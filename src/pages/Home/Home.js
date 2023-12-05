@@ -1,9 +1,9 @@
-const Main = () => {
+const Home = () => {
     return (
-        <div>Main
+        <div>Home
             asdasd
         </div>
         
     );
 }
-export default Main;
+export default Home;
