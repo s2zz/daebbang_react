@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import TopForm from './pages/commons/TopForm';
-import Main from './pages/main/main';
+import Main from './pages/Main/Main';
 import Board from './pages/Board/Board';
 
 import LoadEstate from './pages/LoadEstate/LoadEstate';
