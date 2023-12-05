@@ -7,6 +7,7 @@ import Board from './pages/Board/Board';
 import LoadEstate from './pages/LoadEstate/LoadEstate';
 import AdminMain from './pages/Admin/AdminMain';
 import EstateCreate from './pages/EstateManage/EstateCreate';
+import Login from './pages/Login/Login';
 
 function App() {
   return (
