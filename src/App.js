@@ -8,12 +8,13 @@ import LoadEstate from './pages/LoadEstate/LoadEstate';
 import AdminMain from './pages/Admin/AdminMain';
 import EstateCreate from './pages/EstateManage/EstateCreate';
 import Login from './pages/Login/Login';
+import Enrollment from './pages/Enrollment/Enrollment';
 
 function App() {
   return (
+    <BrowserRouter>
     <div className="container">
       <TopForm />
-      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} /> 
           <Route path="/home/*" element={<Home />} /> 
@@ -22,9 +23,10 @@ function App() {
           <Route path="/loadEstate/*" element={<LoadEstate/>}/>
           <Route path="/login/*" element={<Login/>}/>
           <Route path="/admin/*" element={<AdminMain />}/>
+          <Route path="/enrollment/*" element={<Enrollment />}/>
         </Routes>
-      </BrowserRouter>
     </div>
+    </BrowserRouter>
   );
 }
 
