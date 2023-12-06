@@ -1,8 +1,12 @@
 import ReactQuill from "react-quill";
 import style from "../../css/WriteBoard/WriteBoard.module.css";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const FreeBoardWrite = () => {
+    const [boardContents, setBoardContents] = useState({board_title:"자유게시판",title:"",});
+
+
     const modules = {
         toolbar: {
             container: [
