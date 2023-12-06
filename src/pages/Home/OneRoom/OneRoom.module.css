@@ -1,4 +1,33 @@
+.home_top{
+    border: 1px solid #000;
+    height: 50px;
+}
+
+.home_top ul{
+    list-style:none;
+}
+
+.home_top li{
+    float: left;
+    margin-right: 20px;
+    border: 1px solid #000;
+    font-size: 15px;
+    padding: 0 20px;
+}
+
 .main_box{ 
+    width: 100%;
+    height: calc(100vh - 86.5px);
     border: solid 1px red;
     display: flex;
+}
+
+.home_body_map{
+    border: solid 1px red;
+    width: 85%;
+}
+
+.home_body_info{
+    border: solid 1px red;
+    width: 15%;
 }

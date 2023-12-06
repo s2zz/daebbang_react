@@ -1,26 +1,43 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Map from "./Map/Map";
-import Item from "./Item/Item";
+import { Helmet } from 'react-helmet';
+
+import List from "./List/List";
+import Info from "./Info/Info";
+
 import style from './OneRoom.module.css';
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=97341ac4e80b9a87a5f181cdc1456971"></script>
+
 
 function OneRoom() {
   return (
     <div className="container">
-      <div className="home_top">방찾기 / 찜한 매물 / 방 올리기</div>
-      <div className={style.main_box}>
-        <div className="home_body_map">
+<Helmet>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=97341ac4e80b9a87a5f181cdc1456971"></script>
+      </Helmet>
+      <div className={style.home_top}>
+        <ul>
+          <li>방 찾기</li>
+          <li>찜한 매물</li>
+          <li>방 내놓기(전월세만)</li>
+        </ul>
+      </div>
 
+      <div className={style.main_box}>
+
+        <div className={style.home_body_map}>
+          지도 출력
         </div>
-        <div className="home_body_info">
+
+        <div className={style.home_body_info}>
           <Routes>
-            <Route path="map" element={<Map />} />
-            <Route path="item" element={<Item />} />
+            <Route path="list" element={<List />} />
+            <Route path="info" element={<Info />} />
           </Routes>
         </div>
+
       </div>
+
     </div>
   );
 }
