@@ -18,10 +18,10 @@ const TopForm = () => {
                 <ul className={style.gnb_container}>
                     <li className={style.has_d2}>
                         <a>
-                            <Link to="/main"><span>원룸</span></Link>
+                            <Link to="/home/oneroom/list"><span>원룸</span></Link>
                         </a>
                         <div className={style.depth2_bx}>
-                            <a href="#">방찾기</a>
+                            <a href="/home/oneroom/list">방찾기</a>
                             <a href="#">찜한매물</a>
                             <a href="#">방내놓기(전월세만)</a>
                         </div>
@@ -39,13 +39,13 @@ const TopForm = () => {
                 </ul>
             </div>
             <div className={style.top_btn}>
-                <div className="top_btn_menu">
+                <div className={style.top_btn_menu}>
                     <Button><Link to="/login">로그인 및 회원가입</Link></Button>
                 </div>
-                <div className="top_btn_menu">
+                <div className={style.top_btn_menu}>
                     <Button><Link to="/admin">관리자 페이지</Link></Button>
                 </div>
-                <div className="top_btn_menu">
+                <div className={style.top_btn_menu}>
                     <Button><Link to="/enrollment">중개사무소 가입</Link></Button>
                 </div>
             
