@@ -9,7 +9,7 @@ function OneRoom() {
     return (
         <div className="container">
             <Routes>
-                <Route path="/" element={<Map />} />
+                <Route path="map" element={<Map />} />
                 <Route path="item" element={<Item />} />
             </Routes>
         </div>
