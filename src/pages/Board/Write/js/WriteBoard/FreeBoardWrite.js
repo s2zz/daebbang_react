@@ -1,9 +1,12 @@
 import ReactQuill from "react-quill";
 import style from "../../css/WriteBoard/WriteBoard.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 const FreeBoardWrite = () => {
+    const navi = useNavigate();
+
     const [boardContents, setBoardContents] = useState({boardTitle:"자유게시판",title:"",contents:""});
 
     const handleChange = (e) => {
@@ -12,9 +15,10 @@ const FreeBoardWrite = () => {
     }
 
     const handleAdd = () => {
+        console.log(boardContents);
         axios.post("/api/board",boardContents).then(resp=>{
             alert("게시글 등록에 성공하였습니다");
-            navigator("/board/toFreeBoardList");
+            navi("/board/toFreeBoardList");
         }).catch(err=>{
             alert("게시글 등록에 실패하였습니다");
             console.log(err);
@@ -58,7 +62,7 @@ const FreeBoardWrite = () => {
             <div>
                 <div>제목</div>
                 <div>
-                    <input placeholder="제목을 입력해주세요" onChange={handleChange}/>
+                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange}/>
                 </div>
             </div>
             <div>
@@ -68,7 +72,7 @@ const FreeBoardWrite = () => {
             <div>
                 <div>내용</div>
                 <div>
-                    <ReactQuill className={style.reactQuill} placeholder="내용을 입력해주세요" onChange={handleChange} modules={modules} formats={formats} />
+                    <ReactQuill id="editor" className={style.reactQuill} value={boardContents.contents} onChange={(value) => setBoardContents({ ...boardContents, contents: value })}/>
                 </div>
             </div>
 
