@@ -1,0 +1,19 @@
+*{box-sizing: border-box;}
+
+/* div{border:1px solid black;} */
+
+.sideBar{
+    background-color: aliceblue;
+    height:800px;
+}
+
+.boardContainer{overflow:hidden;}
+.boardContainer>div{float:left;}
+.boardContainer>div:first-child{
+    width:15%;
+}
+.boardContainer>div:last-child{
+    width:85%;
+    padding:30px;
+}
+
