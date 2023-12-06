@@ -36,7 +36,7 @@
 }
 .gnb > ul > li > a {
     display: block;
-    line-height: 18px;
+    line-height: 30px;
     padding: 19px 15px 17px;
     text-decoration: none;
     color: inherit;
@@ -93,6 +93,11 @@
   }
 .top_btn{
     float: right;
-    display: table;
     height: 80px;
+    display: flex;
+    font-size: 30px;
+    line-height: 70px;
 }
+.top_btn_menu {
+    margin-right: 10px;
+  }
