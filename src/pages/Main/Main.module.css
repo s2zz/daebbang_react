@@ -1,0 +1,31 @@
+.container{
+    width: 100%;
+    height: 100%;
+}
+
+.imgbox{
+    width: 100%;
+    height: 30%;
+}
+.middlebox{
+    width: 100%;
+    height: 50%;
+}
+.footerbox{
+    width: 100%;
+    height: 20%;
+}
+.homeimg{
+    width: 100%;
+    height: 450px;
+    min-width: 1290px;
+}
+.overlay_text {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+  }

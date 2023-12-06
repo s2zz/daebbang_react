@@ -8,6 +8,7 @@ import EstateCreate1 from './pages/EstateManage/js/EstateCreate1';
 import Login from './pages/Login/Login';
 import Enrollment from './pages/Enrollment/Enrollment';
 import SignUp from './pages/SignUp/SignUp';
+import Main from './pages/Main/Main';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <TopForm />
         <div className='body_form'>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Main />} />
           <Route path="/home/*" element={<Home />} />
           <Route path="/board/*" element={<Board />} />
           <Route path="/estateManage/*" element={<EstateCreate1 />} />
