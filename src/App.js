@@ -4,7 +4,7 @@ import TopForm from './pages/commons/TopForm';
 import Home from './pages/Home/Home';
 import Board from './pages/Board/Board';
 import Admin from './pages/Admin/Admin';
-import EstateCreate from './pages/EstateManage/EstateCreate';
+import EstateCreate1 from './pages/EstateManage/js/EstateCreate1';
 import Login from './pages/Login/Login';
 import Enrollment from './pages/Enrollment/Enrollment';
 import SignUp from './pages/SignUp/SignUp';
@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/home/*" element={<Home />} />
           <Route path="/board/*" element={<Board />} />
-          <Route path="/estateManage/*" element={<EstateCreate />} />
+          <Route path="/estateManage/*" element={<EstateCreate1 />} />
           <Route path="/login/*" element={<Login/>} />
           <Route path="/signUp/*" element={<SignUp/>} />
           <Route path="/admin/*" element={<Admin />} />
