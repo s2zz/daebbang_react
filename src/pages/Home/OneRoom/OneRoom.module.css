@@ -1,0 +1,4 @@
+.main_box{ 
+    border: solid 1px red;
+    display: flex;
+}
