@@ -12,8 +12,9 @@ import Login from './pages/Login/Login';
 function App() {
   return (
     <div className="container">
-      <TopForm />
+     
       <BrowserRouter>
+      <TopForm />
         <Routes>
           <Route path="/" element={<Home />} /> 
           <Route path="/home/*" element={<Home />} /> 
