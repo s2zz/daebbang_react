@@ -1,19 +1,18 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet";
+import { Map } from "react-kakao-maps-sdk";
 
 import List from "./List/List";
 import Info from "./Info/Info";
 
-import style from './OneRoom.module.css';
-
-
+import style from "./OneRoom.module.css";
 
 function OneRoom() {
   return (
     <div className="container">
-<Helmet>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=97341ac4e80b9a87a5f181cdc1456971"></script>
+      <Helmet>
+
       </Helmet>
       <div className={style.home_top}>
         <ul>
@@ -24,20 +23,20 @@ function OneRoom() {
       </div>
 
       <div className={style.main_box}>
-
         <div className={style.home_body_map}>
-          지도 출력
+          <Map
+            center={{ lat: 33.5563, lng: 126.79581 }} // 지도의 중심 좌표
+            style={{ width: "100%", height: "100%" }} // 지도 크기
+            level={3} // 지도 확대 레벨
+          ></Map>
         </div>
-
         <div className={style.home_body_info}>
           <Routes>
             <Route path="list" element={<List />} />
             <Route path="info" element={<Info />} />
           </Routes>
         </div>
-
       </div>
-
     </div>
   );
 }
