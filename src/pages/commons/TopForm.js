@@ -43,6 +43,9 @@ const TopForm = () => {
                     <Button><Link to="/login">로그인 및 회원가입</Link></Button>
                 </div>
                 <div className="top_btn_menu">
+                    <Button><Link to="/admin">관리자 페이지</Link></Button>
+                </div>
+                <div className="top_btn_menu">
                     <Button><Link to="/enrollment">중개사무소 가입</Link></Button>
                 </div>
             
