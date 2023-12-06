@@ -61,8 +61,8 @@
     align-items: center;
 }
 
-.findId, .findPw {
+.findId, .findPw, .signUp {
     display: flex;
     justify-content: center;
-    width:150px;
+    width:130px;
 }
