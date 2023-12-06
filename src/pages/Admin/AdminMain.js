@@ -1,6 +1,6 @@
 const AdminMain = () => {
     return (
-        <div>AdminState</div>
+        <div>AdminStateewtwtetwet</div>
     );
 }
 export default AdminMain;
