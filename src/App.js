@@ -7,6 +7,7 @@ import Admin from './pages/Admin/Admin';
 import EstateCreate from './pages/EstateManage/EstateCreate';
 import Login from './pages/Login/Login';
 import Enrollment from './pages/Enrollment/Enrollment';
+import SignUp from './pages/SignUp/SignUp';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/board/*" element={<Board />} />
           <Route path="/estateManage/*" element={<EstateCreate />} />
           <Route path="/login/*" element={<Login/>} />
+          <Route path="/signUp/*" element={<SignUp/>} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/enrollment/*" element={<Enrollment />} />
         </Routes>
