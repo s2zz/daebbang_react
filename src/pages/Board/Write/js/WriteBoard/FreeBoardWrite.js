@@ -1,5 +1,5 @@
 import ReactQuill from "react-quill";
-import style from "../../commons_css/WriteBoard.module.css";
+import style from "../../css/WriteBoard/WriteBoard.module.css";
 import { Link } from "react-router-dom";
 
 const FreeBoardWrite = () => {
