@@ -4,8 +4,22 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const FreeBoardWrite = () => {
-    const [boardContents, setBoardContents] = useState({board_title:"자유게시판",title:"",});
+    const [boardContents, setBoardContents] = useState({boardTitle:"자유게시판",title:"",contents:""});
 
+    const handleChange = (e) => {
+        const {name,value} = e.target;
+        setBoardContents(prev=>({...prev,[name]:value}));
+    }
+
+    const handleAdd = () => {
+        axios.post("/api/board",boardContents).then(resp=>{
+            alert("게시글 등록에 성공하였습니다");
+            navigator("/board/toFreeBoardList");
+        }).catch(err=>{
+            alert("게시글 등록에 실패하였습니다");
+            console.log(err);
+        })
+    }
 
     const modules = {
         toolbar: {
@@ -44,7 +58,7 @@ const FreeBoardWrite = () => {
             <div>
                 <div>제목</div>
                 <div>
-                    <input placeholder="제목을 입력해주세요" />
+                    <input placeholder="제목을 입력해주세요" onChange={handleChange}/>
                 </div>
             </div>
             <div>
@@ -54,13 +68,13 @@ const FreeBoardWrite = () => {
             <div>
                 <div>내용</div>
                 <div>
-                    <ReactQuill className={style.reactQuill} placeholder="내용을 입력해주세요" modules={modules} formats={formats} />
+                    <ReactQuill className={style.reactQuill} placeholder="내용을 입력해주세요" onChange={handleChange} modules={modules} formats={formats} />
                 </div>
             </div>
 
             <div>
                 <Link to="/board/toFreeBoardList"><button>작성 취소</button></Link>
-                <button>작성 완료</button>
+                <button onClick={handleAdd}>작성 완료</button>
             </div>
         </>
     );
