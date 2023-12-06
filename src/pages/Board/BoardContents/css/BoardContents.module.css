@@ -1,0 +1,58 @@
+.boardContentsTitle{
+    font-weight: bold;
+    font-size:xx-large;
+    margin-bottom:5px;
+    display: flex;
+    align-items: center;
+}
+.boardContentsTitle>span{
+    color:rgb(1, 140, 247);
+    font-weight: normal;
+    font-size: x-large;
+    margin-right:10px;
+}
+
+.boardContentsInfo{
+    margin-bottom:20px;
+    overflow: hidden;
+}
+.boardContentsInfo>div{float:left;}
+.boardContentsInfo>div:nth-child(1){width:75%;}
+.boardContentsInfo>div:nth-child(2){
+    width:25%;
+    text-align: end;
+}
+
+.boardContentsDiv{
+    border:1px solid black;
+    margin-bottom:20px;
+    min-height:100px;
+}
+
+.insertReplyDiv textarea{
+    width:100%;
+    resize: none;
+}
+.replyBoxFirst{
+    border-bottom:1px solid gainsboro;
+}
+.replyBoxFirst>div:nth-child(3){margin-bottom:20px;}
+
+.replyBox{
+    border-bottom:1px solid gainsboro;
+    padding-top:20px;
+}
+.replyBox:nth-child(1){padding-top:0px;}
+.replyBox>div:nth-child(3){margin-bottom:20px;}
+.replyInfo{overflow: hidden;}
+.replyInfo>div{
+    float:left;
+    width:50%;
+}
+.replyInfo>div:nth-child(2){text-align: end;}
+
+.naviFooter{
+    display: flex;
+    justify-content: space-evenly;
+    font-size: large;
+}

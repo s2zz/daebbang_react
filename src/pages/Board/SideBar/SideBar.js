@@ -3,7 +3,7 @@ const SideBar = () => {
     return (
         <>
             <div>
-                <a href="#">즐겨찾기</a>
+            <Link to="/board/toFavoriteBoardList">즐겨찾기</Link>
             </div>
             <div>
                 <Link to="/board/toFreeBoardList">자유게시판</Link>
