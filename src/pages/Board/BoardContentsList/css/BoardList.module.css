@@ -65,11 +65,15 @@
     font-size:large;
     text-align: center;
 }
-.boardInfo>div:nth-child(1){width:5%;}
-.boardInfo>div:nth-child(2){width:15%;}
-.boardInfo>div:nth-child(3){width:65%;}
-.boardInfo>div:nth-child(4){width:15%;}
-
+.boardInfo>div:nth-child(1){
+    width:5%;
+    padding-top:1px;
+}
+.boardInfo>div:nth-child(1)>img{width:30%;}
+.boardInfo>div:nth-child(2){width:5%;}
+.boardInfo>div:nth-child(3){width:15%;}
+.boardInfo>div:nth-child(4){width:60%;}
+.boardInfo>div:nth-child(5){width:15%;}
 .boardListContents>div{
     overflow:hidden;
     padding-top:8px;
@@ -82,10 +86,15 @@
     font-size:large;
     text-align: center;
 }
-.boardListContents>div>div:nth-child(1){width:5%;}
-.boardListContents>div>div:nth-child(2){width:15%;}
-.boardListContents>div>div:nth-child(3){width:65%;}
-.boardListContents>div>div:nth-child(4){width:15%;}
+.boardListContents>div>div:nth-child(1){
+    width:5%;
+    padding-top:1px;
+}
+.boardListContents>div>div:nth-child(1)>img{width:30%}
+.boardListContents>div>div:nth-child(2){width:5%;}
+.boardListContents>div>div:nth-child(3){width:15%;}
+.boardListContents>div>div:nth-child(4){width:60%;}
+.boardListContents>div>div:nth-child(5){width:15%;}
 
 .writeBtnDiv{
     text-align: right;
