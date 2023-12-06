@@ -28,11 +28,11 @@
     font-weight: 700;
 }
 
-.inputLoginBox {
-    height:200px;
+.inputSignUpBox {
     display: flex;
     justify-content: center;
     align-items: center;
+    height:300px;
 }
 
 .btnBox {
@@ -41,7 +41,7 @@
     align-items: center;
 }
 
-.loginBtn {
+.signUpBtn {
     width:200px;
     height:80px;
     background-color: black;
@@ -49,21 +49,8 @@
     font-size:12pt;
 }
 
-.loginBtn:hover {
+.signUpBtn:hover {
     cursor:pointer;
     background-color:rgb(48, 48, 48);
     color:white;
-}
-
-.findBox {
-    height:150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.findId, .findPw, .signUp {
-    display: flex;
-    justify-content: center;
-    width:130px;
 }
