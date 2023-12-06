@@ -9,9 +9,9 @@ import Info from "./Info/Info";
 import style from "./OneRoom.module.css";
 
 function OneRoom() {
+  
+    // 지도 랜더링 될때 한 번만 실행되게
   const [mapRendered, setMapRendered] = useState(false);
-
-  // 컴포넌트가 처음으로 렌더링될 때 한 번만 실행
   useEffect(() => {
     setMapRendered(true);
   }, []);
@@ -24,9 +24,13 @@ function OneRoom() {
           <li>방 찾기</li>
           <li>찜한 매물</li>
           <li>방 내놓기(전월세만)</li>
-          <li><Link to="list">Go to List</Link></li>
-          
-          <li><Link to="info">Go to Info</Link></li>
+          <li>
+            <Link to="list">Go to List</Link>
+          </li>
+
+          <li>
+            <Link to="info">Go to Info</Link>
+          </li>
         </ul>
       </div>
 
