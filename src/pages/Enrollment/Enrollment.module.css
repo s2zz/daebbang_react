@@ -1,0 +1,46 @@
+.container {
+    width: 100%;
+}
+.img{
+    width: 500px;
+    height: auto;
+}
+.imgbag{
+    width: 100%;
+    background-color: #FFF6E5;
+    text-align: center;
+}
+.box{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.baggray{
+    background-color: #F6F6F6;
+    padding-top: 2px;
+    padding-bottom: 15px;
+    padding-right: 35px;
+
+}
+.list{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.nextId{
+    display: inline-block;
+    margin-right: 20px;
+}
+.flex{
+    display: inline-block;
+    font-size: small;
+}
+input,select{
+    padding: 3px;
+}
+ul {
+    list-style-type: none;
+  }
+  hr{
+    color: #e1e1e1;
+    margin-top: 13px;
+  }
