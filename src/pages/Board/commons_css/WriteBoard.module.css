@@ -1,0 +1,23 @@
+.boardTitle{
+    font-size:xx-large;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.boardTitle+hr{
+    height:4px;
+    color:black;
+    background-color: black;
+    margin-bottom:20px;
+}
+
+.reactQuill>div:nth-child(2){
+    width:100%;
+    min-height:400px;
+    height:400px;
+}
+.reactQuill>div:nth-child(2)>div:nth-child(1){
+    width:100%;
+    height:100%;
+}
+
