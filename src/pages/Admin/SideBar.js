@@ -3,17 +3,18 @@ const SideBar = () => {
     return (
         <>
             <div>
-                <Link to="">메인페이지</Link>
+                <Link to="/admin">메인페이지</Link>
             </div>
             <div>
-                <Link to="">회원 관리</Link>
+                <Link to="/admin/toAgentManagement">회원 관리</Link>
             </div>
             <div>
-                <Link to="">공인중개사 관리</Link>
+                <Link to="/admin/toMemberManagement">공인중개사 관리</Link>
             </div>
             <div>
-                <Link to="">신고 관리</Link>
+                <Link to="/admin/toNotificationManagement">신고 관리</Link>
             </div>
+            
         </>
     );
 }
