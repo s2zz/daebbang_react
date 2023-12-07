@@ -15,6 +15,10 @@ const RoomBoardList = () => {
         })
     }, [])
 
+    const toBoardContents = (seq) => {
+        return `/board/toFreeBoardContents/${seq}`;
+    }
+
     return (
         <>
             <div className={style.boardTitle}>양도게시판</div>
@@ -46,7 +50,7 @@ const RoomBoardList = () => {
                                     <div><img src={favorite} /></div>
                                     <div>{i + 1}</div>
                                     <div>{e.writer}</div>
-                                    <div>{e.title}</div>
+                                    <div><Link to={toBoardContents(e.seq)}>{e.title}</Link></div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
                             );

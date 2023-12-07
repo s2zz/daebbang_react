@@ -1,13 +1,27 @@
 import style from '../css/BoardContents.module.css';
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const FreeBoardContents = () => {
+const FreeBoardContents = ({contentsSeq}) => {
+
+    const [boardContents, setBoardContents] = useState({});
+
+    useEffect(() => {
+        axios.get(`/api/board/boardContents/${contentsSeq}`).then(resp => {
+            setBoardContents(resp.data);
+            console.log(resp.data);
+        }).catch(err=>{
+            console.log(err);
+        })
+    }, [])
+
     return (
         <>
-            <div className={style.boardContentsTitle}>제목</div>
+            <div className={style.boardContentsTitle}>{boardContents.title}</div>
             <div className={style.boardContentsInfo}>
                 <div>
-                    글 번호 1 | 작성자 test0000 | 날짜 2023.12.03
+                    글 번호 {contentsSeq} | 작성자 test0000 | 날짜 2023.12.03
                 </div>
                 <div>
                     <button>삭제</button>

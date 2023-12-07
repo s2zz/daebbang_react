@@ -16,6 +16,9 @@ const FreeBoardList = () => {
         })
     }, [])
 
+    const toBoardContents = (seq) => {
+        return `/board/toFreeBoardContents/${seq}`;
+    }
 
     return (
         <>
@@ -48,7 +51,7 @@ const FreeBoardList = () => {
                                     <div><img src={favorite} /></div>
                                     <div>{i+1}</div>
                                     <div>{e.writer}</div>
-                                    <div>{e.title}</div>
+                                    <div><Link to={toBoardContents(e.seq)}>{e.title}</Link></div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
                             );
