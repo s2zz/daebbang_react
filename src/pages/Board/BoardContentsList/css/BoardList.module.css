@@ -9,14 +9,7 @@
     background-color: black;
     margin-bottom:20px;
 }
-.searchBoxDiv{
-    display: flez;
-    justify-content: right;
-}
-.searchDiv{
-    display: flex;
-    justify-content: right;
-}
+
 .searchBox{
     border:1px solid black;
     width:30%;
@@ -74,13 +67,18 @@
 .boardInfo>div:nth-child(3){width:15%;}
 .boardInfo>div:nth-child(4){width:60%;}
 .boardInfo>div:nth-child(5){width:15%;}
+.boardListContents span{
+    color:rgb(1, 140, 247);
+    margin-right:10px;
+    text-decoration: none!important;
+}
 .boardListContents>div{
     overflow:hidden;
     padding-top:8px;
     padding-bottom:8px;
     border-bottom:1px solid gainsboro;
 }
-.boardListContents>div:nth-child(10){border:none;}
+.boardListContents>div:last-child{border:none;}
 .boardListContents>div>div{
     float:left;
     font-size:large;

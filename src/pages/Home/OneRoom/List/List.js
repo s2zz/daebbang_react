@@ -1,19 +1,46 @@
+// List.js
 import React from 'react';
-import { markerdata } from '../data/markerData'; // markerdata import
+import { useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate } from "react-router-dom";
+
+import style from "./List.module.css";
+import Info from "../Info/Info";
 
 function List() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { markersInBounds } = location.state || {}; // 전달된 데이터 추출
+
+  const handleMarkerClick = (marker) => {
+    navigate('/home/oneroom/info', { state: marker });
+  };
+
   return (
     <div>
-      <h2>List 컴포넌트</h2>
-      {markerdata.map((marker, index) => (
-        <div key={index}>
-          <h3>마커 {index + 1} 정보</h3>
-          <p>Title: {marker.title}</p>
-          <p>Latitude: {marker.lat}</p>
-          <p>Longitude: {marker.lng}</p>
+      <div className={style.list_cnt}>
+        지역 목록
+        <span className={style.unit_change}></span>
+      </div>
+
+      {markersInBounds && markersInBounds.map((marker, index) => (
+        <div key={index} className={style.list_box} onClick={() => handleMarkerClick(marker)}>
+          <div className={style.list_box_img}>
+            {/* 이미지 */}
+          </div>
+          
+          <div className={style.list_box_text}>
+            <div className={style.list_box_top}><span className={style.recommend}>추천</span> {marker.a}</div>
+            <div className={style.list_title}>{marker.b}</div>
+            <div className={style.list_subtitle}>{marker.c}</div>
+            <div className={style.list_subtitle}>{marker.d}</div>
+            <div className={style.list_simple}>{marker.title}</div>
+          </div>
         </div>
       ))}
-      <p>기타 리스트 출력 부분</p>
+
+      <Routes>
+        <Route path="info" element={<Info />} />
+      </Routes>
     </div>
   );
 }
