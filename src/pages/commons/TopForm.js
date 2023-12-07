@@ -31,9 +31,7 @@ const TopForm = ({ setLoginId }) => {
                 <div className={style.gnb}>
                     <ul className={style.gnb_container}>
                         <li className={style.has_d2}>
-                            <a>
-                                <Link to="/home/oneroom/list"><span>원룸</span></Link>
-                            </a>
+                        <Button><a href="/home/oneroom/list"><span>원룸</span> </a></Button>
                             <div className={style.depth2_bx}>
                                 <a href="/home/oneroom/list">방찾기</a>
                                 <a href="#">찜한매물</a>
@@ -41,27 +39,25 @@ const TopForm = ({ setLoginId }) => {
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                            <a>
-                                <Link to="/board"> <span>게시판</span></Link>
-                            </a>
+                        <Button> <a href="/board"><span>게시판</span> </a></Button>
                             <div className={style.depth2_bx}>
                                 <a href="#">자유게시판</a>
                                 <a href="#">양도게시판</a>
-                                <a href="#">작성하기</a>
+                                <a href="#">즐겨찾기</a>
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div className={style.top_btn}>
                     <div className={style.top_btn_menu}>
-                        {storedLoginId ? <Button><a href="#" onClick={handleLogout}>로그아웃</a></Button> : <Button><Link to="/login">로그인 및 회원가입</Link></Button>}
+                        {storedLoginId ? <Button><a href="#" onClick={handleLogout}>로그아웃</a></Button> : <Button><a href="login">로그인 및 회원가입</a></Button>}
 
                     </div>
                     <div className={style.top_btn_menu}>
-                        <Button><Link to="/admin">관리자 페이지</Link></Button>
+                        <Button><a href="admin">관리자 페이지</a></Button>
                     </div>
                     <div className={style.top_btn_menu}>
-                        <Button><Link to="/enrollment">중개사무소 가입</Link></Button>
+                        <Button><a href="enrollment">중개사무소 가입</a></Button>
                     </div>
 
                 </div>
