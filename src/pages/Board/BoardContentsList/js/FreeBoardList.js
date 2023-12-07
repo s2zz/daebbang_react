@@ -5,20 +5,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const FreeBoardList = () => {
-
     const [board, setBoard] = useState([]);
-
 
     useEffect(() => {
         axios.get(`/api/board/freeBoardList`).then(resp => {
             setBoard(resp.data);
-            console.log(resp.data);
         })
-    }, [])
-
-    const toBoardContents = (seq) => {
-        return `/board/toFreeBoardContents/${seq}`;
-    }
+    }, []);
 
     return (
         <>
@@ -51,7 +44,9 @@ const FreeBoardList = () => {
                                     <div><img src={favorite} /></div>
                                     <div>{i+1}</div>
                                     <div>{e.writer}</div>
-                                    <div><Link to={toBoardContents(e.seq)}>{e.title}</Link></div>
+                                    <div>
+                                        <Link to={`/board/toFreeBoardContents/${i+1}`} state={{oriSeq:e.seq,sysSeq:i+1}}>{e.title}</Link>
+                                    </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
                             );

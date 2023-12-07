@@ -2,34 +2,47 @@ import style from '../css/BoardContents.module.css';
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
-const FreeBoardContents = ({contentsSeq}) => {
-
-    const [boardContents, setBoardContents] = useState({});
-
+const FreeBoardContents = () => {
+    const location = useLocation();
+    const [boardContents, setBoardContents] = useState({contents:""});
     useEffect(() => {
-        axios.get(`/api/board/boardContents/${contentsSeq}`).then(resp => {
+        axios.get(`/api/board/boardContents/${location.state.oriSeq}`).then(resp => {
             setBoardContents(resp.data);
-            console.log(resp.data);
-        }).catch(err=>{
+        }).catch(err => {
             console.log(err);
         })
+
     }, [])
+
+    const [insertReply, setInsertReply] = useState({contents:"",parentSeq:location.state.oriSeq});
+    const insertReplyHandleChange = (e) => {
+        setInsertReply(prev=>({...prev,contents:e.target.value}));
+    }
+
+    const insertReplyAdd = () => {
+        axios.post("/api/reply",insertReply).then(resp=>{
+            alert("댓글 등록 성공");
+        }).catch(err=>{
+            alert("댓글 등록 실패");
+            console.log(err);
+        })
+    }
+
 
     return (
         <>
             <div className={style.boardContentsTitle}>{boardContents.title}</div>
             <div className={style.boardContentsInfo}>
                 <div>
-                    글 번호 {contentsSeq} | 작성자 test0000 | 날짜 2023.12.03
+                    글 번호 {location.state.sysSeq} | 작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
                 </div>
                 <div>
                     <button>삭제</button>
                 </div>
             </div>
-            <div className={style.boardContentsDiv}>
-                글 내용 나오는 곳
-            </div>
+            <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}></div>
             <div>
                 <Link to="/board/toFreeBoardList"><button>뒤로가기</button></Link>
                 <button>수정하기</button>
@@ -38,14 +51,14 @@ const FreeBoardContents = ({contentsSeq}) => {
             <div>
                 <div className={style.insertReplyDiv}>
                     <div>
-                        <textarea placeholder="댓글을 입력해주세요"/>
+                        <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange}/>
                     </div>
                 </div>
                 <div>
-                    <button>등록</button>
+                    <button onClick={insertReplyAdd}>등록</button>
                 </div>
             </div>
-            <hr/>
+            <hr />
             <div className={style.replyBoxFirst}>
                 <div className={style.replyInfo}>
                     <div>test0000</div>
