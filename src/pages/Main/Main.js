@@ -3,9 +3,41 @@ import homeimg from "../Enrollment/assets/homeimg.jpg";
 import { faBlog } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube,faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect } from 'react';
+import axios from 'axios';
 
 const Main = () => {
-
+    useEffect(() => {
+        // 페이지 로드 시 오늘 날짜 데이터 확인 후 방문자 수 증가 요청
+        axios.get('/api/admin/todayVisitor')
+          .then(response => {
+      
+            if (response.data) {
+              console.log('Data exists:', response.data.seq);
+              // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
+              axios.put(`/api/admin/incrementVisitor/${response.data.seq}`)
+                .then(resp => {
+                  console.log('Visitor count incremented for today');
+                })
+                .catch(error => {
+                  console.error('Error incrementing visitor count:', error);
+                });
+            } else {
+              console.log('Data does not exist:', response.data);
+              // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
+              axios.post('/api/admin/createVisitor')
+                .then(resp => {
+                  console.log('New visitor entry created for today');
+                })
+                .catch(error => {
+                  console.error('Error creating new visitor entry:', error);
+                });
+            }
+          })
+          .catch(error => {
+            console.error('Error checking today\'s visitor data:', error);
+          });
+      }, []);
     return (
         <div className={style.container}>
             <div className={style.imgbox}>
