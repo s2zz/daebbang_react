@@ -39,6 +39,22 @@ const RoomBoardContents = () => {
             console.log(err);
         })
     }
+    const [visibleUpdateBox, setVisibleUpdateBox] = useState(0);
+
+    const showUpdateBox = (seq) => {
+        if (visibleUpdateBox !== 0) {
+            let check = window.confirm("댓글 수정을 취소하고 다른 댓글을 수정하시겠습니까?");
+            if (check) { setVisibleUpdateBox(seq) }
+        } else {
+            setVisibleUpdateBox(seq);
+        }
+    }
+    const hideUpdateBox = (seq) => {
+        if (visibleUpdateBox !== 0) {
+            let check = window.confirm("댓글 수정을 취소하시겠습니까?");
+            if (check) { setVisibleUpdateBox(0) }
+        }
+    }
 
     return (
         <>
@@ -81,13 +97,21 @@ const RoomBoardContents = () => {
                                     <div>{e.writer}</div>
                                     <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                 </div>
-                                <div>
-                                    {e.contents}
-                                </div>
-                                <div>
-                                    <button>수정</button>
-                                    <button>삭제</button>
-                                </div>
+                                {
+                                    visibleUpdateBox === e.seq ? <div><textarea value={e.contents}></textarea></div> : <div>{e.contents}</div>
+                                }
+                                {
+                                    visibleUpdateBox === e.seq ?
+                                        <div>
+                                            <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
+                                            <button>수정완료</button>
+                                        </div>
+                                        :
+                                        <div>
+                                            <button onClick={() => showUpdateBox(e.seq)}>수정</button>
+                                            <button>삭제</button>
+                                        </div>
+                                }
                             </div>
                         );
                     } else {
@@ -97,13 +121,22 @@ const RoomBoardContents = () => {
                                     <div>{e.writer}</div>
                                     <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                 </div>
-                                <div>
-                                    {e.contents}
-                                </div>
-                                <div>
-                                    <button>수정</button>
-                                    <button>삭제</button>
-                                </div>
+                                {
+                                    visibleUpdateBox === e.seq ? <div><textarea value={e.contents}></textarea></div> : <div>{e.contents}</div>
+                                }
+                                {
+                                    visibleUpdateBox === e.seq ?
+                                        <div>
+                                            <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
+                                            <button>수정완료</button>
+                                        </div>
+                                        :
+                                        <div>
+                                            <button onClick={() => showUpdateBox(e.seq)}>수정</button>
+                                            <button>삭제</button>
+                                        </div>
+                                }
+
                             </div>
                         );
                     }
