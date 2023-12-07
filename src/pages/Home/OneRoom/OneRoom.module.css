@@ -18,16 +18,13 @@
 .main_box{ 
     width: 100%;
     height: calc(100vh - 86.5px);
-    border: solid 1px red;
     display: flex;
 }
 
 .home_body_map{
-    border: solid 1px red;
-    width: 85%;
+    width: calc(100% - 400px);
 }
 
-.home_body_info{
-    border: solid 1px red;
-    width: 15%;
+.home_body_side{
+    width: 400px;
 }
