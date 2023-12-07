@@ -80,7 +80,7 @@
     padding-bottom:8px;
     border-bottom:1px solid gainsboro;
 }
-.boardListContents>div:nth-child(10){border:none;}
+.boardListContents>div:last-child{border:none;}
 .boardListContents>div>div{
     float:left;
     font-size:large;
