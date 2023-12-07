@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import style from "../css/BoardList.module.css";
+import roomStyle from "../css/RoomBoardList.module.css";
 import favorite from "../../assets/favorites.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -11,19 +12,21 @@ const RoomBoardList = () => {
     useEffect(() => {
         axios.get(`/api/board/roomBoardList`).then(resp => {
             setBoard(resp.data);
-            console.log(resp.data);
         })
     }, [])
-
-    const toBoardContents = (seq) => {
-        return `/board/toFreeBoardContents/${seq}`;
-    }
 
     return (
         <>
             <div className={style.boardTitle}>양도게시판</div>
             <hr></hr>
-            <div className={style.searchDiv}>
+            <div className={roomStyle.searchDiv}>
+                <div className={style.selectBox}>
+                    <select>
+                        <option selected>전체게시물</option>
+                        <option>양도합니다</option>
+                        <option>양도구합니다</option>
+                    </select>
+                </div>
                 <div className={style.searchBox}>
                     <div>icon</div>
                     <div>
@@ -50,7 +53,12 @@ const RoomBoardList = () => {
                                     <div><img src={favorite} /></div>
                                     <div>{i + 1}</div>
                                     <div>{e.writer}</div>
-                                    <div><Link to={toBoardContents(e.seq)}>{e.title}</Link></div>
+                                    <div>
+                                        <Link to={`/board/toRoomBoardContents/${i+1}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:i+1}}>
+                                            <span>[{e.header}]</span>
+                                            {e.title}
+                                        </Link>
+                                    </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
                             );

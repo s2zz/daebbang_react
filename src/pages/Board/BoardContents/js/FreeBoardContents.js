@@ -6,31 +6,39 @@ import { useLocation } from "react-router-dom";
 
 const FreeBoardContents = () => {
     const location = useLocation();
-    const [boardContents, setBoardContents] = useState({contents:""});
+    const [boardContents, setBoardContents] = useState({ contents: "" });
+    const [replyList, setReplyList] = useState([{}]);
+
+    // 댓글 내림차순 정렬
+    function compareBySeq(a, b) {
+        return b.seq - a.seq;
+    }
+
     useEffect(() => {
         axios.get(`/api/board/boardContents/${location.state.oriSeq}`).then(resp => {
             setBoardContents(resp.data);
+            setReplyList(resp.data.replies.sort(compareBySeq));
         }).catch(err => {
             console.log(err);
         })
-
     }, [])
 
-    const [insertReply, setInsertReply] = useState({contents:"",parentSeq:location.state.oriSeq});
+    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.oriSeq });
     const insertReplyHandleChange = (e) => {
-        setInsertReply(prev=>({...prev,contents:e.target.value}));
+        setInsertReply(prev => ({ ...prev, contents: e.target.value }));
     }
 
     const insertReplyAdd = () => {
-        axios.post("/api/reply",insertReply).then(resp=>{
+        axios.post("/api/reply", insertReply).then(resp => {
             alert("댓글 등록 성공");
-        }).catch(err=>{
+            setInsertReply(prev=>({...prev,contents:""}));
+            setReplyList(resp.data.sort(compareBySeq));
+        }).catch(err => {
             alert("댓글 등록 실패");
             console.log(err);
         })
     }
-
-
+  
     return (
         <>
             <div className={style.boardContentsTitle}>{boardContents.title}</div>
@@ -51,7 +59,7 @@ const FreeBoardContents = () => {
             <div>
                 <div className={style.insertReplyDiv}>
                     <div>
-                        <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange}/>
+                        <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange} value={insertReply.contents}/>
                     </div>
                 </div>
                 <div>
@@ -59,32 +67,43 @@ const FreeBoardContents = () => {
                 </div>
             </div>
             <hr />
-            <div className={style.replyBoxFirst}>
-                <div className={style.replyInfo}>
-                    <div>test0000</div>
-                    <div>2023.12.06</div>
-                </div>
-                <div>
-                    댓글내용
-                </div>
-                <div>
-                    <button>수정</button>
-                    <button>삭제</button>
-                </div>
-            </div>
-            <div className={style.replyBox}>
-                <div className={style.replyInfo}>
-                    <div>test0000</div>
-                    <div>2023.12.06</div>
-                </div>
-                <div>
-                    댓글내용
-                </div>
-                <div>
-                    <button>수정</button>
-                    <button>삭제</button>
-                </div>
-            </div>
+            {
+                replyList.map((e, i) => {
+                    if (i === 0) {
+                        return (
+                            <div className={style.replyBoxFirst} key={i}>
+                                <div className={style.replyInfo}>
+                                    <div>{e.writer}</div>
+                                    <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
+                                </div>
+                                <div>
+                                    {e.contents}
+                                </div>
+                                <div>
+                                    <button>수정</button>
+                                    <button>삭제</button>
+                                </div>
+                            </div>
+                        );
+                    } else {
+                        return (
+                            <div className={style.replyBox} key={i}>
+                                <div className={style.replyInfo}>
+                                    <div>{e.writer}</div>
+                                    <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
+                                </div>
+                                <div>
+                                    {e.contents}
+                                </div>
+                                <div>
+                                    <button>수정</button>
+                                    <button>삭제</button>
+                                </div>
+                            </div>
+                        );
+                    }
+                })
+            }
             <div className={style.naviFooter}>
                 &lt; 1 2 3 4 5 6 7 8 9  10 &gt;
             </div>
