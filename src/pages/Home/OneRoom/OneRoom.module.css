@@ -1,33 +1,46 @@
 .home_top{
-    border: 1px solid #000;
     height: 50px;
+    display: flex;
 }
 
-.home_top ul{
-    list-style:none;
-}
-
-.home_top li{
-    float: left;
-    margin-right: 20px;
-    border: 1px solid #000;
-    font-size: 15px;
+.home_top div{
+    line-height: 50px;
     padding: 0 20px;
+    margin-left: 25px;
+    cursor: pointer;
+    color: #a6a6a6;
+    font-size: 15px;
+    transition: background-color 0.15s ease 0s;
+}
+
+.home_top div:first-child{ /* 선택시 조건 */
+    color: #000;
+    border-bottom: 2px solid #000;
+    margin-left: 40px;
+    font-weight: 600;
+} 
+
+.home_top div:hover{
+    color: #444;
 }
 
 .main_box{ 
     width: 100%;
-    height: calc(100vh - 86.5px);
-    border: solid 1px red;
+    height: calc(100vh - 131px);
     display: flex;
+    border-top: 1px solid #d9d9d9;
 }
 
 .home_body_map{
-    border: solid 1px red;
-    width: 85%;
+    width: calc(100% - 400px);
 }
 
-.home_body_info{
-    border: solid 1px red;
-    width: 15%;
+.home_body_side{
+    width: 400px;
+    border-left: 1px solid #d9d9d9;
+}
+
+/* 사이드 메뉴 스크롤 숨김처리 */
+.home_body_side::-webkit-scrollbar {
+    display: none;
 }

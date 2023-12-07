@@ -34,14 +34,14 @@
     margin-right: 15px;
     cursor: pointer;
 }
-.gnb > ul > li > a {
+.gnb > ul > li > Button> a {
     display: block;
     line-height: 30px;
     padding: 19px 15px 17px;
     text-decoration: none;
-    color: inherit;
+    color: black;
 }
-.gnb>ul>li>a>span {
+.gnb>ul>li> Button>a>span {
     display: block;
     font-size: 17px;
     color: rgb(34, 34, 34);
@@ -83,6 +83,9 @@
     text-decoration: none;
     color: inherit;
 }
+.depth2_bx > a:hover{
+    background-color: rgb(240, 240, 240);
+}
 .has_d2:hover .depth2_bx {
     visibility: visible;
     opacity: 1;
@@ -99,5 +102,19 @@
     line-height: 70px;
 }
 .top_btn_menu {
+    padding-top: 10px;
     margin-right: 10px;
+  }
+  .top_btn_menu a{
+    text-decoration: none;
+    color: black;
+  }
+  .top_right_menu{
+    margin-right: 20px;
+    padding-top: 10px;
+  }
+  .top_right_menu a{
+
+    text-decoration: none;
+    color: black;
   }
