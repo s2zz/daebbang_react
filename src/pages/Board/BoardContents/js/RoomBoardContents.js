@@ -40,6 +40,45 @@ const RoomBoardContents = () => {
         })
     }
 
+    const [visibleUpdateBox, setVisibleUpdateBox] = useState(0);
+    const [updateReply, setUpdateReply] = useState({seq:0,contents:""});
+    const showUpdateBox = (seq, contents) => {
+        if (visibleUpdateBox !== 0) {
+            let check = window.confirm("댓글 수정을 취소하고 다른 댓글을 수정하시겠습니까?");
+            if (check) { 
+                setVisibleUpdateBox(seq); 
+                setUpdateReply({seq:seq,contents:contents});
+            }
+        } else {
+            setVisibleUpdateBox(seq);
+            setUpdateReply({seq:seq,contents:contents});
+        }
+    }
+    const hideUpdateBox = (seq) => {
+        if (visibleUpdateBox !== 0) {
+            let check = window.confirm("댓글 수정을 취소하시겠습니까?");
+            if (check) { setVisibleUpdateBox(0) }
+            setUpdateReply(prev=>({seq:0,contents:""}))
+        }
+    }
+    const updateHandle = (e) => {
+        console.log(e.target.value)
+        setUpdateReply(prev=>({...prev,contents:e.target.value}))
+    }
+
+    const updateAdd = () => {
+        axios.put("/api/reply",updateReply).then(resp=>{
+            alert("댓글 수정에 성공하였습니다");
+            setReplyList(resp.data.sort(compareBySeq));
+            setUpdateReply(prev=>({seq:0,contents:""}));
+            setVisibleUpdateBox(0);
+
+        }).catch(err=>{
+            alert("댓글 수정에 실패하였습니다.");
+            console.log(err);
+        })
+    }
+
     return (
         <>
             <div className={style.boardContentsTitle}>
@@ -81,13 +120,21 @@ const RoomBoardContents = () => {
                                     <div>{e.writer}</div>
                                     <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                 </div>
-                                <div>
-                                    {e.contents}
-                                </div>
-                                <div>
-                                    <button>수정</button>
-                                    <button>삭제</button>
-                                </div>
+                                {
+                                    visibleUpdateBox === e.seq ? <div><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
+                                }
+                                {
+                                    visibleUpdateBox === e.seq ?
+                                        <div>
+                                            <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
+                                            <button onClick={updateAdd}>수정완료</button>
+                                        </div>
+                                        :
+                                        <div>
+                                            <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
+                                            <button>삭제</button>
+                                        </div>
+                                }
                             </div>
                         );
                     } else {
@@ -97,13 +144,22 @@ const RoomBoardContents = () => {
                                     <div>{e.writer}</div>
                                     <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                 </div>
-                                <div>
-                                    {e.contents}
-                                </div>
-                                <div>
-                                    <button>수정</button>
-                                    <button>삭제</button>
-                                </div>
+                                {
+                                    visibleUpdateBox === e.seq ? <div><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
+                                }
+                                {
+                                    visibleUpdateBox === e.seq ?
+                                        <div>
+                                            <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
+                                            <button>수정완료</button>
+                                        </div>
+                                        :
+                                        <div>
+                                            <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
+                                            <button>삭제</button>
+                                        </div>
+                                }
+
                             </div>
                         );
                     }
