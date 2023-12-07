@@ -26,3 +26,7 @@ th>span {
   margin-left: 4px;
   color: rgb(50, 108, 249);
 }
+
+input:read-only {
+  background-color: rgb(230, 230, 230);
+}
