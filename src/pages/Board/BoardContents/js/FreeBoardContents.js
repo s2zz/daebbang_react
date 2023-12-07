@@ -39,6 +39,13 @@ const FreeBoardContents = () => {
         })
     }
   
+    const [visibleUpdateBox, setVisibleUpdateBox] = useState(false);
+
+    const showUpdateBox = () => {
+        visibleUpdateBox ? setVisibleUpdateBox(false) : setVisibleUpdateBox(true);
+    }
+
+
     return (
         <>
             <div className={style.boardContentsTitle}>{boardContents.title}</div>
@@ -76,11 +83,11 @@ const FreeBoardContents = () => {
                                     <div>{e.writer}</div>
                                     <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                 </div>
+                                {
+                                    visibleUpdateBox ? <div><textarea>{e.contents}</textarea></div> : <div>{e.contents}</div>
+                                }
                                 <div>
-                                    {e.contents}
-                                </div>
-                                <div>
-                                    <button>수정</button>
+                                    <button onClick={showUpdateBox}>수정</button>
                                     <button>삭제</button>
                                 </div>
                             </div>
@@ -96,7 +103,7 @@ const FreeBoardContents = () => {
                                     {e.contents}
                                 </div>
                                 <div>
-                                    <button>수정</button>
+                                    <button onClick={showUpdateBox}>수정</button>
                                     <button>삭제</button>
                                 </div>
                             </div>
