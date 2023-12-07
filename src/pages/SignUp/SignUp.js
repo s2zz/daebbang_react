@@ -12,6 +12,13 @@ function SignUp() {
   const [duplId, setDuplId] = useState(false);
   const [readOnlyState, setReadOnlyState] = useState(false);
 
+  const [idRegex, setIdRegex] = useState(false);
+  const [pwRegex, setPwRegex] = useState(false);
+  const [nameRegex, setNameRegex] = useState(false);
+  const [emailRegex, setEmailRegex] = useState(false);
+  const [phoneRegex, setPhoneRegex] = useState(false);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
@@ -31,6 +38,28 @@ function SignUp() {
       user.address1 !== '' &&
       user.address2 !== ''
     );
+
+    const idregex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{5,}$/;
+    const pwregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
+    const nameregex = /^[가-힣]{2,5}$/;
+    const emailregex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneregex = /^\d{11}$/;
+
+    if (idregex.test(user.id)) {
+      setIdRegex(true);
+    }
+    if (pwregex.test(user.pw)) {
+      setPwRegex(true);
+    }
+    if (nameregex.test(user.name)) {
+      setNameRegex(true);
+    }
+    if (emailregex.test(user.email)) {
+      setEmailRegex(true);
+    }
+    if (phoneregex.test(user.phone)) {
+      setPhoneRegex(true);
+    }
   }
 
   const duplCheck = (value) => {
@@ -39,6 +68,9 @@ function SignUp() {
       if(resp.data===false) {
         alert("이미 존재하는 아이디 입니다.");
         setDuplId(false);
+        setUser({ id: ""});
+      } else if (user.id==='') {
+        alert("아이디를 먼저 입력해주세요.");
       } else {
         let useId = window.confirm("사용 가능한 아이디 입니다. 사용하시겠습니까?");
         if(useId) {
@@ -55,21 +87,24 @@ function SignUp() {
     });
   }
 
-  // const handleRegex = (e) => {
-  //   const value = e.target.value;
-
-  //   const idregex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{5,}$/;
-
-  //   if (idregex.test(value)) {
-  //     // 숫자만 입력되었을 때만 state 업데이트
-  //     setInputValue(value);
-  //   }
-  // };
-
   const navi = useNavigate();
 
   const handleSignUp = () => {
-    if (fill && duplId) {
+    if (!fill) {
+      alert('모든 항목을 입력해주세요.');
+    } else if (!duplId) {
+      alert('아이디 중복 확인이 필요합니다.');
+    } else if (!idRegex) {
+      alert('아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다.');
+    } else if (!pwRegex) {
+      alert('비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.');
+    } else if (!nameRegex) {
+      alert('이름은 2~5글자의 한글이어야합니다.');
+    } else if (!emailRegex) {
+      alert('이메일 형식을 올바르게 입력해주세요.');
+    } else if (!phoneRegex) {
+      alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
+    } else {
       console.log(user);
       axios.post("/api/member/signUp", user).then(resp => {
         alert("회원가입이 완료되었습니다.");
@@ -77,10 +112,6 @@ function SignUp() {
       }).catch(() => {
         console.log("회원가입 실패");
       });
-    } else if (!fill) {
-      alert('모든 항목을 입력해주세요.');
-    } else if (!duplId) {
-      alert('중복된 아이디는 사용하실 수 없습니다.');
     }
   }
 
