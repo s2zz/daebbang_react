@@ -1,0 +1,14 @@
+.adminContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.sideBar {
+    width: 20%;
+    background-color: antiquewhite;
+    padding: 40px;
+  }
+  
+  .mainContent {
+    width: 80%;
+  }
