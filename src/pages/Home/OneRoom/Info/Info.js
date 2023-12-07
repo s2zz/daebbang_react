@@ -1,46 +1,49 @@
-// Info.js
-// import React from 'react';
+//
+import { useState, useEffect, useRef} from "react";
 import { useLocation } from 'react-router-dom';
+import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
 
 
+//
 import style from "./Info.module.css";
-import React, { useState, useEffect, useRef} from "react";
 
+//
 function Info() {
-  const examRef = useRef(null);
+  const info_scroll = useRef(null);
   const location = useLocation();
   const markerInfo = location.state;
 
+  const { kakao } = window;
+
+  // 임시로 일단 지도 그냥 뻘하니 떠있는거 좀 그래서 임시로 박아둠
+  // 위치는 한기대임
+  useEffect(()=>{
+    var container = document.getElementById('map');
+    var options = {
+      center: new kakao.maps.LatLng(36.84142696925057, 127.14542099214732),
+      level: 3
+    };
+    var map = new kakao.maps.Map(container, options);
+    }, [])
+
+  // 돌아가기 버튼 이벤트
   const back = function(){
       window.history.back();
   }
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = examRef.current.scrollTop;
-      if (scrollTop === 0) {
-        console.log('최상단입니다.');
-      } else {
-        console.log('현재 최상단이 아닌 곳입니다.');
-        // 원하는 동작 추가
-      }
-    };
-  
-    // Add scroll event listener to the .exam element
-    const examElement = examRef.current;
-    if (examElement) {
-      examElement.addEventListener('scroll', handleScroll);
+  // 스크롤 감지 이벤트
+  const handleScroll = () => {
+
+    // info_scroll의 속성 중 scrollTop(탑)을 나타냄
+    const scrollTop = info_scroll.current.scrollTop;
+
+    // 만약 탑이 0이라면을 가지고 조건문을 검
+    if (scrollTop === 0) {
+      console.log('최상단입니다.');
+    } else {
+      console.log('현재 최상단이 아닌 곳입니다.');      
     }
-  
-    // Remove event listener on component unmount
-    return () => {
-      if (examElement) {
-        examElement.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
-
-
+  };
 
   {/* box_2 더보기 클릭 시 나타남 ( 미구현 )  // 함수 적용 필요 display:none*/}
 
@@ -61,7 +64,11 @@ function Info() {
   }
 
   return (
-    <div ref={examRef} className={style.exam}>
+    <div 
+    ref={info_scroll}
+    className={style.info_main}
+    onScroll={() => handleScroll(info_scroll.current)}
+    >
     {/* 정보 표기 구역*/}
 
       <div>
@@ -174,8 +181,8 @@ function Info() {
           <div style={{margin:'20px 0 0 0'}}>
             {/*주소*/}{markerInfo.d}
           </div>
-          <div className={style.info_map}>
-            지도
+          <div className={style.info_map} id="map">
+            
           </div>
       </div>
 
