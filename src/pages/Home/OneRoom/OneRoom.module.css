@@ -39,3 +39,8 @@
     width: 400px;
     border-left: 1px solid #d9d9d9;
 }
+
+/* 사이드 메뉴 스크롤 숨김처리 */
+.home_body_side::-webkit-scrollbar {
+    display: none;
+}
