@@ -10,6 +10,7 @@ const RoomBoardList = () => {
     const [board, setBoard] = useState([]);
 
     useEffect(() => {
+        console.log("d")
         axios.get(`/api/board/roomBoardList`).then(resp => {
             setBoard(resp.data);
         })

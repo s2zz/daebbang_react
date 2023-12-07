@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import DelContents from '../../component/DelContents';
 
 const FreeBoardContents = () => {
     const location = useLocation();
@@ -163,6 +164,7 @@ const FreeBoardContents = () => {
             <div className={style.naviFooter}>
                 &lt; 1 2 3 4 5 6 7 8 9  10 &gt;
             </div>
+            <DelContents></DelContents>
         </>
     )
 }
