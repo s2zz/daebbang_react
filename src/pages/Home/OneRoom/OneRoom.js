@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
 import { markerdata } from "./data/markerData"; // 마커 데이터 가져오기
+import $ from 'jquery';
 
 import List from "./List/List";
 import Info from "./Info/Info";
@@ -55,7 +56,17 @@ function OneRoom() {
   const handleZoomChanged = (map) => {
     // Zoom level이 변경되면 페이지 이동
     setZoomLevel(map.getLevel());
-    navigate(`/home/oneroom/list?zoom=${map.getLevel()}`);
+
+    const bounds = map.getBounds();
+  
+    // 경계에 포함된 마커들 찾기
+    const markersInBounds = markerdata.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
+      return bounds.contain(markerPosition);
+    });
+
+
+    navigate(`/home/oneroom/list?zoom=${map.getLevel()}`, { state: { markersInBounds } });
   };
 
   const handleMarkerClick = (marker) => {

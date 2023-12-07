@@ -102,9 +102,19 @@
     line-height: 70px;
 }
 .top_btn_menu {
+    padding-top: 10px;
     margin-right: 10px;
   }
   .top_btn_menu a{
+    text-decoration: none;
+    color: black;
+  }
+  .top_right_menu{
+    margin-right: 20px;
+    padding-top: 10px;
+  }
+  .top_right_menu a{
+
     text-decoration: none;
     color: black;
   }
