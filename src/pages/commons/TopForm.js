@@ -6,20 +6,20 @@ import logo from "../Enrollment/assets/logo.png";
 import axios from 'axios';
 
 const TopForm = ({ setLoginId }) => {
-    
+
     const storedLoginId = sessionStorage.getItem('loginId');
     const handleLogout = () => {
         axios.get("/api/member/logout").then(resp => {
             console.log("로그아웃 완료");
             sessionStorage.removeItem('loginId');
             window.location.reload();
-            setLoginId=null;
-           
+            setLoginId = null;
+
         }).catch(resp => {
             console.log(resp);
         })
     }
-    
+
 
     return (
         <div className={style.container}>
@@ -31,7 +31,7 @@ const TopForm = ({ setLoginId }) => {
                 <div className={style.gnb}>
                     <ul className={style.gnb_container}>
                         <li className={style.has_d2}>
-                        <Button><a href="/home/oneroom/list"><span>원룸</span> </a></Button>
+                            <Button><a href="/home/oneroom/list"><span>원룸</span> </a></Button>
                             <div className={style.depth2_bx}>
                                 <a href="/home/oneroom/list">방찾기</a>
                                 <a href="#">찜한매물</a>
@@ -39,7 +39,7 @@ const TopForm = ({ setLoginId }) => {
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                        <Button> <a href="/board"><span>게시판</span> </a></Button>
+                            <Button> <a href="/board"><span>게시판</span> </a></Button>
                             <div className={style.depth2_bx}>
                                 <a href="#">자유게시판</a>
                                 <a href="#">양도게시판</a>
@@ -50,13 +50,24 @@ const TopForm = ({ setLoginId }) => {
                 </div>
                 <div className={style.top_btn}>
                     <div className={style.top_btn_menu}>
-                        {storedLoginId ? <Button><a href="#" onClick={handleLogout}>로그아웃</a></Button> : <Button><a href="login">로그인 및 회원가입</a></Button>}
-
+                        {storedLoginId ?
+                            <div className={style.gnb}>
+                                <ul className={style.gnb_container}>
+                                    <li className={style.has_d2}>
+                                        <Button>{storedLoginId}▼</Button>
+                                        <div className={style.depth2_bx}>
+                                            <a href="#">마이페이지</a>
+                                            <a href="#" onClick={handleLogout}>로그아웃</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            : <Button><a href="login">로그인 및 회원가입</a></Button>}
                     </div>
-                    <div className={style.top_btn_menu}>
+                    <div className={style.top_right_menu}>
                         <Button><a href="admin">관리자 페이지</a></Button>
                     </div>
-                    <div className={style.top_btn_menu}>
+                    <div className={style.top_right_menu}>
                         <Button><a href="enrollment">중개사무소 가입</a></Button>
                     </div>
 
