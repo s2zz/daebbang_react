@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import style from "../css/BoardList.module.css";
+import freeStyle from "../css/FreeBoardList.module.css";
 import favorite from "../../assets/favorites.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -17,7 +18,7 @@ const FreeBoardList = () => {
         <>
             <div className={style.boardTitle}>자유게시판</div>
             <hr></hr>
-            <div className={style.searchDiv}>
+            <div className={freeStyle.searchDiv}>
                 <div className={style.searchBox}>
                     <div>icon</div>
                     <div>
@@ -45,7 +46,7 @@ const FreeBoardList = () => {
                                     <div>{i+1}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toFreeBoardContents/${i+1}`} state={{oriSeq:e.seq,sysSeq:i+1}}>{e.title}</Link>
+                                        <Link to={`/board/toFreeBoardContents/${i+1}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:i+1}}>{e.title}</Link>
                                     </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
