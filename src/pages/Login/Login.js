@@ -4,6 +4,8 @@ import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Home from "../Home/Home";
 import SignUp from "../SignUp/SignUp";
+import Main from "../Main/Main";
+import TopForm from "../commons/TopForm";
 
 
 const LoginBox = ({ setLoginId }) => {
@@ -25,6 +27,7 @@ const LoginBox = ({ setLoginId }) => {
       sessionStorage.setItem('loginId', user.id);
       setUser({ id: "", pw: "" });
       navi("/");
+      window.location.reload();
     }).catch(resp => {
       console.log(resp); // 로그인 실패시
       setUser({ id: "", pw: "" });
@@ -60,19 +63,12 @@ function Login() {
 
   const [loginId, setLoginId] = useState(null);
 
-  const handleLogout = () => {
-    axios.get("/api/member/logout").then(resp => {
-      setLoginId(null);
-      console.log("로그아웃 완료");
-    }).catch(resp => {
-      console.log(resp);
-    })
-  }
+ 
 
 
   return (
     <div>
-      {loginId ? <Home /> : <LoginBox setLoginId={setLoginId}></LoginBox>}<br></br>
+      {loginId ? <TopForm setLoginId={setLoginId}/> : <LoginBox setLoginId={setLoginId}></LoginBox>}<br></br>
     </div>
 
   );

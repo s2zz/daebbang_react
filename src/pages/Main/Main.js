@@ -1,6 +1,7 @@
 import style from "./Main.module.css"
 import homeimg from "../Enrollment/assets/homeimg.jpg";
 const Main = () => {
+    
     return (
         <div className={style.container}>
             <div className={style.imgbox}>
@@ -9,7 +10,15 @@ const Main = () => {
             </div>
             <div className={style.middlebox}>
                 <div className={style.middle_up}>
+                    <div className={style.freeboard}>
 
+                    </div>
+                    <div className={style.board}>
+                        
+                    </div>
+                    <div className={style.recent_estate}>
+                        
+                    </div>
                 </div>
                 <div className={style.middle_down}>
                     
@@ -20,6 +29,7 @@ const Main = () => {
             </div>
 
         </div>
+
     );
 }
 export default Main;

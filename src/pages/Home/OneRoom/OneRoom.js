@@ -11,15 +11,67 @@ import style from "./OneRoom.module.css";
 function OneRoom() {
   const [mapRendered, setMapRendered] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(6);
+  const { kakao } = window;
+
   const navigate = useNavigate();
 
   useEffect(() => {
+    handlePageOpen();
     setMapRendered(true);
   }, []);
 
+  const getDefaultBounds = () => {
+    // 페이지 로딩 시 기본 경계 반환
+    return new kakao.maps.LatLngBounds(
+      new kakao.maps.LatLng(36, 127),
+      new kakao.maps.LatLng(37, 128)
+    );
+  };
+
+  const handlePageOpen = (map) => {
+    // 만약 map 인자가 전달되지 않았다면, 페이지 로딩 시 호출되는 경우이므로 getDefaultBounds로 기본 bounds를 생성한다.
+
+      map = {
+        getBounds: () => getDefaultBounds(),
+      };
+
+    // 현재 지도의 경계를 가져오기
+    const bounds = map.getBounds();
+  
+    // 경계에 포함된 마커들 찾기
+    const markersInBounds = markerdata.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
+      return bounds.contain(markerPosition);
+    });
+    // 콘솔에 마커 갯수와 정보 찍기
+    console.log("마커 갯수:", markersInBounds.length);
+    console.log("마커 정보:", markersInBounds);
+    return;
+  };
+
   const handleDragEnd = (map) => {
+    // 만약 map 인자가 전달되지 않았다면, 페이지 로딩 시 호출되는 경우이므로 getDefaultBounds로 기본 bounds를 생성한다.
+    if (!map) {
+      map = {
+        getBounds: () => getDefaultBounds(),
+      };
+    }
+    // 현재 지도의 경계를 가져오기
+    const bounds = map.getBounds();
+  
+    // 경계에 포함된 마커들 찾기
+    const markersInBounds = markerdata.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
+      return bounds.contain(markerPosition);
+    });
+    // 콘솔에 마커 갯수와 정보 찍기
+    console.log("마커 갯수:", markersInBounds.length);
+    console.log("마커 정보:", markersInBounds);
+  
     // 이벤트가 발생하면 페이지 이동
-    navigate('/home/oneroom/list');
+    if(map) {
+      navigate('/home/oneroom/list');
+    }
   };
 
   const handleZoomChanged = (map) => {
