@@ -1,9 +1,35 @@
 import style from "./SignUp.module.css";
 import DaumPostcode from "react-daum-postcode";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
+import axios from 'axios';
 
 function SignUp() {
+  const [user, setUser] = useState({id:"",pw:"",name:"",email:"",phone:"",zipcode:"",address1:"",address2:""});
+
+  const handleChange = (e) => {
+    const { name, value }= e.target;
+    setUser(prev=>({...prev,[name]:value}));
+    setUser((prev) => ({
+      ...prev,
+      zipcode: document.getElementById('sample6_postcode').value,
+      address1: document.getElementById("sample6_address").value
+    }));
+  }
+
+  const navi = useNavigate();
+
+  const handleSignUp = () => {
+    console.log(user);
+    axios.post("/api/member/signUp",user).then(resp=>{
+      alert("회원가입이 완료되었습니다.");
+      navi("/");
+    }).catch(()=>{
+      console.log("회원가입 실패");
+    });
+  }
+
   const [showModal, setShowModal] = useState(false);
 
   const handleComplete = (data) => {
@@ -32,16 +58,13 @@ function SignUp() {
       if (extraAddr !== '') {
         extraAddr = ' (' + extraAddr + ')';
       }
-      // 조합된 참고항목을 해당 필드에 넣는다.
-      document.getElementById("sample6_extraAddress").value = extraAddr;
-
     } else {
       document.getElementById("sample6_extraAddress").value = '';
     }
 
     // 우편번호와 주소 정보를 해당 필드에 넣는다.
     document.getElementById('sample6_postcode').value = data.zonecode;
-    document.getElementById("sample6_address").value = addr;
+    document.getElementById("sample6_address").value = addr + extraAddr;
     // 커서를 상세주소 필드로 이동한다.
     document.getElementById("sample6_detailAddress").focus();
 
@@ -60,15 +83,15 @@ function SignUp() {
         <div className={style.logo}>DAEBBANG</div>
         <div className={style.inputSignUpBox}>
           <div className={style.inputs}>
-            <input type="text" name="id" placeholder="input your ID"></input><br></br>
-            <input type="password" name="pw" placeholder="input your PW"></input><br></br>
-            <input type="text" name="email" placeholder="input your E-Mail"></input><br></br>
-            <input type="text" name="phone" placeholder="input your Phone Number"></input><br></br>
-            <input type="text" id="sample6_postcode" placeholder="우편번호" readonly></input>
+            <input type="text" name="id" placeholder="input your ID" onChange={handleChange} value={user.id}></input><br></br>
+            <input type="password" name="pw" placeholder="input your PW" onChange={handleChange} value={user.pw}></input><br></br>
+            <input type="text" name="name" placeholder="input your Name" onChange={handleChange} value={user.name}></input><br></br>
+            <input type="text" name="email" placeholder="input your E-Mail" onChange={handleChange} value={user.email}></input><br></br>
+            <input type="text" name="phone" placeholder="input your Phone Number" onChange={handleChange} value={user.phone}></input><br></br>
+            <input type="text" name="postcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChange}></input>
             <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
-            <input type="text" id="sample6_address" placeholder="주소"></input><br></br>
-            <input type="text" id="sample6_detailAddress" placeholder="상세주소"></input>
-            <input type="text" id="sample6_extraAddress" placeholder="참고항목"></input>
+            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChange}></input><br></br>
+            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChange} value={user.address2}></input>
             {/* 모달 */}
             <Modal
               isOpen={showModal}
@@ -92,7 +115,7 @@ function SignUp() {
           </div>
         </div>
         <div className={style.btnBox}>
-          <button className={style.signUpBtn}>회원가입</button>
+          <button className={style.signUpBtn} onClick={handleSignUp}>회원가입</button>
         </div>
       </div>
     </div>
