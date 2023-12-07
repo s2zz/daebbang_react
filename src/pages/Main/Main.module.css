@@ -1,39 +1,109 @@
+
 .container{
     width: 100%;
-    height: 100%;
+    height: 1300px;
 }
 
 .imgbox{
     width: 100%;
-    height: 30%;
+    height: 35%;
+    
 }
 .middlebox{
     width: 100%;
-    height: 50%;
+    height: 40%;
 }
 .middle_up{
-    width: 100%;
+    border: 1px solid black;
+    width: 950px;
+    margin: auto;
     height: 50%;
+    
+}
+.recent_read{
+    width: 900px;
+    height: 100%;
+    margin-left: 20px;
 }
 .middle_down{
-    width: 100%;
+    border: 1px solid black;
+    width: 950px;
     height: 50%;
+    margin: auto;
 }
+.middle_down>div{
+    float: left;
+    width: 300px;
+    height: 100%;
+}
+.recent_estate{
+    margin-left: 10px;
+}
+.freeboard{
+    margin-left: 10px;
+}
+.board{
+   margin-left: 10px;
+}
+
+
 .footerbox{
     width: 100%;
-    height: 20%;
+    height: 25%;
+}
+.footer{
+    width: 40%;
+    height: 100%;
+    margin: auto;
 }
 .homeimg{
     width: 100%;
     height: 450px;
     min-width: 1290px;
 }
+.linkbox{
+    width: 80%;
+    margin: auto;
+    padding-top: 30px;
+    text-align: center;
+}
+.linkbox>a{
+    font-size: 12px;
+    text-decoration: none;
+    color: black;
+}
+.font{
+    font-weight: bolder;
+}
+.footermain{
+    padding-top: 30px;
+    text-align: center;
+    color: rgb(76, 76, 76);
+    font-size: 12px;
+    line-height: 1.6em;
+}
+.btnbox{
+    padding-bottom: 20px;
+}
+.btnbox>button{
+    font-size: 20px;
+    color: rgb(100, 100, 100);
+    margin-left: 5px;
+    cursor: pointer;
+}
+.copywrite{
+    
+    text-align: center;
+    color: rgb(166, 166, 166);
+}
 .overlay_text {
     position: absolute;
-    top: 40%;
+    top: 10%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
     font-size: 30px;
     font-weight: bold;
   }
+
+  
