@@ -79,6 +79,18 @@ const RoomBoardContents = () => {
         })
     }
 
+    const delReplyBtn = (seq) => {
+        if(window.confirm("댓글을 삭제하시겠습니까?")){
+            axios.delete(`/api/reply/${seq}`).then(resp=>{
+                alert("댓글 삭제에 성공하였습니다");
+                setReplyList(replyList.filter(e=>e.seq!==seq))
+            }).catch(err=>{
+                alert("댓글 삭제에 실패아였습니다");
+                console.log(err);
+            })
+        }
+    }
+
     return (
         <>
             <div className={style.boardContentsTitle}>
@@ -132,7 +144,7 @@ const RoomBoardContents = () => {
                                         :
                                         <div>
                                             <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
-                                            <button>삭제</button>
+                                            <button onClick={()=>delReplyBtn(e.seq)}>삭제</button>
                                         </div>
                                 }
                             </div>
@@ -156,7 +168,7 @@ const RoomBoardContents = () => {
                                         :
                                         <div>
                                             <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
-                                            <button>삭제</button>
+                                            <button onClick={()=>delReplyBtn(e.seq)}>삭제</button>
                                         </div>
                                 }
 
