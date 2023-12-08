@@ -15,6 +15,7 @@ const FreeBoardList = () => {
         return b.seq - a.seq;
     }
 
+    // 게시글 목록 불러오기
     useEffect(() => {
         axios.get(`/api/board/freeBoardList`).then(resp => {
             console.log(resp.data.sort(compareBySeq))
@@ -22,6 +23,7 @@ const FreeBoardList = () => {
         })
     }, []);
 
+    // 페이지네이션
     const [currentPage, setCurrentPage] = useState(1);
     const countPerPage = 10;
     const sliceContentsList = () => {

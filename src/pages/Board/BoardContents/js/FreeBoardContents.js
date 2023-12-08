@@ -33,6 +33,12 @@ const FreeBoardContents = () => {
     }
 
     const insertReplyAdd = () => {
+
+        if(insertReply.contents===""){
+            alert("내용을 입력해주세요");
+            return;
+        }
+
         axios.post("/api/reply", insertReply).then(resp => {
             alert("댓글 등록 성공");
             setInsertReply(prev => ({ ...prev, contents: "" }));
@@ -66,11 +72,16 @@ const FreeBoardContents = () => {
         }
     }
     const updateHandle = (e) => {
-        console.log(e.target.value)
         setUpdateReply(prev => ({ ...prev, contents: e.target.value }))
     }
 
     const updateAdd = () => {
+
+        if(updateReply.contents===""){
+            alert("내용을 입력해주세요");
+            return;
+        }
+
         axios.put("/api/reply", updateReply).then(resp => {
             alert("댓글 수정에 성공하였습니다");
             setReplyList(resp.data.sort(compareBySeq));

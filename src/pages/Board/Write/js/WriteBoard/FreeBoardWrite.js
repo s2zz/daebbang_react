@@ -1,4 +1,5 @@
 import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import style from "../../css/WriteBoard/WriteBoard.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -19,7 +20,17 @@ const FreeBoardWrite = () => {
     }
 
     const handleAdd = () => {
-        console.log(boardContents);
+        
+        if(boardContents.title===""){
+            alert("제목을 입력해주세요");
+            return;
+        } 
+
+        if(boardContents.contents===""){
+            alert("내용을 입력해주세요");
+            return;
+        }
+
         axios.post("/api/board",boardContents).then(resp=>{
             alert("게시글 등록에 성공하였습니다");
             navi("/board/toFreeBoardList");
@@ -81,7 +92,7 @@ const FreeBoardWrite = () => {
             <div>
                 <div>내용</div>
                 <div>
-                    <ReactQuill id="editor" className={style.reactQuill} value={boardContents.contents} onChange={(value) => setBoardContents({ ...boardContents, contents: value })}/>
+                    <ReactQuill modules={modules} formats={formats} className={style.reactQuill} value={boardContents.contents} onChange={(value) => setBoardContents({ ...boardContents, contents: value })}/>
                 </div>
             </div>
 
