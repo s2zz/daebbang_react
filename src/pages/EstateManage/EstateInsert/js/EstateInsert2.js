@@ -89,7 +89,6 @@ function EstateInsert2() {
             <input type="radio" id="t1" name="transactionCode" value="t1" onChange={handleChange} checked={realEstate.transactionCode === "t1"} /><label for="t1">월세</label>
             <input type="radio" id="t2" name="transactionCode" value="t2" onChange={handleChange} checked={realEstate.transactionCode === "t2"} /><label for="t2">전세</label>
             {realEstate.transactionCode === 't1' && <span><input type="checkbox" id="o1" name="optionCode" value="o1" onChange={handleOptionCode} /><label for="o1">단기가능</label></span>}
-
           </td>
         </tr>
         <tr>
