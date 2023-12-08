@@ -4,18 +4,33 @@ import roomStyle from "../css/RoomBoardList.module.css";
 import favorite from "../../assets/favorites.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Pagination from "@mui/material/Pagination";
 
 const RoomBoardList = () => {
 
     const [board, setBoard] = useState([]);
 
+    function compareBySeq(a, b) {
+        return b.seq - a.seq;
+    }
+    
     useEffect(() => {
         console.log("d")
         axios.get(`/api/board/roomBoardList`).then(resp => {
-            setBoard(resp.data);
+            setBoard(resp.data.sort(compareBySeq));
         })
     }, [])
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const countPerPage = 10;
+    const sliceContentsList = () => {
+        const start = (currentPage - 1) * countPerPage;
+        const end = start + countPerPage;
+        return board.slice(start, end);
+    }
+    const currentPageHandle = (event, currentPage) => {
+        setCurrentPage(currentPage);
+    }
     return (
         <>
             <div className={style.boardTitle}>양도게시판</div>
@@ -48,14 +63,14 @@ const RoomBoardList = () => {
                 </div>
                 <div className={style.boardListContents}>
                     {
-                        board.map((e, i) => {
+                        sliceContentsList().map((e, i) => {
                             return (
                                 <div key={i} data-seq={e.seq}>
                                     <div><img src={favorite} /></div>
-                                    <div>{i + 1}</div>
+                                    <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toRoomBoardContents/${i+1}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:i+1}}>
+                                    <Link to={`/board/toRoomBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>
                                             <span>[{e.header}]</span>
                                             {e.title}
                                         </Link>
@@ -71,7 +86,10 @@ const RoomBoardList = () => {
                 <Link to="/board/toRoomBoardWrite"><button>글 작성</button></Link>
             </div>
             <div className={style.naviFooter}>
-                &lt; 1 2 3 4 5 6 7 8 9  10 &gt;
+                <Pagination
+                    count={Math.ceil(board.length / countPerPage)}
+                    page={currentPage}
+                    onChange={currentPageHandle} />
             </div>
         </>
     );

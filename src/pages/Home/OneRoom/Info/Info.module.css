@@ -1,9 +1,13 @@
 
-.exam {
+.info_main {
     overflow-y: auto;
     height: 100%;
 }
 
+/* 사이드 메뉴 스크롤 숨김처리 */
+.info_main::-webkit-scrollbar {
+    display: none;
+}
 
 .info_img{
     height: 300px;
@@ -25,14 +29,18 @@
 .address_box{
     height: 50px;
     background-color: #fff;
+    border-top: 1px solid #d9d9d9;
     border-bottom: 1px solid #d9d9d9;
     text-align: center;
     line-height: 50px;
     font-size: 14px;
     font-weight: 600;
-    position: relative;
-    transition: all 0.3s;
+    position: absolute;
+    width: 399px;
+    background-color: #fff;
+    z-index: 9998;
     display: none;
+    top: 50px;
 }
 
 .address_box div{
@@ -270,6 +278,7 @@
     border-top: 1px solid #d9d9d9;
     font-size: 16px;
     display: flex;
+    z-index: 9998;
 }
 
 .bottom_btn{
