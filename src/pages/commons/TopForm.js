@@ -56,7 +56,7 @@ const TopForm = ({ setLoginId }) => {
                                     <li className={style.has_d2}>
                                         <Button>{storedLoginId}▼</Button>
                                         <div className={style.depth2_bx}>
-                                            <a href="#">마이페이지</a>
+                                            <a href="/myPage">마이페이지</a>
                                             <a href="#" onClick={handleLogout}>로그아웃</a>
                                         </div>
                                     </li>
