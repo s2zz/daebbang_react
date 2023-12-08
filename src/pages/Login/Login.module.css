@@ -8,6 +8,10 @@
     align-items: center;
 }
 
+.blank {
+    height:20px;
+}
+
 .loginBox{
     border:1px solid black;
     width:100%;
@@ -23,16 +27,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height:100px;
+    height:200px;
     font-size:30pt;
     font-weight: 700;
 }
 
 .inputLoginBox {
-    height:200px;
+    height:190px;
     display: flex;
     justify-content: center;
-    align-items: center;
+}
+
+.inputInfo {
+    width:200px;
+    height:30px;
 }
 
 .btnBox {
@@ -65,5 +73,7 @@
 .findId, .findPw, .signUp {
     display: flex;
     justify-content: center;
-    width:130px;
+    text-decoration: none;
+    color:black;
+    margin:10px;
 }
