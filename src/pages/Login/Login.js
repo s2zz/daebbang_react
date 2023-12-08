@@ -2,9 +2,6 @@ import style from "./Login.module.css"
 import { useState } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Home from "../Home/Home";
-import SignUp from "../SignUp/SignUp";
-import Main from "../Main/Main";
 import TopForm from "../commons/TopForm";
 
 
@@ -41,18 +38,19 @@ const LoginBox = ({ setLoginId }) => {
         <div className={style.inputLoginBox}>
           <div className={style.inputLogin}>
             <div className={style.loginFont}>아이디</div>
-            <input type="text" name="id" placeholder="input your ID" onChange={handleChange} value={user.id}></input>
+            <input type="text" name="id" placeholder="input your ID" onChange={handleChange} value={user.id} className={style.inputInfo}></input>
+            <div className={style.blank}></div>
             <div className={style.loginFont}>비밀번호</div>
-            <input type="password" name="pw" placeholder="input your PW" onChange={handleChange} value={user.pw}></input>
+            <input type="password" name="pw" placeholder="input your PW" onChange={handleChange} value={user.pw} className={style.inputInfo}></input>
           </div>
         </div>
         <div className={style.btnBox}>
           <button className={style.loginBtn} onClick={handleLogin}>로그인</button>
         </div>
         <div className={style.findBox}>
-          <Link to="/signUp">회원가입</Link>
-          <a className={style.findId} href="#">아이디 찾기</a>
-          <a className={style.findPw} href="#">비밀번호 찾기</a>
+          <Link to="/signUp" className={style.findId}>회원가입</Link>
+          <a className={style.findId} href="/login/findId">아이디 찾기</a>
+          <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
         </div>
       </div>
     </div>

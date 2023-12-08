@@ -4,6 +4,7 @@ import enrollImage from './assets/enroll.png';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const BootstrapButton = styled(Button)({
     boxShadow: 'none',
@@ -40,6 +41,34 @@ const BootstrapButton = styled(Button)({
         boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
     },
 });
+
+
+const fetchData = async () => {
+  const HttpUrl = 'http://openapi.nsdi.go.kr/nsdi/EstateBrkpgService/attr/getEBOfficeInfo';
+  const authkey = 'c3e7631d335545078685c562fcb54151'; // 여기에 실제 인증키를 넣어주세요
+
+  const params = new URLSearchParams();
+  params.append('authkey', authkey);
+//   params.append('ldCode', '11110');
+//   params.append('bsnmCmpnm', '맑은공인');
+//   params.append('brkrNm', '홍길동');
+//   params.append('jurirno', '가123456-789');
+//   params.append('sttusSeCode', '1');
+//   params.append('format', 'xml');
+//   params.append('numOfRows', '10');
+//   params.append('pageNo', '1');
+
+  try {
+    const response = await axios.get(HttpUrl, { params });
+    console.log('Response:', response.data); // 여기서 응답 데이터를 활용할 수 있습니다.
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// fetchData 함수 호출
+fetchData();
+
 
 const HomeEnrollment = () => {
     const [value, setValue] = useState('');

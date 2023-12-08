@@ -7,7 +7,6 @@ import axios from 'axios';
 
 function SignUp() {
   const [user, setUser] = useState({ id: "", pw: "", name: "", email: "", phone: "", zipcode: "", address1: "", address2: "" });
-
   const [fill, setFill] = useState(false);
   const [duplId, setDuplId] = useState(false);
   const [readOnlyState, setReadOnlyState] = useState(false);
@@ -20,10 +19,14 @@ function SignUp() {
 
 
   const handleChange = (e) => {
+
+   
     const { name, value } = e.target;
+    console.log (name, value);
     setUser(prev => ({ ...prev, [name]: value }));
     setUser((prev) => ({
       ...prev,
+      [name]: value,
       zipcode: document.getElementById('sample6_postcode').value,
       address1: document.getElementById("sample6_address").value
     }));
@@ -64,23 +67,26 @@ function SignUp() {
 
   const duplCheck = (value) => {
     axios.post("/api/member/idDuplCheck", value).then(resp => {
-      console.log(resp.data);
-      if(resp.data===false) {
+      if (resp.data === false) {
         alert("이미 존재하는 아이디 입니다.");
         setDuplId(false);
-        setUser({ id: ""});
-      } else if (user.id==='') {
+        setUser({ id: "" });
+      } else if (user.id === '') {
         alert("아이디를 먼저 입력해주세요.");
-      } else {
+      } else if (!idRegex) {
+        alert('아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다.');
+        setUser({ id: "" });
+      } 
+      if(resp.data !== false && user.id !== '' && idRegex) {
         let useId = window.confirm("사용 가능한 아이디 입니다. 사용하시겠습니까?");
-        if(useId) {
+        if (useId) {
           setDuplId(true);
           setReadOnlyState(true);
         } else {
-          setUser({ id: ""});
+          setUser({ id: "" });
           setDuplId(false);
         }
-        
+
       }
     }).catch(() => {
       console.log('아이디 찾기 실패~');
@@ -90,6 +96,18 @@ function SignUp() {
   const navi = useNavigate();
 
   const handleSignUp = () => {
+
+    setFill(
+      user.id !== '' &&
+      user.pw !== '' &&
+      user.name !== '' &&
+      user.email !== '' &&
+      user.phone !== '' &&
+      user.zipcode !== '' &&
+      user.address1 !== '' &&
+      user.address2 !== ''
+    );
+
     if (!fill) {
       alert('모든 항목을 입력해주세요.');
     } else if (!duplId) {
@@ -150,6 +168,8 @@ function SignUp() {
     // 우편번호와 주소 정보를 해당 필드에 넣는다.
     document.getElementById('sample6_postcode').value = data.zonecode;
     document.getElementById("sample6_address").value = addr + extraAddr;
+    user.zipcode = data.zonecode;
+    user.address1 = addr + extraAddr;
     // 커서를 상세주소 필드로 이동한다.
     document.getElementById("sample6_detailAddress").focus();
 
@@ -174,14 +194,15 @@ function SignUp() {
             <input type="text" name="name" id="name" placeholder="input your Name" onChange={handleChange} value={user.name}></input><br></br>
             <input type="text" name="email" id="email" placeholder="input your E-Mail" onChange={handleChange} value={user.email}></input><br></br>
             <input type="text" name="phone" id="phone" placeholder="input your Phone Number" onChange={handleChange} value={user.phone}></input><br></br>
-            <input type="text" name="postcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChange}></input>
+            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChange} value={user.zipcode}></input>
             <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
-            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChange}></input><br></br>
+            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChange} value={user.address1}></input><br></br>
             <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChange} value={user.address2}></input>
             {/* 모달 */}
             <Modal
               isOpen={showModal}
               onRequestClose={() => setShowModal(false)}
+              appElement={document.getElementById('root')}
               style={{
                 overlay: {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)'
