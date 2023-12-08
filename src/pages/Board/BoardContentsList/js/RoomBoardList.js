@@ -9,10 +9,14 @@ const RoomBoardList = () => {
 
     const [board, setBoard] = useState([]);
 
+    function compareBySeq(a, b) {
+        return b.seq - a.seq;
+    }
+    
     useEffect(() => {
         console.log("d")
         axios.get(`/api/board/roomBoardList`).then(resp => {
-            setBoard(resp.data);
+            setBoard(resp.data.sort(compareBySeq));
         })
     }, [])
 
@@ -52,10 +56,10 @@ const RoomBoardList = () => {
                             return (
                                 <div key={i} data-seq={e.seq}>
                                     <div><img src={favorite} /></div>
-                                    <div>{i + 1}</div>
+                                    <div>{board.length-(i)}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toRoomBoardContents/${i+1}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:i+1}}>
+                                        <Link to={`/board/toFreeBoardContents/${board.length-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>
                                             <span>[{e.header}]</span>
                                             {e.title}
                                         </Link>

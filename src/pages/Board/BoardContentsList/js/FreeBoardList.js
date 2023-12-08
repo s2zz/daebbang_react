@@ -52,7 +52,7 @@ const FreeBoardList = () => {
                                     <div>{board.length-(i)}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toFreeBoardContents/${i+1}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:i+1}}>{e.title}</Link>
+                                        <Link to={`/board/toFreeBoardContents/${board.length-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>{e.title}</Link>
                                     </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
