@@ -49,8 +49,8 @@ const LoginBox = ({ setLoginId }) => {
         </div>
         <div className={style.findBox}>
           <Link to="/signUp" className={style.findId}>회원가입</Link>
-          <a className={style.findId} href="#">아이디 찾기</a>
-          <a className={style.findPw} href="#">비밀번호 찾기</a>
+          <a className={style.findId} href="/login/findId">아이디 찾기</a>
+          <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
         </div>
       </div>
     </div>
