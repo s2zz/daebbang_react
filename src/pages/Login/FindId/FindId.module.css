@@ -32,7 +32,7 @@
     font-weight: 700;
 }
 
-.inputfindIdBox {
+.inputFindIdBox {
     height:190px;
     display: flex;
     justify-content: center;
@@ -76,4 +76,10 @@
     text-decoration: none;
     color:black;
     margin:10px;
+}
+.good{
+    color: rgb(35, 255, 35);
+}
+.notgood{
+    color: rgb(255, 55, 55);
 }
