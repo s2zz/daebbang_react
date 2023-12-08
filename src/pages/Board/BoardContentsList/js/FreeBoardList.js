@@ -18,7 +18,6 @@ const FreeBoardList = () => {
     // 게시글 목록 불러오기
     useEffect(() => {
         axios.get(`/api/board/freeBoardList`).then(resp => {
-            console.log(resp.data.sort(compareBySeq))
             setBoard(resp.data.sort(compareBySeq));
         })
     }, []);
@@ -67,7 +66,9 @@ const FreeBoardList = () => {
                                     <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toFreeBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>{e.title}</Link>
+                                        <Link to={`/board/toFreeBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>
+                                            {e.title.length>80 ? e.title.substring(0,80)+"...":e.title}
+                                        </Link>
                                     </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
