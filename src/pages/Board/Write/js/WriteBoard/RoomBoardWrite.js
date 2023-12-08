@@ -22,7 +22,7 @@ const RoomBoardWrite = () => {
         console.log(boardContents);
         axios.post("/api/board",boardContents).then(resp=>{
             alert("게시글 등록에 성공하였습니다");
-            navi("/board/toFreeBoardList");
+            navi("/board/toRoomBoardList");
         }).catch(err=>{
             alert("게시글 등록에 실패하였습니다");
             console.log(err);

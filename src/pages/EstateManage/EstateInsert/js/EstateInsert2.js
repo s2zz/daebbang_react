@@ -44,25 +44,21 @@ function EstateInsert2() {
   }
 
   // 옵션 리스트
-  const [optionCodeList, setOptionCodeList] = useState([]);
+  const [optionList, setOptionList] = useState([]);
 
   // 옵션 리스트
   const handleOptionCode = (e) => {
     const { value, checked } = e.target;
 
     if (checked) {
-      setOptionCodeList((prev) => [...prev, value]);
+      setOptionList((prev) => [...prev, value]);
     } else {
-      setOptionCodeList((prev) => prev.filter((option) => option !== value));
+      setOptionList((prev) => prev.filter((option) => option !== value));
     }
   };
 
-
-
   const handleSubmit = () => {
-    console.log(realEstate);
-    console.log(optionCodeList);
-    axios.post("/api/estateManage/estateInsert2", { estateDTO: realEstate, optionCodeList: optionCodeList }).then(resp => {
+    axios.post("/api/estateManage/estateInsert2", { estateDTO: realEstate, optionList: optionList }).then(resp => {
       console.log(resp);
       navi("../estateInsert3");
     }).catch(e => {
@@ -152,35 +148,6 @@ function EstateInsert2() {
           </td>
         </tr>
       </table>
-
-
-      {/* <h1 className="title">사진 등록</h1>
-      <table border={1}>
-        <tr>
-          <th>일반 사진<span>*</span></th>
-          <td>
-            <input type="file"></input>
-          </td>
-        </tr>
-      </table>
-
-
-      <h1 className="title">상세 설명</h1>
-      <table border={1}>
-        <tr>
-          <th>제목<span>*</span></th>
-          <td>
-            <input type="text" placeholder="제목을 입력해주세요."></input>
-          </td>
-        </tr>
-        <tr>
-          <th>상세설명<span>*</span></th>
-          <td>
-            <input type="text" placeholder="설명을 입력해주세요."></input>
-          </td>
-        </tr>
-      </table> */}
-
       <button onClick={handleSubmit}>다음으로</button>
     </div>
   );
