@@ -8,9 +8,15 @@ import axios from "axios";
 const FreeBoardList = () => {
     const [board, setBoard] = useState([]);
 
+    // 내림차순 정렬
+    function compareBySeq(a, b) {
+        return b.seq - a.seq;
+    }
+
     useEffect(() => {
         axios.get(`/api/board/freeBoardList`).then(resp => {
-            setBoard(resp.data);
+            console.log(resp.data.sort(compareBySeq))
+            setBoard(resp.data.sort(compareBySeq));
         })
     }, []);
 
@@ -43,7 +49,7 @@ const FreeBoardList = () => {
                             return (
                                 <div key={i} data-seq={e.seq}>
                                     <div><img src={favorite} /></div>
-                                    <div>{i+1}</div>
+                                    <div>{board.length-(i)}</div>
                                     <div>{e.writer}</div>
                                     <div>
                                         <Link to={`/board/toFreeBoardContents/${i+1}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:i+1}}>{e.title}</Link>
