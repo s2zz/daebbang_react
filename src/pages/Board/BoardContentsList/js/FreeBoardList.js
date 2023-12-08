@@ -4,6 +4,7 @@ import freeStyle from "../css/FreeBoardList.module.css";
 import favorite from "../../assets/favorites.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Pagination from "@mui/material/Pagination";
 
 const FreeBoardList = () => {
     const [board, setBoard] = useState([]);
@@ -19,6 +20,17 @@ const FreeBoardList = () => {
             setBoard(resp.data.sort(compareBySeq));
         })
     }, []);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const countPerPage = 10;
+    const sliceContentsList = () => {
+        const start = (currentPage - 1) * countPerPage;
+        const end = start + countPerPage;
+        return board.slice(start, end);
+    }
+    const currentPageHandle = (event, currentPage) => {
+        setCurrentPage(currentPage);
+    }
 
     return (
         <>
@@ -45,14 +57,14 @@ const FreeBoardList = () => {
                 </div>
                 <div className={style.boardListContents}>
                     {
-                        board.map((e, i) => {
+                        sliceContentsList().map((e, i) => {
                             return (
                                 <div key={i} data-seq={e.seq}>
                                     <div><img src={favorite} /></div>
-                                    <div>{board.length-(i)}</div>
+                                    <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toFreeBoardContents/${board.length-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>{e.title}</Link>
+                                        <Link to={`/board/toFreeBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>{e.title}</Link>
                                     </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>
@@ -65,7 +77,10 @@ const FreeBoardList = () => {
                 <Link to="/board/toFreeBoardWrite"><button>글 작성</button></Link>
             </div>
             <div className={style.naviFooter}>
-                &lt; 1 2 3 4 5 6 7 8 9  10 &gt;
+            <Pagination
+                    count={Math.ceil(board.length / countPerPage)}
+                    page={currentPage}
+                    onChange={currentPageHandle} />
             </div>
 
         </>
