@@ -41,15 +41,15 @@ const TopForm = ({ setLoginId }) => {
                         <li className={style.has_d2}>
                             <Button> <a href="/board"><span>게시판</span> </a></Button>
                             <div className={style.depth2_bx}>
+                                <a href="#">즐겨찾기</a>
                                 <a href="#">자유게시판</a>
                                 <a href="#">양도게시판</a>
-                                <a href="#">즐겨찾기</a>
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div className={style.top_btn}>
-                    <div className={style.top_btn_menu}>
+                   
                         {storedLoginId ?
                             <div className={style.gnb}>
                                 <ul className={style.gnb_container}>
@@ -62,13 +62,13 @@ const TopForm = ({ setLoginId }) => {
                                     </li>
                                 </ul>
                             </div>
-                            : <Button><a href="login">로그인 및 회원가입</a></Button>}
+                            :<div className={style.top_btn_menu}> <Button><a href="/login">로그인 및 회원가입</a></Button></div>}
+                   
+                    <div className={style.top_right_menu}>
+                        <Button><a href="/admin">관리자 페이지</a></Button>
                     </div>
                     <div className={style.top_right_menu}>
-                        <Button><a href="admin">관리자 페이지</a></Button>
-                    </div>
-                    <div className={style.top_right_menu}>
-                        <Button><a href="enrollment">중개사무소 가입</a></Button>
+                        <Button><a href="/enrollment">중개사무소 가입</a></Button>
                     </div>
 
                 </div>
