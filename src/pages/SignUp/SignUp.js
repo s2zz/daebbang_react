@@ -4,11 +4,13 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faLock, faEnvelope, faPhone, faHouse, faFileSignature } from "@fortawesome/free-solid-svg-icons";
 
 function SignUp() {
-  //const [user, setUser] = useState({ id: "", pw: "", name: "", email: "", phone: "", zipcode: "", address1: "", address2: "" });
   const [id, setId] = useState({id:""});
   const [pw, setPw] = useState({pw:""});
+  const [pw2, setPw2] = useState({pw2:""});
   const [name, setName] = useState({name:""});
   const [email, setEmail] = useState({email:""});
   const [phone, setPhone] = useState({phone:""});
@@ -19,6 +21,8 @@ function SignUp() {
   const [fill, setFill] = useState(false);
   const [duplId, setDuplId] = useState(false);
   const [readOnlyState, setReadOnlyState] = useState(false);
+
+  const [samePw, setSamePw] = useState(false);
 
   const [idRegex, setIdRegex] = useState(false);
   const [pwRegex, setPwRegex] = useState(false);
@@ -45,11 +49,31 @@ function SignUp() {
     setPw(prev => ({ ...prev, [name]: value }));
 
     setFill(e.target.value !== '');
+
+    if(e.target.value === pw2.pw2) {
+      setSamePw(true);
+    } else {
+      setSamePw(false);
+    }
+
     const pwregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
     
     
     if (pwregex.test(e.target.value)) {
       setPwRegex(true);
+    }
+  }
+
+  const handleChangePw2 = (e) => {
+    const { name, value } = e.target;
+    setPw2(prev => ({ ...prev, [name]: value }));
+
+    setFill(e.target.value !== '');
+
+    if(pw.pw === e.target.value) {
+      setSamePw(true);
+    } else {
+      setSamePw(false);
     }
   }
 
@@ -164,7 +188,9 @@ function SignUp() {
       alert('이메일 형식을 올바르게 입력해주세요.');
     } else if (!phoneRegex) {
       alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
-    } else {
+    } else if (!samePw) {
+      alert('비밀번호를 다시 확인해주세요.');
+    }else {
       try {
         const userData = {
           id: id.id,
@@ -240,16 +266,31 @@ function SignUp() {
         <div className={style.logo}>DAEBBANG</div>
         <div className={style.inputSignUpBox}>
           <div className={style.inputs}>
-            <input type="text" name="id" id="id" placeholder="input your ID" onChange={handleChangeId} value={id.id} readOnly={readOnlyState}></input>
+            <FontAwesomeIcon icon={faUser} />
+            <input type="text" name="id" id="id" placeholder="input your ID" onChange={handleChangeId} value={id.id} readOnly={readOnlyState} className={[style.inputInfo, style.inputId].join(' ')}></input>
             <button onClick={() => duplCheck({ id: id.id })}>아이디 중복 확인</button><br></br>
-            <input type="password" name="pw" id="pw" placeholder="input your PW" onChange={handleChangePw} value={pw.pw}></input><br></br>
-            <input type="text" name="name" id="name" placeholder="input your Name" onChange={handleChangeName} value={name.name}></input><br></br>
-            <input type="text" name="email" id="email" placeholder="input your E-Mail" onChange={handleChangeEmail} value={email.email}></input><br></br>
-            <input type="text" name="phone" id="phone" placeholder="input your Phone Number" onChange={handleChangePhone} value={phone.phone}></input><br></br>
-            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode}></input>
+            <div className={style.blank}></div>
+            <FontAwesomeIcon icon={faLock} />
+            <input type="password" name="pw" id="pw" placeholder="input your PW" onChange={handleChangePw} value={pw.pw} className={style.inputInfo}></input><br></br>
+            <div className={style.blank}></div>
+            <input type="password" name="pw2" id="pw2" placeholder="input your PW Again" onChange={handleChangePw2} value={pw2.pw2} className={[style.inputInfo, style.inputPw2].join(' ')}></input><br></br>
+            <div className={style.blank}></div>
+            <FontAwesomeIcon icon={faFileSignature} />
+            <input type="text" name="name" id="name" placeholder="input your Name" onChange={handleChangeName} value={name.name} className={style.inputInfo}></input><br></br>
+            <div className={style.blank}></div>
+            <FontAwesomeIcon icon={faEnvelope} />
+            <input type="text" name="email" id="email" placeholder="input your E-Mail" onChange={handleChangeEmail} value={email.email} className={style.inputInfo}></input><br></br>
+            <div className={style.blank}></div>
+            <FontAwesomeIcon icon={faPhone} />
+            <input type="text" name="phone" id="phone" placeholder="input your Phone Number" onChange={handleChangePhone} value={phone.phone} className={style.inputInfo}></input><br></br>
+            <div className={style.blank}></div>
+            <FontAwesomeIcon icon={faHouse} />
+            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip].join(' ')}></input>
             <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
-            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
-            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2}></input>
+            <div className={style.blank}></div>
+            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1} className={[style.inputInfo, style.inputAddr].join(' ')}></input><br></br>
+            <div className={style.blank}></div>
+            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2} className={[style.inputInfo, style.inputAddr].join(' ')}></input>
             {/* 모달 */}
             <Modal
               isOpen={showModal}
