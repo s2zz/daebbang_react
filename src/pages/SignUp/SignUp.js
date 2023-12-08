@@ -6,7 +6,16 @@ import Modal from 'react-modal';
 import axios from 'axios';
 
 function SignUp() {
-  const [user, setUser] = useState({ id: "", pw: "", name: "", email: "", phone: "", zipcode: "", address1: "", address2: "" });
+  //const [user, setUser] = useState({ id: "", pw: "", name: "", email: "", phone: "", zipcode: "", address1: "", address2: "" });
+  const [id, setId] = useState({id:""});
+  const [pw, setPw] = useState({pw:""});
+  const [name, setName] = useState({name:""});
+  const [email, setEmail] = useState({email:""});
+  const [phone, setPhone] = useState({phone:""});
+  const [zipcode, setZipcode] = useState({zipcode:""});
+  const [address1, setAddress1] = useState({address1:""});
+  const [address2, setAddress2] = useState({address2:""});
+
   const [fill, setFill] = useState(false);
   const [duplId, setDuplId] = useState(false);
   const [readOnlyState, setReadOnlyState] = useState(false);
@@ -18,51 +27,96 @@ function SignUp() {
   const [phoneRegex, setPhoneRegex] = useState(false);
 
 
-  const handleChange = (e) => {
-
-   
+  const handleChangeId = (e) => {
     const { name, value } = e.target;
-    console.log (name, value);
-    setUser(prev => ({ ...prev, [name]: value }));
-    setUser((prev) => ({
+    setId(prev => ({ ...prev, [name]: value }));
+
+    setFill(e.target.value !== '');
+
+    const idregex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{5,}$/;
+
+    if (idregex.test(e.target.value)) {
+      setIdRegex(true);
+    }
+  }
+
+  const handleChangePw = (e) => {
+    const { name, value } = e.target;
+    setPw(prev => ({ ...prev, [name]: value }));
+
+    setFill(e.target.value !== '');
+    const pwregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
+    
+    
+    if (pwregex.test(e.target.value)) {
+      setPwRegex(true);
+    }
+  }
+
+  const handleChangeName = (e) => {
+    const { name, value } = e.target;
+    setName(prev => ({ ...prev, [name]: value }));
+
+    setFill(e.target.value !== '');
+    const nameregex = /^[가-힣]{2,5}$/;
+    
+    if (nameregex.test(e.target.value)) {
+      setNameRegex(true);
+    }
+  }
+
+  const handleChangeEmail = (e) => {
+    const { name, value } = e.target;
+    setEmail(prev => ({ ...prev, [name]: value }));
+
+    setFill(e.target.value !== '');
+    const emailregex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (emailregex.test(e.target.value)) {
+      setEmailRegex(true);
+    }
+  }
+
+  const handleChangePhone = (e) => {
+    const { name, value } = e.target;
+    setPhone(prev => ({ ...prev, [name]: value }));
+
+    setFill(e.target.value !== '');
+
+    const phoneregex = /^\d{11}$/;
+
+    if (phoneregex.test(e.target.value)) {
+      setPhoneRegex(true);
+    }
+  }
+
+  const handleChangeZipcode = (e) => {
+    const { name, value } = e.target;
+    setZipcode((prev) => ({
       ...prev,
       [name]: value,
-      zipcode: document.getElementById('sample6_postcode').value,
+      zipcode: document.getElementById('sample6_postcode').value
+    }));
+
+    setFill(e.target.value !== '');
+  }
+
+  const handleChangeAddress1 = (e) => {
+    const { name, value } = e.target;
+    setAddress1((prev) => ({
+      ...prev,
+      [name]: value,
       address1: document.getElementById("sample6_address").value
     }));
 
-    setFill(
-      user.id !== '' &&
-      user.pw !== '' &&
-      user.name !== '' &&
-      user.email !== '' &&
-      user.phone !== '' &&
-      user.zipcode !== '' &&
-      user.address1 !== '' &&
-      user.address2 !== ''
-    );
+    setFill(e.target.value !== '');
+  }
 
-    const idregex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{5,}$/;
-    const pwregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
-    const nameregex = /^[가-힣]{2,5}$/;
-    const emailregex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const phoneregex = /^\d{11}$/;
+  const handleChangeAddress2 = (e) => {
+    const { name, value } = e.target;
+    setAddress2(prev => ({ ...prev, [name]: value }));
 
-    if (idregex.test(user.id)) {
-      setIdRegex(true);
-    }
-    if (pwregex.test(user.pw)) {
-      setPwRegex(true);
-    }
-    if (nameregex.test(user.name)) {
-      setNameRegex(true);
-    }
-    if (emailregex.test(user.email)) {
-      setEmailRegex(true);
-    }
-    if (phoneregex.test(user.phone)) {
-      setPhoneRegex(true);
-    }
+    setFill(e.target.value !== '');
   }
 
   const duplCheck = (value) => {
@@ -70,20 +124,20 @@ function SignUp() {
       if (resp.data === false) {
         alert("이미 존재하는 아이디 입니다.");
         setDuplId(false);
-        setUser({ id: "" });
-      } else if (user.id === '') {
+        setId({ id: "" });
+      } else if (id.id === '') {
         alert("아이디를 먼저 입력해주세요.");
       } else if (!idRegex) {
         alert('아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다.');
-        setUser({ id: "" });
+        setId({ id: "" });
       } 
-      if(resp.data !== false && user.id !== '' && idRegex) {
+      if(resp.data !== false && id.id !== '' && idRegex) {
         let useId = window.confirm("사용 가능한 아이디 입니다. 사용하시겠습니까?");
         if (useId) {
           setDuplId(true);
           setReadOnlyState(true);
         } else {
-          setUser({ id: "" });
+          setId({ id: "" });
           setDuplId(false);
         }
 
@@ -95,19 +149,7 @@ function SignUp() {
 
   const navi = useNavigate();
 
-  const handleSignUp = () => {
-
-    setFill(
-      user.id !== '' &&
-      user.pw !== '' &&
-      user.name !== '' &&
-      user.email !== '' &&
-      user.phone !== '' &&
-      user.zipcode !== '' &&
-      user.address1 !== '' &&
-      user.address2 !== ''
-    );
-
+  const handleSignUp = async () => {
     if (!fill) {
       alert('모든 항목을 입력해주세요.');
     } else if (!duplId) {
@@ -123,13 +165,23 @@ function SignUp() {
     } else if (!phoneRegex) {
       alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
     } else {
-      console.log(user);
-      axios.post("/api/member/signUp", user).then(resp => {
+      try {
+        const userData = {
+          id: id.id,
+          pw: pw.pw,
+          name: name.name,
+          email: email.email,
+          phone: phone.phone,
+          zipcode: zipcode.zipcode,
+          address1: address1.address1,
+          address2: address2.address2
+        };
+        await axios.post("/api/member/signUp", userData);
         alert("회원가입이 완료되었습니다.");
         navi("/");
-      }).catch(() => {
-        console.log("회원가입 실패");
-      });
+      } catch (error) {
+        console.log("회원가입 실패", error);
+      }
     }
   }
 
@@ -168,8 +220,8 @@ function SignUp() {
     // 우편번호와 주소 정보를 해당 필드에 넣는다.
     document.getElementById('sample6_postcode').value = data.zonecode;
     document.getElementById("sample6_address").value = addr + extraAddr;
-    user.zipcode = data.zonecode;
-    user.address1 = addr + extraAddr;
+    zipcode.zipcode = data.zonecode;
+    address1.address1 = addr + extraAddr;
     // 커서를 상세주소 필드로 이동한다.
     document.getElementById("sample6_detailAddress").focus();
 
@@ -188,16 +240,16 @@ function SignUp() {
         <div className={style.logo}>DAEBBANG</div>
         <div className={style.inputSignUpBox}>
           <div className={style.inputs}>
-            <input type="text" name="id" id="id" placeholder="input your ID" onChange={handleChange} value={user.id} readOnly={readOnlyState}></input>
-            <button onClick={() => duplCheck({ id: user.id })}>아이디 중복 확인</button><br></br>
-            <input type="password" name="pw" id="pw" placeholder="input your PW" onChange={handleChange} value={user.pw}></input><br></br>
-            <input type="text" name="name" id="name" placeholder="input your Name" onChange={handleChange} value={user.name}></input><br></br>
-            <input type="text" name="email" id="email" placeholder="input your E-Mail" onChange={handleChange} value={user.email}></input><br></br>
-            <input type="text" name="phone" id="phone" placeholder="input your Phone Number" onChange={handleChange} value={user.phone}></input><br></br>
-            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChange} value={user.zipcode}></input>
+            <input type="text" name="id" id="id" placeholder="input your ID" onChange={handleChangeId} value={id.id} readOnly={readOnlyState}></input>
+            <button onClick={() => duplCheck({ id: id.id })}>아이디 중복 확인</button><br></br>
+            <input type="password" name="pw" id="pw" placeholder="input your PW" onChange={handleChangePw} value={pw.pw}></input><br></br>
+            <input type="text" name="name" id="name" placeholder="input your Name" onChange={handleChangeName} value={name.name}></input><br></br>
+            <input type="text" name="email" id="email" placeholder="input your E-Mail" onChange={handleChangeEmail} value={email.email}></input><br></br>
+            <input type="text" name="phone" id="phone" placeholder="input your Phone Number" onChange={handleChangePhone} value={phone.phone}></input><br></br>
+            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode}></input>
             <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
-            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChange} value={user.address1}></input><br></br>
-            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChange} value={user.address2}></input>
+            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
+            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2}></input>
             {/* 모달 */}
             <Modal
               isOpen={showModal}
