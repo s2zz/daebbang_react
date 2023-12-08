@@ -6,6 +6,13 @@ import { useNavigate } from "react-router-dom";
 function EstateInsert3() {
   const navi = useNavigate();
 
+  const [estateImages, setEstateImages] = useState([]);
+
+  const handleImageChange = (e) => {
+    const files = e.target.files;
+    setEstateImages([...estateImages, ...files]);
+  }
+
   // 보낼 데이터
   const [realEstate, setRealEstate] = useState({
     title: "",
@@ -19,8 +26,20 @@ function EstateInsert3() {
   }
 
   const handleSubmit = () => {
-    console.log(realEstate);
-    axios.post("/api/estateManage/estateInsert3", realEstate).then(resp => {
+    const formData = new FormData();
+    formData.append('title', realEstate.title);
+    formData.append('contents', realEstate.contents);
+    formData.append('memo', realEstate.memo);
+
+    for (const image of estateImages) {
+      formData.append("images", image);
+    }
+
+    axios.post("/api/estateManage/estateInsert3", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then(resp => {
       console.log(resp);
       navi("../../");
     }).catch(e => {
@@ -35,7 +54,7 @@ function EstateInsert3() {
         <tr>
           <th>일반 사진<span>*</span></th>
           <td>
-            <input type="file"></input>
+            <input type="file" multiple={true} onChange={handleImageChange} />
           </td>
         </tr>
       </table>
