@@ -4,7 +4,7 @@ import { Box, Button } from '@mui/material';
 import axios from 'axios';
 import style from "./MemberManagement.module.css";
 
-const PaginatedGrid = () => {
+const MemberManagement = () => {
   const [page, setPage] = React.useState(1);
   const pageSize = 10;
   const [totalRows, setTotalRows] = React.useState(0);
@@ -58,14 +58,14 @@ const PaginatedGrid = () => {
   );
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 ,headerAlign:"center"},
-    { field: 'name', headerName: 'Name', width: 90 ,headerAlign:"center"},
-    { field: 'phone', headerName: 'Phone', width: 110 ,headerAlign:"center"},
-    { field: 'email', headerName: 'Email', width: 150 ,headerAlign:"center"},
-    { field: 'address1', headerName: 'Address', width: 150 ,headerAlign:"center"},
-    { field: 'role', headerName: 'Role', width: 150 ,headerAlign:"center"},
-    { field: 'enabled', headerName: 'Enabled', width: 100 ,headerAlign:"center"},
-    {field: 'delete',headerName: 'Delete',headerAlign:"center",width: 110,renderCell: (params) => {return deleteButton(params.row.id);},},
+    { field: 'id', headerName: 'ID', width: 90 ,headerAlign:"center",align:"center"},
+    { field: 'name', headerName: 'Name', width: 90 ,headerAlign:"center",align:"center"},
+    { field: 'phone', headerName: 'Phone', width: 110 ,headerAlign:"center",align:"center"},
+    { field: 'email', headerName: 'Email', width: 150 ,headerAlign:"center",align:"center"},
+    { field: 'address1', headerName: 'Address', width: 150 ,headerAlign:"center",align:"center"},
+    { field: 'role', headerName: 'Role', width: 150 ,headerAlign:"center",align:"center"},
+    { field: 'enabled', headerName: 'Enabled', width: 100 ,headerAlign:"center",align:"center"},
+    {field: 'delete',headerName: 'Delete',headerAlign:"center",align:"center",width: 110,renderCell: (params) => {return deleteButton(params.row.id);},},
   ];
 
   return (
@@ -89,4 +89,4 @@ const PaginatedGrid = () => {
   );
 };
 
-export default PaginatedGrid;
+export default MemberManagement;
