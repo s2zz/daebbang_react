@@ -12,8 +12,6 @@ function EstateInsert2() {
   const handleMaintenanceChange = (e) => {
     setMaintenanceOption(e.target.value);
 
-    console.log(maintenanceOption);
-
     if (maintenanceOption === "true") {
       realEstate.maintenanceCost = "";
     }
@@ -32,8 +30,8 @@ function EstateInsert2() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // 숫자 또는 소수점 이외의 문자는 제거
-    const sanitizedValue = value.replace(/[^0-9.]/g, "");
+    // 숫자 이외의 문자는 제거
+    const sanitizedValue = value.replace(/[^0-9]/g, "");
 
     if (name === 'transactionCode') {
       setRealEstate(prev => ({ ...prev, [name]: value }));
@@ -58,6 +56,21 @@ function EstateInsert2() {
   };
 
   const handleSubmit = () => {
+    // 필수 항목
+    const requiredFields = ['transactionCode', 'price', 'buildingFloors', 'roomFloors'];
+
+    // 필수 항목이 비어있는지 검사
+    if (requiredFields.some(name => !realEstate[name])) {
+      alert("필수 항목을 입력해주세요");
+      return false;
+    }
+
+    // 관리비 '있음' AND 관리비 입력 안한 경우 
+    if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
+      alert("필수 항목을 입력해주세요");
+      return false;
+    }
+
     axios.post("/api/estateManage/estateInsert2", { estateDTO: realEstate, optionList: optionList }).then(resp => {
       console.log(resp);
       navi("../estateInsert3");
@@ -76,7 +89,6 @@ function EstateInsert2() {
             <input type="radio" id="t1" name="transactionCode" value="t1" onChange={handleChange} checked={realEstate.transactionCode === "t1"} /><label for="t1">월세</label>
             <input type="radio" id="t2" name="transactionCode" value="t2" onChange={handleChange} checked={realEstate.transactionCode === "t2"} /><label for="t2">전세</label>
             {realEstate.transactionCode === 't1' && <span><input type="checkbox" id="o1" name="optionCode" value="o1" onChange={handleOptionCode} /><label for="o1">단기가능</label></span>}
-
           </td>
         </tr>
         <tr>
