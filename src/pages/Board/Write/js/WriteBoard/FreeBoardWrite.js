@@ -9,6 +9,10 @@ const FreeBoardWrite = () => {
 
     const [boardContents, setBoardContents] = useState({boardTitle:"자유게시판",title:"",contents:""});
 
+    const handleFileChange = (e) => {
+
+    }
+
     const handleChange = (e) => {
         const {name,value} = e.target;
         setBoardContents(prev=>({...prev,[name]:value}));
@@ -24,6 +28,7 @@ const FreeBoardWrite = () => {
             console.log(err);
         })
     }
+
 
     const modules = {
         toolbar: {
@@ -67,7 +72,11 @@ const FreeBoardWrite = () => {
             </div>
             <div>
                 <div>파일첨부</div>
-                <div><input type="file" /></div>
+                <div><input type="file" onChange={handleFileChange}/></div>
+                <div><input type="file" onChange={handleFileChange}/></div>
+                <div><input type="file" onChange={handleFileChange}/></div>
+                <div><input type="file" onChange={handleFileChange}/></div>
+                <div><input type="file" onChange={handleFileChange}/></div>
             </div>
             <div>
                 <div>내용</div>
