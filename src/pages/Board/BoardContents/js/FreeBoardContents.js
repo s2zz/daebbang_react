@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import DelContents from '../../component/DelContents';
+
 
 const FreeBoardContents = () => {
     const location = useLocation();
@@ -22,7 +22,7 @@ const FreeBoardContents = () => {
         }).catch(err => {
             console.log(err);
         })
-    }, [])
+    }, [replyList.length])
 
     const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.oriSeq });
     const insertReplyHandleChange = (e) => {
@@ -79,6 +79,18 @@ const FreeBoardContents = () => {
         })
     }
 
+    const delReplyBtn = (seq) => {
+        if(window.confirm("댓글을 삭제하시겠습니까?")){
+            axios.delete(`/api/reply/${seq}`).then(resp=>{
+                alert("댓글 삭제에 성공하였습니다");
+                setReplyList(replyList.filter(e=>e.seq!==seq))
+            }).catch(err=>{
+                alert("댓글 삭제에 실패아였습니다");
+                console.log(err);
+            })
+        }
+    }
+
     return (
         <>
             <div className={style.boardContentsTitle}>{boardContents.title}</div>
@@ -128,7 +140,7 @@ const FreeBoardContents = () => {
                                         :
                                         <div>
                                             <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
-                                            <button>삭제</button>
+                                            <button onClick={()=>delReplyBtn(e.seq)}>삭제</button>
                                         </div>
                                 }
                             </div>
@@ -152,7 +164,7 @@ const FreeBoardContents = () => {
                                         :
                                         <div>
                                             <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
-                                            <button>삭제</button>
+                                            <button onClick={()=>delReplyBtn(e.seq)}>삭제</button>
                                         </div>
                                 }
 
@@ -164,7 +176,7 @@ const FreeBoardContents = () => {
             <div className={style.naviFooter}>
                 &lt; 1 2 3 4 5 6 7 8 9  10 &gt;
             </div>
-            <DelContents></DelContents>
+            
         </>
     )
 }
