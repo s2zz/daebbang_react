@@ -8,11 +8,22 @@ import axios from 'axios';
 
 const Main = () => {
   useEffect(() => {
-    // 페이지 로드 시 오늘 날짜 데이터 확인 후 방문자 수 증가 요청
+    const checkAndResetVisited = () => {
+      const now = new Date();
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0); // 다음날 0시
+      const timeTillMidnight = midnight - now;
+  
+      setTimeout(() => {
+        localStorage.setItem('visited', 'false'); // 매일 자정에 visited 값을 false로 초기화
+        setInterval(() => {
+          localStorage.setItem('visited', 'false'); // 매일 자정에 visited 값을 false로 초기화
+        }, 24 * 60 * 60 * 1000); // 24시간 주기로 실행
+      }, timeTillMidnight);
+    };
+  
     const checkTodayVisitor = async () => {
       try {
         const response = await axios.get('/api/admin/todayVisitor');
-  
         if (response.data) {
           console.log('Data exists:', response.data.seq);
           // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
@@ -29,15 +40,17 @@ const Main = () => {
       }
     };
   
-    // 로컬 스토리지에서 방문 여부 확인
     const visited = localStorage.getItem('visited');
   
-    if (!visited) {
-      // 방문 여부가 없는 경우 (처음 방문)
-      localStorage.setItem('visited', 'true'); // 방문 여부를 로컬 스토리지에 저장
+    if (!visited || visited === 'false') {
+      // 방문 여부가 없거나, 방문 여부가 false인 경우
+      localStorage.setItem('visited', 'true');
       checkTodayVisitor(); // 방문자 수 증가 함수 호출
     }
+  
+    checkAndResetVisited(); // 매일 자정에 방문 여부 초기화 함수 호출
   }, []);
+  
   
     return (
         <div className={style.container}>
