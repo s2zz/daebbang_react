@@ -43,31 +43,26 @@ const BootstrapButton = styled(Button)({
 });
 
 
-const fetchData = async () => {
-  const HttpUrl = 'http://openapi.nsdi.go.kr/nsdi/EstateBrkpgService/attr/getEBOfficeInfo';
-  const authkey = 'c3e7631d335545078685c562fcb54151'; // 여기에 실제 인증키를 넣어주세요
 
-  const params = new URLSearchParams();
-  params.append('authkey', authkey);
-//   params.append('ldCode', '11110');
-//   params.append('bsnmCmpnm', '맑은공인');
-//   params.append('brkrNm', '홍길동');
-//   params.append('jurirno', '가123456-789');
-//   params.append('sttusSeCode', '1');
-//   params.append('format', 'xml');
-//   params.append('numOfRows', '10');
-//   params.append('pageNo', '1');
 
-  try {
-    const response = await axios.get(HttpUrl, { params });
-    console.log('Response:', response.data); // 여기서 응답 데이터를 활용할 수 있습니다.
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-};
 
-// fetchData 함수 호출
-fetchData();
+
+
+fetch('/api/admin/openApi')
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not ok.');
+  })
+  .then(data => {
+    // 여기서 데이터를 사용하거나 처리합니다.
+    console.log("데이터"+JSON.stringify(data));
+  })
+  .catch(error => {
+    // 에러 발생 시 처리
+    console.error('There was a problem with the fetch operation:', error);
+  });
 
 
 const HomeEnrollment = () => {

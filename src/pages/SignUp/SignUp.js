@@ -172,7 +172,24 @@ function SignUp() {
   }
 
   const navi = useNavigate();
-
+  const increaseNewMemberCount = async () => {
+    try {
+      const response = await axios.get('/api/admin/todayNewMember');
+      if (response.data) {
+        console.log('Data exists:', response.data.seq);
+        // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
+        await axios.put(`/api/admin/incrementNewMember/${response.data.seq}`);
+        console.log('회원 1증가');
+      } else {
+        console.log('Data does not exist:', response.data);
+        // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
+        await axios.post('/api/admin/createNewMember');
+        console.log('신규 회원 데이터 생성');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   const handleSignUp = async () => {
     if (!fill) {
       alert('모든 항목을 입력해주세요.');
@@ -202,8 +219,10 @@ function SignUp() {
           address1: address1.address1,
           address2: address2.address2
         };
+        await increaseNewMemberCount();
         await axios.post("/api/member/signUp", userData);
         alert("회원가입이 완료되었습니다.");
+        
         navi("/");
       } catch (error) {
         console.log("회원가입 실패", error);
