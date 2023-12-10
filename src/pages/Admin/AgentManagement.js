@@ -142,7 +142,7 @@ const AgentManagement = () => {
           onPageChange={(newPage) => handlePageChange(newPage)}
           columns={columns}
           rows={generateData(page)}
-          pageSizeOptions={[30, 50, 100]}
+          pageSizeOptions={[10, 50, 100]}
           getRowId={(row) => row.email} 
         />
       )}

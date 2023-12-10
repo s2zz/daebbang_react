@@ -8,48 +8,31 @@ import axios from 'axios';
 
 const Main = () => {
   useEffect(() => {
-    const checkAndResetVisited = () => {
-      const now = new Date();
-      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0); // 다음날 0시
-      const timeTillMidnight = midnight - now;
-  
-      setTimeout(() => {
-        localStorage.setItem('visited', 'false'); // 매일 자정에 visited 값을 false로 초기화
-        setInterval(() => {
-          localStorage.setItem('visited', 'false'); // 매일 자정에 visited 값을 false로 초기화
-        }, 24 * 60 * 60 * 1000); // 24시간 주기로 실행
-      }, timeTillMidnight);
-    };
-  
     const checkTodayVisitor = async () => {
       try {
-        const response = await axios.get('/api/admin/todayVisitor');
-        if (response.data) {
-          console.log('Data exists:', response.data.seq);
-          // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
-          await axios.put(`/api/admin/incrementVisitor/${response.data.seq}`);
-          console.log('Visitor count incremented for today');
-        } else {
-          console.log('Data does not exist:', response.data);
-          // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
-          await axios.post('/api/admin/createVisitor');
-          console.log('New visitor entry created for today');
+        const visited = localStorage.getItem('visited');
+        if (visited !== 'true') {
+          const response = await axios.get('/api/admin/todayVisitor');
+          
+          if (!response.data) {
+            localStorage.setItem('visited', 'false');
+            await axios.post('/api/admin/createVisitor');
+            localStorage.setItem('visited', 'true');
+          } else {
+            await axios.put(`/api/admin/incrementVisitor/${response.data.seq}`);
+            localStorage.setItem('visited', 'true');
+          }
         }
       } catch (error) {
         console.error('Error:', error);
       }
     };
   
-    const visited = localStorage.getItem('visited');
-  
-    if (!visited || visited === 'false') {
-      // 방문 여부가 없거나, 방문 여부가 false인 경우
-      localStorage.setItem('visited', 'true');
-      checkTodayVisitor(); // 방문자 수 증가 함수 호출
-    }
-  
-    checkAndResetVisited(); // 매일 자정에 방문 여부 초기화 함수 호출
+    checkTodayVisitor();
   }, []);
+  
+  
+  
   
   
     return (
