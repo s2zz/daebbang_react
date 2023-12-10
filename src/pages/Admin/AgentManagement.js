@@ -104,17 +104,18 @@ const AgentManagement = () => {
   };
   const columns = [
     { field: 'email', headerName: 'Email', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'estateName', headerName: 'estateName', width: 150, headerAlign: 'center', align: 'center' },
     { field: 'name', headerName: 'Name', width: 90, headerAlign: 'center', align: 'center' },
     { field: 'phone', headerName: 'Phone', width: 110, headerAlign: 'center', align: 'center' },
     { field: 'manners_temperature', headerName: 'Manners_temperature', width: 200, headerAlign: 'center', align: 'center' },
     { field: 'role', headerName: 'Role', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'enabled', headerName: 'Enabled', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'enabled', headerName: 'Enabled', width: 80, headerAlign: 'center', align: 'center' },
     {
         field: 'approval',
         headerName: 'Approval',
         headerAlign: 'center',
         align: 'center',
-        width: 200,
+        width: 120,
         renderCell: (params) => approvalButton(params.row.email, params.row.enabled),
       },
     {
@@ -122,7 +123,7 @@ const AgentManagement = () => {
       headerName: 'Delete',
       headerAlign: 'center',
       align: 'center',
-      width: 110,
+      width: 120,
       renderCell: (params) => deleteButton(params.row.email),
     },
   ];
