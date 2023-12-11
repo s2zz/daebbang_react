@@ -18,6 +18,12 @@
 .menuInfo, .menuJjim, .menuReview {
     width:270px;
     height:100%;
+    background-color: white;
+    color:black;
+}
+
+.menuInfo:hover, .menuJjim:hover, .menuReview:hover {
+    cursor: pointer;
 }
 
 .profile {

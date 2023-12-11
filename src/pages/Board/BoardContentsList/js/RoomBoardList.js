@@ -15,7 +15,6 @@ const RoomBoardList = () => {
     }
     
     useEffect(() => {
-        console.log("d")
         axios.get(`/api/board/roomBoardList`).then(resp => {
             setBoard(resp.data.sort(compareBySeq));
         })
@@ -72,7 +71,7 @@ const RoomBoardList = () => {
                                     <div>
                                     <Link to={`/board/toRoomBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>
                                             <span>[{e.header}]</span>
-                                            {e.title}
+                                            {e.title.length>80 ? e.title.substring(0,80)+"...":e.title}
                                         </Link>
                                     </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
