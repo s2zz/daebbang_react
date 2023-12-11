@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import style from "../css/BoardList.module.css";
 import freeStyle from "../css/FreeBoardList.module.css";
 import favorite from "../../assets/favorites.png";
+import notFavorite from "../../assets/notFavorite.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
@@ -14,13 +15,14 @@ const FreeBoardList = () => {
         return b.seq - a.seq;
     }
 
+    // 게시글 목록 불러오기
     useEffect(() => {
         axios.get(`/api/board/freeBoardList`).then(resp => {
-            console.log(resp.data.sort(compareBySeq))
             setBoard(resp.data.sort(compareBySeq));
         })
     }, []);
 
+    // 페이지네이션
     const [currentPage, setCurrentPage] = useState(1);
     const countPerPage = 10;
     const sliceContentsList = () => {
@@ -49,7 +51,7 @@ const FreeBoardList = () => {
             </div>
             <div className={style.boardContentsBox}>
                 <div className={style.boardInfo}>
-                    <div><img src={favorite} /></div>
+                    <div><img src={notFavorite} /></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
@@ -60,11 +62,13 @@ const FreeBoardList = () => {
                         sliceContentsList().map((e, i) => {
                             return (
                                 <div key={i} data-seq={e.seq}>
-                                    <div><img src={favorite} /></div>
+                                    <div><img src={notFavorite} /></div>
                                     <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toFreeBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>{e.title}</Link>
+                                        <Link to={`/board/toFreeBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>
+                                            {e.title.length>80 ? e.title.substring(0,80)+"...":e.title}
+                                        </Link>
                                     </div>
                                     <div>{e.writeDate.split("T")[0]}</div>
                                 </div>

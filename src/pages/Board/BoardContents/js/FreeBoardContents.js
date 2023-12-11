@@ -16,6 +16,7 @@ const FreeBoardContents = () => {
         return b.seq - a.seq;
     }
 
+    // 게시글 내용, 댓글 목록 불러오기
     useEffect(() => {
         axios.get(`/api/board/boardContents/${location.state.oriSeq}`).then(resp => {
             setBoardContents(resp.data);
@@ -25,12 +26,19 @@ const FreeBoardContents = () => {
         })
     }, [replyList.length])
 
+    // 댓글 추가
     const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.oriSeq });
     const insertReplyHandleChange = (e) => {
         setInsertReply(prev => ({ ...prev, contents: e.target.value }));
     }
 
     const insertReplyAdd = () => {
+
+        if(insertReply.contents===""){
+            alert("내용을 입력해주세요");
+            return;
+        }
+
         axios.post("/api/reply", insertReply).then(resp => {
             alert("댓글 등록 성공");
             setInsertReply(prev => ({ ...prev, contents: "" }));
@@ -41,6 +49,7 @@ const FreeBoardContents = () => {
         })
     }
 
+    // 댓글 수정
     const [visibleUpdateBox, setVisibleUpdateBox] = useState(0);
     const [updateReply, setUpdateReply] = useState({ seq: 0, contents: "" });
     const showUpdateBox = (seq, contents) => {
@@ -63,11 +72,16 @@ const FreeBoardContents = () => {
         }
     }
     const updateHandle = (e) => {
-        console.log(e.target.value)
         setUpdateReply(prev => ({ ...prev, contents: e.target.value }))
     }
 
     const updateAdd = () => {
+
+        if(updateReply.contents===""){
+            alert("내용을 입력해주세요");
+            return;
+        }
+
         axios.put("/api/reply", updateReply).then(resp => {
             alert("댓글 수정에 성공하였습니다");
             setReplyList(resp.data.sort(compareBySeq));
@@ -80,6 +94,7 @@ const FreeBoardContents = () => {
         })
     }
 
+    // 댓글 삭제
     const delReplyBtn = (seq) => {
         if (window.confirm("댓글을 삭제하시겠습니까?")) {
             axios.delete(`/api/reply/${seq}`).then(resp => {
@@ -92,6 +107,7 @@ const FreeBoardContents = () => {
         }
     }
 
+    // 댓글 페이지네이션
     const [currentReplyPage, setCurrentReplyPage] = useState(1);
     const replyCountPerPage = 10;
     const sliceReplyList = () => {
