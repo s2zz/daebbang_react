@@ -4,6 +4,7 @@ import axios from 'axios';
 import style from "./css/MyPage.module.css"
 import DeleteMyInfo from './DeleteMyInfo';
 import UpdateMyInfo from './UpdateMyInfo';
+import ChangePw from './ChangePw';
 
 const Info = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -26,7 +27,7 @@ const Info = () => {
                 <div>폰번호 : {info.phone}</div>
                 <div>우편번호 : {info.zipcode}</div>
                 <div>주소 : {info.address1} {info.address2}</div>
-                <button>비밀번호 변경하기</button>
+                <Link to="/mypage/changePw"><button>비밀번호 변경하기</button></Link>
                 <Link to="/mypage/updateMyInfo"><button>회원정보 수정하기</button></Link>
                 <Link to="/mypage/deleteMyInfo"><button>회원 탈퇴하기</button></Link>
             </div>
@@ -67,6 +68,7 @@ function MyPage() {
                 <Route path="review" element={<Review />} />
                 <Route path="deleteMyInfo" element={<DeleteMyInfo/>}/>
                 <Route path="updateMyInfo" element={<UpdateMyInfo/>}/>
+                <Route path="changePw" element={<ChangePw/>}/>
             </Routes>
         </div>
 
