@@ -8,30 +8,51 @@ import axios from "axios";
 const FreeBoardWrite = () => {
     const navi = useNavigate();
 
-    const [boardContents, setBoardContents] = useState({boardTitle:"자유게시판",title:"",contents:""});
-
+    const [formData, setFormData] = useState({
+        title:"",
+        contents:"",
+        files:[]
+    });
     const handleFileChange = (e) => {
-
+        setFormData(prev=>({...prev,files:[...prev.files,e.target.files]}));
     }
 
     const handleChange = (e) => {
+        console.log(e.target);
         const {name,value} = e.target;
-        setBoardContents(prev=>({...prev,[name]:value}));
+        setFormData(prev=>({...prev,[name]:value}));
     }
 
     const handleAdd = () => {
-        
-        if(boardContents.title===""){
+        console.log(formData);
+        if(formData.title===""){
             alert("제목을 입력해주세요");
             return;
         } 
 
-        if(boardContents.contents===""){
+        if(formData.title>50){
+            alert("제목은 최대 50글자 입니다");
+            return;
+        }
+
+        if(formData.contents===""){
             alert("내용을 입력해주세요");
             return;
         }
 
-        axios.post("/api/board",boardContents).then(resp=>{
+        if(formData.contents.length>3000){
+            alert("내용은 최대 3000글자 입니다");
+            return;
+        }
+
+        const submitFormData = new FormData();
+        submitFormData.append("boardTitle","자유게시판");
+        submitFormData.append("title",formData.title);
+        submitFormData.append("contents",formData.contents);
+        formData.files.forEach(e=>{
+            submitFormData.append("files",e);
+        });
+        axios.post("/api/board",submitFormData).then(resp=>{
             alert("게시글 등록에 성공하였습니다");
             navi("/board/toFreeBoardList");
         }).catch(err=>{
@@ -92,7 +113,7 @@ const FreeBoardWrite = () => {
             <div>
                 <div>내용</div>
                 <div>
-                    <ReactQuill modules={modules} formats={formats} className={style.reactQuill} value={boardContents.contents} onChange={(value) => setBoardContents({ ...boardContents, contents: value })}/>
+                    <ReactQuill modules={modules} formats={formats} className={style.reactQuill} value={formData.contents} onChange={(value) => setFormData({...formData,contents:value})}/>
                 </div>
             </div>
 
