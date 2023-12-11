@@ -10,10 +10,10 @@
 .boardContainer{overflow:hidden;}
 .boardContainer>div{float:left;}
 .boardContainer>div:first-child{
-    width:15%;
+    width:20%;
 }
 .boardContainer>div:last-child{
-    width:85%;
+    width:80%;
     padding:30px 40px;
 }
 
