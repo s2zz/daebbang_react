@@ -111,7 +111,7 @@ const FreeBoardWrite = () => {
         submitFormData.append("title", formData.title);
         submitFormData.append("contents", formData.contents);
         submitFormData.append("delImgList",delImgList);
-        console.log(formData.files);
+
         formData.files.forEach((e) => {
             submitFormData.append("files", e);
         });
