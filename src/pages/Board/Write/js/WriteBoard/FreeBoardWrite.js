@@ -14,17 +14,15 @@ const FreeBoardWrite = () => {
         files:[]
     });
     const handleFileChange = (e) => {
-        setFormData(prev=>({...prev,files:[...prev.files,e.target.files]}));
+        setFormData(prev=>({...prev,files:[...prev.files,e.target.files[0]]}));
     }
 
     const handleChange = (e) => {
-        console.log(e.target);
         const {name,value} = e.target;
         setFormData(prev=>({...prev,[name]:value}));
     }
 
     const handleAdd = () => {
-        console.log(formData);
         if(formData.title===""){
             alert("제목을 입력해주세요");
             return;
@@ -49,7 +47,8 @@ const FreeBoardWrite = () => {
         submitFormData.append("boardTitle","자유게시판");
         submitFormData.append("title",formData.title);
         submitFormData.append("contents",formData.contents);
-        formData.files.forEach(e=>{
+        console.log(formData.files);
+        formData.files.forEach((e)=>{
             submitFormData.append("files",e);
         });
         axios.post("/api/board",submitFormData).then(resp=>{
