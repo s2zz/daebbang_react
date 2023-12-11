@@ -1,6 +1,6 @@
 import style from "./SignUp.module.css";
 import DaumPostcode from "react-daum-postcode";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
@@ -8,15 +8,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEnvelope, faPhone, faHouse, faFileSignature } from "@fortawesome/free-solid-svg-icons";
 
 function SignUp() {
-  const [id, setId] = useState({id:""});
-  const [pw, setPw] = useState({pw:""});
-  const [pw2, setPw2] = useState({pw2:""});
-  const [name, setName] = useState({name:""});
-  const [email, setEmail] = useState({email:""});
-  const [phone, setPhone] = useState({phone:""});
-  const [zipcode, setZipcode] = useState({zipcode:""});
-  const [address1, setAddress1] = useState({address1:""});
-  const [address2, setAddress2] = useState({address2:""});
+  const [id, setId] = useState({ id: "" });
+  const [pw, setPw] = useState({ pw: "" });
+  const [pw2, setPw2] = useState({ pw2: "" });
+  const [name, setName] = useState({ name: "" });
+  const [email, setEmail] = useState({ email: "" });
+  const [phone, setPhone] = useState({ phone: "" });
+  const [zipcode, setZipcode] = useState({ zipcode: "" });
+  const [address1, setAddress1] = useState({ address1: "" });
+  const [address2, setAddress2] = useState({ address2: "" });
 
   const [fill, setFill] = useState(false);
   const [duplId, setDuplId] = useState(false);
@@ -50,15 +50,15 @@ function SignUp() {
 
     setFill(e.target.value !== '');
 
-    if(e.target.value === pw2.pw2) {
+    if (e.target.value === pw2.pw2) {
       setSamePw(true);
     } else {
       setSamePw(false);
     }
 
     const pwregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
-    
-    
+
+
     if (pwregex.test(e.target.value)) {
       setPwRegex(true);
     }
@@ -70,7 +70,7 @@ function SignUp() {
 
     setFill(e.target.value !== '');
 
-    if(pw.pw === e.target.value) {
+    if (pw.pw === e.target.value) {
       setSamePw(true);
     } else {
       setSamePw(false);
@@ -83,7 +83,7 @@ function SignUp() {
 
     setFill(e.target.value !== '');
     const nameregex = /^[가-힣]{2,5}$/;
-    
+
     if (nameregex.test(e.target.value)) {
       setNameRegex(true);
     }
@@ -143,6 +143,9 @@ function SignUp() {
     setFill(e.target.value !== '');
   }
 
+
+  const [isConditionMet, setIsConditionMet] = useState(true);
+
   const duplCheck = (value) => {
     axios.post("/api/member/idDuplCheck", value).then(resp => {
       if (resp.data === false) {
@@ -154,12 +157,13 @@ function SignUp() {
       } else if (!idRegex) {
         alert('아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다.');
         setId({ id: "" });
-      } 
-      if(resp.data !== false && id.id !== '' && idRegex) {
+      }
+      if (resp.data !== false && id.id !== '' && idRegex) {
         let useId = window.confirm("사용 가능한 아이디 입니다. 사용하시겠습니까?");
         if (useId) {
           setDuplId(true);
           setReadOnlyState(true);
+          setIsConditionMet(false);
         } else {
           setId({ id: "" });
           setDuplId(false);
@@ -172,25 +176,72 @@ function SignUp() {
   }
 
   const navi = useNavigate();
+  const increaseNewMemberCount = async () => {
+    try {
+      const response = await axios.get('/api/admin/todayNewMember');
+      if (response.data) {
+        console.log('Data exists:', response.data.seq);
+        // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
+        await axios.put(`/api/admin/incrementNewMember/${response.data.seq}`);
+        console.log('회원 1증가');
+      } else {
+        console.log('Data does not exist:', response.data);
+        // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
+        await axios.post('/api/admin/createNewMember');
+        console.log('신규 회원 데이터 생성');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  useEffect(() => {
+    setFill(
+      id.id !== '' &&
+      pw.pw !== '' &&
+      name.name !== '' &&
+      email.email !== '' &&
+      phone.phone !== '' &&
+      address1.address1 !== '' &&
+      address2.address2 !== ''
+    );
+  }, [id.id, pw.pw, name.name, email.email, phone.phone, address1.address1, address2.address2]);
 
   const handleSignUp = async () => {
+
     if (!fill) {
       alert('모든 항목을 입력해주세요.');
-    } else if (!duplId) {
+      return;
+    }
+    if (!duplId) {
       alert('아이디 중복 확인이 필요합니다.');
-    } else if (!idRegex) {
+      return;
+    }
+    if (!idRegex) {
       alert('아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다.');
-    } else if (!pwRegex) {
+      return;
+    }
+    if (!pwRegex) {
       alert('비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.');
-    } else if (!nameRegex) {
+      return;
+    }
+    if (!nameRegex) {
       alert('이름은 2~5글자의 한글이어야합니다.');
-    } else if (!emailRegex) {
+      return;
+    }
+    if (!emailRegex) {
       alert('이메일 형식을 올바르게 입력해주세요.');
-    } else if (!phoneRegex) {
+      return;
+    }
+    if (!phoneRegex) {
       alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
-    } else if (!samePw) {
+      return;
+    }
+    if (!samePw) {
       alert('비밀번호를 다시 확인해주세요.');
-    }else {
+      return;
+    }
+    if (fill && duplId && idRegex && pwRegex && nameRegex && emailRegex && phoneRegex && samePw) {
       try {
         const userData = {
           id: id.id,
@@ -202,8 +253,10 @@ function SignUp() {
           address1: address1.address1,
           address2: address2.address2
         };
+        await increaseNewMemberCount();
         await axios.post("/api/member/signUp", userData);
         alert("회원가입이 완료되었습니다.");
+
         navi("/");
       } catch (error) {
         console.log("회원가입 실패", error);
@@ -268,7 +321,7 @@ function SignUp() {
           <div className={style.inputs}>
             <FontAwesomeIcon icon={faUser} />
             <input type="text" name="id" id="id" placeholder="input your ID" onChange={handleChangeId} value={id.id} readOnly={readOnlyState} className={[style.inputInfo, style.inputId].join(' ')}></input>
-            <button onClick={() => duplCheck({ id: id.id })}>아이디 중복 확인</button><br></br>
+            <button onClick={() => duplCheck({ id: id.id })} disabled={!isConditionMet}>아이디 중복 확인</button><br></br>
             <div className={style.blank}></div>
             <FontAwesomeIcon icon={faLock} />
             <input type="password" name="pw" id="pw" placeholder="input your PW" onChange={handleChangePw} value={pw.pw} className={style.inputInfo}></input><br></br>

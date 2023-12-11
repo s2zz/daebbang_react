@@ -8,36 +8,32 @@ import axios from 'axios';
 
 const Main = () => {
   useEffect(() => {
-    // 페이지 로드 시 오늘 날짜 데이터 확인 후 방문자 수 증가 요청
     const checkTodayVisitor = async () => {
       try {
-        const response = await axios.get('/api/admin/todayVisitor');
-  
-        if (response.data) {
-          console.log('Data exists:', response.data.seq);
-          // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
-          await axios.put(`/api/admin/incrementVisitor/${response.data.seq}`);
-          console.log('Visitor count incremented for today');
-        } else {
-          console.log('Data does not exist:', response.data);
-          // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
-          await axios.post('/api/admin/createVisitor');
-          console.log('New visitor entry created for today');
+        const visited = localStorage.getItem('visited');
+        if (visited !== 'true') {
+          const response = await axios.get('/api/admin/todayVisitor');
+          
+          if (!response.data) {
+            localStorage.setItem('visited', 'false');
+            await axios.post('/api/admin/createVisitor');
+            localStorage.setItem('visited', 'true');
+          } else {
+            await axios.put(`/api/admin/incrementVisitor/${response.data.seq}`);
+            localStorage.setItem('visited', 'true');
+          }
         }
       } catch (error) {
         console.error('Error:', error);
       }
     };
   
-    // 로컬 스토리지에서 방문 여부 확인
-    const visited = localStorage.getItem('visited');
-  
-    if (!visited) {
-      // 방문 여부가 없는 경우 (처음 방문)
-      localStorage.setItem('visited', 'true'); // 방문 여부를 로컬 스토리지에 저장
-      checkTodayVisitor(); // 방문자 수 증가 함수 호출
-    }
+    checkTodayVisitor();
   }, []);
+  
+  
+  
+  
   
     return (
         <div className={style.container}>

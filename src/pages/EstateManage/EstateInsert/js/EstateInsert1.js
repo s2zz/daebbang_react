@@ -12,11 +12,12 @@ function EstateInsert1() {
 
   // 평수, 제곱미터
   const handleAreaChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
 
     // 입력한 값이 평수일 떄
     if (name === 'area') {
-      if (value === NaN) {
+      // 숫자가 아닌 값이 입력되었을 때
+      if (isNaN(value)) {
         value = 0;
       }
 
@@ -84,7 +85,11 @@ function EstateInsert1() {
   }
 
   const handleSubmit = () => {
-    console.log(realEstate);
+    if (Object.values(realEstate).some(e => !e)) {
+      alert("모든 항목을 입력해주세요");
+      return false;
+    }
+
     axios.post("/api/estateManage/estateInsert1", realEstate).then(resp => {
       console.log(resp);
       navi("../estateInsert2");
