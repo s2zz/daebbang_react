@@ -1,5 +1,5 @@
-import { useState, useEffect  } from 'react';
-import { Link, Route, Routes} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import style from "./css/MyPage.module.css"
 import DeleteMyInfo from './DeleteMyInfo';
@@ -9,27 +9,33 @@ import ChangePw from './ChangePw';
 const Info = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
 
-    const [info,setInfo] = useState([{}]);
+    const [info, setInfo] = useState([{}]);
 
-    useEffect(()=>{
-        axios.get("/api/member/myInfo/"+storedLoginId).then(resp=>{
+    useEffect(() => {
+        axios.get("/api/member/myInfo/" + storedLoginId).then(resp => {
             setInfo(resp.data);
         });
     }, []);
 
     return (
         <div className={style.infoContainer}>
-            <div className={style.profile}>프로필사진을 내가 할 수 있을까..</div>
             <div className={style.infoBox}>
-                <div>아이디 : {storedLoginId}</div>
-                <div>이름 : {info.name}</div>
-                <div>이메일 : {info.email}</div>
-                <div>폰번호 : {info.phone}</div>
-                <div>우편번호 : {info.zipcode}</div>
-                <div>주소 : {info.address1} {info.address2}</div>
-                <Link to="/mypage/changePw"><button>비밀번호 변경하기</button></Link>
-                <Link to="/mypage/updateMyInfo"><button>회원정보 수정하기</button></Link>
-                <Link to="/mypage/deleteMyInfo"><button>회원 탈퇴하기</button></Link>
+                <div className={style.leftInfo}>
+                    아이디<br></br>이름<br></br>이메일<br></br>폰번호<br></br>우편번호<br></br>주소
+                </div>
+                <div className={style.rightInfo}>
+                    {storedLoginId}<br></br>
+                    {info.name}<br></br>
+                    {info.email}<br></br>
+                    {info.phone}<br></br>
+                    {info.zipcode}<br></br>
+                    {info.address1} {info.address2}
+                </div>
+                <div className={style.cBtnBox}>
+                    <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
+                    <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
+                    <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
+                </div>
             </div>
         </div>
     );
@@ -54,21 +60,33 @@ const Review = () => {
 function MyPage() {
     const [initialRender, setInitialRender] = useState(true);
 
+    const [selectedMenu, setSelectedMenu] = useState("info");
+
+    const handleMenuClick = (menu) => {
+        setSelectedMenu(menu);
+    };
+
     return (
         <div className={style.container}>
             <div className={style.menu}>
-                <Link to="/mypage/info"><button className={style.menuInfo}>내 정보</button></Link>
-                <Link to="/mypage/jjim"><button className={style.menuJjim}>내 찜</button></Link>
-                <Link to="/mypage/review"><button className={style.menuReview}>내 리뷰</button></Link>
+                <Link to="/mypage/info">
+                    <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
+                </Link>
+                <Link to="/mypage/jjim">
+                    <button className={selectedMenu === "jjim" ? style.menuJjimSelected : style.menuJjim} onClick={() => handleMenuClick("jjim")}>내 찜</button>
+                </Link>
+                <Link to="/mypage/review">
+                    <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내 리뷰</button>
+                </Link>
             </div>
             <Routes>
                 {initialRender && <Route path="/" element={<Info />} />} {/* 처음 렌더링 시에만 Info 컴포넌트를 보임 */}
                 <Route path="info" element={<Info />} />
                 <Route path="jjim" element={<Jjim />} />
                 <Route path="review" element={<Review />} />
-                <Route path="deleteMyInfo" element={<DeleteMyInfo/>}/>
-                <Route path="updateMyInfo" element={<UpdateMyInfo/>}/>
-                <Route path="changePw" element={<ChangePw/>}/>
+                <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
+                <Route path="updateMyInfo" element={<UpdateMyInfo />} />
+                <Route path="changePw" element={<ChangePw />} />
             </Routes>
         </div>
 
