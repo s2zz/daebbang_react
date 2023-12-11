@@ -1,21 +1,33 @@
 import { useState, useEffect  } from 'react';
 import { Link, Route, Routes} from 'react-router-dom';
 import axios from 'axios';
-import style from "./MyPage.module.css"
+import style from "./css/MyPage.module.css"
+import DeleteMyInfo from './DeleteMyInfo';
 
 const Info = () => {
+    const storedLoginId = sessionStorage.getItem('loginId');
+
+    const [info,setInfo] = useState([{}]);
+
+    useEffect(()=>{
+        axios.get("/api/member/myInfo/"+storedLoginId).then(resp=>{
+            setInfo(resp.data);
+        });
+    }, []);
+
     return (
         <div className={style.infoContainer}>
             <div className={style.profile}>프로필사진을 내가 할 수 있을까..</div>
             <div className={style.infoBox}>
-                <div>아이디</div>
-                <div>이름</div>
-                <div>이메일</div>
-                <div>폰번호</div>
-                <div>집주소</div>
+                <div>아이디 : {storedLoginId}</div>
+                <div>이름 : {info.name}</div>
+                <div>이메일 : {info.email}</div>
+                <div>폰번호 : {info.phone}</div>
+                <div>우편번호 : {info.zipcode}</div>
+                <div>주소 : {info.address1} {info.address2}</div>
                 <button>비밀번호 변경하기</button>
                 <button>회원정보 수정하기</button>
-                <button>회원 탈퇴하기</button><br></br>
+                <Link to="/mypage/deleteMyInfo"><button>회원 탈퇴하기</button></Link>
             </div>
         </div>
     );
@@ -52,6 +64,7 @@ function MyPage() {
                 <Route path="info" element={<Info />} />
                 <Route path="jjim" element={<Jjim />} />
                 <Route path="review" element={<Review />} />
+                <Route path="deleteMyInfo" element={<DeleteMyInfo/>}/>
             </Routes>
         </div>
 
