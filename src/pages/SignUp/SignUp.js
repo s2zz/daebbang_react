@@ -358,8 +358,10 @@ function SignUp() {
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  width: '400px',
-                  height: '400px'
+                  width: '430px',
+                  height: '400px',
+                  padding:'0px',
+                  overflow:'none'
                 }
               }}
             >

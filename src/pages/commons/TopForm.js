@@ -1,20 +1,21 @@
 import style from "./TopForm.module.css"
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import logo from "../Enrollment/assets/logo.png";
 import axios from 'axios';
 
 const TopForm = ({ setLoginId }) => {
 
+    const navi = useNavigate();
     const storedLoginId = sessionStorage.getItem('loginId');
     const handleLogout = () => {
         axios.get("/api/member/logout").then(resp => {
             console.log("로그아웃 완료");
             sessionStorage.removeItem('loginId');
+            navi("/");
             window.location.reload();
             setLoginId = null;
-
         }).catch(resp => {
             console.log(resp);
         })
