@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function EstateInsert1() {
   const navi = useNavigate();
+  const { kakao } = window;
 
   // 평수&제곱미터
   const [areas, setAreas] = useState({ area: '', squareMeter: '' });
@@ -45,42 +46,38 @@ function EstateInsert1() {
     if (name === 'address') {
       setEnroll_company({
         ...enroll_company,
-        [name]: value,
+        [name]: value
       });
-
-      // 좌표 변환
-      try {
-        const geocoder = new window.kakao.maps.services.Geocoder();
-        const result = await new Promise((resolve, reject) => {
-          geocoder.addressSearch(value, (result, status) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              resolve({
-                latitude: result[0].y,
-                longitude: result[0].x,
-              });
-            } else {
-              reject(status);
-            }
-          });
-        });
-
-        setRealEstate(prev => ({
-          ...prev,
-          latitude: result.latitude,
-          longitude: result.longitude,
-        }));
-      } catch (error) {
-        console.error("Error converting address to coordinates:", error);
-      }
-      // 좌표 변환
     }
   };
-
 
   // 주소 검색 팝업창 닫기
   const handleComplete = (data) => {
     setPopup(!popup);
   }
+
+  // 좌표 입력
+  const handleGeocoding = (address) => {
+    // 주소-좌표 변환 객체를 생성합니다
+    const geocoder = new kakao.maps.services.Geocoder();
+
+    // 주소로 좌표를 검색합니다
+    geocoder.addressSearch(address, function (result, status) {
+      // 정상적으로 검색이 완료됐으면
+      if (status === kakao.maps.services.Status.OK) {
+        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 realEstate 객체에 자동 입력합니다
+        setRealEstate(prevState => ({
+          ...prevState,
+          latitude: result[0].y,
+          longitude: result[0].x
+        }));
+
+        // ... (마커, 인포윈도우 설정 등 이전 코드와 동일한 부분)
+      }
+    });
+  };
 
   // 보낼 데이터
   const [realEstate, setRealEstate] = useState({
@@ -111,10 +108,17 @@ function EstateInsert1() {
     } else {
       setRealEstate(prev => ({ ...prev, [name]: value }));
     }
+
+    // 주소가 입력되었을 때 주소를 이용해 좌표 검색 및 realEstate 업데이트
+    if (realEstate.address) {
+      handleGeocoding(realEstate.address);
+    }
   }
 
   const handleSubmit = () => {
     
+    console.log(realEstate);
+
     if (Object.values(realEstate).some(e => !e)) {
       alert("모든 항목을 입력해주세요");
       return false;
