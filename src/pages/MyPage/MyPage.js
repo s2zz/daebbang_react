@@ -31,12 +31,13 @@ const Info = () => {
                     {info.zipcode}<br></br>
                     {info.address1} {info.address2}
                 </div>
-                <div className={style.cBtnBox}>
-                    <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
-                    <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
-                    <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
-                </div>
             </div>
+            <div className={style.cBtnBox}>
+                <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
+                <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
+                <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
+            </div>
+
         </div>
     );
 }
@@ -68,6 +69,7 @@ function MyPage() {
 
     return (
         <div className={style.container}>
+            <div className={style.myLogo}>MY DAEBBANG</div>
             <div className={style.menu}>
                 <Link to="/mypage/info">
                     <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>

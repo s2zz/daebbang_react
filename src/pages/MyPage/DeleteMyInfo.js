@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import dstyle from "./css/DeleteMyInfo.module.css"
 
@@ -35,6 +35,7 @@ const DeleteMyInfo = () => {
 
     return (
         <div className={dstyle.delContainer}>
+            <Link to="/mypage"><button>뒤로가기</button></Link>
             <div>DAEBBANG 회원 탈퇴</div>
             <div>id : {storedLoginId}</div>
             <div>pw :

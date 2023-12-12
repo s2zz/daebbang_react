@@ -1,17 +1,18 @@
 *{box-sizing: border-box;}
 
+.myLogo {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    font-size: 30pt;
+    font-weight: bold;
+}
+
 .infoContainer, .JjimContainer, .ReviewContainer {
     margin:auto;
     border:1px solid black;
     width:800px;
-    height:600px;
     margin-top:30px;
-    display:flex;
-    justify-content: center;
-}
-
-.infoBox {
-    margin-top:50px;
 }
 
 .menu {
@@ -39,23 +40,31 @@
     cursor: pointer;
 }
 
-.leftInfo, .rightInfo {
-    float:left;
-    width:250px;
+.infoBox {
+    display: flex;
+    justify-content: center;
+    margin-top:50px;
+    margin-bottom: 50px;
 }
 
 .leftInfo {
     font-weight: bold;
+    float:left;
+    width:100px;
 }
 
 .cBtnBox {
-    margin-top:50px;
+    display: flex;
+    justify-content:center;
+    margin-bottom:50px;
 }
 
 .changeBtn {
     width:150px;
+    height:50px;
     background-color: white;
     color:black;
+    margin-right:10px;
 }
 
 .changeBtn:hover {
