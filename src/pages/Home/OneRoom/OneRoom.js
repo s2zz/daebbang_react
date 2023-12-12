@@ -1,13 +1,14 @@
 //
 import { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
+import { Map, MapMarker, ZoomControl, MarkerClusterer } from "react-kakao-maps-sdk";
 
 //
 import { markerdata } from "./data/markerData"; // 마커 데이터 가져오기
 
 //
 import $ from "jquery";
+import axios from "axios";
 
 //
 import List from "./List/List";
@@ -20,18 +21,40 @@ function OneRoom() {
   const [mapRendered, setMapRendered] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(6);
 
+  const [mapList, setMapList] = useState([{}]);
+
+
+  const [positions, setPositions] = useState([]);
+
+
   const navigate = useNavigate();
 
   // NPM INSTALL 하면서 받은 카카오 정보들이
   // 로컬에 저장되어 있기 때문에 불러옴
   const { kakao } = window;
 
+  
+
   // 1. 로딩 될때 화면 드레그 발동
   // 2. 지도 화면은 한번만 로딩 되게
   useEffect(() => {
-    handleDragEnd();
-    setMapRendered(true);
+    axios
+      .get(`/api/map/getAll`)
+      .then((resp) => {
+        setMapList(resp.data);
+        handleDragEnd();
+        setMapRendered(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        // 데이터를 받고 나서 실행할 코드를 이곳에 넣어보세요.
+        console.log(mapList); // 여기에서 값을 확인해보세요.
+        
+      });
   }, []);
+
 
   // 페이지 로딩 시 사용할 기본 경계 반환
   const getDefaultBounds = () => {
@@ -43,7 +66,6 @@ function OneRoom() {
 
   // 지도에서 마우스 드레그 이벤트 발생시 마커 새로 불러오기
   const handleDragEnd = (map) => {
-
     // map 인자가 받지 못한건 처음 페이지 켤때니까
     // get Bouns에 기본 바운스를 넣어줌 안 그럼 맵이 없어서 값이 없음
     if (!map) {
@@ -60,7 +82,7 @@ function OneRoom() {
       const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
       return bounds.contain(markerPosition);
     });
-    
+
     // 콘솔에 마커 갯수와 정보 찍기
     // console.log("마커 갯수:", markersInBounds.length);
     // console.log("마커 정보:", markersInBounds);
@@ -71,7 +93,6 @@ function OneRoom() {
 
   // 지도에서 휠을 활용한 줌 이벤트 발생시 마커 새로 불러오기
   const handleZoomChanged = (map) => {
-
     // Zoom level이 변경되면 페이지 이동
     setZoomLevel(map.getLevel());
 
@@ -95,7 +116,6 @@ function OneRoom() {
     navigate("/home/oneroom/info", { state: marker });
   };
 
-  
   return (
     <div className="container">
       <div className={style.home_top}>
@@ -120,6 +140,7 @@ function OneRoom() {
               onDragEnd={handleDragEnd}
               onZoomChanged={handleZoomChanged}
             >
+                 <MarkerClusterer averageCenter={true} minLevel={1}>
               {markerdata.map((marker, index) => (
                 <MapMarker
                   key={index}
@@ -128,6 +149,7 @@ function OneRoom() {
                   onClick={() => handleMarkerClick(marker)}
                 />
               ))}
+              </MarkerClusterer>
             </Map>
           )}
         </div>
