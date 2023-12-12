@@ -1,37 +1,36 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from 'reactstrap';
+const Entry = (props) => {
+    const [modalOpen, setModalOpen] = useState(false);
 
-const Entry = () => {
-    const [age, setAge] = useState('');
-
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
-
+  const toggleModal = () => setModalOpen(!modalOpen);
+  
     return (
         <div>
-            <Box sx={{ maxWidth: 140 }}>
-                <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">번호</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={age}
-                        label="Age"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-        </div>
+        <Button color="primary" onClick={toggleModal}>
+          Open Modal
+        </Button>
+        <Modal isOpen={modalOpen} toggle={toggleModal}>
+          <ModalHeader toggle={toggleModal}>Modal Title</ModalHeader>
+          <ModalBody>
+            This is the content of the modal.
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={toggleModal}>
+              Close
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </div>
     );
-};
+  }
 
 export default Entry;
