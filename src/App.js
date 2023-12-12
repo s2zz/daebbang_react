@@ -17,7 +17,7 @@ import FindPw from './pages/Login/FindPw/FindPw';
 function App() {
   return (
     <BrowserRouter>
-      <div className="container">
+      <div className="main_container">
         <TopForm />
         <div className='body_form'>
         <Routes>

@@ -1,74 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from "./Enrollment.module.css"
 import enrollImage from './assets/enroll.png';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-const BootstrapButton = styled(Button)({
-    boxShadow: 'none',
-    textTransform: 'none',
-    fontSize: 16,
-    padding: '6px 12px',
-    border: '1px solid',
-    lineHeight: 1.5,
-    backgroundColor: '#0063cc',
-    borderColor: '#0063cc',
-    fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
-        backgroundColor: '#0069d9',
-        borderColor: '#0062cc',
-        boxShadow: 'none',
-    },
-    '&:active': {
-        boxShadow: 'none',
-        backgroundColor: '#0062cc',
-        borderColor: '#005cbf',
-    },
-    '&:focus': {
-        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-    },
-});
+// function fetchData(pageNo) {
+//     const pageSize = 100; // 페이지 크기 설정 (적절한 값으로 변경)
+
+//     axios.get("/api/admin/openApi", {
+//         params: {
+//             pageNo: pageNo,
+//             pageSize: pageSize,
+//             bsnmCmpnm: "신흥사부동산중개인사무소",
+//         }
+//     })
+//         .then(response => {
+//             // console.log(response.data.EDOffices.field);
+//             response.data.EDOffices.field.map((item, index) => {
+//                 // 각 객체에 접근하는 로직을 여기에 구현
+//                 console.log(`Index ${index}:`, item.bsnmCmpnm); // 각 객체에 대한 작업 수행
+//             });
 
 
+//             // 데이터가 더 이상 없는지 확인
+//             if (response.data.EDOffices.field.length === pageSize) {
+//                 fetchData(pageNo + 1); // 데이터가 있으면 다음 페이지 호출
+//             } else {
+//                 console.log("No more data available");
+//             }
+//         })
+//         .catch(error => {
+//             console.error("There was a problem with the axios request:", error);
+//         });
+// }
+
+// // 첫 번째 페이지에서 호출을 시작하려면 아래와 같이 하세요
+// fetchData(1);
+axios.get("/api/admin/openApi")
+    .then(response => {
+        console.log(response.data);
+    })
 
 
-
-
-
-fetch('/api/admin/openApi')
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    throw new Error('Network response was not ok.');
-  })
-  .then(data => {
-    // 여기서 데이터를 사용하거나 처리합니다.
-    console.log("데이터"+JSON.stringify(data));
-  })
-  .catch(error => {
-    // 에러 발생 시 처리
-    console.error('There was a problem with the fetch operation:', error);
-  });
-
-
-const HomeEnrollment = () => {
+const HomeEnrollment = (args) => {
     const [value, setValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
-    const [csvData, setCsvData] = useState([]);
+    //모달
+    const [modal, setModal] = useState(false);
+    const toggle = () => setModal(!modal);
+    //api
+    const [data, setData] = useState([]); // Store fetched data
+    const [pageNo, setPageNo] = useState(1); // Track page number
+    const [loading, setLoading] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const fetchData = (page) => {
+        setLoading(true);
+        const pageSize = 100;
+
+        axios.get("/api/admin/openApi", {
+            params: {
+                pageNo: page,
+                pageSize: pageSize
+            }
+        })
+            .then(response => {
+                // Assuming response.data.EDOffices.field contains the data
+                const newData = response.data.EDOffices.field;
+                setData(prevData => [...prevData, ...newData]); // Append new data to existing data
+                setLoading(false);
+                setPageNo(page + 1); // Increment page number for the next fetch
+                console.log(data);
+            })
+            .catch(error => {
+                console.error("There was a problem with the axios request:", error);
+                setLoading(false);
+            });
+    };
+    const filterData = () => {
+        // 사용자가 입력한 값을 기준으로 데이터를 필터링하고, 검색어가 포함된 결과만 반환합니다.
+        return data.filter(item => {
+            // 검색어가 없거나 해당 아이템의 필드 중에서 검색어가 포함된 것을 찾습니다. 여기서는 bsnmCmpnm 필드를 검색어로 활용하겠어요.
+            return !searchValue || item.bsnmCmpnm.toLowerCase().includes(searchValue.toLowerCase());
+        });
+    };
+
+    const handleApiInputChange = (e) => {
+        setSearchValue(e.target.value);
+    };
+
+    // 중개사무소 찾기 버튼 클릭 시 데이터 가져오기
+    const handleButtonClick = () => {
+        toggle(); // 모달 열기/닫기
+
+    };
 
     const handleInputChange = (e) => {
         const inputValue = e.target.value.replace(/\D/g, '');;
@@ -81,11 +107,6 @@ const HomeEnrollment = () => {
     const handleSelectChange = (e) => {
         setSelectedValue(e.target.value);
         console.log('선택된 값:', e.target.value);
-    };
-
-    const agentLayerShow = (e) => {
-        console.log('중개사무소 정보를 표시합니다.');
-
     };
 
     return (
@@ -103,7 +124,41 @@ const HomeEnrollment = () => {
                     <ul className={style.baggray}>
                         <li>
                             <h5 className={style.list}>중개사무소 정보</h5>
-                            <button onClick={agentLayerShow} style={{padding:'3px'}}>중개사무소 찾기</button>
+                            <div>
+                                <Button color="danger" onClick={handleButtonClick}>
+                                    중개사무소 찾기
+                                </Button>
+
+                                <Modal isOpen={modal} toggle={toggle} className="style.custom-modal" {...args}>
+                                    <ModalHeader toggle={toggle}>중개사무소 찾기</ModalHeader>
+                                    <ModalBody>
+                                        <input
+                                            type="text"
+                                            placeholder='예) 종로 베스트공인 김대방'
+                                            value={searchValue}
+                                            onChange={handleApiInputChange}
+                                        />
+                                        {filterData().map((item, index) => (
+                                            <div key={index}>
+                                                {/* Displaying data fields from each item */}
+                                                <p>{item.bsnmCmpnm}</p> {/* 혹시 이 부분에서 다른 속성으로 바꿔야 하는지 확인해주세요 */}
+                                                {/* Add other data fields as needed */}
+                                            </div>
+                                        ))}
+                                    </ModalBody>
+
+
+
+                                    <ModalFooter>
+                                        <Button color="primary" onClick={toggle}>
+                                            Do Something
+                                        </Button>{' '}
+                                        <Button color="secondary" onClick={toggle}>
+                                            Cancel
+                                        </Button>
+                                    </ModalFooter>
+                                </Modal>
+                            </div>
                         </li>
                         <hr></hr>
                         <li>
@@ -112,10 +167,10 @@ const HomeEnrollment = () => {
                         </li>
                         <hr></hr>
                         <li>
-                            <h5 className={style.list} style={{marginBottom:'0px'}}>대표공인중개사 이메일</h5>
+                            <h5 className={style.list} style={{ marginBottom: '0px' }}>대표공인중개사 이메일</h5>
                             <div className={style.nextId}>
                                 <input type="text" placeholder='이메일을 입력하세요.'></input>
-                                <span style={{marginLeft:'5px',marginRight:'5px'}}>@</span>
+                                <span style={{ marginLeft: '5px', marginRight: '5px' }}>@</span>
                                 <select value={selectedValue} onChange={handleSelectChange}>
                                     <option value="">선택하세요</option>
                                     <option value="naver.com">naver.com</option>
@@ -131,9 +186,9 @@ const HomeEnrollment = () => {
                 </div>
             </div>
             <div style={{ textAlign: 'center', marginBottom: "20px" }}>
-                <BootstrapButton variant="contained" disableRipple>
+                <Button>
                     <Link to="/enrollment/entry">가입 신청하기</Link>
-                </BootstrapButton>
+                </Button>
             </div>
         </div>
     );
