@@ -11,14 +11,17 @@
 .blank {
     height:20px;
 }
+.Font{
+    margin-bottom: 10px;
+}
 
-.findIdBox{
+.findPwBox{
     border:1px solid black;
     width:100%;
     height:100%;
 }
 
-.findIdFont {
+.findPwFont {
     font-size:11pt;
     font-weight: bold;
 }
@@ -32,7 +35,7 @@
     font-weight: 700;
 }
 
-.inputfindIdBox {
+.inputFindPwBox {
     height:190px;
     display: flex;
     justify-content: center;
@@ -49,7 +52,7 @@
     align-items: center;
 }
 
-.findIdBtn {
+.findPwBtn {
     width:200px;
     height:80px;
     background-color: black;
@@ -57,7 +60,7 @@
     font-size:12pt;
 }
 
-.findIdBtn:hover {
+.findPwBtn:hover {
     cursor:pointer;
     background-color:rgb(48, 48, 48);
     color:white;
@@ -76,4 +79,12 @@
     text-decoration: none;
     color:black;
     margin:10px;
+}
+.good{
+    margin-top: 10px;
+    color: rgb(35, 255, 35);
+}
+.notgood{
+    margin-top: 10px;
+    color: rgb(255, 55, 55);
 }
