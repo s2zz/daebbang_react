@@ -1,5 +1,5 @@
 import style from '../css/BoardContents.module.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -8,8 +8,10 @@ import Pagination from "@mui/material/Pagination";
 
 const FreeBoardContents = () => {
     const location = useLocation();
+    const navi = useNavigate();
     const [boardContents, setBoardContents] = useState({ contents: "" });
     const [replyList, setReplyList] = useState([{}]);
+    const [fileList, setFileList] = useState([{}]);
 
     // 댓글 내림차순 정렬
     function compareBySeq(a, b) {
@@ -18,9 +20,10 @@ const FreeBoardContents = () => {
 
     // 게시글 내용, 댓글 목록 불러오기
     useEffect(() => {
-        axios.get(`/api/board/boardContents/${location.state.oriSeq}`).then(resp => {
+        axios.get(`/api/board/boardContents/${location.state.sysSeq}`).then(resp => {
             setBoardContents(resp.data);
             setReplyList(resp.data.replies.sort(compareBySeq));
+            setFileList(resp.data.files.sort(compareBySeq));
         }).catch(err => {
             console.log(err);
         })
@@ -41,6 +44,7 @@ const FreeBoardContents = () => {
 
         axios.post("/api/reply", insertReply).then(resp => {
             alert("댓글 등록 성공");
+            console.log(resp.data)
             setInsertReply(prev => ({ ...prev, contents: "" }));
             setReplyList(resp.data.sort(compareBySeq));
         }).catch(err => {
@@ -93,6 +97,30 @@ const FreeBoardContents = () => {
             console.log(err);
         })
     }
+    
+    // 게시글 삭제
+    const contentsDel = (seq) => {
+        let imgList = existImgSearch(boardContents.contents);
+        if(window.confirm("게시글을 삭제하시겠습니까?")){
+            axios.delete(`/api/board/${seq}`,{ data: imgList }).then(resp=>{
+                alert("게시글 삭제에 성공하였습니다");
+                navi("/");
+            }).catch(err=>{
+                alert("게시글 삭제에 실패하였습니다");
+                console.log(err);
+            })
+        }
+    }
+
+    let existImgSearch = (contents) => { // 게시글 내용에 존재하는 태그 뽑아내기 ( sysName )
+        const imgSrcRegex = /<img[^>]*src=["']\/uploads\/board\/([^"']+)["'][^>]*>/g;
+        let existImgList = [];
+        let match;
+        while ((match = imgSrcRegex.exec(contents)) !== null) {
+            existImgList.push(match[1]);
+        }
+        return existImgList;
+    }
 
     // 댓글 삭제
     const delReplyBtn = (seq) => {
@@ -110,7 +138,9 @@ const FreeBoardContents = () => {
     // 댓글 페이지네이션
     const [currentReplyPage, setCurrentReplyPage] = useState(1);
     const replyCountPerPage = 10;
+
     const sliceReplyList = () => {
+        console.log("replyList" + replyList);
         const start = (currentReplyPage - 1) * replyCountPerPage;
         const end = start + replyCountPerPage;
         return replyList.slice(start, end);
@@ -119,16 +149,34 @@ const FreeBoardContents = () => {
         setCurrentReplyPage(currentPage);
     }
 
+    // 파일 다운로드
+    const downloadFile = (sysName,oriName) => {
+        axios.get("/api/file",{params:{sysName:sysName,oriName:oriName}}).then(resp=>{
+        }).catch(err=>{
+            alert("파일 다운로드 중 에러가 발생하였습니다");
+            console.log(err);
+        })
+    }
+
     return (
         <>
             <div className={style.boardContentsTitle}>{boardContents.title}</div>
             <div className={style.boardContentsInfo}>
                 <div>
-                    글 번호 {location.state.sysSeq} | 작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
+                 작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
                 </div>
                 <div>
-                    <button>삭제</button>
+                    <button onClick={()=>{contentsDel(location.state.sysSeq)}}>삭제</button>
                 </div>
+            </div>
+            <div>
+                {
+                    fileList.map((e,i)=>{
+                        return (
+                            <div key={i} onClick={()=>downloadFile(e.sysName,e.oriName)}>{e.oriName}</div>
+                        );
+                    })
+                }
             </div>
             <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}></div>
             <div>

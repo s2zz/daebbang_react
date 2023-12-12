@@ -66,7 +66,7 @@ const FreeBoardList = () => {
                                     <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                        <Link to={`/board/toFreeBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:e.seq,sysSeq:board.length-(i)}}>
+                                        <Link to={`/board/toFreeBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:board.length-(i),sysSeq:e.seq}}>
                                             {e.title.length>80 ? e.title.substring(0,80)+"...":e.title}
                                         </Link>
                                     </div>
