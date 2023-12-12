@@ -39,7 +39,7 @@ function EstateInsert1() {
   // 주소 검색 팝업
   const [popup, setPopup] = useState(false);
 
-  const handleAddress = (e) => {
+  const handleAddress = async (e) => {
     const { name, value } = e.target;
 
     if (name === 'address') {
@@ -47,8 +47,35 @@ function EstateInsert1() {
         ...enroll_company,
         [name]: value,
       });
+
+      // 좌표 변환
+      try {
+        const geocoder = new window.kakao.maps.services.Geocoder();
+        const result = await new Promise((resolve, reject) => {
+          geocoder.addressSearch(value, (result, status) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              resolve({
+                latitude: result[0].y,
+                longitude: result[0].x,
+              });
+            } else {
+              reject(status);
+            }
+          });
+        });
+
+        setRealEstate(prev => ({
+          ...prev,
+          latitude: result.latitude,
+          longitude: result.longitude,
+        }));
+      } catch (error) {
+        console.error("Error converting address to coordinates:", error);
+      }
+      // 좌표 변환
     }
-  }
+  };
+
 
   // 주소 검색 팝업창 닫기
   const handleComplete = (data) => {
@@ -64,6 +91,8 @@ function EstateInsert1() {
     area: "",
     zipcode: "",
     address: "",
+    latitude: "",
+    longitude: ""
   });
 
   const handleChange = (e) => {
@@ -85,6 +114,7 @@ function EstateInsert1() {
   }
 
   const handleSubmit = () => {
+    
     if (Object.values(realEstate).some(e => !e)) {
       alert("모든 항목을 입력해주세요");
       return false;
