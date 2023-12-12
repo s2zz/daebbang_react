@@ -11,6 +11,9 @@
 .blank {
     height:20px;
 }
+.loginFont{
+    margin-bottom: 10px;
+}
 
 .findIdBox{
     border:1px solid black;
@@ -78,8 +81,10 @@
     margin:10px;
 }
 .good{
+    margin-top: 10px;
     color: rgb(35, 255, 35);
 }
 .notgood{
+    margin-top: 10px;
     color: rgb(255, 55, 55);
 }
