@@ -30,7 +30,7 @@ const FreeBoardContents = () => {
     }, [replyList.length])
 
     // 댓글 추가
-    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.oriSeq });
+    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.sysSeq });
     const insertReplyHandleChange = (e) => {
         setInsertReply(prev => ({ ...prev, contents: e.target.value }));
     }
@@ -80,7 +80,6 @@ const FreeBoardContents = () => {
     }
 
     const updateAdd = () => {
-
         if(updateReply.contents===""){
             alert("내용을 입력해주세요");
             return;
@@ -235,7 +234,7 @@ const FreeBoardContents = () => {
                                     visibleUpdateBox === e.seq ?
                                         <div>
                                             <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
-                                            <button>수정완료</button>
+                                            <button onClick={updateAdd}>수정완료</button>
                                         </div>
                                         :
                                         <div>
