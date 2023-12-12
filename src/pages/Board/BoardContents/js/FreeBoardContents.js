@@ -103,7 +103,7 @@ const FreeBoardContents = () => {
         if(window.confirm("게시글을 삭제하시겠습니까?")){
             axios.delete(`/api/board/${seq}`,{ data: imgList }).then(resp=>{
                 alert("게시글 삭제에 성공하였습니다");
-                navi("/");
+                navi("/board/toFreeBoardList");
             }).catch(err=>{
                 alert("게시글 삭제에 실패하였습니다");
                 console.log(err);
@@ -111,7 +111,7 @@ const FreeBoardContents = () => {
         }
     }
 
-    let existImgSearch = (contents) => { // 게시글 내용에 존재하는 태그 뽑아내기 ( sysName )
+    const existImgSearch = (contents) => { // 게시글 내용에 존재하는 태그 뽑아내기 ( sysName )
         const imgSrcRegex = /<img[^>]*src=["']\/uploads\/board\/([^"']+)["'][^>]*>/g;
         let existImgList = [];
         let match;
