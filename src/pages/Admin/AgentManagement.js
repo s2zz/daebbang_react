@@ -58,7 +58,7 @@ const AgentManagement = () => {
   );
 
   const handleApproval = (email, enabled) => {
-    const confirmationMessage = enabled ? 'Do you want to revoke approval?' : 'Do you want to approve?';
+    const confirmationMessage = enabled ? '권한 취소 하시겠습니까?' : '권한 부여 하시겠습니까?';
     const confirmed = window.confirm(confirmationMessage);
     
     if (confirmed) {
@@ -88,7 +88,7 @@ const AgentManagement = () => {
       color={enabled ? 'secondary' : 'primary'}
       onClick={() => handleApproval(email, enabled)}
     >
-      {enabled ? 'Revoke Approval' : 'Approve'}
+      {enabled ? '권한 취소' : '권한 부여'}
     </Button>
   );
 
@@ -112,7 +112,7 @@ const AgentManagement = () => {
     { field: 'enabled', headerName: 'Enabled', width: 80, headerAlign: 'center', align: 'center' },
     {
         field: 'approval',
-        headerName: 'Approval',
+        headerName: 'Authority',
         headerAlign: 'center',
         align: 'center',
         width: 120,

@@ -12,22 +12,20 @@ const MemberManagement = () => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/api/member/getAll');
-        console.log(response.data); // 데이터 확인용 로그
-        
-        setContacts(response.data);
-        setTotalRows(response.data.length);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('/api/member/getAll');
+      setContacts(response.data);
+      setTotalRows(response.data.length);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+      setLoading(false);
+    }
+  };
 
   const generateData = (page) => {
     const startIndex = (page - 1) * pageSize;
@@ -49,14 +47,57 @@ const MemberManagement = () => {
       axios.delete(`/api/member/delete/${id}`);
     }
   };
-  
+  //member
+  const handleApproval = (id, enabled) => {
+    const confirmationMessage = enabled ? '권한 취소 하시겠습니까?' : '권한 부여 하시겠습니까?';
+    const confirmed = window.confirm(confirmationMessage);
+    
+    if (confirmed) {
+      const endpoint = enabled
+        ? `/api/admin/member/revoke-approval/${id}`
+        : `/api/admin/member/approve/${id}`;
+
+      const approvalStatus = enabled ? false : true;
+
+      axios.put(endpoint, { enabled: approvalStatus })
+        .then((response) => {
+          console.log(`Approval ${enabled ? 'revoked' : 'successful'} for ${id}`);
+          // 데이터를 다시 가져와서 화면을 업데이트
+          fetchData();
+        })
+        .catch((error) => {
+          console.error(`Error while ${enabled ? 'revoking approval' : 'approving'}:`, error);
+        });
+    } else {
+      console.log('Approval action cancelled');
+    }
+  };
+
+  const approvalButton = (id, enabled) => (
+    <Button
+      variant="outlined"
+      color={enabled ? 'secondary' : 'primary'}
+      onClick={() => handleApproval(id, enabled)}
+    >
+      {enabled ? '권한 취소' : '권한 부여'}
+    </Button>
+  );
 
   const deleteButton = (id) => (
     <Button variant="outlined" color="error" onClick={() => handleDelete(id)}>
       Delete
     </Button>
   );
+  const toggleEnabled = (id) => {
+    const updatedContacts = contacts.map((contact) => {
+      if (contact.id === id) {
+        return { ...contact, enabled: !contact.enabled };
+      }
+      return contact;
+    });
 
+    setContacts(updatedContacts);
+  };
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 ,headerAlign:"center",align:"center"},
     { field: 'name', headerName: 'Name', width: 90 ,headerAlign:"center",align:"center"},
@@ -65,6 +106,14 @@ const MemberManagement = () => {
     { field: 'address1', headerName: 'Address', width: 150 ,headerAlign:"center",align:"center"},
     { field: 'role', headerName: 'Role', width: 150 ,headerAlign:"center",align:"center"},
     { field: 'enabled', headerName: 'Enabled', width: 100 ,headerAlign:"center",align:"center"},
+    {
+      field: 'approval',
+      headerName: 'Authority',
+      headerAlign: 'center',
+      align: 'center',
+      width: 150,
+      renderCell: (params) => approvalButton(params.row.id, params.row.enabled),
+    },
     {field: 'delete',headerName: 'Delete',headerAlign:"center",align:"center",width: 110,renderCell: (params) => {return deleteButton(params.row.id);},},
   ];
 
