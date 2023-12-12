@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import dstyle from "./css/DeleteMyInfo.module.css"
+import style from "./css/DeleteMyInfo.module.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const DeleteMyInfo = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -34,14 +36,25 @@ const DeleteMyInfo = () => {
     }
 
     return (
-        <div className={dstyle.delContainer}>
-            <Link to="/mypage"><button>뒤로가기</button></Link>
-            <div>DAEBBANG 회원 탈퇴</div>
-            <div>id : {storedLoginId}</div>
-            <div>pw :
-                <input type="password" placeholder="input your PW" name="pw" onChange={handleChange} value={pw.pw} />
+        <div className={style.delContainer}>
+            <Link to="/mypage"><button className={style.backBtn}><FontAwesomeIcon icon={faArrowLeft} className={style.arrowLeft} /></button></Link>
+            <div className={style.titleBox}>
+                <div className={style.title}>회원 탈퇴</div>
             </div>
-            <button onClick={handleDelete}>회원 탈퇴</button>
+            
+            <div className={style.inputBox}>
+                <div>
+                    ID<br></br>
+                    {storedLoginId}<br></br><br></br>
+                    PW<br></br>
+                    <input type="password" placeholder="input your PW" name="pw" onChange={handleChange} value={pw.pw} />
+                </div>
+            </div>
+            <div className={style.delBtns}>
+                <div>
+                    <button onClick={handleDelete} className={style.delBtn}>회원 탈퇴</button>
+                </div>
+            </div>
         </div>
     );
 }

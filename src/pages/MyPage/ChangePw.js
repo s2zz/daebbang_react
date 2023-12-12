@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import style from "./css/ChangePw.module.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const ChangePw = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -64,11 +66,27 @@ const ChangePw = () => {
 
     return (
         <div className={style.chaContainer}>
-            <Link to="/mypage"><button>뒤로가기</button></Link>
-            <div>현재 비번 : <input type="password" name="pw" onChange={handleChangePw} value={pw.pw}></input></div>
-            <div>바꿀 비번 : <input type="password" name="cpw1" onChange={handleChangeCpw1} value={cpw1.cpw1}></input></div>
-            <div>바꿀 비번 확인 : <input type="password" name="cpw2" onChange={handleChangeCpw2} value={cpw2.cpw2}></input></div>
-            <button onClick={handleChange}>비번 바꾸기</button>
+            <div className={style.backBtns}>
+                <Link to="/mypage"><button className={style.backBtn}><FontAwesomeIcon icon={faArrowLeft} className={style.arrowLeft} /></button></Link>
+            </div>
+            <div className={style.titleBox}>
+                <div className={style.title}>비밀번호 변경</div>
+            </div>
+            <div className={style.inputBox}>
+                <div>
+                    현재 비밀번호<br></br>
+                    <input type="password" name="pw" onChange={handleChangePw} value={pw.pw} placeholder='input your PW'></input><br /><br />
+                    변경 비밀번호<br></br>
+                    <input type="password" name="cpw1" onChange={handleChangeCpw1} value={cpw1.cpw1} placeholder='input your new PW'></input><br /><br />
+                    변경 비밀번호 확인<br></br>
+                    <input type="password" name="cpw2" onChange={handleChangeCpw2} value={cpw2.cpw2} placeholder='input your new PW again'></input>
+                </div>
+            </div>
+            <div className={style.changeBtns}>
+                <div>
+                    <button className={style.changeBtn} onClick={handleChange}>비번 바꾸기</button>
+                </div>
+            </div>
         </div>
     );
 }
