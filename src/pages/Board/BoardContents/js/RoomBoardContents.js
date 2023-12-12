@@ -1,5 +1,5 @@
 import style from '../css/BoardContents.module.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -8,24 +8,28 @@ import Pagination from "@mui/material/Pagination";
 const RoomBoardContents = () => {
 
     const location = useLocation();
+    const navi = useNavigate();
     const [boardContents, setBoardContents] = useState({});
     const [replyList, setReplyList] = useState([{}]);
+    const [fileList, setFileList] = useState([{}]);
 
     // 댓글 내림차순 정렬
     function compareBySeq(a, b) {
         return b.seq - a.seq;
     }
 
+    // 게시글 내용, 댓글 목록 불러오기
     useEffect(() => {
-        axios.get(`/api/board/boardContents/${location.state.oriSeq}`).then(resp => {
+        axios.get(`/api/board/boardContents/${location.state.sysSeq}`).then(resp => {
             setBoardContents(resp.data);
             setReplyList(resp.data.replies.sort(compareBySeq));
         }).catch(err => {
             console.log(err);
         })
-    }, [])
+    }, [replyList.length])
 
-    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.oriSeq });
+    // 댓글 추가
+    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.sysSeq });
     const insertReplyHandleChange = (e) => {
         setInsertReply(prev => ({ ...prev, contents: e.target.value }));
     }
@@ -41,6 +45,7 @@ const RoomBoardContents = () => {
         })
     }
 
+    // 댓글 수정
     const [visibleUpdateBox, setVisibleUpdateBox] = useState(0);
     const [updateReply, setUpdateReply] = useState({ seq: 0, contents: "" });
     const showUpdateBox = (seq, contents) => {
@@ -80,6 +85,7 @@ const RoomBoardContents = () => {
         })
     }
 
+    // 댓글 삭제
     const delReplyBtn = (seq) => {
         if (window.confirm("댓글을 삭제하시겠습니까?")) {
             axios.delete(`/api/reply/${seq}`).then(resp => {
@@ -91,6 +97,33 @@ const RoomBoardContents = () => {
             })
         }
     }
+
+    // 게시글 삭제
+    const contentsDel = (seq) => {
+        let imgList = existImgSearch(boardContents.contents);
+        if(window.confirm("게시글을 삭제하시겠습니까?")){
+            axios.delete(`/api/board/${seq}`,{ data: imgList }).then(resp=>{
+                alert("게시글 삭제에 성공하였습니다");
+                navi("/board/toRoomBoardList");
+            }).catch(err=>{
+                alert("게시글 삭제에 실패하였습니다");
+                console.log(err);
+            })
+        }
+    }
+
+    // 게시글 내용에 존재하는 태그 뽑아내기 ( sysName )
+    const existImgSearch = (contents) => { 
+        const imgSrcRegex = /<img[^>]*src=["']\/uploads\/board\/([^"']+)["'][^>]*>/g;
+        let existImgList = [];
+        let match;
+        while ((match = imgSrcRegex.exec(contents)) !== null) {
+            existImgList.push(match[1]);
+        }
+        return existImgList;
+    }
+
+    // 댓글 페이지네이션
     const [currentReplyPage, setCurrentReplyPage] = useState(1);
     const replyCountPerPage = 10;
     const sliceReplyList = () => {
@@ -102,6 +135,15 @@ const RoomBoardContents = () => {
         setCurrentReplyPage(currentPage);
     }
 
+     // 파일 다운로드
+     const downloadFile = (sysName,oriName) => {
+        axios.get("/api/file",{params:{sysName:sysName,oriName:oriName}}).then(resp=>{
+        }).catch(err=>{
+            alert("파일 다운로드 중 에러가 발생하였습니다");
+            console.log(err);
+        })
+    }
+
     return (
         <>
             <div className={style.boardContentsTitle}>
@@ -110,11 +152,20 @@ const RoomBoardContents = () => {
             </div>
             <div className={style.boardContentsInfo}>
                 <div>
-                    글 번호 {location.state.sysSeq} | 작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
+                    작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
                 </div>
                 <div>
-                    <button>삭제</button>
+                    <button onClick={()=>{contentsDel(location.state.sysSeq)}}>삭제</button>
                 </div>
+            </div>
+            <div>
+                {
+                    fileList.map((e,i)=>{
+                        return (
+                            <div key={i} onClick={()=>downloadFile(e.sysName,e.oriName)}>{e.oriName}</div>
+                        );
+                    })
+                }
             </div>
             <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}>
             </div>
@@ -174,7 +225,7 @@ const RoomBoardContents = () => {
                                     visibleUpdateBox === e.seq ?
                                         <div>
                                             <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
-                                            <button>수정완료</button>
+                                            <button onClick={updateAdd}>수정완료</button>
                                         </div>
                                         :
                                         <div>
