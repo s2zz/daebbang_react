@@ -4,7 +4,7 @@ import enrollImage from './assets/enroll.png';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+// import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 // function fetchData(pageNo) {
 //     const pageSize = 100; // 페이지 크기 설정 (적절한 값으로 변경)
@@ -124,41 +124,7 @@ const HomeEnrollment = (args) => {
                     <ul className={style.baggray}>
                         <li>
                             <h5 className={style.list}>중개사무소 정보</h5>
-                            <div>
-                                <Button color="danger" onClick={handleButtonClick}>
-                                    중개사무소 찾기
-                                </Button>
-
-                                <Modal isOpen={modal} toggle={toggle} className="style.custom-modal" {...args}>
-                                    <ModalHeader toggle={toggle}>중개사무소 찾기</ModalHeader>
-                                    <ModalBody>
-                                        <input
-                                            type="text"
-                                            placeholder='예) 종로 베스트공인 김대방'
-                                            value={searchValue}
-                                            onChange={handleApiInputChange}
-                                        />
-                                        {filterData().map((item, index) => (
-                                            <div key={index}>
-                                                {/* Displaying data fields from each item */}
-                                                <p>{item.bsnmCmpnm}</p> {/* 혹시 이 부분에서 다른 속성으로 바꿔야 하는지 확인해주세요 */}
-                                                {/* Add other data fields as needed */}
-                                            </div>
-                                        ))}
-                                    </ModalBody>
-
-
-
-                                    <ModalFooter>
-                                        <Button color="primary" onClick={toggle}>
-                                            Do Something
-                                        </Button>{' '}
-                                        <Button color="secondary" onClick={toggle}>
-                                            Cancel
-                                        </Button>
-                                    </ModalFooter>
-                                </Modal>
-                            </div>
+                            
                         </li>
                         <hr></hr>
                         <li>
@@ -185,11 +151,7 @@ const HomeEnrollment = (args) => {
                     </ul>
                 </div>
             </div>
-            <div style={{ textAlign: 'center', marginBottom: "20px" }}>
-                <Button>
-                    <Link to="/enrollment/entry">가입 신청하기</Link>
-                </Button>
-            </div>
+           
         </div>
     );
 };
