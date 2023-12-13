@@ -17,6 +17,10 @@
     height: 79px;
     text-align: center;
     line-height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 8px;
 }
 .gnb{
     float: left;
