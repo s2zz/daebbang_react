@@ -1,3 +1,8 @@
+.container {
+  width: 90%;
+  margin: auto;
+}
+
 .ScaleDiv {
   display: inline-block;
   position: relative;
@@ -22,11 +27,50 @@ input[type=number]::-webkit-outer-spin-button {
   font-weight: 700;
 }
 
-th>span {
+.star {
   margin-left: 4px;
   color: rgb(50, 108, 249);
 }
 
 input:read-only {
-  background-color: rgb(230, 230, 230);
+  background-color: rgb(252, 252, 252);
+}
+
+table {
+  width: 100%;
+  border-top: 2px solid black;
+}
+
+table th {
+  width: 12.5%;
+  background-color: rgb(252, 252, 252);
+}
+
+table>th,td {
+  padding: 10px;
+}
+
+.bigTitle {
+  font-size: 46px;
+  line-height: 70px;
+  letter-spacing: -1px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.explanation {
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.titleDiv {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.buttonDiv {
+  text-align: center;
 }
