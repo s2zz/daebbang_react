@@ -145,7 +145,7 @@ const EditFreeBoardContents = () => {
 
         axios.put("/api/board", submitFormData).then(resp => {
             alert("게시글 수정에 성공하였습니다");
-            navi("/board/toFreeBoardList");
+            navi("/board/toFreeBoardContents",{state:{sysSeq:location.state.sysSeq}});
         }).catch(err => {
             alert("게시글 수정에 실패하였습니다");
             console.log(err);
@@ -220,8 +220,8 @@ const EditFreeBoardContents = () => {
             </div>
 
             <div>
-                <Link to="/board/toFreeBoardList"><button>작성 취소</button></Link>
-                <button onClick={handleAdd}>작성 완료</button>
+                <Link to="/board/toFreeBoardContents" state={{sysSeq:location.state.sysSeq}}><button>작성 취소</button></Link>
+                <button onClick={handleAdd}>수정 완료</button>
             </div>
         </>
     );

@@ -12,6 +12,7 @@ import FreeBoardWrite from './Write/js/WriteBoard/FreeBoardWrite';
 import FreeBoardContents from './BoardContents/js/FreeBoardContents';
 import RoomBoardContents from './BoardContents/js/RoomBoardContents';
 import EditFreeBoardContents from './EditBoardContents/js/EditFreeBoardContents';
+import EditRoomBoardContents from './EditBoardContents/js/EditRoomBoardContents';
 const Board = () => {
 
     return (
@@ -30,6 +31,7 @@ const Board = () => {
                     <Route path="/toFreeBoardContents/*" element={<FreeBoardContents/>} ></Route>
                     <Route path="/toRoomBoardContents/*" element={<RoomBoardContents/>}></Route>
                     <Route path="/toEditFreeBoardContents/*" element={<EditFreeBoardContents/>}></Route>
+                    <Route path="/toEditRoomBoardContents/*" element={<EditRoomBoardContents/>}></Route>
                 </Routes>
             </div>
         </div >
