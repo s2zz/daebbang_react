@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function EstateInsert1() {
   const navi = useNavigate();
+  const { kakao } = window;
 
   // 평수&제곱미터
   const [areas, setAreas] = useState({ area: '', squareMeter: '' });
@@ -33,27 +34,51 @@ function EstateInsert1() {
   // 우편 번호
   const [enroll_company, setEnroll_company] = useState({
     zipcode: '',
-    address: ''
+    address1: '',
+    address2: ''
   });
 
   // 주소 검색 팝업
   const [popup, setPopup] = useState(false);
 
-  const handleAddress = (e) => {
+  const handleAddress = async (e) => {
     const { name, value } = e.target;
 
     if (name === 'address') {
       setEnroll_company({
         ...enroll_company,
-        [name]: value,
+        [name]: value
       });
     }
-  }
+  };
 
   // 주소 검색 팝업창 닫기
   const handleComplete = (data) => {
     setPopup(!popup);
   }
+
+  // 좌표 입력
+  const handleGeocoding = (address) => {
+    // 주소-좌표 변환 객체를 생성합니다
+    const geocoder = new kakao.maps.services.Geocoder();
+
+    // 주소로 좌표를 검색합니다
+    geocoder.addressSearch(address, function (result, status) {
+      // 정상적으로 검색이 완료됐으면
+      if (status === kakao.maps.services.Status.OK) {
+        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 realEstate 객체에 자동 입력합니다
+        setRealEstate(prevState => ({
+          ...prevState,
+          latitude: result[0].y,
+          longitude: result[0].x
+        }));
+
+        // ... (마커, 인포윈도우 설정 등 이전 코드와 동일한 부분)
+      }
+    });
+  };
 
   // 보낼 데이터
   const [realEstate, setRealEstate] = useState({
@@ -63,7 +88,10 @@ function EstateInsert1() {
     heatingCode: "",
     area: "",
     zipcode: "",
-    address: "",
+    address1: "",
+    address2: "",
+    latitude: "",
+    longitude: ""
   });
 
   const handleChange = (e) => {
@@ -75,16 +103,24 @@ function EstateInsert1() {
     handleAreaChange(e);
     handleAddress(e);
 
-    setRealEstate(prev => ({ ...prev, zipcode: enroll_company.zipcode, address: enroll_company.address }));
+    setRealEstate(prev => ({ ...prev, zipcode: enroll_company.zipcode, address1: enroll_company.address1, address2: enroll_company.address2 }));
 
     if (name === 'area') {
       setRealEstate(prev => ({ ...prev, [name]: sanitizedValue }));
     } else {
       setRealEstate(prev => ({ ...prev, [name]: value }));
     }
+
+    // 주소가 입력되었을 때 주소를 이용해 좌표 검색 및 realEstate 업데이트
+    if (realEstate.address1) {
+      handleGeocoding(realEstate.address1);
+    }
   }
 
   const handleSubmit = () => {
+
+    console.log(realEstate);
+
     if (Object.values(realEstate).some(e => !e)) {
       alert("모든 항목을 입력해주세요");
       return false;
@@ -134,7 +170,7 @@ function EstateInsert1() {
                 <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
               </div>
               <div>
-                <input type="text" placeholder="주소" name="address" onChange={handleChange} value={enroll_company.address} />
+                <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={enroll_company.address1} />
               </div>
               {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
             </div>

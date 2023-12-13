@@ -21,7 +21,7 @@ const Info = () => {
         <div className={style.infoContainer}>
             <div className={style.infoBox}>
                 <div className={style.leftInfo}>
-                    아이디<br></br>이름<br></br>이메일<br></br>폰번호<br></br>우편번호<br></br>주소
+                    ID<br></br>NAME<br></br>E-MAIL<br></br>PHONE<br></br>ZIPCODE<br></br>ADDRESS
                 </div>
                 <div className={style.rightInfo}>
                     {storedLoginId}<br></br>

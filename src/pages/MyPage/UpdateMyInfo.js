@@ -5,6 +5,8 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import DaumPostcode from "react-daum-postcode";
 import style from "./css/UpdateMyInfo.module.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const UpdateMyInfo = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -190,49 +192,54 @@ const UpdateMyInfo = () => {
 
     return (
         <div className={style.updContainer}>
-            <Link to="/mypage"><button>뒤로가기</button></Link>
-            <div>
-                이름 : <input type="text" name="name" onChange={handleChangeName} value={name.name}></input>
+            <Link to="/mypage"><button className={style.backBtn}><FontAwesomeIcon icon={faArrowLeft} className={style.arrowLeft} /></button></Link>
+            <div className={style.titleBox}>
+                <div className={style.title}>회원 정보 수정</div>
             </div>
-            <div>
-                phone : <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone}></input>
+            <div className={style.inputBox}>
+                <div>
+                    Name<br></br>
+                    <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='input your Name'></input><br /><br />
+                    Phone<br></br>
+                    <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='input your Phone Number'></input><br /><br />
+                    Email<br></br>
+                    <input type="text" name="email" onChange={handleChangeEmail} value={email.email} placeholder='input your Email'></input><br /><br />
+                    ZipCode<br></br>
+                    <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode}></input>
+                    <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
+                    Address<br></br>
+                    <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
+                    <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='input Detail Address'></input>
+                    <Modal
+                        isOpen={showModal}
+                        onRequestClose={() => setShowModal(false)}
+                        appElement={document.getElementById('root')}
+                        style={{
+                            overlay: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                            },
+                            content: {
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: '430px',
+                                height: '400px',
+                                padding: '0px',
+                                overflow: 'none'
+                            }
+                        }}
+                    >
+                        <DaumPostcode onComplete={handleComplete} />
+                    </Modal>
+                </div>
             </div>
-            <div>
-                email : <input type="text" name="email" onChange={handleChangeEmail} value={email.email}></input>
+            <div className={style.changeBtns}>
+                <div>
+                    <button onClick={handleUpdate} className={style.changeBtn}>회원정보 수정하기</button>
+                </div>
             </div>
-            <div>
-                우편번호 : <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode}></input>
-                <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
-            </div>
-            <div>
-                주소<input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1}></input>
-            </div>
-            <div>
-                <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2}></input>
-            </div>
-            <Modal
-                isOpen={showModal}
-                onRequestClose={() => setShowModal(false)}
-                appElement={document.getElementById('root')}
-                style={{
-                    overlay: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                    },
-                    content: {
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '430px',
-                        height: '400px',
-                        padding:'0px',
-                        overflow:'none'
-                    }
-                }}
-            >
-                <DaumPostcode onComplete={handleComplete} />
-            </Modal>
-            <button onClick={handleUpdate}>회원정보 수정하기</button>
+
         </div>
     );
 }

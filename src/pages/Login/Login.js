@@ -1,11 +1,28 @@
 import style from "./Login.module.css"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Modal from 'react-modal';
 import TopForm from "../commons/TopForm";
 
 
 const LoginBox = ({ setLoginId }) => {
+  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // event.ctrlKey, event.shiftKey 등을 사용하여 각 키의 상태를 확인
+      if (event.ctrlKey && event.shiftKey && event.key === 'H') {
+        setShowModal(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const [user, setUser] = useState({ id: "", pw: "" });
 
   const navi = useNavigate();
@@ -53,7 +70,30 @@ const LoginBox = ({ setLoginId }) => {
           <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
         </div>
       </div>
+      <Modal
+        isOpen={showModal}
+        onRequestClose={() => setShowModal(false)}
+        appElement={document.getElementById('root')}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+          },
+          content: {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '430px',
+            height: '400px',
+            padding: '0px',
+            overflow: 'none'
+          }
+        }}
+      >
+      </Modal>
     </div>
+
+
   );
 }
 
@@ -61,12 +101,9 @@ function Login() {
 
   const [loginId, setLoginId] = useState(null);
 
- 
-
-
   return (
     <div>
-      {loginId ? <TopForm setLoginId={setLoginId}/> : <LoginBox setLoginId={setLoginId}></LoginBox>}<br></br>
+      {loginId ? <TopForm setLoginId={setLoginId} /> : <LoginBox setLoginId={setLoginId}></LoginBox>}<br></br>
     </div>
 
   );
