@@ -4,6 +4,8 @@ import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
 import TopForm from "../commons/TopForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHammer, faLock } from "@fortawesome/free-solid-svg-icons";
 
 
 const LoginBox = ({ setLoginId }) => {
@@ -39,6 +41,23 @@ const LoginBox = ({ setLoginId }) => {
     axios.post("/api/member/login", formData).then(resp => {
       setLoginId(user.id); // 로그인 성공시
       sessionStorage.setItem('loginId', user.id);
+      setUser({ id: "", pw: "" });
+      navi("/");
+      window.location.reload();
+    }).catch(resp => {
+      console.log(resp); // 로그인 실패시
+      setUser({ id: "", pw: "" });
+    });
+  }
+
+  const handleAdminLogin = () => {
+    const formData = new FormData();
+    formData.append("id", user.id);
+    formData.append("pw", user.pw);
+    axios.post("/api/member/login", formData).then(resp => {
+      setLoginId(user.id); // 로그인 성공시
+      sessionStorage.setItem('loginId', user.id);
+      sessionStorage.setItem('isAdmin', true);
       setUser({ id: "", pw: "" });
       navi("/");
       window.location.reload();
@@ -90,6 +109,17 @@ const LoginBox = ({ setLoginId }) => {
           }
         }}
       >
+
+        <div className={style.adminModal}>
+          <div className={style.adminDiv}>
+            <div>관리자 로그인</div>
+            <FontAwesomeIcon icon={faHammer} />
+            <input type="text" placeholder="input admin ID" onChange={handleChange} name="id" value={user.id}></input><br></br>
+            <FontAwesomeIcon icon={faLock} />
+            <input type="password" placeholder="input admin PW" onChange={handleChange} name="pw" value={user.pw}></input><br></br>
+            <button onClick={handleAdminLogin}>로그인</button>
+          </div>
+        </div>
       </Modal>
     </div>
 
