@@ -43,7 +43,6 @@ const HomeEnrollment = (args) => {
     const searchButtonClick = () => {
         axios.get(`/api/admin/openApi/${searchValue}`)
             .then(response => {
-                console.log(response.data.EDOffices.field);
                 setSearchResult(response.data.EDOffices.field);
             })
             .catch(error => {
@@ -66,7 +65,6 @@ const HomeEnrollment = (args) => {
 
     const handleSelectChange = (e) => {
         setSelectedValue(e.target.value);
-        console.log('선택된 값:', e.target.value);
     };
 
     const handleItemClick = (item) => {
@@ -81,30 +79,34 @@ const HomeEnrollment = (args) => {
         setHoveredItem(null);
     };
     const handleSubmit = () => {
-        const formData = new FormData();
+        if (!selectedItem || !value || !nameValue || !emailValue || !selectedValue) {
+            alert('모든 필드를 입력해주세요.');
+        } else {
+            const formData = new FormData();
 
-        // 사용자가 입력한 정보 추가
-        formData.append('estateName', selectedItem.bsnmCmpnm);
-        formData.append('estateNumber', selectedItem.jurirno);
-        formData.append('name', nameValue);
-        console.log(nameValue);
-        formData.append('phone', value);
-        formData.append('pw', value);
-        formData.append('role', 'ROLE_AGENT');
-        formData.append('email', emailValue + "@" + selectedValue);
-        // 다른 필드 추가 가능
+            // 사용자가 입력한 정보 추가
+            formData.append('estateName', selectedItem.bsnmCmpnm);
+            formData.append('estateNumber', selectedItem.jurirno);
+            formData.append('name', nameValue);
+            formData.append('phone', value);
+            formData.append('pw', value);
+            formData.append('role', 'ROLE_AGENT');
+            formData.append('email', emailValue + "@" + selectedValue);
+            // 다른 필드 추가 가능
 
-        // axios를 사용하여 FormData를 서버로 전송
-        axios
-            .post('/api/admin/agent/signup', formData)
-            .then(response => {
-                console.log('회원가입 성공:', response.data);
-            })
-            .catch(error => {
-                console.error('회원가입 에러:', error);
-            });
-        alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');
-        navigate('/enrollment/entry');
+            // axios를 사용하여 FormData를 서버로 전송
+            axios
+                .post('/api/admin/agent/signup', formData)
+                .then(response => {
+                    alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');
+                    navigate('/enrollment/entry');
+                })
+                .catch(error => {
+                    console.error('회원가입 에러:', error);
+                });
+
+        }
+
     };
     const handleEmailChange = (e) => {
         const inputValue = e.target.value;
@@ -115,6 +117,17 @@ const HomeEnrollment = (args) => {
         }
     };
 
+    const handleNameChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'name') {
+            const regex = /^[ㄱ-힣]{0,5}$/; // 글자 수 범위 수정 (0에서 5 사이)
+
+            if (regex.test(value)) {
+                setNameValue(value);
+            }
+        }
+    };
 
     return (
         <div className={style.container}>
@@ -187,7 +200,7 @@ const HomeEnrollment = (args) => {
                         <hr></hr>
                         <li>
                             <h5 className={style.list}>대표공인중개사 휴대폰 번호</h5>
-                            <input type="text" placeholder='전화번호를 입력하세요.' value={value} onChange={handleInputChange}></input>
+                            <input type="text" placeholder='예) 01012345678' value={value} onChange={handleInputChange}></input>
                         </li>
                         <hr></hr>
                         <li>
@@ -196,13 +209,14 @@ const HomeEnrollment = (args) => {
                                 type="text"
                                 placeholder="이름을 입력하세요."
                                 value={nameValue}
-                                onChange={(e) => setNameValue(e.target.value)}
+                                name='name'
+                                onChange={handleNameChange}
                             />
 
                         </li>
                         <hr></hr>
                         <li>
-                            <h5 className={style.list} style={{ marginBottom: '0px' }}>대표공인중개사 이메일</h5>
+                            <h5 className={style.list}>대표공인중개사 이메일</h5>
                             <div className={style.nextId}>
                                 <input
                                     type="text"

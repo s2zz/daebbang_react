@@ -53,7 +53,7 @@ const AgentManagement = () => {
 
   const deleteButton = (email) => (
     <Button variant="outlined" color="error" onClick={() => handleDelete(email)}>
-      Delete
+      삭제
     </Button>
   );
 
@@ -104,7 +104,8 @@ const AgentManagement = () => {
   };
   const columns = [
     { field: 'email', headerName: 'Email', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'estateName', headerName: 'estateName', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'estateName', headerName: 'EstateName', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'estateNumber', headerName: 'EstateNumber', width: 150, headerAlign: 'center', align: 'center' },
     { field: 'name', headerName: 'Name', width: 90, headerAlign: 'center', align: 'center' },
     { field: 'phone', headerName: 'Phone', width: 110, headerAlign: 'center', align: 'center' },
     { field: 'manners_temperature', headerName: 'Manners_temperature', width: 200, headerAlign: 'center', align: 'center' },

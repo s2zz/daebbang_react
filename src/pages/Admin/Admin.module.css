@@ -6,6 +6,7 @@
     width: 20%;
     background-color: antiquewhite;
     padding: 40px;
+    min-height: 89vh;
   }
   
   .mainContent {
