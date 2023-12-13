@@ -3,7 +3,7 @@ import style from '../css/Post.module.css';
 
 const Post = (props) => {
 
-    const complete = (data) =>{
+    const complete = (data) => {
         let fullAddress = data.address;
         let extraAddress = '';
 
@@ -16,14 +16,16 @@ const Post = (props) => {
             }
             fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
         }
-        console.log(data)
-        console.log(fullAddress)
-        console.log(data.zonecode)
+        console.log(data);
+        console.log(data.sigungu);
+        console.log(data.bname1);
+        console.log(data.bname2);
 
         props.setcompany({
             ...props.company,
-            zipcode:data.zonecode,
-            address:fullAddress,
+            zipcode: data.zonecode,
+            address1: fullAddress,
+            address2: data.sigungu + data.bname1 + " " + data.bname2
         })
     }
 
