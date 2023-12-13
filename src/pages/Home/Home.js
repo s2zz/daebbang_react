@@ -4,7 +4,7 @@ import OneRoom from '../Home/OneRoom/OneRoom';
 
 function Home() {
     return (
-        <div className="container">
+        <div> {/* className="container" */}
             <Routes>
                 <Route path="/oneroom/*" element={<OneRoom />} />
                 <Route path="/tworoom/*" element={<OneRoom />} />

@@ -1,7 +1,12 @@
 //
 import { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { Map, MapMarker, ZoomControl, MarkerClusterer } from "react-kakao-maps-sdk";
+import {
+  Map,
+  MapMarker,
+  ZoomControl,
+  MarkerClusterer,
+} from "react-kakao-maps-sdk";
 
 //
 import { markerdata } from "./data/markerData"; // 마커 데이터 가져오기
@@ -23,9 +28,7 @@ function OneRoom() {
 
   const [mapList, setMapList] = useState([{}]);
 
-
   const [positions, setPositions] = useState([]);
-
 
   const navigate = useNavigate();
 
@@ -33,28 +36,22 @@ function OneRoom() {
   // 로컬에 저장되어 있기 때문에 불러옴
   const { kakao } = window;
 
-  
-
   // 1. 로딩 될때 화면 드레그 발동
   // 2. 지도 화면은 한번만 로딩 되게
   useEffect(() => {
+    setMapRendered(true);
+    handleDragEnd();
     axios
       .get(`/api/map/getAll`)
       .then((resp) => {
         setMapList(resp.data);
-        handleDragEnd();
         setMapRendered(true);
+        handleDragEnd();
       })
       .catch((err) => {
         console.log(err);
-      })
-      .finally(() => {
-        // 데이터를 받고 나서 실행할 코드를 이곳에 넣어보세요.
-        console.log(mapList); // 여기에서 값을 확인해보세요.
-        
       });
   }, []);
-
 
   // 페이지 로딩 시 사용할 기본 경계 반환
   const getDefaultBounds = () => {
@@ -78,8 +75,11 @@ function OneRoom() {
     const bounds = map.getBounds();
 
     // 경계(현재 화면)에 포함된 마커들 찾기
-    const markersInBounds = markerdata.filter((marker) => {
-      const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
+    const markersInBounds = mapList.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(
+        marker.latitude,
+        marker.longitude
+      );
       return bounds.contain(markerPosition);
     });
 
@@ -100,8 +100,11 @@ function OneRoom() {
     const bounds = map.getBounds();
 
     // 경계(현재 화면)에 포함된 마커들 찾기
-    const markersInBounds = markerdata.filter((marker) => {
-      const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
+    const markersInBounds = mapList.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(
+        marker.latitude,
+        marker.longitude
+      );
       return bounds.contain(markerPosition);
     });
 
@@ -117,7 +120,9 @@ function OneRoom() {
   };
 
   return (
-    <div className="container">
+    <div>
+      {" "}
+      {/* className="container"*/}
       <div className={style.home_top}>
         <div>방 찾기</div>
         <div>찜한 매물</div>
@@ -129,29 +134,78 @@ function OneRoom() {
           <Link to="info">Go to Info</Link>
         </div>
       </div>
-
       <div className={style.main_box}>
         <div className={style.home_body_map}>
-          {mapRendered && (
-            <Map
-              center={{ lat: 36.84142696925057, lng: 127.14542099214732 }}
-              style={{ width: "100%", height: "100%" }}
-              level={zoomLevel}
-              onDragEnd={handleDragEnd}
-              onZoomChanged={handleZoomChanged}
-            >
-                 <MarkerClusterer averageCenter={true} minLevel={1}>
-              {markerdata.map((marker, index) => (
-                <MapMarker
-                  key={index}
-                  position={{ lat: marker.lat, lng: marker.lng }}
-                  options={{ title: marker.title }}
-                  onClick={() => handleMarkerClick(marker)}
-                />
-              ))}
-              </MarkerClusterer>
-            </Map>
-          )}
+          <div className={style.home_body_map_main}>
+            {mapRendered && (
+              <Map
+                center={{ lat: 36.84142696925057, lng: 127.14542099214732 }}
+                style={{ width: "100%", height: "100%" }}
+                level={zoomLevel}
+                onDragEnd={handleDragEnd}
+                onZoomChanged={handleZoomChanged}
+              >
+                <MarkerClusterer
+                  averageCenter={true}
+                  minLevel={1}
+                  calculator={[1, 2, 5]}
+                  styles={[
+                    {
+                      // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+                      width: "30px",
+                      height: "30px",
+                      background: "rgba(51, 204, 255, .8)",
+                      borderRadius: "15px",
+                      color: "#000",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      lineHeight: "31px",
+                    },
+                    {
+                      width: "40px",
+                      height: "40px",
+                      background: "rgba(255, 153, 0, .8)",
+                      borderRadius: "20px",
+                      color: "#000",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      lineHeight: "41px",
+                    },
+                    {
+                      width: "50px",
+                      height: "50px",
+                      background: "rgba(255, 51, 204, .8)",
+                      borderRadius: "25px",
+                      color: "#000",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      lineHeight: "51px",
+                    },
+                    {
+                      width: "60px",
+                      height: "60px",
+                      background: "rgba(255, 80, 80, .8)",
+                      borderRadius: "30px",
+                      color: "#000",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      lineHeight: "61px",
+                    },
+                  ]}
+                >
+                  {markerdata.map((marker, index) => (
+                    <MapMarker
+                      key={index}
+                      position={{ lat: marker.latitude, lng: marker.longitude }}
+                      options={{ title: marker.title }}
+                      onClick={() => handleMarkerClick(marker)}
+                    />
+                  ))}
+                </MarkerClusterer>
+              </Map>
+            )}
+          </div>
+          <div className={style.home_body_map_search}>asd</div>
         </div>
         <div className={style.home_body_side}>
           <Routes>
