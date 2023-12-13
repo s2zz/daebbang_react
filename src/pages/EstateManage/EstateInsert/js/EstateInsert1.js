@@ -34,7 +34,8 @@ function EstateInsert1() {
   // 우편 번호
   const [enroll_company, setEnroll_company] = useState({
     zipcode: '',
-    address: ''
+    address1: '',
+    address2: ''
   });
 
   // 주소 검색 팝업
@@ -87,7 +88,8 @@ function EstateInsert1() {
     heatingCode: "",
     area: "",
     zipcode: "",
-    address: "",
+    address1: "",
+    address2: "",
     latitude: "",
     longitude: ""
   });
@@ -101,7 +103,7 @@ function EstateInsert1() {
     handleAreaChange(e);
     handleAddress(e);
 
-    setRealEstate(prev => ({ ...prev, zipcode: enroll_company.zipcode, address: enroll_company.address }));
+    setRealEstate(prev => ({ ...prev, zipcode: enroll_company.zipcode, address1: enroll_company.address1, address2: enroll_company.address2 }));
 
     if (name === 'area') {
       setRealEstate(prev => ({ ...prev, [name]: sanitizedValue }));
@@ -110,13 +112,13 @@ function EstateInsert1() {
     }
 
     // 주소가 입력되었을 때 주소를 이용해 좌표 검색 및 realEstate 업데이트
-    if (realEstate.address) {
-      handleGeocoding(realEstate.address);
+    if (realEstate.address1) {
+      handleGeocoding(realEstate.address1);
     }
   }
 
   const handleSubmit = () => {
-    
+
     console.log(realEstate);
 
     if (Object.values(realEstate).some(e => !e)) {
@@ -168,7 +170,7 @@ function EstateInsert1() {
                 <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
               </div>
               <div>
-                <input type="text" placeholder="주소" name="address" onChange={handleChange} value={enroll_company.address} />
+                <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={enroll_company.address1} />
               </div>
               {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
             </div>
