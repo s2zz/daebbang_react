@@ -23,6 +23,7 @@ const RoomBoardContents = () => {
         axios.get(`/api/board/boardContents/${location.state.sysSeq}`).then(resp => {
             setBoardContents(resp.data);
             setReplyList(resp.data.replies.sort(compareBySeq));
+            setFileList(resp.data.files.sort(compareBySeq));
         }).catch(err => {
             console.log(err);
         })
@@ -171,7 +172,7 @@ const RoomBoardContents = () => {
             </div>
             <div>
                 <Link to="/board/toRoomBoardList"><button>뒤로가기</button></Link>
-                <button>수정하기</button>
+                <Link to="/board/toEditRoomBoardContents" state={{sysSeq:location.state.sysSeq}}><button>수정하기</button></Link>
             </div>
             <hr />
             <div>
