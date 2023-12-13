@@ -6,6 +6,7 @@ function EstateBoard() {
 
   useEffect(() => {
     axios.get("/api/estateManage/").then((resp) => {
+      console.log(resp.data);
       setRealEstate(resp.data);
     });
   }, []);

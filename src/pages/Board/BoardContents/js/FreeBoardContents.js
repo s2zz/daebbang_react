@@ -180,7 +180,7 @@ const FreeBoardContents = () => {
             <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}></div>
             <div>
                 <Link to="/board/toFreeBoardList"><button>뒤로가기</button></Link>
-                <button>수정하기</button>
+                <Link to="/board/toEditFreeBoardContents" state={{sysSeq:location.state.sysSeq}}><button>수정하기</button></Link>
             </div>
             <hr />
             <div>

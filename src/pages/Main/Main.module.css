@@ -46,57 +46,12 @@
    margin-left: 10px;
 }
 
-
-.footerbox{
-    min-width: 1290px;
-    width: 100%;
-    height: 25%;
-}
-.footer{
-    width: 40%;
-    height: 100%;
-    margin: auto;
-}
 .homeimg{
     width: 100%;
     height: 450px;
     min-width: 1290px;
 }
-.linkbox{
-    width: 80%;
-    margin: auto;
-    padding-top: 30px;
-    text-align: center;
-}
-.linkbox>a{
-    font-size: 12px;
-    text-decoration: none;
-    color: black;
-}
-.font{
-    font-weight: bolder;
-}
-.footermain{
-    padding-top: 30px;
-    text-align: center;
-    color: rgb(76, 76, 76);
-    font-size: 12px;
-    line-height: 1.6em;
-}
-.btnbox{
-    padding-bottom: 20px;
-}
-.btnbox>button{
-    font-size: 20px;
-    color: rgb(100, 100, 100);
-    margin-left: 5px;
-    cursor: pointer;
-}
-.copywrite{
-    
-    text-align: center;
-    color: rgb(166, 166, 166);
-}
+
 .overlay_text {
     position: absolute;
     top: 10%;

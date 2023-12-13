@@ -77,3 +77,11 @@
     color:black;
     margin:10px;
 }
+
+
+/*관리자 모달창*/
+
+.adminModal {
+    display: flex;
+    justify-content: center;
+}

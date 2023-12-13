@@ -93,7 +93,7 @@ function EstateInsert3() {
         <tr>
           <th>일반 사진<span>*</span></th>
           <td>
-            <input type="file" multiple={true} onChange={handleImageChange} />
+            <input type="file" multiple={true} accept="image/gif, image/jpeg, image/png" onChange={handleImageChange} />
           </td>
         </tr>
       </table>

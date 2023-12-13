@@ -85,7 +85,7 @@ const MemberManagement = () => {
 
   const deleteButton = (id) => (
     <Button variant="outlined" color="error" onClick={() => handleDelete(id)}>
-      Delete
+      삭제
     </Button>
   );
   const toggleEnabled = (id) => {
