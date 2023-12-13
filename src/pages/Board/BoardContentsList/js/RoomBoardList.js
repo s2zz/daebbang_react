@@ -69,7 +69,7 @@ const RoomBoardList = () => {
                                     <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
                                     <div>
-                                    <Link to={`/board/toRoomBoardContents/${(countPerPage*(currentPage-1))-i}`} style={{ textDecoration: "none" }} state={{oriSeq:board.length-(i),sysSeq:e.seq}}>
+                                    <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none" }} state={{sysSeq:e.seq}}>
                                             <span>[{e.header}]</span>
                                             {e.title.length>80 ? e.title.substring(0,80)+"...":e.title}
                                         </Link>
