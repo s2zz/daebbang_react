@@ -43,7 +43,6 @@ const HomeEnrollment = (args) => {
     const searchButtonClick = () => {
         axios.get(`/api/admin/openApi/${searchValue}`)
             .then(response => {
-                console.log(response.data.EDOffices.field);
                 setSearchResult(response.data.EDOffices.field);
             })
             .catch(error => {
@@ -66,7 +65,6 @@ const HomeEnrollment = (args) => {
 
     const handleSelectChange = (e) => {
         setSelectedValue(e.target.value);
-        console.log('선택된 값:', e.target.value);
     };
 
     const handleItemClick = (item) => {
@@ -90,7 +88,6 @@ const HomeEnrollment = (args) => {
             formData.append('estateName', selectedItem.bsnmCmpnm);
             formData.append('estateNumber', selectedItem.jurirno);
             formData.append('name', nameValue);
-            console.log(nameValue);
             formData.append('phone', value);
             formData.append('pw', value);
             formData.append('role', 'ROLE_AGENT');
@@ -101,13 +98,13 @@ const HomeEnrollment = (args) => {
             axios
                 .post('/api/admin/agent/signup', formData)
                 .then(response => {
-                    console.log('회원가입 성공:', response.data);
+                    alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');
+                    navigate('/enrollment/entry');
                 })
                 .catch(error => {
                     console.error('회원가입 에러:', error);
                 });
-            alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');
-            navigate('/enrollment/entry');
+
         }
 
     };
@@ -122,10 +119,10 @@ const HomeEnrollment = (args) => {
 
     const handleNameChange = (e) => {
         const { name, value } = e.target;
-    
+
         if (name === 'name') {
             const regex = /^[ㄱ-힣]{0,5}$/; // 글자 수 범위 수정 (0에서 5 사이)
-    
+
             if (regex.test(value)) {
                 setNameValue(value);
             }
