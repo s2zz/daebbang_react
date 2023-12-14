@@ -1,5 +1,5 @@
 import { useState } from "react";
-import style from '../css/EstateInsert.module.css';
+import style from '../css/EstateUpdate.module.css';
 
 function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImages }) {
   // 이미지 미리보기
@@ -9,12 +9,10 @@ function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImage
     const files = e.target.files;
 
     if (files.length > 0) {
-      const newEstateImages = [];
+      setEstateImages([...files]);
+
       const previews = [];
-
       for (const file of files) {
-        newEstateImages.push(file);
-
         // 파일리더 API
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -23,16 +21,14 @@ function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImage
           if (previews.length === files.length) {
             setImagePreviews(previews);
           }
-        };
+        }
         reader.readAsDataURL(file);
       }
-
-      setEstateImages(newEstateImages);
     } else {
       setEstateImages([]);
       setImagePreviews([]);
     }
-  };
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

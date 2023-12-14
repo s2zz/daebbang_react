@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function EstateBoard() {
   const [realEstate, setRealEstate] = useState([]);
@@ -10,10 +11,6 @@ function EstateBoard() {
       setRealEstate(resp.data);
     });
   }, []);
-
-  const handleUpdate = (estateId) => {
-    
-  }
 
   const handleDelete = (estateId) => {
     const result = window.confirm("정말 삭제하시겠습니까?");
@@ -55,7 +52,10 @@ function EstateBoard() {
               <td>{estate.title}</td>
               <td>{estate.contents}</td>
               <td>{estate.writer} 위도{estate.latitude} 경도{estate.longitude}</td>
-              <td> <button>수정</button> <button onClick={() => handleDelete(estate.estateId)}>삭제</button></td>
+              <td>
+                <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><button>수정</button></Link>
+                <button onClick={() => handleDelete(estate.estateId)}>삭제</button>
+              </td>
             </tr>
           ))}
         </tbody>

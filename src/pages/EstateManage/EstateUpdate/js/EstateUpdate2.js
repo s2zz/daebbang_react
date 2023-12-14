@@ -1,4 +1,4 @@
-import style from '../css/EstateInsert.module.css';
+import style from '../css/EstateUpdate.module.css';
 
 function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOption, setMaintenanceOption }) {
 
