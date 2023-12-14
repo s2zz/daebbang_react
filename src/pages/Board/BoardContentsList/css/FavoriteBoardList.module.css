@@ -1,0 +1,50 @@
+.boardInfo{ 
+    overflow:hidden;
+    padding-top:8px;
+    padding-bottom:8px;
+    border-bottom:1px solid black;
+}
+.boardInfo>div{
+    float:left;
+    font-weight: bold;
+    font-size:large;
+    text-align: center;
+}
+.boardInfo>div:nth-child(1){
+    width:5%;
+    padding-top:1px;
+}
+.boardInfo>div:nth-child(1)>img{width:30%;}
+.boardInfo>div:nth-child(2){width:5%;}
+.boardInfo>div:nth-child(3){width:15%;}
+.boardInfo>div:nth-child(4){width:45%;}
+.boardInfo>div:nth-child(5){width:15%;}
+.boardInfo>div:nth-child(6){width:15%;}
+
+.boardListContents span{
+    color:rgb(1, 140, 247);
+    margin-right:10px;
+    text-decoration: none!important;
+}
+.boardListContents>div{
+    overflow:hidden;
+    padding-top:8px;
+    padding-bottom:8px;
+    border-bottom:1px solid gainsboro;
+}
+.boardListContents>div:last-child{border:none;}
+.boardListContents>div>div{
+    float:left;
+    font-size:large;
+    text-align: center;
+}
+.boardListContents>div>div:nth-child(1){
+    width:5%;
+    padding-top:1px;
+}
+.boardListContents>div>div:nth-child(1)>img{width:30%}
+.boardListContents>div>div:nth-child(2){width:5%;}
+.boardListContents>div>div:nth-child(3){width:15%;}
+.boardListContents>div>div:nth-child(4){width:45%;}
+.boardListContents>div>div:nth-child(5){width:15%;}
+.boardListContents>div>div:nth-child(6){width:15%;}

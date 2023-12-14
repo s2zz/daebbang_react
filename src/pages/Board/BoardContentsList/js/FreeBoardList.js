@@ -34,6 +34,39 @@ const FreeBoardList = () => {
         setCurrentPage(currentPage);
     }
 
+    // 즐겨찾기 추가
+    const addFav = (parentSeq) => {
+        if(window.confirm("즐겨찾기를 추가하시겠습니까?")){
+            let fav = {boardTitle:"자유게시판",parentSeq:parentSeq};
+            axios.post("/api/favoriteBoard",fav).then(resp=>{
+                setBoard(board.map((e,i)=>{
+                    if(e.seq === parentSeq){e.favorite = 'true'}
+                    return e;
+                }))
+                alert("즐겨찾기 등록에 성공하였습니다");
+            }).catch(err=>{
+                alert("즐겨찾기 등록에 실패하였습니다");
+                console.log(err);
+            })
+        }
+    }
+
+    // 즐겨찾기 제거
+    const delFav = (parentSeq) => {
+        if(window.confirm("즐겨찾기를 삭제하시겠습니까?")){
+            axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp=>{
+                setBoard(board.map((e,i)=>{
+                    if(e.seq === parentSeq){e.favorite = 'false'}
+                    return e;
+                }))
+                alert("즐겨찾기 삭제에 성공하였습니다");
+            }).catch(err=>{
+                alert("즐겨찾기 삭제에 실패하였습니다");
+                console.log(err);
+            })
+        }
+    }
+
     return (
         <>
             <div className={style.boardTitle}>자유게시판</div>
@@ -61,8 +94,8 @@ const FreeBoardList = () => {
                     {
                         sliceContentsList().map((e, i) => {
                             return (
-                                <div key={i} data-seq={e.seq}>
-                                    <div><img src={notFavorite} /></div>
+                                <div key={i}>
+                                    <div>{e.favorite === 'true' ? <img src={favorite} onClick={()=>{delFav(e.seq)}}/>: <img src={notFavorite} onClick={()=>{addFav(e.seq)}}/>}</div>
                                     <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
                                     <div>
@@ -81,7 +114,7 @@ const FreeBoardList = () => {
                 <Link to="/board/toFreeBoardWrite"><button>글 작성</button></Link>
             </div>
             <div className={style.naviFooter}>
-            <Pagination
+                <Pagination
                     count={Math.ceil(board.length / countPerPage)}
                     page={currentPage}
                     onChange={currentPageHandle} />
