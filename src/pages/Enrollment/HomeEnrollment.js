@@ -39,7 +39,7 @@ const HomeEnrollment = (args) => {
     };
 
     const searchButtonClick = () => {
-        axios.get(`/api/admin/openApi/${searchValue}`)
+        axios.get(`/api/enrollment/openApi/${searchValue}`)
             .then(response => {
                 setSearchResult(response.data.EDOffices.field);
             })
@@ -66,26 +66,19 @@ const HomeEnrollment = (args) => {
     };
 
     const handleItemClick = (item) => {
-        axios.get(`/api/admin/agent/isEstateNumber/${item.jurirno}`)
+        axios.get(`/api/enrollment/agent/isEstateNumber/${item.jurirno}`)
             .then(response => {
-                console.log(response.data);
                 if (response.data) {
                     setSelectedItem('');
                     alert("이미 가입된 공인중개사무소 입니다.")
-                }else{
+                } else {
                     setSelectedItem(item);
                 }
-                
+
             })
             .catch(error => {
                 console.error("에러 발생: ", error);
             });
-
-
-
-
-
-
         toggle();
     };
     const handleMouseEnter = (item) => {
@@ -95,6 +88,24 @@ const HomeEnrollment = (args) => {
     const handleMouseLeave = () => {
         setHoveredItem(null);
     };
+    const increaseNewEstateCount = async () => {
+        try {
+          const response = await axios.get('/api/admin/agent/todayNewEstate');
+          if (response.data) {
+            console.log('Data exists:', response.data.seq);
+            // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
+            await axios.put(`/api/admin/agent/incrementNewEstate/${response.data.seq}`);
+            console.log('회원 1증가');
+          } else {
+            console.log('Data does not exist:', response.data);
+            // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
+            await axios.post('/api/admin/agent/createNewEstate');
+            console.log('신규 회원 데이터 생성');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
     const handleSubmit = () => {
         if (!selectedItem || !value || !nameValue || !emailValue || !selectedValue) {
             alert('모든 필드를 입력해주세요.');
@@ -113,8 +124,9 @@ const HomeEnrollment = (args) => {
 
             // axios를 사용하여 FormData를 서버로 전송
             axios
-                .post('/api/admin/agent/signup', formData)
+                .post('/api/enrollment/agent/signup', formData)
                 .then(response => {
+                    increaseNewEstateCount();
                     alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');
                     navigate('/enrollment/entry');
                 })
@@ -145,6 +157,7 @@ const HomeEnrollment = (args) => {
             }
         }
     };
+
 
     return (
         <div className={style.container}>
@@ -251,7 +264,7 @@ const HomeEnrollment = (args) => {
                                     <option value="gmail.com">gmail.com</option>
                                 </select>
                             </div>
-                            <p className={style.flex}>가입 후 아이디로 이용됩니다</p>
+                            <p className={style.flex}>가입 후 아이디로 이용됩니다.</p>
                         </li>
                     </ul>
                 </div>

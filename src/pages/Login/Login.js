@@ -111,13 +111,17 @@ const LoginBox = ({ setLoginId }) => {
       >
 
         <div className={style.adminModal}>
-          <div className={style.adminDiv}>
-            <div>관리자 로그인</div>
-            <FontAwesomeIcon icon={faHammer} />
-            <input type="text" placeholder="input admin ID" onChange={handleChange} name="id" value={user.id}></input><br></br>
-            <FontAwesomeIcon icon={faLock} />
-            <input type="password" placeholder="input admin PW" onChange={handleChange} name="pw" value={user.pw}></input><br></br>
-            <button onClick={handleAdminLogin}>로그인</button>
+          <div>
+            <div className={style.adminTitle}>관리자 로그인</div>
+            <div>
+              <FontAwesomeIcon icon={faHammer} className={style.icon}/>
+              <input type="text" placeholder="input admin ID" onChange={handleChange} name="id" value={user.id}></input><br></br><br></br>
+              <FontAwesomeIcon icon={faLock} className={style.icon}/>
+              <input type="password" placeholder="input admin PW" onChange={handleChange} name="pw" value={user.pw}></input><br></br>
+            </div>
+            <div className={style.adminBtnDiv}>
+              <button className={style.adminBtn} onClick={handleAdminLogin}>로그인</button>
+            </div>
           </div>
         </div>
       </Modal>
