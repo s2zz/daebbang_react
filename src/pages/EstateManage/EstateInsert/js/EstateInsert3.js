@@ -1,13 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import style from '../css/EstateInsert.module.css';
-import { useNavigate } from "react-router-dom";
 
-function EstateInsert3() {
-  const navi = useNavigate();
-
-  // 이미지 파일
-  const [estateImages, setEstateImages] = useState([]);
+function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImages}) {
   // 이미지 미리보기
   const [imagePreviews, setImagePreviews] = useState([]);
 
@@ -36,53 +30,9 @@ function EstateInsert3() {
     }
   }
 
-  // 보낼 데이터
-  const [realEstate, setRealEstate] = useState({
-    title: "",
-    contents: "",
-    memo: ""
-  });
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRealEstate(prev => ({ ...prev, [name]: value }));
-  }
-
-  const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('title', realEstate.title);
-    formData.append('contents', realEstate.contents);
-    formData.append('memo', realEstate.memo);
-
-    for (const image of estateImages) {
-      formData.append("images", image);
-    }
-
-    // 필수 항목
-    const requiredFields = ['title', 'contents'];
-
-    // 필수 항목이 비어있는지 검사
-    if (requiredFields.some(name => !realEstate[name])) {
-      alert("필수 항목을 입력해주세요");
-      return false;
-    }
-
-    const imageLength = formData.getAll('images').length;
-    if (imageLength < 3 || imageLength > 10) {
-      alert("사진을 3장 이상 10장 이하로 등록해주세요.");
-      return false;
-    }
-
-    axios.post("/api/estateManage/estateInsert3", formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then(resp => {
-      console.log(resp);
-      navi("../../");
-    }).catch(e => {
-
-    });
   }
 
   return (
@@ -127,8 +77,6 @@ function EstateInsert3() {
           </td>
         </tr>
       </table>
-
-      <button onClick={handleSubmit}>다음으로</button>
     </div>
   );
 }

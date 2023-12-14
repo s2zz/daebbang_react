@@ -1,11 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import Post from '../../js/Post';
 import style from '../css/EstateInsert.module.css';
-import { useNavigate } from "react-router-dom";
 
-function EstateInsert1() {
-  const navi = useNavigate();
+function EstateInsert1({ realEstate, setRealEstate}) {
   const { kakao } = window;
 
   // 평수&제곱미터
@@ -44,7 +41,7 @@ function EstateInsert1() {
   const handleAddress = async (e) => {
     const { name, value } = e.target;
 
-    if (name === 'address') {
+    if (name === 'address1') {
       setEnroll_company({
         ...enroll_company,
         [name]: value
@@ -58,12 +55,12 @@ function EstateInsert1() {
   }
 
   // 좌표 입력
-  const handleGeocoding = (address) => {
+  const handleGeocoding = (address1) => {
     // 주소-좌표 변환 객체를 생성합니다
     const geocoder = new kakao.maps.services.Geocoder();
 
     // 주소로 좌표를 검색합니다
-    geocoder.addressSearch(address, function (result, status) {
+    geocoder.addressSearch(address1, function (result, status) {
       // 정상적으로 검색이 완료됐으면
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
@@ -79,20 +76,6 @@ function EstateInsert1() {
       }
     });
   };
-
-  // 보낼 데이터
-  const [realEstate, setRealEstate] = useState({
-    roomCode: "",
-    structureCode: "",
-    buildingCode: "",
-    heatingCode: "",
-    area: "",
-    zipcode: "",
-    address1: "",
-    address2: "",
-    latitude: "",
-    longitude: ""
-  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,27 +98,6 @@ function EstateInsert1() {
     if (realEstate.address1) {
       handleGeocoding(realEstate.address1);
     }
-  }
-
-  const handleReturn = () => {
-    navi("../../EstateManage");
-  }
-
-  const handleSubmit = () => {
-
-    console.log(realEstate);
-
-    if (Object.values(realEstate).some(e => !e)) {
-      alert("모든 항목을 입력해주세요");
-      return false;
-    }
-
-    axios.post("/api/estateManage/estateInsert1", realEstate).then(resp => {
-      console.log(resp);
-      navi("../estateInsert2");
-    }).catch(e => {
-
-    });
   }
 
   return (
@@ -209,10 +171,6 @@ function EstateInsert1() {
           </td>
         </tr>
       </table>
-      <div className={style.buttonDiv}>
-        <button onClick={handleReturn}>이전으로</button>
-        <button onClick={handleSubmit}>다음으로</button>
-      </div>
     </div>
   );
 }

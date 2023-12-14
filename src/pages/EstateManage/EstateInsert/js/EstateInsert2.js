@@ -1,13 +1,6 @@
-import { useState } from "react";
-import axios from "axios";
 import style from '../css/EstateInsert.module.css';
-import { useNavigate } from "react-router-dom";
 
-function EstateInsert2() {
-  const navi = useNavigate();
-
-  // 관리비 유무
-  const [maintenanceOption, setMaintenanceOption] = useState("true");
+function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOption, setMaintenanceOption }) {
 
   const handleMaintenanceChange = (e) => {
     setMaintenanceOption(e.target.value);
@@ -16,33 +9,6 @@ function EstateInsert2() {
       realEstate.maintenanceCost = "";
     }
   }
-
-  // 보낼 데이터
-  const [realEstate, setRealEstate] = useState({
-    transactionCode: "t1",
-    deposit: "",
-    price: "",
-    maintenanceCost: "",
-    roomFloors: "",
-    buildingFloors: ""
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    // 숫자 이외의 문자는 제거
-    const sanitizedValue = value.replace(/[^0-9]/g, "");
-
-    if (name === 'transactionCode') {
-      setRealEstate(prev => ({ ...prev, [name]: value }));
-    } else {
-      setRealEstate(prev => ({ ...prev, [name]: sanitizedValue }));
-    }
-
-  }
-
-  // 옵션 리스트
-  const [optionList, setOptionList] = useState([]);
 
   // 옵션 리스트
   const handleOptionCode = (e) => {
@@ -55,28 +21,17 @@ function EstateInsert2() {
     }
   };
 
-  const handleSubmit = () => {
-    // 필수 항목
-    const requiredFields = ['transactionCode', 'price', 'buildingFloors', 'roomFloors'];
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    // 필수 항목이 비어있는지 검사
-    if (requiredFields.some(name => !realEstate[name])) {
-      alert("필수 항목을 입력해주세요");
-      return false;
+    // 숫자 이외의 문자는 제거
+    const sanitizedValue = value.replace(/[^0-9]/g, "");
+
+    if (name === 'transactionCode') {
+      setRealEstate(prev => ({ ...prev, [name]: value }));
+    } else {
+      setRealEstate(prev => ({ ...prev, [name]: sanitizedValue }));
     }
-
-    // 관리비 '있음' AND 관리비 입력 안한 경우 
-    if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
-      alert("필수 항목을 입력해주세요");
-      return false;
-    }
-
-    axios.post("/api/estateManage/estateInsert2", { estateDTO: realEstate, optionList: optionList }).then(resp => {
-      console.log(resp);
-      navi("../estateInsert3");
-    }).catch(e => {
-
-    });
   }
 
   return (
@@ -160,7 +115,6 @@ function EstateInsert2() {
           </td>
         </tr>
       </table>
-      <button onClick={handleSubmit}>다음으로</button>
     </div>
   );
 }
