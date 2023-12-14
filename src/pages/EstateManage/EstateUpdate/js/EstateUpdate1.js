@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Post from '../../js/Post';
-import style from '../css/EstateInsert.module.css';
+import style from '../css/EstateUpdate.module.css';
 
 function EstateInsert1({ realEstate, setRealEstate }) {
   const { kakao } = window;
