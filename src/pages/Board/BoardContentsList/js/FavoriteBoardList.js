@@ -23,6 +23,7 @@ const FavoriteBoardList = () => {
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
+                    <div>게시판</div>
                     <div>날짜</div>
                 </div>
                 <div className={style.boardListContents}>
