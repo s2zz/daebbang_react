@@ -1,3 +1,8 @@
+.searchDiv{
+    display: flex;
+    justify-content: space-between;
+}
+
 .boardInfo{ 
     overflow:hidden;
     padding-top:8px;
