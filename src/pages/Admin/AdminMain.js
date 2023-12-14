@@ -17,17 +17,12 @@ const AdminMain = () => {
     const [newEstateDateData, setNewEstateDateData] = useState([]);
     const [sumNewEstateCount, setSumNewEstateCount] = useState([]);
 
+
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchVisitorData = async () => {
             try {
                 const dailyVisitors = await axios.get("/api/admin/dailyVisitors");
                 setVisitorCount(dailyVisitors.data.visitorCount || 0);
-
-                const dailyMember = await axios.get("/api/admin/dailyMember");
-                setNewMemberCount(dailyMember.data.newMemberCount || 0);
-
-                const dailyEstate = await axios.get("/api/admin/dailyEstate");
-                setNewEstateCount(dailyEstate.data.newEstateCount || 0);
 
                 const allVisitors = await axios.get("/api/admin/visitors/getAll");
                 const visitorData = allVisitors.data.map(entry => ({
@@ -37,6 +32,18 @@ const AdminMain = () => {
                 setVisitorCountData(visitorData);
                 setVisitorDateData(allVisitors.data.map(entry => entry.date));
 
+                const sumVisitors = await axios.get("/api/admin/visitors/sum");
+                setSumVisitorCount(sumVisitors.data);
+            } catch (error) {
+                console.error('Error fetching visitor data:', error);
+            }
+        };
+
+        const fetchNewMemberData = async () => {
+            try {
+                const dailyMember = await axios.get("/api/admin/dailyMember");
+                setNewMemberCount(dailyMember.data.newMemberCount || 0);
+
                 const newMembers = await axios.get("/api/admin/newMember/getAll");
                 const newMemberData = newMembers.data.map(entry => ({
                     x: entry.newMemberDate,
@@ -44,6 +51,18 @@ const AdminMain = () => {
                 }));
                 setNewMemberCountData(newMemberData);
                 setNewMemberDateData(newMembers.data.map(entry => entry.date));
+
+                const sumNewMembers = await axios.get("/api/admin/newMember/sum");
+                setSumNewMemberCount(sumNewMembers.data);
+            } catch (error) {
+                console.error('Error fetching new member data:', error);
+            }
+        };
+
+        const fetchNewEstateData = async () => {
+            try {
+                const dailyEstate = await axios.get("/api/admin/dailyEstate");
+                setNewEstateCount(dailyEstate.data.newEstateCount || 0);
 
                 const newEstates = await axios.get("/api/admin/agent/newEstate/getAll");
                 const newEstateData = newEstates.data.map(entry => ({
@@ -53,25 +72,27 @@ const AdminMain = () => {
                 setNewEstateCountData(newEstateData);
                 setNewEstateDateData(newEstates.data.map(entry => entry.date));
 
-                const sumVisitors = await axios.get("/api/admin/visitors/sum");
-                setSumVisitorCount(sumVisitors.data);
-
-                const sumNewMembers = await axios.get("/api/admin/newMember/sum");
-                setSumNewMemberCount(sumNewMembers.data);
-
                 const sumNewEstates = await axios.get("/api/admin/agent/sum");
                 setSumNewEstateCount(sumNewEstates.data);
-
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching new estate data:', error);
             }
         };
 
-        fetchData(); // 초기 호출
 
-        const interval = setInterval(fetchData, 5000); // 5초마다 호출
+        fetchVisitorData();
+        fetchNewMemberData();
+        fetchNewEstateData();
 
-        return () => clearInterval(interval); // 언마운트 시 clearInterval 호출
+        const visitorInterval = setInterval(fetchVisitorData, 5000);
+        const newMemberInterval = setInterval(fetchNewMemberData, 5000);
+        const newEstateInterval = setInterval(fetchNewEstateData, 5000);
+
+        return () => {
+            clearInterval(visitorInterval);
+            clearInterval(newMemberInterval);
+            clearInterval(newEstateInterval);
+        };
     }, []);
 
     return (
