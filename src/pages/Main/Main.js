@@ -1,14 +1,27 @@
 import style from "./Main.module.css"
-import { BrowserRouter } from 'react-router-dom';
 import homeimg from "../Enrollment/assets/homeimg.jpg";
-import { faBlog } from "@fortawesome/free-solid-svg-icons";
-import { faYoutube, faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 import Footer from "../commons/Footer";
 
 const Main = () => {
+  const [freeboard, setfreeBoard] = useState([]);
+  const [roomboard, setroomBoard] = useState([]);
+  const [mapList, setMapList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`/api/map/getAll`)
+      .then((resp) => {
+        console.log(resp.data);
+        setMapList(resp.data.sort(compareByestate_id));
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, []);
+
   useEffect(() => {
     const checkTodayVisitor = async () => {
       try {
@@ -34,6 +47,41 @@ const Main = () => {
   }, []);
 
 
+  // 내림차순 정렬
+  function compareBySeq(a, b) {
+    return b.seq - a.seq;
+  }
+  function compareByestate_id(a, b) {
+    return b.estateId - a.estateId;
+  }
+
+  // 게시글 목록 불러오기
+  useEffect(() => {
+    axios.get(`/api/board/freeBoardList`).then(resp => {
+      setfreeBoard(resp.data.sort(compareBySeq));
+    })
+  }, []);
+  useEffect(() => {
+    axios.get(`/api/board/roomBoardList`).then(resp => {
+      setroomBoard(resp.data.sort(compareBySeq));
+    })
+  }, [])
+
+  // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const countPerPage = 10;
+  const sliceRoomContentsList = () => {
+    const start = (currentPage - 1) * countPerPage;
+    const end = start + countPerPage;
+    return roomboard.slice(start, end);
+  }
+  const sliceFreeContentsList = () => {
+    const start = (currentPage - 1) * countPerPage;
+    const end = start + countPerPage;
+    return freeboard.slice(start, end);
+  }
+
+
 
 
 
@@ -46,23 +94,105 @@ const Main = () => {
       <div className={style.middlebox}>
         <div className={style.middle_up}>
           <div className={style.recent_read}>
-            여기는 최근 본 매물
+            <div className={style.titlebox}>
+              <span className={style.title}> 최근 본 매물</span>
+            </div>
             <hr></hr>
           </div>
 
         </div>
         <div className={style.middle_down}>
           <div className={style.recent_estate}>
-            여기는 최근 등록된 매물
+            <div className={style.titlebox}>
+              <span className={style.title}> 최근 등록된 매물</span>
+              <a href="/home/oneroom/list"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
+            </div>
+            <div className={style.contents}>
             <hr></hr>
+              {
+                mapList.map((e, i) => {
+                  if (i >= 6) {
+                    return
+                  }
+                  return (
+                    <Link to={`#`} style={{ textDecoration: "none", color: "black" }} >
+                      <div className={style.cbgdiv} key={i}>
+                        <span className={style.fontcss}>
+                          [{e.address2}]
+                        </span>
+                        <span className={style.fontcss}>
+                          {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
+                        </span>
+                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.substring(0, 10)}</span>
+                      </div>
+                    </Link>
+                  );
+                })
+              }
+            </div>
+
+            
           </div>
           <div className={style.freeboard}>
-            여기는 최근 등록된 양도 게시판 목록
+            <div className={style.titlebox}>
+              <span className={style.title}>양도 게시판</span>
+              <a href="/board/toRoomBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
+            </div>
             <hr></hr>
+            <div className={style.contents}>
+              {
+                sliceRoomContentsList().map((e, i) => {
+                  if (i >= 6) {
+                    return
+                  }
+                  return (
+                    <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none", color: "black" }} state={{ sysSeq: e.seq }}>
+                      <div className={style.cbgdiv} key={i} data-seq={e.seq}>
+                        <span className={style.fontcss}>
+                          [{e.header}]
+                        </span>
+                        <span className={style.fontcss}>
+                          {e.title.length > 9 ? e.title.substring(0, 9) + "..." : e.title}
+                        </span>
+                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.split("T")[0]}</span>
+                      </div>
+                    </Link>
+                  );
+                })
+              }
+            </div>
+
+
           </div>
           <div className={style.board}>
-            여기는 최근 등록된 자유 게시판 목록
+            <div className={style.titlebox}>
+              <span className={style.title}>자유 게시판</span>
+
+              <a href="/board/toFreeBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
+            </div>
             <hr></hr>
+            <div className={style.contents}>
+              {
+                sliceFreeContentsList().map((e, i) => {
+                  if (i >= 6) {
+                    return
+                  }
+                  return (
+                    <Link to={`/board/toFreeBoardContents/${(countPerPage * (currentPage - 1)) - i}`} style={{ textDecoration: "none", color: "black" }} state={{ oriSeq: freeboard.length - (i), sysSeq: e.seq }}>
+                      <div className={style.cbgdiv} key={i} data-seq={e.seq}>
+                        <span className={style.fontcss}>[자유]  </span>
+                        <span className={style.fontcss}>
+                          {e.title.length > 13 ? e.title.substring(0, 13) + "..." : e.title}
+                        </span>
+                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.split("T")[0]}</span>
+                      </div>
+                    </Link>
+                  );
+                })
+              }
+            </div>
+
+
           </div>
         </div>
       </div>

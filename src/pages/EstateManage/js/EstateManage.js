@@ -1,11 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import EstateInsert from '../EstateInsert/js/EstateInsert1'
-import EstateInsert2 from '../EstateInsert/js/EstateInsert2'
-import EstateInsert3 from '../EstateInsert/js/EstateInsert3'
+import EstateInsert from '../EstateInsert/js/EstateInsert';
+import EstateUpdate from '../EstateUpdate/js/EstateUpdate';
 import EstateBoard from '../EstateBoard/js/EstateBoard';
-
-
-
 
 const EstateManage = () => {
     return (
@@ -14,8 +10,7 @@ const EstateManage = () => {
                 <Routes>
                     <Route path="/" element={<EstateBoard />}></Route>
                     <Route path="/estateInsert" element={<EstateInsert />}></Route>
-                    <Route path="/estateInsert2" element={<EstateInsert2 />}></Route>
-                    <Route path="/estateInsert3" element={<EstateInsert3 />}></Route>
+                    <Route path="/estateUpdate/:estateId" element={<EstateUpdate />}></Route>
                 </Routes>
             </div>
         </div >

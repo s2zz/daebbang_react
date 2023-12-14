@@ -14,7 +14,6 @@ const SideBar = () => {
             <div>
                 <Link to="/admin/toNotificationManagement">신고 관리</Link>
             </div>
-            
         </>
     );
 }

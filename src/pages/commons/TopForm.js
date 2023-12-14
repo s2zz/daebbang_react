@@ -59,7 +59,9 @@ const TopForm = ({ setLoginId }) => {
                                 <li className={style.has_d2}>
                                     <Button>{storedLoginId}▼</Button>
                                     <div className={style.depth2_bx}>
-                                        <a href="/myPage">마이페이지</a>
+                                        {isAdmin ?
+                                            <a href="/admin">관리자 페이지</a>
+                                            : <a href="/myPage">마이페이지</a>}
                                         <a href="#" onClick={handleLogout}>로그아웃</a>
                                     </div>
                                 </li>
@@ -67,11 +69,6 @@ const TopForm = ({ setLoginId }) => {
                         </div>
                         : <div className={style.top_btn_menu}> <Button><a href="/login">로그인 및 회원가입</a></Button></div>}
 
-                    {isAdmin ?
-                        <div className={style.top_right_menu}>
-                            <Button><a href="/admin">관리자 페이지</a></Button>
-                        </div>
-                        : <></>}
 
                     <div className={style.top_right_menu}>
                         <Button><a href="/enrollment">중개사무소 가입</a></Button>
