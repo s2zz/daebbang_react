@@ -64,7 +64,8 @@ function EstateInsert() {
 
     const formData = new FormData();
 
-    const imageLength = formData.getAll('estateImages').length;
+    const imageLength = estateImages.length;
+    
     if (imageLength < 3 || imageLength > 10) {
       alert("사진을 3장 이상 10장 이하로 등록해주세요.");
       return false;
