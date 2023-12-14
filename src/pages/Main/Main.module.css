@@ -26,24 +26,40 @@
     margin-left: 20px;
 }
 .middle_down{
-    border: 1px solid black;
     width: 950px;
     height: 50%;
     margin: auto;
 }
+.fontcss{
+    color: rgb(0, 0, 0);
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    line-height: 15px;
+    white-space: nowrap;
+}
 .middle_down>div{
     float: left;
-    width: 300px;
+    width: 280px;
     height: 100%;
 }
-.recent_estate{
-    margin-left: 10px;
+.recent_estate, .freeboard, .board{
+    margin-left: 25px;
 }
-.freeboard{
-    margin-left: 10px;
+.titlebox{
+    padding-top: 10px;
+    height: 10%;
 }
-.board{
-   margin-left: 10px;
+.title{
+    font-weight: bold;
+}
+.morebtnspan{
+    float: right;
+}
+.morebtn{
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    color: rgb(117, 117, 117);
 }
 
 .homeimg{

@@ -2,7 +2,6 @@ import { Route, Routes } from 'react-router-dom';
 import style from "./Board.module.css";
 import SideBar from './SideBar/SideBar';
 import "react-quill/dist/quill.snow.css";
-import { useState } from "react";
 
 import FreeBoardList from './BoardContentsList/js/FreeBoardList';
 import FavoriteBoardList from './BoardContentsList/js/FavoriteBoardList';
@@ -14,7 +13,7 @@ import RoomBoardContents from './BoardContents/js/RoomBoardContents';
 import EditFreeBoardContents from './EditBoardContents/js/EditFreeBoardContents';
 import EditRoomBoardContents from './EditBoardContents/js/EditRoomBoardContents';
 const Board = () => {
-
+    
     return (
         <div className={style.boardContainer}>
              <div className={style.sideBar}>

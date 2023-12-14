@@ -55,7 +55,7 @@ function FindId() {
           <div className={style.inputFindIdBox}>
             <div className={style.inputFindId}>
               <div className={style.loginFont}>작성 후 Enter키로 입력해주세요</div>
-              <input type="text" name="email" placeholder="여기에 이메일을 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.email} className={style.inputInfo}></input><br></br>
+              <input type="text" name="email" placeholder="이메일을 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.email} className={style.inputInfo}></input><br></br>
               {emailRegex ? <div className={style.good}>올바른 이메일 형식입니다</div> : <div className={style.notgood}>올바른 이메일 형식이 아닙니다.</div>}
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import style from "../css/BoardList.module.css";
 import roomStyle from "../css/RoomBoardList.module.css";
 import favorite from "../../assets/favorites.png";
@@ -8,9 +8,10 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 
 const RoomBoardList = () => {
-
+    const location = useLocation();
     const [board, setBoard] = useState([]);
-
+    const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
+    const [searchText, setSearchText] = useState(location.state !== null && location.state.searchText !== null ? location.state.searchText : "");
     function compareBySeq(a, b) {
         return b.seq - a.seq;
     }
@@ -18,6 +19,9 @@ const RoomBoardList = () => {
     useEffect(() => {
         axios.get(`/api/board/roomBoardList`).then(resp => {
             setBoard(resp.data.sort(compareBySeq));
+            if (searchText !== "") {
+                setSearchBoard(resp.data.sort(compareBySeq).filter(e => e.contents.includes(searchText) || e.title.includes(searchText)));
+            }
         })
     }, [])
 
@@ -27,6 +31,11 @@ const RoomBoardList = () => {
         const start = (currentPage - 1) * countPerPage;
         const end = start + countPerPage;
         return board.slice(start, end);
+    }
+    const sliceSearchContentsList = () => {
+        const start = (currentPage - 1) * countPerPage;
+        const end = start + countPerPage;
+        return searchBoard.slice(start, end);
     }
     const currentPageHandle = (event, currentPage) => {
         setCurrentPage(currentPage);
@@ -65,7 +74,34 @@ const RoomBoardList = () => {
         }
     }
 
+    // 검색 기능
+    const handleSearchChange = (e) => {
+        setSearchText(e.target.value);
+    }
 
+    const search = () => {
+        setCurrentPage(1);
+        searchText === "" ?
+            setSearchBoard([]) :
+            setSearchBoard(board.filter(e => e.contents.includes(searchText) || e.title.includes(searchText) || e.header.includes(searchText)));
+    }
+
+    const boardItem = (e, i) => {
+        return (
+            <div key={i}>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} />}</div>
+                <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
+                <div>{e.writer}</div>
+                <div>
+                    <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq, searchText:searchText }}>
+                        <span>[{e.header}]</span>
+                        {e.title.length > 80 ? e.title.substring(0, 80) + "..." : e.title}
+                    </Link>
+                </div>
+                <div>{e.writeDate.split("T")[0]}</div>
+            </div>
+        );
+    }
     return (
         <>
             <div className={style.boardTitle}>양도게시판</div>
@@ -81,10 +117,10 @@ const RoomBoardList = () => {
                 <div className={style.searchBox}>
                     <div>icon</div>
                     <div>
-                        <input placeholder="검색어" />
+                        <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
                     </div>
                     <div>
-                        <button>Search</button>
+                        <button onClick={() => { search() }}>Search</button>
                     </div>
                 </div>
             </div>
@@ -98,22 +134,9 @@ const RoomBoardList = () => {
                 </div>
                 <div className={style.boardListContents}>
                     {
-                        sliceContentsList().map((e, i) => {
-                            return (
-                                <div key={i} data-seq={e.seq}>
-                                    <div>{e.favorite === 'true' ? <img src={favorite} onClick={()=>{delFav(e.seq)}}/>: <img src={notFavorite} onClick={()=>{addFav(e.seq)}}/>}</div>
-                                    <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
-                                    <div>{e.writer}</div>
-                                    <div>
-                                        <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq }}>
-                                            <span>[{e.header}]</span>
-                                            {e.title.length > 80 ? e.title.substring(0, 80) + "..." : e.title}
-                                        </Link>
-                                    </div>
-                                    <div>{e.writeDate.split("T")[0]}</div>
-                                </div>
-                            );
-                        })
+                        searchBoard.length === 0 ?
+                            sliceContentsList().map(boardItem) :
+                            sliceSearchContentsList().map(boardItem)
                     }
                 </div>
             </div>
@@ -121,10 +144,11 @@ const RoomBoardList = () => {
                 <Link to="/board/toRoomBoardWrite"><button>글 작성</button></Link>
             </div>
             <div className={style.naviFooter}>
-                <Pagination
-                    count={Math.ceil(board.length / countPerPage)}
-                    page={currentPage}
-                    onChange={currentPageHandle} />
+                {
+                    searchBoard.length === 0 ?
+                    <Pagination count={Math.ceil(board.length / countPerPage)} page={currentPage} onChange={currentPageHandle} /> :
+                    <Pagination count={Math.ceil(searchBoard.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />
+                }
             </div>
         </>
     );
