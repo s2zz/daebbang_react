@@ -1,8 +1,8 @@
 .container {
-    width:500px;
+    width:1000px;
     height:700px;
     margin:auto;
-    margin-top:30px;
+    margin-top:50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,7 +14,7 @@
 
 .loginBox{
     border:1px solid black;
-    width:100%;
+    width:50%;
     height:100%;
 }
 
@@ -76,6 +76,13 @@
     text-decoration: none;
     color:black;
     margin:10px;
+}
+
+/*공인중개사 로그인*/
+.estateLoginBox {
+    width:50%;
+    height:100%;
+    border: 1px solid black;
 }
 
 
