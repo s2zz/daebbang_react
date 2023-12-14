@@ -138,7 +138,17 @@ const RoomBoardContents = () => {
 
      // 파일 다운로드
      const downloadFile = (sysName,oriName) => {
-        axios.get("/api/file",{params:{sysName:sysName,oriName:oriName}}).then(resp=>{
+        axios.get("/api/file",{
+            params:{sysName:sysName,oriName:oriName},
+            responseType:"blob"
+        }).then(resp=>{
+            const url = window.URL.createObjectURL(new Blob([resp.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", oriName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }).catch(err=>{
             alert("파일 다운로드 중 에러가 발생하였습니다");
             console.log(err);
