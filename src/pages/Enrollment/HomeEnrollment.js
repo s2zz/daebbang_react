@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import style from "./Enrollment.module.css"
 import enrollImage from './assets/enroll.png';
-import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
-
+import Footer from "../commons/Footer";
 
 const HomeEnrollment = (args) => {
     const [value, setValue] = useState('');
@@ -68,7 +66,26 @@ const HomeEnrollment = (args) => {
     };
 
     const handleItemClick = (item) => {
-        setSelectedItem(item);
+        axios.get(`/api/admin/agent/isEstateNumber/${item.jurirno}`)
+            .then(response => {
+                console.log(response.data);
+                if (response.data) {
+                    setSelectedItem('');
+                    alert("이미 가입된 공인중개사무소 입니다.")
+                }else{
+                    setSelectedItem(item);
+                }
+                
+            })
+            .catch(error => {
+                console.error("에러 발생: ", error);
+            });
+
+
+
+
+
+
         toggle();
     };
     const handleMouseEnter = (item) => {
@@ -243,6 +260,9 @@ const HomeEnrollment = (args) => {
                 <Button onClick={handleSubmit}>
                     가입 신청하기
                 </Button>
+            </div>
+            <div>
+                <Footer />
             </div>
         </div>
     );

@@ -77,3 +77,42 @@
     color:black;
     margin:10px;
 }
+
+
+/*관리자 모달창*/
+
+.adminModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100%;
+}
+
+.adminTitle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size:15px;
+    font-weight: bold;
+}
+
+.icon {
+    width:30px;
+}
+
+.adminBtnDiv {
+    display: flex;
+    justify-content: center;
+    margin-top:20px;
+}
+
+.adminBtn {
+    background-color: black;
+    color:white;
+}
+
+.adminBtn:hover {
+    background-color: white;
+    color:black;
+    cursor: pointer;
+}

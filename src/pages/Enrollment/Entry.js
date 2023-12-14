@@ -3,6 +3,7 @@ import signupImage from './assets/signup.png';
 import successImage from './assets/success.png';
 import style from "./Enrollment.module.css"
 import { Link } from 'react-router-dom';
+import Footer from "../commons/Footer";
 const Entry = () => {
 
 
@@ -16,6 +17,9 @@ const Entry = () => {
       </div>
       <div style={{display:'flex', justifyContent:'center',marginTop:'20px'}}>
         <Link to={`/`}>&raquo; 홈으로 돌아가기</Link>
+      </div>
+      <div>
+      <Footer/>
       </div>
     </div>
   );

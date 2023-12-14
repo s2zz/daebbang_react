@@ -1,6 +1,6 @@
 import './App.css';
 
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import TopForm from './pages/commons/TopForm';
 import Home from './pages/Home/Home';
 import Board from './pages/Board/Board';
@@ -15,6 +15,8 @@ import FindId from './pages/Login/FindId/FindId';
 import FindPw from './pages/Login/FindPw/FindPw';
 
 function App() {
+  const storedLoginId = sessionStorage.getItem('loginId');
+  const isAdmin = sessionStorage.getItem('isAdmin');
   return (
     <BrowserRouter>
       <div className="main_container">
@@ -29,8 +31,8 @@ function App() {
           <Route path="/login/findId/*" element={<FindId/>} />
           <Route path="/login/findPw/*" element={<FindPw/>} />
           <Route path="/signUp/*" element={<SignUp/>} />
-          <Route path="/myPage/*" element={<MyPage/>} />
-          <Route path="/admin/*" element={<Admin />} />
+          <Route path="/myPage/*" element={storedLoginId?<MyPage/>:<Navigate to="/" replace/>} />
+          <Route path="/admin/*" element={isAdmin?<Admin />:<Navigate to="/" replace/>} />
           <Route path="/enrollment/*" element={<Enrollment />} />
         </Routes>
         </div>
