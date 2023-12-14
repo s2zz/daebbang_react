@@ -10,6 +10,8 @@ const FavoriteBoardList = () => {
     const [board, setBoard] = useState([]);
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
     const [searchText, setSearchText] = useState("");
+    const [category, setCategory] = useState("전체게시물");
+    const [categoryBoard, setCategoryBoard] = useState([]);
     // 내림차순 정렬
     function compareBySeq(a, b) {
         return b.seq - a.seq;
@@ -25,17 +27,12 @@ const FavoriteBoardList = () => {
     // 페이지네이션
     const [currentPage, setCurrentPage] = useState(1);
     const countPerPage = 10;
-    const sliceContentsList = () => {
+    const sliceContentsList = (list) => {
         const start = (currentPage - 1) * countPerPage;
         const end = start + countPerPage;
-        console.log(board.slice(start, end));
-        return board.slice(start, end);
+        return list.slice(start, end);
     }
-    const sliceSearchContentsList = () => {
-        const start = (currentPage - 1) * countPerPage;
-        const end = start + countPerPage;
-        return searchBoard.slice(start, end);
-    }
+
     const currentPageHandle = (event, currentPage) => {
         setCurrentPage(currentPage);
     }
@@ -53,26 +50,68 @@ const FavoriteBoardList = () => {
         }
     }
 
+    const [completeSearchText, setCompleteSearchText] = useState("");
+
     // 검색
     const handleSearchChange = (e) => {
+        setCompleteSearchText("");
         setSearchText(e.target.value);
     }
 
     const search = () => {
+        setCompleteSearchText(searchText);
+        setCategoryBoard([]);
         setCurrentPage(1);
+        setCategory("전체게시물");
         searchText === "" ?
             setSearchBoard([]) :
-            setSearchBoard(board.filter(e => e.contents.includes(searchText) || e.title.includes(searchText)));
+            setSearchBoard(board.filter(e => e.contents.includes(searchText) || e.title.includes(searchText) || (e.header !== null && e.header.includes(searchText))));
+    }
+
+    const categoryChange = (e) => {
+        let category = e.target.value;
+        setCategory(category);
+        setSearchBoard([]);
+        setSearchText("");
+        setCompleteSearchText("");
+        if (category === "전체게시물") {
+            setCategoryBoard([]);
+        } else if (category === "자유게시판") {
+            setCategoryBoard(board.filter(e => e.boardTitle === "자유게시판"));
+        } else if (category === "양도게시판") {
+            setCategoryBoard(board.filter(e => e.boardTitle === "양도게시판"));
+        }
+    }
+
+    const pagenation = () => {
+        if (completeSearchText !== "") {
+            return <Pagination count={Math.ceil(searchBoard.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />;
+        } else if (category !== "전체게시물") {
+            return <Pagination count={Math.ceil(categoryBoard.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />;
+        } else {
+            return <Pagination count={Math.ceil(board.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />;
+        }
+    }
+
+    const contentslist = () => {
+        if (completeSearchText !== "") {
+            return sliceContentsList(searchBoard).map(boardItem);
+        } else if (category !== "전체게시물") {
+            return sliceContentsList(categoryBoard).map(boardItem);
+        } else {
+            return sliceContentsList(board).map(boardItem);
+        }
     }
 
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div><img src={favorite} onClick={() => { delFav(e.seq) } } alt=""/></div>
+                <div><img src={favorite} onClick={() => { delFav(e.seq) }} alt="" /></div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
                     <Link to={`/board/toFreeBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq }}>
+                        {e.header === null ? "" : <span>[{e.header}]</span>}
                         {e.title.length > 80 ? e.title.substring(0, 80) + "..." : e.title}
                     </Link>
                 </div>
@@ -88,16 +127,18 @@ const FavoriteBoardList = () => {
             <hr></hr>
             <div className={fstyle.searchDiv}>
                 <div className={style.selectBox}>
-                    <select>
-                        <option selected>전체게시물</option>
-                        <option>자유게시판</option>
-                        <option>양도게시판</option>
+                    <select onChange={categoryChange}>
+                        {["전체게시물", "자유게시판", "양도게시판"].map((e, i) => {
+                            return (
+                               category===e ? <option value={e} key={i} selected>{e}</option> : <option value={e} key={i}>{e}</option>
+                            )
+                        })}
                     </select>
                 </div>
                 <div className={style.searchBox}>
                     <div>icon</div>
                     <div>
-                        <input placeholder="검색어" onChange={handleSearchChange}  value={searchText}/>
+                        <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
                     </div>
                     <div>
                         <button onClick={() => { search() }}>Search</button>
@@ -106,7 +147,7 @@ const FavoriteBoardList = () => {
             </div>
             <div className={style.boardContentsBox}>
                 <div className={fstyle.boardInfo}>
-                    <div><img src={favorite} alt=""/></div>
+                    <div><img src={favorite} alt="" /></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
@@ -114,19 +155,11 @@ const FavoriteBoardList = () => {
                     <div>날짜</div>
                 </div>
                 <div className={fstyle.boardListContents}>
-                    {
-                        searchBoard.length === 0 ?
-                            sliceContentsList().map(boardItem) :
-                            sliceSearchContentsList().map(boardItem)
-                    }
+                    {contentslist()}
                 </div>
             </div>
             <div className={style.naviFooter}>
-                {
-                    searchBoard.length === 0 ?
-                        <Pagination count={Math.ceil(board.length / countPerPage)} page={currentPage} onChange={currentPageHandle} /> :
-                        <Pagination count={Math.ceil(searchBoard.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />
-                }
+                {pagenation()}
             </div>
 
         </>
