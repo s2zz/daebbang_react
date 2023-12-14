@@ -94,7 +94,7 @@ const FreeBoardList = () => {
                     {
                         sliceContentsList().map((e, i) => {
                             return (
-                                <div key={i} data-seq={e.seq}>
+                                <div key={i}>
                                     <div>{e.favorite === 'true' ? <img src={favorite} onClick={()=>{delFav(e.seq)}}/>: <img src={notFavorite} onClick={()=>{addFav(e.seq)}}/>}</div>
                                     <div>{board.length-(countPerPage*(currentPage-1))-i}</div>
                                     <div>{e.writer}</div>
@@ -114,7 +114,7 @@ const FreeBoardList = () => {
                 <Link to="/board/toFreeBoardWrite"><button>글 작성</button></Link>
             </div>
             <div className={style.naviFooter}>
-            <Pagination
+                <Pagination
                     count={Math.ceil(board.length / countPerPage)}
                     page={currentPage}
                     onChange={currentPageHandle} />
