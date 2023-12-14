@@ -106,7 +106,7 @@ const FavoriteBoardList = () => {
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div><img src={favorite} onClick={() => { delFav(e.seq) }} alt="" /></div>
+                <div><img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." /></div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
@@ -147,7 +147,7 @@ const FavoriteBoardList = () => {
             </div>
             <div className={style.boardContentsBox}>
                 <div className={fstyle.boardInfo}>
-                    <div><img src={favorite} alt="" /></div>
+                    <div><img src={favorite} alt="..." /></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
