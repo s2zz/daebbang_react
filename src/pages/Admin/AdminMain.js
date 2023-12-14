@@ -2,19 +2,32 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { ResponsiveLine } from '@nivo/line'
 const AdminMain = () => {
-    const [visitorCount, setVisitorCount] = useState(null);
+    const [visitorCount, setVisitorCount] = useState(0);
     const [visitorCountData, setVisitorCountData] = useState([]);
     const [visitorDateData, setVisitorDateData] = useState([]);
+    const [sumVisitorCount, setSumVisitorCount] = useState([]);
+
+    const [newMemberCount, setNewMemberCount] = useState(0);
     const [newMemberCountData, setNewMemberCountData] = useState([]);
     const [newMemberDateData, setNewMemberDateData] = useState([]);
+    const [sumNewMemberCount, setSumNewMemberCount] = useState([]);
+
+    const [newEstateCount, setNewEstateCount] = useState(0);
     const [newEstateCountData, setNewEstateCountData] = useState([]);
     const [newEstateDateData, setNewEstateDateData] = useState([]);
-    const [sumVisitorCount, setSumVisitorCount] = useState([]);
+    const [sumNewEstateCount, setSumNewEstateCount] = useState([]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const dailyVisitors = await axios.get("/api/admin/dailyVisitors");
-                setVisitorCount(dailyVisitors.data.visitorCount);
+                setVisitorCount(dailyVisitors.data.visitorCount || 0);
+
+                const dailyMember = await axios.get("/api/admin/dailyMember");
+                setNewMemberCount(dailyMember.data.newMemberCount || 0);
+
+                const dailyEstate = await axios.get("/api/admin/dailyEstate");
+                setNewEstateCount(dailyEstate.data.newEstateCount || 0);
 
                 const allVisitors = await axios.get("/api/admin/visitors/getAll");
                 const visitorData = allVisitors.data.map(entry => ({
@@ -42,6 +55,13 @@ const AdminMain = () => {
 
                 const sumVisitors = await axios.get("/api/admin/visitors/sum");
                 setSumVisitorCount(sumVisitors.data);
+
+                const sumNewMembers = await axios.get("/api/admin/newMember/sum");
+                setSumNewMemberCount(sumNewMembers.data);
+
+                const sumNewEstates = await axios.get("/api/admin/agent/sum");
+                setSumNewEstateCount(sumNewEstates.data);
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -76,19 +96,29 @@ const AdminMain = () => {
                 <VisitorLine data={visitorCountData} />
             </div>
             <div style={{ border: '1px solid #eeeeee', width: "90%", margin: 'auto', marginTop: '2%', display: 'flex', padding: '2%' }}>
-                <div >
-                    <div>신규 현황</div>
+                <div>
+                    <div>오늘 신규회원수</div>
+                    <div style={{ fontSize: '1.5rem' }}>{newMemberCount}</div>
+                </div>
+                <div style={{ marginLeft: '5%' }}>
+                    <div>누적 신규회원수</div>
+                    <div style={{ fontSize: '1.5rem' }}>{sumNewMemberCount}</div>
                 </div>
             </div>
             <div style={{ border: '1px solid #eeeeee', width: "90%", height: '400px', margin: 'auto', marginTop: '1%' }}>
                 <NewMemberLine data={newMemberCountData} />
             </div>
             <div style={{ border: '1px solid #eeeeee', width: "90%", margin: 'auto', marginTop: '2%', display: 'flex', padding: '2%' }}>
-                <div >
-                    <div>신규 공인중개사 현황</div>
+                <div>
+                    <div>오늘 신규공인중개사수</div>
+                    <div style={{ fontSize: '1.5rem' }}>{newEstateCount}</div>
+                </div>
+                <div style={{ marginLeft: '5%' }}>
+                    <div>누적 신규공인중개사수</div>
+                    <div style={{ fontSize: '1.5rem' }}>{sumNewEstateCount}</div>
                 </div>
             </div>
-            <div style={{ border: '1px solid #eeeeee', width: "90%", height: '400px', margin: 'auto', marginTop: '1%' ,marginBottom:'2%'}}>
+            <div style={{ border: '1px solid #eeeeee', width: "90%", height: '400px', margin: 'auto', marginTop: '1%', marginBottom: '2%' }}>
                 <NewEstateLine data={newEstateCountData} />
             </div>
         </div>
