@@ -8,6 +8,19 @@ import Footer from "../commons/Footer";
 const Main = () => {
   const [freeboard, setfreeBoard] = useState([]);
   const [roomboard, setroomBoard] = useState([]);
+  const [mapList, setMapList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`/api/map/getAll`)
+      .then((resp) => {
+        console.log(resp.data);
+        setMapList(resp.data.sort(compareByestate_id));
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, []);
 
   useEffect(() => {
     const checkTodayVisitor = async () => {
@@ -37,6 +50,9 @@ const Main = () => {
   // 내림차순 정렬
   function compareBySeq(a, b) {
     return b.seq - a.seq;
+  }
+  function compareByestate_id(a, b) {
+    return b.estateId - a.estateId;
   }
 
   // 게시글 목록 불러오기
@@ -89,12 +105,33 @@ const Main = () => {
           <div className={style.recent_estate}>
             <div className={style.titlebox}>
               <span className={style.title}> 최근 등록된 매물</span>
+              <a href="/home/oneroom/list"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
             </div>
             <div className={style.contents}>
-
+            <hr></hr>
+              {
+                mapList.map((e, i) => {
+                  if (i >= 6) {
+                    return
+                  }
+                  return (
+                    <Link to={`#`} style={{ textDecoration: "none", color: "black" }} >
+                      <div className={style.cbgdiv} key={i}>
+                        <span className={style.fontcss}>
+                          [{e.address2}]
+                        </span>
+                        <span className={style.fontcss}>
+                          {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
+                        </span>
+                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.substring(0, 10)}</span>
+                      </div>
+                    </Link>
+                  );
+                })
+              }
             </div>
 
-            <hr></hr>
+            
           </div>
           <div className={style.freeboard}>
             <div className={style.titlebox}>
@@ -110,9 +147,9 @@ const Main = () => {
                   }
                   return (
                     <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none", color: "black" }} state={{ sysSeq: e.seq }}>
-                      <div key={i} data-seq={e.seq}>
+                      <div className={style.cbgdiv} key={i} data-seq={e.seq}>
                         <span className={style.fontcss}>
-                          {`[${e.header}]`.padEnd(20, ' ')}
+                          [{e.header}]
                         </span>
                         <span className={style.fontcss}>
                           {e.title.length > 9 ? e.title.substring(0, 9) + "..." : e.title}
@@ -142,7 +179,7 @@ const Main = () => {
                   }
                   return (
                     <Link to={`/board/toFreeBoardContents/${(countPerPage * (currentPage - 1)) - i}`} style={{ textDecoration: "none", color: "black" }} state={{ oriSeq: freeboard.length - (i), sysSeq: e.seq }}>
-                      <div key={i} data-seq={e.seq}>
+                      <div className={style.cbgdiv} key={i} data-seq={e.seq}>
                         <span className={style.fontcss}>[자유]  </span>
                         <span className={style.fontcss}>
                           {e.title.length > 13 ? e.title.substring(0, 13) + "..." : e.title}
