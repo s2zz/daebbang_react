@@ -1,5 +1,5 @@
 import { useState } from "react";
-import style from '../css/EstateInsert.module.css';
+import style from '../css/EstateUpdate.module.css';
 
 function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImages }) {
   // 이미지 미리보기
@@ -89,4 +89,3 @@ function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImage
 }
 
 export default EstateInsert3;
-

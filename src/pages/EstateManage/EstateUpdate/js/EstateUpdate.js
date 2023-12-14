@@ -1,13 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
-import style from '../css/EstateInsert.module.css';
-import { useNavigate } from "react-router-dom";
-import EstateInsert1 from './EstateInsert1';
-import EstateInsert2 from './EstateInsert2';
-import EstateInsert3 from './EstateInsert3';
+import style from '../css/EstateUpdate.module.css';
+import { useNavigate, useParams } from "react-router-dom";
+import EstateUpdate1 from './EstateUpdate1';
+import EstateUpdate2 from './EstateUpdate2';
+import EstateUpdate3 from './EstateUpdate3';
 
-function EstateInsert() {
+function EstateUpdate() {
   const navi = useNavigate();
+  const { estateId } = useParams();
 
   // 옵션 리스트
   const [optionList, setOptionList] = useState([]);
@@ -65,12 +66,14 @@ function EstateInsert() {
     const formData = new FormData();
 
     const imageLength = estateImages.length;
-    
+
+    console.log({estateId});
+
     if (imageLength < 3 || imageLength > 10) {
       alert("사진을 3장 이상 10장 이하로 등록해주세요.");
       return false;
     }
-
+    
     formData.append('realEstate', JSON.stringify(realEstate));
     formData.append('optionList', JSON.stringify(optionList));
 
@@ -78,7 +81,7 @@ function EstateInsert() {
       formData.append("estateImages", image);
     }
 
-    axios.post("/api/estateManage/", formData, {
+    axios.put(`/api/estateManage/estateUpdate/${estateId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -94,12 +97,10 @@ function EstateInsert() {
 
   return (
     <div className={style.container}>
-      <h1 className={style.bigTitle}>방내놓기</h1>
-      <p className={style.explanation}>전/ 월세 매물만 등록할 수 있습니다.</p>
-      <p className={style.explanation}>주소를 다르게 입력할 경우 허위매물로 신고될 수 있으니 꼭 동일하게 입력 바랍니다.</p>
-      <EstateInsert1 realEstate={realEstate} setRealEstate={setRealEstate} />
-      <EstateInsert2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
-      <EstateInsert3 setRealEstate={setRealEstate} estateImages={estateImages} setEstateImages={setEstateImages} />
+      <h1 className={style.bigTitle}>정보수정</h1>
+      <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
+      <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
+      <EstateUpdate3 setRealEstate={setRealEstate} estateImages={estateImages} setEstateImages={setEstateImages} />
       <div className={style.buttonDiv}>
         <button onClick={handleReturn}>이전으로</button>
         <button onClick={handleSubmit}>다음으로</button>
@@ -108,4 +109,4 @@ function EstateInsert() {
   );
 }
 
-export default EstateInsert;
+export default EstateUpdate;

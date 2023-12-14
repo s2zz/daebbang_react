@@ -39,7 +39,7 @@ const HomeEnrollment = (args) => {
     };
 
     const searchButtonClick = () => {
-        axios.get(`/api/admin/openApi/${searchValue}`)
+        axios.get(`/api/enrollment/openApi/${searchValue}`)
             .then(response => {
                 setSearchResult(response.data.EDOffices.field);
             })
@@ -66,7 +66,7 @@ const HomeEnrollment = (args) => {
     };
 
     const handleItemClick = (item) => {
-        axios.get(`/api/admin/agent/isEstateNumber/${item.jurirno}`)
+        axios.get(`/api/enrollment/agent/isEstateNumber/${item.jurirno}`)
             .then(response => {
                 if (response.data) {
                     setSelectedItem('');
@@ -124,7 +124,7 @@ const HomeEnrollment = (args) => {
 
             // axios를 사용하여 FormData를 서버로 전송
             axios
-                .post('/api/admin/agent/signup', formData)
+                .post('/api/enrollment/agent/signup', formData)
                 .then(response => {
                     increaseNewEstateCount();
                     alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');

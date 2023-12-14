@@ -30,7 +30,7 @@ const Post = (props) => {
     }
 
     return (
-        <div >
+        <div>
             <DaumPostcode
                 className={style.postmodal}
                 autoClose
