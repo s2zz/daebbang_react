@@ -17,7 +17,7 @@ const MemberManagement = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('/api/member/getAll');
+      const response = await axios.get('/api/admin/getMember');
       setContacts(response.data);
       setTotalRows(response.data.length);
       setLoading(false);
