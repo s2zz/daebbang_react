@@ -92,7 +92,7 @@ const FreeBoardList = () => {
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} />}</div>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..."/> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..."/>}</div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
@@ -122,7 +122,7 @@ const FreeBoardList = () => {
             </div>
             <div className={style.boardContentsBox}>
                 <div className={style.boardInfo}>
-                    <div><img src={notFavorite} /></div>
+                    <div><img src={notFavorite} alt="..."/></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
