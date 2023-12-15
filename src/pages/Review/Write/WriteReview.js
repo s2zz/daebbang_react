@@ -1,7 +1,11 @@
+import style from './WriteReview.module.css';
 
 const WriteReview = () => {
     return (
-        <div>리뷰작성창</div>
+        <>
+            리뷰작성창
+            <div>hi</div>
+        </>
     );
 }
 
