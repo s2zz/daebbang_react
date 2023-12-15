@@ -68,19 +68,19 @@ function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImage
         <tr>
           <th>제목<span className={style.star}>*</span></th>
           <td>
-            <input type="text" className={style.inputTitle} placeholder="제목을 입력해주세요." name="title" onChange={handleChange}></input>
+            <input type="text" className={style.inputTitle} placeholder="제목을 입력해주세요." name="title" onChange={handleChange} value={realEstate.title}></input>
           </td>
         </tr>
         <tr>
           <th>상세설명<span className={style.star}>*</span></th>
           <td>
-            <textarea placeholder="설명을 입력해주세요." className={style.inputContents} name="contents" onChange={handleChange}></textarea>
+            <textarea placeholder="설명을 입력해주세요." className={style.inputContents} name="contents" onChange={handleChange} value={realEstate.contents}></textarea>
           </td>
         </tr>
         <tr>
           <th>메모</th>
           <td>
-            <textarea placeholder="메모는 본인에게만 보입니다." className={style.inputContents} name="memo" onChange={handleChange}></textarea>
+            <textarea placeholder="메모는 본인에게만 보입니다." className={style.inputContents} name="memo" onChange={handleChange} value={realEstate.memo}></textarea>
           </td>
         </tr>
       </table>
