@@ -1,4 +1,7 @@
-
+.list_main {
+    overflow-y: auto;
+    height: 100%;
+}
 
 .list_cnt{
     height: 50px;
@@ -11,13 +14,18 @@
 }
 
 .unit_change{
-    border: 1px solid #000;
     position: absolute;
     height: 28px;
     width: 28px;
     line-height: 20px;
     right: 10px;
     top: 11px;
+    cursor: pointer;
+}
+
+.unit_change img {
+    height: 100%;
+    width: 100%;
 }
 
 .list_box{
