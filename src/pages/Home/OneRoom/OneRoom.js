@@ -127,13 +127,8 @@ function OneRoom() {
     // 리스트 박스를 찾기 위해서 쓰는 Ref
     const searchListBox = searchListBoxRef.current;
 
-    // List에 넣을 CSS를 사용하기 위해 만드는 마크업
-    const regionSpan = document.createElement("span");
-    const regionDiv = document.createElement("div");
-
     // 2글자 이상일 때 active 클래스를 추가하고, display를 block으로 설정
     if (inputValue.length >= 2) {
-
       // 숨겨놨던 리스트 Div를 풀어줌
       searchListBox.classList.add(style.active);
       searchListBox.style.display = "block";
@@ -151,13 +146,20 @@ function OneRoom() {
 
           // 검색된 데이터가 없을때
           if (resp.data.length === 0) {
-            regionSpan.textContent = `검색된 항목이 없습니다.`;
-            regionDiv.appendChild(regionSpan);
-            searchListBox.appendChild(regionDiv);
+            // NULL 값일때 List에 넣을 CSS를 사용하기 위해 만드는 마크업
+            const nullRegionSpan = document.createElement("span");
+            const nullRegionDiv = document.createElement("div");
+
+            nullRegionSpan.textContent = `검색된 항목이 없습니다.`;
+            nullRegionDiv.appendChild(nullRegionSpan);
+            searchListBox.appendChild(nullRegionDiv);
           }
 
           // region에는 각 지역 정보가 들어 있음
           resp.data.forEach((region) => {
+            // List에 넣을 CSS를 사용하기 위해 만드는 마크업
+            const regionSpan = document.createElement("span");
+            const regionDiv = document.createElement("div");
 
             // 리에 대한 검색
             if (region.re) {
@@ -193,6 +195,8 @@ function OneRoom() {
               !region.eup_myeon_re_dong &&
               !region.re
             ) {
+              console.log("여기임 ?");
+              console.log(region.eup_myeon_dong_gu);
               regionSpan.textContent = `${region.eup_myeon_dong_gu}`;
 
               const regionText = document.createTextNode(
