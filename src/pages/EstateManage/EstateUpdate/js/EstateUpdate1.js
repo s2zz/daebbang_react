@@ -136,10 +136,10 @@ function EstateInsert1({ realEstate, setRealEstate }) {
           <td>
             <div>
               <div>
-                <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
+                <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
               </div>
               <div>
-                <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={enroll_company.address1} />
+                <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={realEstate.address1} />
               </div>
               {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
             </div>
