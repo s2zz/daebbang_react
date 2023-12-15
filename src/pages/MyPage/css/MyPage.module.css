@@ -15,9 +15,16 @@
     margin-top:30px;
 }
 
-.menu {
-    margin:auto;
+.menuDiv {
     width:810px;
+    margin:auto;
+    height:120px;
+    margin-top:50px;
+}
+
+.menu {
+    display:flex;
+    justify-content: center;
     height:120px;
     margin-top:50px;
 }
@@ -51,6 +58,12 @@
     font-weight: bold;
     float:left;
     width:100px;
+}
+
+.eleftInfo {
+    font-weight: bold;
+    float:left;
+    width:200px;
 }
 
 .cBtnBox {

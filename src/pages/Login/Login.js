@@ -69,6 +69,7 @@ const LoginBox = ({ setLoginId }) => {
     axios.post("/api/estate/login", formData).then(resp => {
       setLoginId(estate.id); // 로그인 성공시
       sessionStorage.setItem('loginId', estate.id);
+      sessionStorage.setItem('isEstate', true);
       setEstate({ id: "", pw: "" });
       navi("/");
       window.location.reload();

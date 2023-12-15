@@ -10,6 +10,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const UpdateMyInfo = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
+    const isEstate = sessionStorage.getItem('isEstate');
 
     const [name, setName] = useState({ name: "" });
     const [email, setEmail] = useState({ email: "" });
@@ -19,6 +20,7 @@ const UpdateMyInfo = () => {
     const [address2, setAddress2] = useState({ address2: "" });
 
     const [fill, setFill] = useState(false);
+    const [efill, setEfill] = useState(false);
 
     const [nameRegex, setNameRegex] = useState(false);
     const [emailRegex, setEmailRegex] = useState(false);
@@ -29,6 +31,7 @@ const UpdateMyInfo = () => {
         setName(prev => ({ ...prev, [name]: value }));
 
         setFill(e.target.value !== '');
+        setEfill(e.target.value !== '');
         const nameregex = /^[가-힣]{2,5}$/;
 
         if (nameregex.test(e.target.value)) {
@@ -53,6 +56,7 @@ const UpdateMyInfo = () => {
         setPhone(prev => ({ ...prev, [name]: value }));
 
         setFill(e.target.value !== '');
+        setEfill(e.target.value !== '');
 
         const phoneregex = /^\d{11}$/;
 
@@ -70,6 +74,7 @@ const UpdateMyInfo = () => {
         }));
 
         setFill(e.target.value !== '');
+        setEfill(e.target.value !== '');
     }
 
     const handleChangeAddress1 = (e) => {
@@ -81,6 +86,7 @@ const UpdateMyInfo = () => {
         }));
 
         setFill(e.target.value !== '');
+        setEfill(e.target.value !== '');
     }
 
     const handleChangeAddress2 = (e) => {
@@ -88,6 +94,7 @@ const UpdateMyInfo = () => {
         setAddress2(prev => ({ ...prev, [name]: value }));
 
         setFill(e.target.value !== '');
+        setEfill(e.target.value !== '');
     }
 
     useEffect(() => {
@@ -99,6 +106,15 @@ const UpdateMyInfo = () => {
             address2.address2 !== ''
         );
     }, [name.name, email.email, phone.phone, address1.address1, address2.address2]);
+
+    useEffect(() => {
+        setEfill(
+            name.name !== '' &&
+            phone.phone !== '' &&
+            address1.address1 !== '' &&
+            address2.address2 !== ''
+        );
+    }, [name.name, phone.phone, address1.address1, address2.address2]);
 
     const navi = useNavigate();
 
@@ -139,6 +155,38 @@ const UpdateMyInfo = () => {
             }
         }
     }
+
+    const handleEstateUpdate = async () => {
+        if (!efill) {
+            alert('모든 항목을 입력해주세요.');
+            return;
+        }
+        if (!nameRegex) {
+            alert('이름은 2~5글자의 한글이어야합니다.');
+            return;
+        }
+        if (!phoneRegex) {
+            alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
+            return;
+        }
+        if (efill && nameRegex && phoneRegex) {
+            try {
+                const userData = {
+                    id: storedLoginId,
+                    name: name.name,
+                    phone: phone.phone,
+                    address : address1.address1 + address2.address2
+                };
+                await axios.post("/api/estate/updateMyInfo", userData);
+                alert("회원정보 수정이 완료되었습니다.");
+                navi("/mypage");
+                window.location.reload();
+            } catch (error) {
+                console.log("수정 실패", error);
+            }
+        }
+    }
+
 
     const [showModal, setShowModal] = useState(false);
 
@@ -196,49 +244,99 @@ const UpdateMyInfo = () => {
             <div className={style.titleBox}>
                 <div className={style.title}>회원 정보 수정</div>
             </div>
-            <div className={style.inputBox}>
+            {!isEstate ?
                 <div>
-                    Name<br></br>
-                    <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='input your Name'></input><br /><br />
-                    Phone<br></br>
-                    <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='input your Phone Number'></input><br /><br />
-                    Email<br></br>
-                    <input type="text" name="email" onChange={handleChangeEmail} value={email.email} placeholder='input your Email'></input><br /><br />
-                    ZipCode<br></br>
-                    <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode}></input>
-                    <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
-                    Address<br></br>
-                    <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
-                    <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='input Detail Address'></input>
-                    <Modal
-                        isOpen={showModal}
-                        onRequestClose={() => setShowModal(false)}
-                        appElement={document.getElementById('root')}
-                        style={{
-                            overlay: {
-                                backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                            },
-                            content: {
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: '430px',
-                                height: '400px',
-                                padding: '0px',
-                                overflow: 'none'
-                            }
-                        }}
-                    >
-                        <DaumPostcode onComplete={handleComplete} />
-                    </Modal>
+                    <div className={style.inputBox}>
+                        <div>
+                            Name<br></br>
+                            <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='input your Name'></input><br /><br />
+                            Phone<br></br>
+                            <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='input your Phone Number'></input><br /><br />
+                            Email<br></br>
+                            <input type="text" name="email" onChange={handleChangeEmail} value={email.email} placeholder='input your Email'></input><br /><br />
+                            ZipCode<br></br>
+                            <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode}></input>
+                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
+                            Address<br></br>
+                            <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
+                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='input Detail Address'></input>
+                            <Modal
+                                isOpen={showModal}
+                                onRequestClose={() => setShowModal(false)}
+                                appElement={document.getElementById('root')}
+                                style={{
+                                    overlay: {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                                    },
+                                    content: {
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        width: '430px',
+                                        height: '400px',
+                                        padding: '0px',
+                                        overflow: 'none'
+                                    }
+                                }}
+                            >
+                                <DaumPostcode onComplete={handleComplete} />
+                            </Modal>
+                        </div>
+                    </div>
+                    <div className={style.changeBtns}>
+                        <div>
+                            <button onClick={handleUpdate} className={style.changeBtn}>회원정보 수정하기</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className={style.changeBtns}>
+                :
                 <div>
-                    <button onClick={handleUpdate} className={style.changeBtn}>회원정보 수정하기</button>
+                    <div className={style.inputBox}>
+                        <div>
+                            Name<br></br>
+                            <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='input your Name'></input><br /><br />
+                            Phone<br></br>
+                            <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='input your Phone Number'></input><br /><br />
+                            ZipCode<br></br>
+                            <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode}></input>
+                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
+                            Address<br></br>
+                            <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
+                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='input Detail Address'></input>
+                            <Modal
+                                isOpen={showModal}
+                                onRequestClose={() => setShowModal(false)}
+                                appElement={document.getElementById('root')}
+                                style={{
+                                    overlay: {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                                    },
+                                    content: {
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        width: '430px',
+                                        height: '400px',
+                                        padding: '0px',
+                                        overflow: 'none'
+                                    }
+                                }}
+                            >
+                                <DaumPostcode onComplete={handleComplete} />
+                            </Modal>
+                        </div>
+                    </div>
+                    <div className={style.changeBtns}>
+                        <div>
+                            <button onClick={handleEstateUpdate} className={style.changeBtn}>회원정보 수정하기</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+            }
+
 
         </div>
     );
