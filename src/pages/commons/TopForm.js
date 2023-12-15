@@ -10,11 +10,13 @@ const TopForm = ({ setLoginId }) => {
     const navi = useNavigate();
     const storedLoginId = sessionStorage.getItem('loginId');
     const isAdmin = sessionStorage.getItem('isAdmin');
+    const isEstate = sessionStorage.getItem('isEstate');
     const handleLogout = () => {
         axios.get("/api/member/logout").then(resp => {
             console.log("로그아웃 완료");
             sessionStorage.removeItem('loginId');
             sessionStorage.removeItem('isAdmin');
+            sessionStorage.removeItem('isEstate');
             navi("/");
             window.location.reload();
             setLoginId = null;
