@@ -57,14 +57,17 @@ const Review = () => {
     useEffect(() => {
         axios.get(`/api/reviewApproval/myReview/${storedLoginId}`).then(resp => {
             setSawEstate(resp.data);
-            for(let i=0;i<sawEstate.length;i++) {
-                console.log(sawEstate[i].estateCode);
-                axios.get(`/api/`)
-            }
         });
-        // 전체목록 가져오기 - promise 객체 반환 대기중
-        // 화면 구성과 관련없는 side effect 기능들을 실행하는 것들을 통ㅈㅔ하기 위해 useeffect 사용
-        // re랜더링 시점에는 useEffect가 실행되지 않는다
+    }, []);
+
+    useEffect(() => {
+        for(let i=0;i<sawEstate.length;i++) {
+            console.log(sawEstate[i].estateCode);
+            axios.get(`/api/reviewApproval/estate/${sawEstate[i].estateCode}`).then(resp2 => {
+                console.log(resp2.data);
+                setEstate(resp2.data);
+            });
+        }
     }, []);
 
     return (
