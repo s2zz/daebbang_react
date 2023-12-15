@@ -90,16 +90,16 @@ const HomeEnrollment = (args) => {
     };
     const increaseNewEstateCount = async () => {
         try {
-          const response = await axios.get('/api/admin/agent/todayNewEstate');
+          const response = await axios.get('/api/enrollment/agent/todayNewEstate');
           if (response.data) {
             console.log('Data exists:', response.data.seq);
             // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
-            await axios.put(`/api/admin/agent/incrementNewEstate/${response.data.seq}`);
+            await axios.put(`/api/enrollment/agent/incrementNewEstate/${response.data.seq}`);
             console.log('회원 1증가');
           } else {
             console.log('Data does not exist:', response.data);
             // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
-            await axios.post('/api/admin/agent/createNewEstate');
+            await axios.post('/api/enrollment/agent/createNewEstate');
             console.log('신규 회원 데이터 생성');
           }
         } catch (error) {
