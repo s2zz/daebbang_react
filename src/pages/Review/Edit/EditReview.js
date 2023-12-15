@@ -1,7 +1,7 @@
 
 const EditReview = () => {
     return (
-        <div>hi</div>
+        <div>리뷰수정창</div>
     );
 }
 

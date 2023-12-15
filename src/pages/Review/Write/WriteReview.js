@@ -1,7 +1,7 @@
 
 const WriteReview = () => {
     return (
-        <div>hi</div>
+        <div>리뷰작성창</div>
     );
 }
 
