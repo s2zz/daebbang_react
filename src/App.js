@@ -33,7 +33,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/home/*" element={<Home />} />
-          <Route path="/board/*" element={<Board />} />
+          <Route path="/board/*" element={<Board loginId={storedLoginId} admin={isAdmin}/>} />
           <Route path="/estateManage/*" element={<EstateManage />} />
           <Route path="/login/*" element={<Login/>} />
           <Route path="/login/findId/*" element={<FindId/>} />

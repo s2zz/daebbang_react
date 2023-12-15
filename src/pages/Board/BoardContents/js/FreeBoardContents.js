@@ -6,12 +6,14 @@ import { useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 
 
-const FreeBoardContents = () => {
+const FreeBoardContents = ({ loginId, admin }) => {
     const location = useLocation();
     const navi = useNavigate();
     const [boardContents, setBoardContents] = useState({ contents: "" });
     const [replyList, setReplyList] = useState([{}]);
     const [fileList, setFileList] = useState([{}]);
+
+    const seq = location.state !== null && location.state.sysSeq !== null ? location.state.sysSeq : 0;
 
     // 댓글 내림차순 정렬
     function compareBySeq(a, b) {
@@ -20,24 +22,26 @@ const FreeBoardContents = () => {
 
     // 게시글 내용, 댓글 목록 불러오기
     useEffect(() => {
-        axios.get(`/api/board/boardContents/${location.state.sysSeq}`).then(resp => {
-            setBoardContents(resp.data);
-            setReplyList(resp.data.replies.sort(compareBySeq));
-            setFileList(resp.data.files.sort(compareBySeq));
-        }).catch(err => {
-            console.log(err);
-        })
+        if (seq) {
+            axios.get(`/api/board/boardContents/${seq}`).then(resp => {
+                setBoardContents(resp.data);
+                setReplyList(resp.data.replies.sort(compareBySeq));
+                setFileList(resp.data.files.sort(compareBySeq));
+            }).catch(err => {
+                console.log(err);
+            })
+        }
     }, [replyList.length])
 
     // 댓글 추가
-    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: location.state.sysSeq });
+    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: seq});
     const insertReplyHandleChange = (e) => {
         setInsertReply(prev => ({ ...prev, contents: e.target.value }));
     }
 
     const insertReplyAdd = () => {
 
-        if(insertReply.contents===""){
+        if (insertReply.contents === "") {
             alert("내용을 입력해주세요");
             return;
         }
@@ -80,7 +84,7 @@ const FreeBoardContents = () => {
     }
 
     const updateAdd = () => {
-        if(updateReply.contents===""){
+        if (updateReply.contents === "") {
             alert("내용을 입력해주세요");
             return;
         }
@@ -96,15 +100,15 @@ const FreeBoardContents = () => {
             console.log(err);
         })
     }
-    
+
     // 게시글 삭제
     const contentsDel = (seq) => {
         let imgList = existImgSearch(boardContents.contents);
-        if(window.confirm("게시글을 삭제하시겠습니까?")){
-            axios.delete(`/api/board/${seq}`,{ data: imgList }).then(resp=>{
+        if (window.confirm("게시글을 삭제하시겠습니까?")) {
+            axios.delete(`/api/board/${seq}`, { data: imgList }).then(resp => {
                 alert("게시글 삭제에 성공하였습니다");
                 navi("/board/toFreeBoardList");
-            }).catch(err=>{
+            }).catch(err => {
                 alert("게시글 삭제에 실패하였습니다");
                 console.log(err);
             })
@@ -149,11 +153,11 @@ const FreeBoardContents = () => {
     }
 
     // 파일 다운로드
-    const downloadFile = (sysName,oriName) => {
-        axios.get("/api/file",{
-            params:{sysName:sysName,oriName:oriName},
-            responseType:"blob"
-        }).then(resp=>{
+    const downloadFile = (sysName, oriName) => {
+        axios.get("/api/file", {
+            params: { sysName: sysName, oriName: oriName },
+            responseType: "blob"
+        }).then(resp => {
             const url = window.URL.createObjectURL(new Blob([resp.data]));
             const link = document.createElement("a");
             link.href = url;
@@ -161,7 +165,7 @@ const FreeBoardContents = () => {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }).catch(err=>{
+        }).catch(err => {
             alert("파일 다운로드 중 에러가 발생하였습니다");
             console.log(err);
         })
@@ -172,25 +176,28 @@ const FreeBoardContents = () => {
             <div className={style.boardContentsTitle}>{boardContents.title}</div>
             <div className={style.boardContentsInfo}>
                 <div>
-                 작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
+                    작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
                 </div>
                 <div>
-                    <button onClick={()=>{contentsDel(location.state.sysSeq)}}>삭제</button>
+                    {loginId === boardContents.writer || admin !== null ? <button onClick={() => { contentsDel(seq) }}>삭제</button> : ""}
                 </div>
             </div>
             <div>
                 {
-                    fileList.map((e,i)=>{
+                    fileList.map((e, i) => {
                         return (
-                            <div key={i} onClick={()=>downloadFile(e.sysName,e.oriName)}>{e.oriName}</div>
+                            <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>{e.oriName}</div>
                         );
                     })
                 }
             </div>
             <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}></div>
             <div>
-                <Link to="/board/toFreeBoardList" state={{searchText:location.state!==null && location.state.searchText!=null ? location.state.searchText : ""}}><button>뒤로가기</button></Link>
-                <Link to="/board/toEditFreeBoardContents" state={{sysSeq:location.state.sysSeq}}><button>수정하기</button></Link>
+                <Link to="/board/toFreeBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button>뒤로가기</button></Link>
+                {loginId === boardContents.writer || admin !== null ?
+                    <Link to="/board/toEditFreeBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> :
+                    ""
+                }
             </div>
             <hr />
             <div>
@@ -219,13 +226,17 @@ const FreeBoardContents = () => {
                                 {
                                     visibleUpdateBox === e.seq ?
                                         <div>
-                                            <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
-                                            <button onClick={updateAdd}>수정완료</button>
+                                            {loginId === e.writer || admin !== null ?
+                                                <><button onClick={() => hideUpdateBox(e.seq)}>취소</button><button onClick={updateAdd}>수정완료</button></> :
+                                                ""
+                                            }
                                         </div>
                                         :
                                         <div>
-                                            <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
-                                            <button onClick={() => delReplyBtn(e.seq)}>삭제</button>
+                                            {loginId === e.writer || admin !== null ?
+                                                <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
+                                                ""
+                                            }
                                         </div>
                                 }
                             </div>
@@ -243,13 +254,17 @@ const FreeBoardContents = () => {
                                 {
                                     visibleUpdateBox === e.seq ?
                                         <div>
-                                            <button onClick={() => hideUpdateBox(e.seq)}>취소</button>
-                                            <button onClick={updateAdd}>수정완료</button>
+                                            {loginId === e.writer || admin !== null ?
+                                                <><button onClick={() => hideUpdateBox(e.seq)}>취소</button><button onClick={updateAdd}>수정완료</button></> :
+                                                ""
+                                            }
                                         </div>
                                         :
                                         <div>
-                                            <button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button>
-                                            <button onClick={() => delReplyBtn(e.seq)}>삭제</button>
+                                            {loginId === e.writer || admin !== null ?
+                                                <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
+                                                ""
+                                            }
                                         </div>
                                 }
 
