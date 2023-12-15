@@ -13,10 +13,18 @@ import MyPage from './pages/MyPage/MyPage';
 import Main from './pages/Main/Main';
 import FindId from './pages/Login/FindId/FindId';
 import FindPw from './pages/Login/FindPw/FindPw';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
   const storedLoginId = sessionStorage.getItem('loginId');
   const isAdmin = sessionStorage.getItem('isAdmin');
+    //방문자수
+    useEffect(() => {
+      axios.get(`/api/visit/test`).then(resp => {
+        
+      })
+    }, []);
   return (
     <BrowserRouter>
       <div className="main_container">
