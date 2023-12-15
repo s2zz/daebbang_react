@@ -36,6 +36,7 @@ function EstateInsert() {
     buildingFloors: "",
     title: "",
     contents: "",
+    writer:"",
     memo: ""
   });
 
@@ -71,7 +72,7 @@ function EstateInsert() {
       return false;
     }
 
-    formData.append('realEstate', JSON.stringify(realEstate));
+    formData.append('realEstate', JSON.stringify({ ...realEstate, writer: sessionStorage.getItem('loginId') }));
     formData.append('optionList', JSON.stringify(optionList));
 
     for (const image of estateImages) {
