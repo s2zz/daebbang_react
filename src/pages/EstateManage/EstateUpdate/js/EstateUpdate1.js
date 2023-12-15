@@ -110,25 +110,25 @@ function EstateInsert1({ realEstate, setRealEstate }) {
         <tr>
           <th>종류 선택<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="r1" name="roomCode" value="r1" onChange={handleChange} /><label for="r1">원룸</label>
-            <input type="radio" id="r2" name="roomCode" value="r2" onChange={handleChange} /><label for="r2">투룸</label>
+            <input type="radio" id="r1" name="roomCode" value="r1" onChange={handleChange} checked={realEstate.roomCode === "r1"} /><label for="r1">원룸</label>
+            <input type="radio" id="r2" name="roomCode" value="r2" onChange={handleChange} checked={realEstate.roomCode === "r2"} /><label for="r2">투룸</label>
           </td>
         </tr>
         <tr>
           <th>구조 선택<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="s1" name="structureCode" value="s1" onChange={handleChange} /><label for="s1">오픈형 원룸</label>
-            <input type="radio" id="s2" name="structureCode" value="s2" onChange={handleChange} /><label for="s2">분리형 원룸</label>
-            <input type="radio" id="s3" name="structureCode" value="s3" onChange={handleChange} /><label for="s3">복층형 원룸</label>
+            <input type="radio" id="s1" name="structureCode" value="s1" onChange={handleChange} checked={realEstate.structureCode === "s1"} /><label for="s1">오픈형 원룸</label>
+            <input type="radio" id="s2" name="structureCode" value="s2" onChange={handleChange} checked={realEstate.structureCode === "s2"} /><label for="s2">분리형 원룸</label>
+            <input type="radio" id="s3" name="structureCode" value="s3" onChange={handleChange} checked={realEstate.structureCode === "s3"} /><label for="s3">복층형 원룸</label>
           </td>
         </tr>
         <tr>
           <th>건물 유형<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="b1" name="buildingCode" value="b1" onChange={handleChange} /><label for="b1">단독주택</label>
-            <input type="radio" id="b2" name="buildingCode" value="b2" onChange={handleChange} /><label for="b2">다가구주택</label>
-            <input type="radio" id="b3" name="buildingCode" value="b3" onChange={handleChange} /><label for="b3">빌라/연립/다세대</label>
-            <input type="radio" id="b4" name="buildingCode" value="b4" onChange={handleChange} /><label for="b4">상가주택</label>
+            <input type="radio" id="b1" name="buildingCode" value="b1" onChange={handleChange} checked={realEstate.buildingCode === "b1"} /><label for="b1">단독주택</label>
+            <input type="radio" id="b2" name="buildingCode" value="b2" onChange={handleChange} checked={realEstate.buildingCode === "b2"} /><label for="b2">다가구주택</label>
+            <input type="radio" id="b3" name="buildingCode" value="b3" onChange={handleChange} checked={realEstate.buildingCode === "b3"} /><label for="b3">빌라/연립/다세대</label>
+            <input type="radio" id="b4" name="buildingCode" value="b4" onChange={handleChange} checked={realEstate.buildingCode === "b4"} /><label for="b4">상가주택</label>
           </td>
         </tr>
         <tr>
@@ -163,8 +163,8 @@ function EstateInsert1({ realEstate, setRealEstate }) {
         <tr>
           <th>난방 종류<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="h1" name="heatingCode" value="h1" onChange={handleChange} /><label for="h1">개별난방</label>
-            <input type="radio" id="h2" name="heatingCode" value="h2" onChange={handleChange} /><label for="h2">중앙난방</label>
+            <input type="radio" id="h1" name="heatingCode" value="h1" onChange={handleChange} checked={realEstate.heatingCode === "h1"}/><label for="h1">개별난방</label>
+            <input type="radio" id="h2" name="heatingCode" value="h2" onChange={handleChange} checked={realEstate.heatingCode === "h2"}/><label for="h2">중앙난방</label>
           </td>
         </tr>
       </table>

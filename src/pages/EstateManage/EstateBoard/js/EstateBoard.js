@@ -8,10 +8,18 @@ function EstateBoard() {
   const [realEstate, setRealEstate] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/estateManage/").then((resp) => {
-      console.log(resp.data);
-      setRealEstate(resp.data);
-    });
+    axios.get("/api/estateManage/", {
+      params: {
+        loginId: sessionStorage.getItem('loginId') // 쿼리 파라미터로 데이터 전송
+      }
+    })
+      .then((resp) => {
+        console.log(resp.data);
+        setRealEstate(resp.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
 
   const handleDelete = (estateId) => {
@@ -29,16 +37,43 @@ function EstateBoard() {
     }
   }
 
-  // 페이지네이션
+  function compareBySeq(a, b) {
+    return b.seq - a.seq;
+  }
+
   const [currentPage, setCurrentPage] = useState(1);
   const countPerPage = 10;
-  const sliceContentsList = () => {
-      const start = (currentPage - 1) * countPerPage;
-      const end = start + countPerPage;
-      return realEstate.slice(start, end);
+  const sliceContentsList = (list) => {
+    const start = (currentPage - 1) * countPerPage;
+    const end = start + countPerPage;
+    return list.slice(start, end);
   }
   const currentPageHandle = (event, currentPage) => {
-      setCurrentPage(currentPage);
+    setCurrentPage(currentPage);
+  }
+
+  const pagenation = () => {
+    return <Pagination count={Math.ceil(realEstate.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />;
+  }
+
+  const contentslist = () => {
+    return sliceContentsList(realEstate).map(boardItem);
+  }
+
+  const boardItem = (estate, i) => {
+    return (
+      <tr key={i}>
+        {<td><img src={`uploads\\estateImages\\${estate.images[0].sysName}`} alt="Estate Image"></img></td>}
+        <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>
+        <td>{estate.title}</td>
+        <td>{estate.contents}</td>
+        <td>{estate.address1}</td>
+        <td>
+          <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><button>수정</button></Link>
+          <button onClick={() => handleDelete(estate.estateId)}>삭제</button>
+        </td>
+      </tr>
+    );
   }
 
   return (
@@ -55,29 +90,18 @@ function EstateBoard() {
           </tr>
         </thead>
         <tbody>
-          {realEstate.map((estate, index) => (
-            <tr key={index}>
-              <td><img src={`uploads\\estateImages\\${estate.images[0].sysName}`} alt="Estate Image"></img></td>
-              <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>
-              <td>{estate.title}</td>
-              <td>{estate.contents}</td>
-              <td>{estate.address1}</td>
-              <td>
-                <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><button>수정</button></Link>
-                <button onClick={() => handleDelete(estate.estateId)}>삭제</button>
-              </td>
-            </tr>
-          ))}
+          {contentslist()}
         </tbody>
       </table>
+      
       <div className={style.naviFooter}>
-        {
-            <Pagination count={Math.ceil(realEstate.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />
-        }
+        {pagenation()}
       </div>
       <Link to={`/estateManage/estateInsert`}><button>방 내놓기</button></Link>
     </div>
   );
 }
+
+
 
 export default EstateBoard;
