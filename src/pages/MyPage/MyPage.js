@@ -73,7 +73,7 @@ const EstateInfo = () => {
         <div className={style.infoContainer}>
             <div className={style.infoBox}>
                 <div className={style.eleftInfo}>
-                    ID<br></br>ESTATE NAME<br></br>ESTATE NUMBER<br></br>NAME<br></br>PHONE<br></br>MANNER TEMPERATURE
+                    ID<br></br>ESTATE NAME<br></br>ESTATE NUMBER<br></br>NAME<br></br>PHONE<br></br>ADDRESS<br></br>MANNER TEMPERATURE
                 </div>
                 <div className={style.rightInfo}>
                     {storedLoginId}<br></br>
@@ -81,6 +81,7 @@ const EstateInfo = () => {
                     {info.estateNumber}<br></br>
                     {info.name}<br></br>
                     {info.phone}<br></br>
+                    {info.address}<br></br>
                     {info.manners_temperature}<br></br>
                 </div>
             </div>
@@ -108,16 +109,12 @@ function MyPage() {
         <div className={style.container}>
             <div className={style.myLogo}>MY DAEBBANG</div>
             {isEstate ?
+                <div className={style.menuDiv}>
                 <div className={style.menu}>
                     <Link to="/mypage/estateInfo">
                         <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
                     </Link>
-                    <Link to="/mypage/jjim">
-                        <button className={selectedMenu === "jjim" ? style.menuJjimSelected : style.menuJjim} onClick={() => handleMenuClick("jjim")}>내 찜</button>
-                    </Link>
-                    <Link to="/mypage/review">
-                        <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내 리뷰</button>
-                    </Link>
+                </div>
                 </div>
                 : <div className={style.menu}>
                     <Link to="/mypage/info">
@@ -127,7 +124,7 @@ function MyPage() {
                         <button className={selectedMenu === "jjim" ? style.menuJjimSelected : style.menuJjim} onClick={() => handleMenuClick("jjim")}>내 찜</button>
                     </Link>
                     <Link to="/mypage/review">
-                        <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내 리뷰</button>
+                        <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내가 본 방</button>
                     </Link>
                 </div>
             }
