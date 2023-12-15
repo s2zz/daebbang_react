@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import style from '../css/EstateUpdate.module.css';
 import { useNavigate, useParams } from "react-router-dom";
@@ -67,8 +67,6 @@ function EstateUpdate() {
 
     const imageLength = estateImages.length;
 
-    console.log({estateId});
-
     if (imageLength < 3 || imageLength > 10) {
       alert("사진을 3장 이상 10장 이하로 등록해주세요.");
       return false;
@@ -95,12 +93,24 @@ function EstateUpdate() {
       });
   }
 
+  useEffect(() => {
+    axios.get(`/api/estateManage/estateUpdate/${estateId}`)
+      .then(resp => {
+        console.log("Fetched data:", resp.data);
+        
+        setRealEstate(resp.data);
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }, [estateId]);
+
   return (
     <div className={style.container}>
       <h1 className={style.bigTitle}>정보수정</h1>
       <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
       <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
-      <EstateUpdate3 setRealEstate={setRealEstate} estateImages={estateImages} setEstateImages={setEstateImages} />
+      <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} estateImages={estateImages} setEstateImages={setEstateImages} />
       <div className={style.buttonDiv}>
         <button onClick={handleReturn}>이전으로</button>
         <button onClick={handleSubmit}>다음으로</button>

@@ -13,10 +13,19 @@ import MyPage from './pages/MyPage/MyPage';
 import Main from './pages/Main/Main';
 import FindId from './pages/Login/FindId/FindId';
 import FindPw from './pages/Login/FindPw/FindPw';
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import Review from './pages/Review/Review';
 
 function App() {
   const storedLoginId = sessionStorage.getItem('loginId');
   const isAdmin = sessionStorage.getItem('isAdmin');
+    //방문자수
+    useEffect(() => {
+      axios.get(`/api/visit/test`).then(resp => {
+        
+      })
+    }, []);
   return (
     <BrowserRouter>
       <div className="main_container">
@@ -25,7 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/home/*" element={<Home />} />
-          <Route path="/board/*" element={<Board />} />
+          <Route path="/board/*" element={<Board loginId={storedLoginId} admin={isAdmin}/>} />
           <Route path="/estateManage/*" element={<EstateManage />} />
           <Route path="/login/*" element={<Login/>} />
           <Route path="/login/findId/*" element={<FindId/>} />
@@ -34,6 +43,7 @@ function App() {
           <Route path="/myPage/*" element={storedLoginId?<MyPage/>:<Navigate to="/" replace/>} />
           <Route path="/admin/*" element={isAdmin?<Admin />:<Navigate to="/" replace/>} />
           <Route path="/enrollment/*" element={<Enrollment />} />
+          <Route path="/review/*" element={<Review />} />
         </Routes>
         </div>
       </div>

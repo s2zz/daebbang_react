@@ -21,7 +21,7 @@ const FreeBoardWrite = () => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     }
-    const [sysNameList,setSysNameList] = useState([]);
+    const [sysNameList, setSysNameList] = useState([]);
 
     const imageHandler = (file) => {
         // 이미지 선택 창 나타나게 하기
@@ -31,6 +31,7 @@ const FreeBoardWrite = () => {
         input.setAttribute("accept", "image/*");
         input.click();
 
+        const editor = quillRef.current.getEditor();
         // 이미지 선택 시 동작
         input.addEventListener("change", async () => {
             const files = input.files;
@@ -41,14 +42,13 @@ const FreeBoardWrite = () => {
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
-                const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev=>[...prev,imgUrl.data[i].split("/uploads/board/")[1]]);
+                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
                     editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
                 }
-                
+
             } catch (error) {
                 console.log(error);
             }
@@ -68,14 +68,14 @@ const FreeBoardWrite = () => {
     let submitImgSearch = (uploadList, sysNameList) => { // 삭제된 이미지 태그 뽑아내기
         let exist = false;
         let delImgList = [];
-        for(let i=0;i<sysNameList.length;i++){
-            for(let j=0;j<uploadList.length;j++){
-                if(sysNameList[i] === uploadList[j]){
+        for (let i = 0; i < sysNameList.length; i++) {
+            for (let j = 0; j < uploadList.length; j++) {
+                if (sysNameList[i] === uploadList[j]) {
                     exist = true;
                     break;
                 }
             }
-            exist ? exist=false : delImgList.push(sysNameList[i]);
+            exist ? exist = false : delImgList.push(sysNameList[i]);
         }
         return delImgList;
     }
@@ -83,7 +83,7 @@ const FreeBoardWrite = () => {
 
     const handleAdd = () => {
         let existImgList = existImgSearch(formData.contents);
-        let delImgList = submitImgSearch(existImgList,sysNameList);
+        let delImgList = submitImgSearch(existImgList, sysNameList);
         console.log(delImgList);
 
         if (formData.title === "") {
@@ -110,7 +110,7 @@ const FreeBoardWrite = () => {
         submitFormData.append("boardTitle", "자유게시판");
         submitFormData.append("title", formData.title);
         submitFormData.append("contents", formData.contents);
-        submitFormData.append("delImgList",delImgList);
+        submitFormData.append("delImgList", delImgList);
 
         formData.files.forEach((e) => {
             submitFormData.append("files", e);
@@ -177,7 +177,14 @@ const FreeBoardWrite = () => {
                 <div>내용</div>
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents} onChange={(value) => setFormData({ ...formData, contents: value })} />
+                        value={formData.contents}
+                        onChange={(value) => {
+                            if (value.length > 5000) {
+                                alert("최대 5000자까지 작성 가능합니다");
+                            } else {
+                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                            }
+                        }} />
                 </div>
             </div>
 
