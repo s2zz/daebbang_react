@@ -119,7 +119,7 @@ function Info() {
           </div>
 
           <div className={style.info_address}>
-            {/*주소*/}{markerInfo.address}
+            {/*주소*/}{markerInfo.address2}
           </div>
           <div className={style.info_cost}>
             {/*월세*/}월세 {markerInfo.price} / 20

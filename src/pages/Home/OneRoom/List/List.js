@@ -1,6 +1,6 @@
 //
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 
 //
 import Info from "../Info/Info";
@@ -9,13 +9,12 @@ import turn from "../assets/turn.PNG";
 //
 import style from "./List.module.css";
 
-function List() {
+function List({ onDragEnd }) {
   const navigate = useNavigate();
   const location = useLocation();
 
   // 전달된 데이터 추출
-    const { markersInBounds } = location.state || {};
-
+  const { markersInBounds } = location.state || {};
 
   // 마커를 클릭하면 해당 마커의 내용을 들고 정보(info)로 감
   const handleMarkerClick = (marker) => {
@@ -52,7 +51,7 @@ function List() {
               <div className={style.list_subtitle}>
                 {marker.area}평 {marker.roomFloors}층
               </div>
-              <div className={style.list_subtitle}>{marker.address}</div>
+              <div className={style.list_subtitle}>{marker.address2}</div>
               <div className={style.list_simple}>{marker.contents}</div>
             </div>
           </div>
