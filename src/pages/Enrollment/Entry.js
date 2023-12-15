@@ -4,34 +4,8 @@ import successImage from './assets/success.png';
 import style from "./Enrollment.module.css"
 import { Link } from 'react-router-dom';
 import Footer from "../commons/Footer";
-import React, { useEffect } from 'react';
 
 const Entry = () => {
-  useEffect(() => {
-    const socket = new WebSocket('ws://localhost:8080');
-
-    socket.onopen = () => {
-      console.log('WebSocket 연결 성공!');
-      // 연결이 열렸을 때 수행할 작업들
-    };
-
-    socket.onerror = (error) => {
-      console.error('WebSocket 연결 실패: ', error);
-      // 연결 에러 발생 시 처리
-    };
-
-    socket.onmessage = (event) => {
-      console.log('메시지 수신:', event.data);
-      // 수신한 데이터 처리 로직
-    };
-
-    return () => {
-      socket.close();
-      console.log('WebSocket 연결 종료');
-      // 컴포넌트가 언마운트되면 소켓 연결 종료
-    };
-  }, []);
-
   return (
     <div className={style.container}>
       <div className={style.imgbag} style={{padding:"50px"}}>
