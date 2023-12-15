@@ -59,6 +59,7 @@ const Review = () => {
             setSawEstate(resp.data);
             for(let i=0;i<sawEstate.length;i++) {
                 console.log(sawEstate[i].estateCode);
+                axios.get(`/api/`)
             }
         });
         // 전체목록 가져오기 - promise 객체 반환 대기중
