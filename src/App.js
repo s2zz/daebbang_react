@@ -15,6 +15,7 @@ import FindId from './pages/Login/FindId/FindId';
 import FindPw from './pages/Login/FindPw/FindPw';
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import Review from './pages/Review/Review';
 
 function App() {
   const storedLoginId = sessionStorage.getItem('loginId');
@@ -42,6 +43,7 @@ function App() {
           <Route path="/myPage/*" element={storedLoginId?<MyPage/>:<Navigate to="/" replace/>} />
           <Route path="/admin/*" element={isAdmin?<Admin />:<Navigate to="/" replace/>} />
           <Route path="/enrollment/*" element={<Enrollment />} />
+          <Route path="/review/*" element={<Review />} />
         </Routes>
         </div>
       </div>
