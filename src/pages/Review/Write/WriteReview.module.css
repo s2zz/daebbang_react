@@ -1,7 +1,32 @@
 *{box-sizing: border-box;}
-.container *{border:1px solid black;}
-.container {
-    width: 100%;
-    height: 1300px;
-    border:1px solid black;
+.scoreBox{
+    overflow: hidden;
+}
+.scoreBox>div{
+    float:left;
+    width:30px;
+    margin-right:20px;
+}
+.scoreBox img{width:100%;}
+.imgInfo{overflow: hidden;}
+.imgInfo>div{float:left;}
+.imgBox{
+    overflow: hidden;
+}
+
+.imgBox>div{
+    float:left;
+    margin-right:20px;
+    background-color: gainsboro;
+    width:90px;
+    height:90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.imgBox button{
+    border: none;
+    background-color: gainsboro;
+    font-size: xx-large;
+    font-weight: bold;
 }
