@@ -200,7 +200,15 @@ const RoomBoardWrite = () => {
                 <div>내용</div>
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents} onChange={(value) => setFormData({ ...formData, contents: value })} />
+                        value={formData.contents}
+                        onChange={(value) => {
+                            if (value.length > 5000) {
+                                alert("최대 5000자까지 작성 가능합니다");
+                            } else {
+                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                            }
+                        }}
+                    />
                 </div>
             </div>
 

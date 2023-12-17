@@ -22,7 +22,8 @@ function Info() {
   useEffect(()=>{
     var container = document.getElementById('map');
     var options = {
-      center: new kakao.maps.LatLng(36.84142696925057, 127.14542099214732),
+      center: new kakao.maps.LatLng(markerInfo.latitude,
+        markerInfo.longitude),
       level: 3
     };
     var map = new kakao.maps.Map(container, options);
@@ -113,26 +114,26 @@ function Info() {
       {/* box_1 */}
         <div className={style.info_title}>
           <div className={style.info_title_top}>
-            <div className={style.info_idx}>등록번호 {/*등록번호 넣기*/}38839957</div>
-            <div className={style.info_day}>{/*몇일 전 넣기*/}12일 전</div>
+            <div className={style.info_idx}>등록번호    {/*등록번호 넣기*/}{markerInfo.estateId}</div>
+            <div className={style.info_day}>{/*몇일 전 넣기*/}{markerInfo.writeDate}</div>
           </div>
 
           <div className={style.info_address}>
-            {/*주소*/}{markerInfo.d}
+            {/*주소*/}{markerInfo.address2}
           </div>
           <div className={style.info_cost}>
-            {/*월세*/}{markerInfo.b}
+            {/*월세*/}월세 {markerInfo.price} / 20
           </div>
           <div className={style.info_maintenance_cost}>
-            {/*관리비*/} 관리비 15만원
+            {/*관리비*/} {markerInfo.maintenanceCost}
           </div>
         </div>
 
       {/* box_2 */}
         <div className={style.info_subbox}>
-          <div style={{margin:'10px 0 0 0'}}>사창사거리 인근</div>
-          <div className={style.subbox_bold}><span>icon</span>전용 7평</div>
-          <div className={style.subbox_bold}><span>icon</span>분리형원룸</div>
+          <div style={{margin:'10px 0 0 0'}}>{markerInfo.contents}</div>
+          <div className={style.subbox_bold}><span>icon</span>전용 {markerInfo.area}평</div>
+          <div className={style.subbox_bold}><span>icon</span>{markerInfo.structureType}</div>
           <div><span>icon</span>주차가능</div>
           <div><span>icon</span>2층/4층</div>
           <div><span>icon</span>즉시 입주 가능</div>

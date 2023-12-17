@@ -37,7 +37,6 @@ const Info = () => {
                 <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
                 <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
             </div>
-
         </div>
     );
 }
@@ -51,15 +50,104 @@ const Jjim = () => {
 }
 
 const Review = () => {
+    const storedLoginId = sessionStorage.getItem('loginId');
+    const [estate, setEstate] = useState([{}]);
+    const [sawEstate, setSawEstate] = useState([{}]);
+
+    const [myArray, setMyArray] = useState([]);
+
+    // 배열에 요소 추가하는 함수
+    const addElement = () => {
+        // 새로운 배열 생성 (불변성을 유지하기 위해 spread 연산자 사용)
+        const newArray = [...myArray, '새로운 요소'];
+
+        // 상태 업데이트
+        setMyArray(newArray);
+    };
+
+    useEffect(() => {
+        axios.get(`/api/reviewApproval/myReview/${storedLoginId}`).then(resp => {
+            setSawEstate(resp.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        const fetchDataForEstate = async (estateCode) => {
+            try {
+                const resp = await axios.get(`/api/reviewApproval/estate/${estateCode}`);
+                console.log(resp.data);
+                return resp.data;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        };
+
+        const fetchAllData = async () => {
+            const dataArray = await Promise.all(sawEstate.map(review => fetchDataForEstate(review.estateCode)));
+            setEstate(dataArray.filter(data => data !== null));
+        };
+
+        if (sawEstate.length > 0) {
+            fetchAllData();
+        }
+    }, [sawEstate]);
+
     return (
         <div className={style.ReviewContainer}>
-            리뷰다.
+            {sawEstate.map((s, i) => (
+                <div map={i}>
+                    {s.estateCode}
+                    {s.approvalCode}
+                    {s.approvalCode === 'a3' && <button>리뷰 쓰기</button>}
+                    {s.approvalCode === 'a4' && <button>승인 거절</button>}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+
+const EstateInfo = () => {
+    const storedLoginId = sessionStorage.getItem('loginId');
+
+    const [info, setInfo] = useState([{}]);
+
+    useEffect(() => {
+        axios.get("/api/estate/estateInfo/" + storedLoginId).then(resp => {
+            setInfo(resp.data);
+        });
+    }, []);
+
+    return (
+        <div className={style.infoContainer}>
+            <div className={style.infoBox}>
+                <div className={style.eleftInfo}>
+                    ID<br></br>ESTATE NAME<br></br>ESTATE NUMBER<br></br>NAME<br></br>PHONE<br></br>ADDRESS<br></br>MANNER TEMPERATURE
+                </div>
+                <div className={style.rightInfo}>
+                    {storedLoginId}<br></br>
+                    {info.estateName}<br></br>
+                    {info.estateNumber}<br></br>
+                    {info.name}<br></br>
+                    {info.phone}<br></br>
+                    {info.address}<br></br>
+                    {info.manners_temperature}<br></br>
+                </div>
+            </div>
+            <div className={style.cBtnBox}>
+                <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
+                <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
+                <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
+            </div>
         </div>
     );
 }
 
 function MyPage() {
     const [initialRender, setInitialRender] = useState(true);
+
+    const isEstate = sessionStorage.getItem('isEstate');
 
     const [selectedMenu, setSelectedMenu] = useState("info");
 
@@ -70,25 +158,37 @@ function MyPage() {
     return (
         <div className={style.container}>
             <div className={style.myLogo}>MY DAEBBANG</div>
-            <div className={style.menu}>
-                <Link to="/mypage/info">
-                    <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
-                </Link>
-                <Link to="/mypage/jjim">
-                    <button className={selectedMenu === "jjim" ? style.menuJjimSelected : style.menuJjim} onClick={() => handleMenuClick("jjim")}>내 찜</button>
-                </Link>
-                <Link to="/mypage/review">
-                    <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내 리뷰</button>
-                </Link>
-            </div>
+            {isEstate ?
+                <div className={style.menuDiv}>
+                    <div className={style.menu}>
+                        <Link to="/mypage/estateInfo">
+                            <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
+                        </Link>
+                    </div>
+                </div>
+                : <div className={style.menu}>
+                    <Link to="/mypage/info">
+                        <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
+                    </Link>
+                    <Link to="/mypage/jjim">
+                        <button className={selectedMenu === "jjim" ? style.menuJjimSelected : style.menuJjim} onClick={() => handleMenuClick("jjim")}>내 찜</button>
+                    </Link>
+                    <Link to="/mypage/review">
+                        <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내가 본 방</button>
+                    </Link>
+                </div>
+            }
             <Routes>
-                {initialRender && <Route path="/" element={<Info />} />} {/* 처음 렌더링 시에만 Info 컴포넌트를 보임 */}
+                {initialRender && !isEstate && <Route path="/" element={<Info />} />} {/* 처음 렌더링 시에만 Info 컴포넌트를 보임 */}
                 <Route path="info" element={<Info />} />
                 <Route path="jjim" element={<Jjim />} />
                 <Route path="review" element={<Review />} />
                 <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
                 <Route path="updateMyInfo" element={<UpdateMyInfo />} />
                 <Route path="changePw" element={<ChangePw />} />
+
+                {initialRender && isEstate && <Route path="/" element={<EstateInfo />} />}
+                <Route path="estateInfo" element={<EstateInfo />} />
             </Routes>
         </div>
 

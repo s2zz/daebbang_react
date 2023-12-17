@@ -26,12 +26,24 @@ const LoginBox = ({ setLoginId }) => {
   }, []);
 
   const [user, setUser] = useState({ id: "", pw: "" });
+  const [estate, setEstate] = useState({ id: "", pw: "" });
+  const [admin, setAdmin] = useState({ id: "", pw: "" });
 
   const navi = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
+  }
+
+  const handleEstateChange = (e) => {
+    const { name, value } = e.target;
+    setEstate(prev => ({ ...prev, [name]: value }));
+  }
+
+  const handleAdminChange = (e) => {
+    const { name, value } = e.target;
+    setAdmin(prev => ({ ...prev, [name]: value }));
   }
 
   const handleLogin = () => {
@@ -50,27 +62,44 @@ const LoginBox = ({ setLoginId }) => {
     });
   }
 
-  const handleAdminLogin = () => {
+  const handleEstateLogin = () => {
     const formData = new FormData();
-    formData.append("id", user.id);
-    formData.append("pw", user.pw);
-    axios.post("/api/member/login", formData).then(resp => {
-      setLoginId(user.id); // 로그인 성공시
-      sessionStorage.setItem('loginId', user.id);
-      sessionStorage.setItem('isAdmin', true);
-      setUser({ id: "", pw: "" });
+    formData.append("id", estate.id);
+    formData.append("pw", estate.pw);
+    axios.post("/api/estate/login", formData).then(resp => {
+      setLoginId(estate.id); // 로그인 성공시
+      sessionStorage.setItem('loginId', estate.id);
+      sessionStorage.setItem('isEstate', true);
+      setEstate({ id: "", pw: "" });
       navi("/");
       window.location.reload();
     }).catch(resp => {
       console.log(resp); // 로그인 실패시
-      setUser({ id: "", pw: "" });
+      setEstate({ id: "", pw: "" });
+    });
+  }
+
+  const handleAdminLogin = () => {
+    const formData = new FormData();
+    formData.append("id", admin.id);
+    formData.append("pw", admin.pw);
+    axios.post("/api/member/login", formData).then(resp => {
+      setLoginId(admin.id); // 로그인 성공시
+      sessionStorage.setItem('loginId', admin.id);
+      sessionStorage.setItem('isAdmin', true);
+      setAdmin({ id: "", pw: "" });
+      navi("/");
+      window.location.reload();
+    }).catch(resp => {
+      console.log(resp); // 로그인 실패시
+      setAdmin({ id: "", pw: "" });
     });
   }
 
   return (
     <div className={style.container}>
       <div className={style.loginBox}>
-        <div className={style.logo}>DAEBBANG</div>
+        <div className={style.logo}>일반 로그인</div>
         <div className={style.inputLoginBox}>
           <div className={style.inputLogin}>
             <div className={style.loginFont}>아이디</div>
@@ -87,6 +116,21 @@ const LoginBox = ({ setLoginId }) => {
           <Link to="/signUp" className={style.findId}>회원가입</Link>
           <a className={style.findId} href="/login/findId">아이디 찾기</a>
           <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
+        </div>
+      </div>
+      <div className={style.estateLoginBox}>
+        <div className={style.logo}>공인중개사 로그인</div>
+        <div className={style.inputLoginBox}>
+          <div className={style.inputLogin}>
+            <div className={style.loginFont}>아이디</div>
+            <input type="text" name="id" placeholder="input your ID" onChange={handleEstateChange} value={estate.id} className={style.inputInfo}></input>
+            <div className={style.blank}></div>
+            <div className={style.loginFont}>비밀번호</div>
+            <input type="password" name="pw" placeholder="input your PW" onChange={handleEstateChange} value={estate.pw} className={style.inputInfo}></input>
+          </div>
+        </div>
+        <div className={style.btnBox}>
+          <button className={style.loginBtn} onClick={handleEstateLogin}>로그인</button>
         </div>
       </div>
       <Modal
@@ -114,10 +158,10 @@ const LoginBox = ({ setLoginId }) => {
           <div>
             <div className={style.adminTitle}>관리자 로그인</div>
             <div>
-              <FontAwesomeIcon icon={faHammer} className={style.icon}/>
-              <input type="text" placeholder="input admin ID" onChange={handleChange} name="id" value={user.id}></input><br></br><br></br>
-              <FontAwesomeIcon icon={faLock} className={style.icon}/>
-              <input type="password" placeholder="input admin PW" onChange={handleChange} name="pw" value={user.pw}></input><br></br>
+              <FontAwesomeIcon icon={faHammer} className={style.icon} />
+              <input type="text" placeholder="input admin ID" onChange={handleAdminChange} name="id" value={admin.id}></input><br></br><br></br>
+              <FontAwesomeIcon icon={faLock} className={style.icon} />
+              <input type="password" placeholder="input admin PW" onChange={handleAdminChange} name="pw" value={admin.pw}></input><br></br>
             </div>
             <div className={style.adminBtnDiv}>
               <button className={style.adminBtn} onClick={handleAdminLogin}>로그인</button>

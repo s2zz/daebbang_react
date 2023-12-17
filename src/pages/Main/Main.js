@@ -21,30 +21,6 @@ const Main = () => {
       })
   }, []);
 
-  useEffect(() => {
-    const checkTodayVisitor = async () => {
-      try {
-        const visited = localStorage.getItem('visited');
-        if (visited !== 'true') {
-          const response = await axios.get('/api/admin/todayVisitor');
-
-          if (!response.data) {
-            localStorage.setItem('visited', 'false');
-            await axios.post('/api/admin/createVisitor');
-            localStorage.setItem('visited', 'true');
-          } else {
-            await axios.put(`/api/admin/incrementVisitor/${response.data.seq}`);
-            localStorage.setItem('visited', 'true');
-          }
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    checkTodayVisitor();
-  }, []);
-
 
   // 내림차순 정렬
   function compareBySeq(a, b) {
