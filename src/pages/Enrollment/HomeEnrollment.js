@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../commons/Footer";
+import DaumPostcode from "react-daum-postcode";
 
 const HomeEnrollment = (args) => {
     const [value, setValue] = useState('');
@@ -14,16 +15,94 @@ const HomeEnrollment = (args) => {
     //모달
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
-    //api
-    const [data, setData] = useState([]); // Store fetched data
-    const [pageNo, setPageNo] = useState(1); // Track page number
-    const [loading, setLoading] = useState(false);
+    // const toggle = () => {
+    //     setModal(!modal);
+    //     setShowAddress(false);
+    // };
     //api 검색결과
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState(null);
     //api 선택된 값
     const [selectedItem, setSelectedItem] = useState(null);
     const [hoveredItem, setHoveredItem] = useState(null); // 마우스가 올라간 아이템
+
+    const [address, setAddress] = useState('');
+    const [xValue, setXValue] = useState('');
+    const [yValue, setYValue] = useState('');
+
+    const [showAddress, setShowAddress] = useState(false);
+    const [showAddressInfo, setShowAddressInfo] = useState(false);
+
+
+    //카카오 우편
+    const [fill, setFill] = useState(false);
+    const [showAddressInputs, setShowAddressInputs] = useState(false);
+    const [zipcode, setZipcode] = useState({ zipcode: "" });
+    const [address1, setAddress1] = useState({ address1: "" });
+    const [address2, setAddress2] = useState({ address2: "" });
+
+    const { kakao } = window;
+
+    var ps = new kakao.maps.services.Places();
+    // 키워드 검색을 요청하는 함수입니다
+    function searchPlaces(key_word) {
+        var keyword = key_word;
+
+        // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+        ps.keywordSearch(keyword, function (data, status, pagination) {
+            var dataLength = Object.keys(data).length;
+
+            if (!dataLength) {
+                alert("주소를 수동으로 입력해주세요.");
+                setShowAddressInputs(true);
+                setShowAddress(false);
+                setShowAddressInfo(false);
+            } else if (dataLength) {
+                setShowAddress(true);
+                setShowAddressInputs(false);
+                setShowAddressInfo(true);
+                if (status === kakao.maps.services.Status.OK) {
+                    console.log(data[0]);
+                    setXValue(data[0].x);
+                    setYValue(data[0].y);
+                    setAddress(data[0].address_name);
+                    var coords = new kakao.maps.LatLng(data[0].x, data[0].y);
+                    placeMap(coords);
+
+                }
+            }
+        });
+    }
+    // useEffect(() => {
+    function placeMap(coords) {
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+
+        var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+        var mapContainer = document.getElementsByClassName('map')[0], // 지도를 표시할 div 
+            mapOption = {
+                center: new kakao.maps.LatLng(coords.La, coords.Ma), // 지도의 중심좌표
+                level: 3 // 지도의 확대 레벨
+            };
+
+        // 지도를 생성합니다    
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(coords.La, coords.Ma)
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style={{width:150px;text-align:center;padding:6px 0;}}>이 곳이 맞으세요 ?!</div>'
+        });
+        infowindow.open(map, marker);
+
+    }
+    // }, []);
     const navigate = useNavigate();
 
     const handleApiInputChange = (e) => {
@@ -35,7 +114,9 @@ const HomeEnrollment = (args) => {
         toggle(); // 모달 열기/닫기
         setSearchResult(null);
         setSearchValue(null);
-
+        setShowAddress(true);
+        setShowAddressInputs(false);
+        setShowAddressInfo(false);
     };
 
     const searchButtonClick = () => {
@@ -44,7 +125,7 @@ const HomeEnrollment = (args) => {
                 setSearchResult(response.data.EDOffices.field);
             })
             .catch(error => {
-                console.error("에러 발생: ", error);
+                alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
             });
     }
     const handleKeyDown = (event) => {
@@ -73,6 +154,7 @@ const HomeEnrollment = (args) => {
                     alert("이미 가입된 공인중개사무소 입니다.")
                 } else {
                     setSelectedItem(item);
+                    searchPlaces(item.ldCodeNm + " " + item.bsnmCmpnm);
                 }
 
             })
@@ -90,28 +172,43 @@ const HomeEnrollment = (args) => {
     };
     const increaseNewEstateCount = async () => {
         try {
-          const response = await axios.get('/api/enrollment/agent/todayNewEstate');
-          if (response.data) {
-            console.log('Data exists:', response.data.seq);
-            // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
-            await axios.put(`/api/enrollment/agent/incrementNewEstate/${response.data.seq}`);
-            console.log('회원 1증가');
-          } else {
-            console.log('Data does not exist:', response.data);
-            // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
-            await axios.post('/api/enrollment/agent/createNewEstate');
-            console.log('신규 회원 데이터 생성');
-          }
+            const response = await axios.get('/api/enrollment/agent/todayNewEstate');
+            if (response.data) {
+                console.log('Data exists:', response.data.seq);
+                // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
+                await axios.put(`/api/enrollment/agent/incrementNewEstate/${response.data.seq}`);
+                console.log('회원 1증가');
+            } else {
+                console.log('Data does not exist:', response.data);
+                // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
+                await axios.post('/api/enrollment/agent/createNewEstate');
+                console.log('신규 회원 데이터 생성');
+            }
         } catch (error) {
-          console.error('Error:', error);
+            console.error('Error:', error);
         }
-      };
+    };
     const handleSubmit = () => {
         if (!selectedItem || !value || !nameValue || !emailValue || !selectedValue) {
             alert('모든 필드를 입력해주세요.');
         } else {
             const formData = new FormData();
+            let addressValue = '';
 
+            if (address) {
+                addressValue = address;
+            } else if (address1.address1) {
+                addressValue = address1.address1 + " " + address2.address2 + "";
+            } else {
+                alert('중개사무소 찾기를 눌러주세요.');
+                return;
+            }
+            const xValueToSend = xValue || 0;
+            const yValueToSend = yValue || 0;
+            // 주소 값을 formData에 추가
+            formData.append('address', addressValue);
+            formData.append('longitude', xValueToSend);
+            formData.append('latitude', yValueToSend);
             // 사용자가 입력한 정보 추가
             formData.append('estateName', selectedItem.bsnmCmpnm);
             formData.append('estateNumber', selectedItem.jurirno);
@@ -120,7 +217,6 @@ const HomeEnrollment = (args) => {
             formData.append('pw', value);
             formData.append('role', 'ROLE_AGENT');
             formData.append('email', emailValue + "@" + selectedValue);
-            // 다른 필드 추가 가능
 
             // axios를 사용하여 FormData를 서버로 전송
             axios
@@ -157,7 +253,82 @@ const HomeEnrollment = (args) => {
             }
         }
     };
+    //카카오 우편 api
+    const handleChangeZipcode = (e) => {
+        const { name, value } = e.target;
+        setZipcode((prev) => ({
+            ...prev,
+            [name]: value,
+            zipcode: document.getElementById('sample6_postcode').value
+        }));
 
+        setFill(e.target.value !== '');
+    }
+
+    const handleChangeAddress1 = (e) => {
+        const { name, value } = e.target;
+        setAddress1((prev) => ({
+            ...prev,
+            [name]: value,
+            address1: document.getElementById("sample6_address").value
+        }));
+
+        setFill(e.target.value !== '');
+    }
+
+    const handleChangeAddress2 = (e) => {
+        const { name, value } = e.target;
+        setAddress2(prev => ({ ...prev, [name]: value }));
+
+        setFill(e.target.value !== '');
+    }
+    const [showModal, setShowModal] = useState(false);
+
+    const handleComplete = (data) => {
+        var addr = ''; // 주소 변수
+        var extraAddr = ''; // 참고항목 변수
+
+        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+            addr = data.roadAddress;
+        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+            addr = data.jibunAddress;
+        }
+
+        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+        if (data.userSelectedType === 'R') {
+            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                extraAddr += data.bname;
+            }
+            // 건물명이 있고, 공동주택일 경우 추가한다.
+            if (data.buildingName !== '' && data.apartment === 'Y') {
+                extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+            }
+            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+            if (extraAddr !== '') {
+                extraAddr = ' (' + extraAddr + ')';
+            }
+        } else {
+            document.getElementById("sample6_extraAddress").value = '';
+        }
+
+        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+        document.getElementById('sample6_postcode').value = data.zonecode;
+        document.getElementById("sample6_address").value = addr + extraAddr;
+        zipcode.zipcode = data.zonecode;
+        address1.address1 = addr + extraAddr;
+        // 커서를 상세주소 필드로 이동한다.
+        document.getElementById("sample6_detailAddress").focus();
+
+        setShowModal(false);
+    }
+
+    const handleOpenModal = () => {
+        // 우편번호 찾기 모달 열기
+        setShowModal(true);
+    };
 
     return (
         <div className={style.container}>
@@ -181,11 +352,54 @@ const HomeEnrollment = (args) => {
                                 <div>
                                     {selectedItem && (
                                         <div style={{ marginTop: '10px' }}>
-                                            <input value={selectedItem.bsnmCmpnm} disabled />
+                                            {showAddressInfo && (
+                                                <div>
+                                                    <input value={selectedItem.bsnmCmpnm} disabled style={{ width: '210px', textAlign: 'center' }} />
+                                                    <input value={address} disabled style={{ width: '300px', textAlign: 'center' }} />
+                                                </div>
+                                            )}
                                         </div>
                                     )}
-                                </div>
+                                    {showAddressInputs && (
+                                        <div>
+                                            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip].join(' ')}></input>
+                                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
+                                            <div className={style.blank}></div>
+                                            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1} className={[style.inputInfo, style.inputAddr].join(' ')}></input><br></br>
+                                            <div className={style.blank}></div>
+                                            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2} className={[style.inputInfo, style.inputAddr].join(' ')}></input>
+                                        </div>
+                                    )}
 
+                                    {/* 모달 */}
+                                    <Modal
+                                        isOpen={showModal}
+                                        onRequestClose={() => setShowModal(false)}
+                                        appElement={document.getElementById('root')}
+                                        style={{
+                                            overlay: {
+                                                backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                                            },
+                                            content: {
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                                width: '430px',
+                                                height: '400px',
+                                                padding: '0px',
+                                                overflow: 'none'
+                                            }
+                                        }}
+                                    >
+                                        <DaumPostcode onComplete={handleComplete} />
+                                    </Modal>
+                                </div>
+                                <div>
+                                    {showAddress && (
+                                        <div className="map" style={{ width: '100%', height: '350px' }}></div>
+                                    )}
+                                </div>
                                 <Modal isOpen={modal} toggle={toggle} className="style.custom-modal" {...args}>
                                     <ModalHeader toggle={toggle}>중개사무소 찾기</ModalHeader>
                                     <ModalBody>
