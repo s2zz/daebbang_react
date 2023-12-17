@@ -14,7 +14,6 @@ const Main = () => {
     axios
       .get(`/api/map/getAll`)
       .then((resp) => {
-        console.log(resp.data);
         setMapList(resp.data.sort(compareByestate_id));
       })
       .catch((err) => {
@@ -107,8 +106,8 @@ const Main = () => {
               <span className={style.title}> 최근 등록된 매물</span>
               <a href="/home/oneroom/list"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
             </div>
-            <div className={style.contents}>
             <hr></hr>
+            <div className={style.contents}>
               {
                 mapList.map((e, i) => {
                   if (i >= 6) {
@@ -118,20 +117,18 @@ const Main = () => {
                     <Link to={`#`} style={{ textDecoration: "none", color: "black" }} >
                       <div className={style.cbgdiv} key={i}>
                         <span className={style.fontcss}>
-                          [{e.address2}]
+                          [{e.address2}]  
                         </span>
                         <span className={style.fontcss}>
                           {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
                         </span>
-                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.substring(0, 10)}</span>
+                        <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.substring(0, 10)}</span>
                       </div>
                     </Link>
                   );
                 })
               }
             </div>
-
-            
           </div>
           <div className={style.freeboard}>
             <div className={style.titlebox}>
@@ -154,15 +151,13 @@ const Main = () => {
                         <span className={style.fontcss}>
                           {e.title.length > 9 ? e.title.substring(0, 9) + "..." : e.title}
                         </span>
-                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.split("T")[0]}</span>
+                        <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.split("T")[0]}</span>
                       </div>
                     </Link>
                   );
                 })
               }
             </div>
-
-
           </div>
           <div className={style.board}>
             <div className={style.titlebox}>
@@ -184,15 +179,13 @@ const Main = () => {
                         <span className={style.fontcss}>
                           {e.title.length > 13 ? e.title.substring(0, 13) + "..." : e.title}
                         </span>
-                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.split("T")[0]}</span>
+                        <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.split("T")[0]}</span>
                       </div>
                     </Link>
                   );
                 })
               }
             </div>
-
-
           </div>
         </div>
       </div>
