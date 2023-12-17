@@ -8,7 +8,7 @@ function EstateBoard() {
   const [realEstate, setRealEstate] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/estateManage/", {
+    axios.get("/api/estateManage/estateBoard", {
       params: {
         loginId: sessionStorage.getItem('loginId') // 쿼리 파라미터로 데이터 전송
       }
@@ -35,10 +35,6 @@ function EstateBoard() {
     } else {
       return false;
     }
-  }
-
-  function compareBySeq(a, b) {
-    return b.seq - a.seq;
   }
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -93,7 +89,7 @@ function EstateBoard() {
           {contentslist()}
         </tbody>
       </table>
-      
+  
       <div className={style.naviFooter}>
         {pagenation()}
       </div>

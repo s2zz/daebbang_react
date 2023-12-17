@@ -8,7 +8,6 @@ const AgentManagement = () => {
   const pageSize = 10;
   const [totalRows, setTotalRows] = React.useState(0);
   const [contacts, setContacts] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     fetchData();
@@ -19,10 +18,8 @@ const AgentManagement = () => {
       const response = await axios.get('/api/admin/agent/getAll');
       setContacts(response.data);
       setTotalRows(response.data.length);
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching data: ', error);
-      setLoading(false);
     }
   };
 
@@ -131,9 +128,6 @@ const AgentManagement = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
         <DataGrid
           autoHeight
           pagination
@@ -146,7 +140,6 @@ const AgentManagement = () => {
           pageSizeOptions={[10, 50, 100]}
           getRowId={(row) => row.email} 
         />
-      )}
     </Box>
   );
 };
