@@ -82,6 +82,7 @@ const FreeBoardWrite = () => {
 
 
     const handleAdd = () => {
+
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
         console.log(delImgList);
