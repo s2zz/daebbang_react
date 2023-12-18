@@ -36,7 +36,7 @@ const TopForm = ({ setLoginId }) => {
                 <div className={style.gnb}>
                     <ul className={style.gnb_container}>
                         <li className={style.has_d2}>
-                            <Button><a href="/home/oneroom/list"><span>원룸</span> </a></Button>
+                            <a href="/home/oneroom/list"><Button><span>원룸</span></Button> </a>
                             <div className={style.depth2_bx}>
                                 <a href="/home/oneroom/list">방찾기</a>
                                 <a href="#">찜한매물</a>
@@ -44,7 +44,7 @@ const TopForm = ({ setLoginId }) => {
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                            <Button> <a href="/board"><span>게시판</span> </a></Button>
+                             <a href="/board"><Button><span>게시판</span></Button> </a>
                             <div className={style.depth2_bx}>
                                 <a href="#">즐겨찾기</a>
                                 <a href="#">자유게시판</a>

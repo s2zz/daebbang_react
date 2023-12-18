@@ -38,14 +38,14 @@
     margin-right: 15px;
     cursor: pointer;
 }
-.gnb > ul > li > Button> a {
+.gnb > ul > li >  a {
     display: block;
     line-height: 30px;
     padding: 19px 15px 17px;
     text-decoration: none;
     color: black;
 }
-.gnb>ul>li> Button>a>span {
+.gnb>ul>li> a>Button>span {
     display: block;
     font-size: 17px;
     color: rgb(34, 34, 34);
@@ -76,7 +76,7 @@
     box-sizing: border-box;
 }
 .depth2_bx > a {
-    z-index: 999;
+    z-index: 9999;
     line-height: 16px;
     font-size: 13px;
     color: rgb(0, 0, 0);
