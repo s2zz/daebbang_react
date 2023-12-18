@@ -1,6 +1,7 @@
 //
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-// import { useState, useEffect } from "react";
+import cookie from 'react-cookies';
+ import { useState,useEffect} from "react";
 
 //
 import Info from "../Info/Info";
@@ -12,15 +13,36 @@ import style from "./List.module.css";
 function List({ onDragEnd }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [markerArray, setmarkerArray] = useState([]);
 
   // 전달된 데이터 추출
   const { markersInBounds } = location.state || {};
 
   // 마커를 클릭하면 해당 마커의 내용을 들고 정보(info)로 감
+  // 마커를 클릭하여 쿠키에 정보 추가
+  
   const handleMarkerClick = (marker) => {
     navigate("/home/oneroom/info", { state: marker });
-  };
+    setmarkerArray(prevMarkerArray => ( [...prevMarkerArray,marker] ));
+  
+      // 쿠키에 새로운 배열을 저장
+      const expires = new Date();
+      expires.setMinutes(expires.getMinutes() + 60);
+      cookie.save('markerArray', markerArray, {
+        path: '/',
+        expires,
+        // secure: true,
+        // httpOnly: true
 
+      });
+      return markerArray;
+      
+ 
+  }
+  useEffect(() => {
+    // useEffect 안에서는 최신 상태를 보장합니다.
+    console.log(markerArray);
+  }, [markerArray]); // markerArray가 변경될 때만 useEffect를 실행
   //
   return (
     <div className={style.list_main}>
