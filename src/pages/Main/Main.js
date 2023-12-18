@@ -4,11 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import Footer from "../commons/Footer";
+import ItemsCarousel from 'react-items-carousel';
 
 const Main = () => {
   const [freeboard, setfreeBoard] = useState([]);
   const [roomboard, setroomBoard] = useState([]);
   const [mapList, setMapList] = useState([]);
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const chevronWidth = 40;
 
   useEffect(() => {
     axios
@@ -73,6 +76,24 @@ const Main = () => {
               <span className={style.title}> 최근 본 매물</span>
             </div>
             <hr></hr>
+            <div style={{ padding: `0 ${chevronWidth}px` }}>
+              <ItemsCarousel
+                requestToChangeActive={setActiveItemIndex}
+                activeItemIndex={activeItemIndex}
+                numberOfCards={3}
+                gutter={20}
+                infiniteLoop={true}
+                leftChevron={<button>{'<'}</button>}
+                rightChevron={<button>{'>'}</button>}
+                outsideChevron
+                chevronWidth={chevronWidth}
+              >
+                <div style={{ height: 200, background: '#EEE' }}>First card</div>
+                <div style={{ height: 200, background: '#EEE' }}>Second card</div>
+                <div style={{ height: 200, background: '#EEE' }}>Third card</div>
+                <div style={{ height: 200, background: '#EEE' }}>Fourth card</div>
+              </ItemsCarousel>
+            </div>
           </div>
 
         </div>
@@ -93,7 +114,7 @@ const Main = () => {
                     <Link to={`#`} style={{ textDecoration: "none", color: "black" }} >
                       <div className={style.cbgdiv} key={i}>
                         <span className={style.fontcss}>
-                          [{e.address2}]  
+                          [{e.address2}]
                         </span>
                         <span className={style.fontcss}>
                           {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
