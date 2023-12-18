@@ -97,8 +97,9 @@ const HomeEnrollment = (args) => {
 
         // 인포윈도우로 장소에 대한 설명을 표시합니다
         var infowindow = new kakao.maps.InfoWindow({
-            content: '<div style={{width:150px;text-align:center;padding:6px 0;}}>이 곳이 맞으세요 ?!</div>'
+            content: '<div style="width: 180px; text-align: center; font-family: \'IBM Plex Sans\', sans-serif; font-size: 0.875rem; font-weight: 400; line-height: 1.5; padding: 8px 12px;  color: #000000; background: #fff; border: 1px solid #B0B8C4; box-shadow: 0px 2px 2px #E5EAF2;">이곳이 맞으세요?!</div>'
         });
+
         infowindow.open(map, marker);
 
     }
@@ -189,12 +190,22 @@ const HomeEnrollment = (args) => {
         }
     };
     const handleSubmit = () => {
-        if (!selectedItem || !value || !nameValue || !emailValue || !selectedValue) {
-            alert('모든 필드를 입력해주세요.');
+        // Check if any required field is empty and display respective alerts
+        if (!selectedItem) {
+            alert('중개사무소를 선택해주세요.');
+        } else if (!value) {
+            alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
+        } else if (!nameValue) {
+            alert('대표이름을 입력해주세요.');
+        } else if (!emailValue || !selectedValue) {
+            alert('대표공인중개사 이메일을 입력해주세요.');
+        } else if (!address && (!address1.address1 || !address2.address2)) {
+            alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
         } else {
+            // If all fields are filled, proceed with form submission
             const formData = new FormData();
             let addressValue = '';
-
+    
             if (address) {
                 addressValue = address;
             } else if (address1.address1) {
@@ -203,13 +214,14 @@ const HomeEnrollment = (args) => {
                 alert('중개사무소 찾기를 눌러주세요.');
                 return;
             }
+    
             const xValueToSend = xValue || 0;
             const yValueToSend = yValue || 0;
-            // 주소 값을 formData에 추가
+    
+            // Populate formData with necessary values
             formData.append('address', addressValue);
             formData.append('longitude', xValueToSend);
             formData.append('latitude', yValueToSend);
-            // 사용자가 입력한 정보 추가
             formData.append('estateName', selectedItem.bsnmCmpnm);
             formData.append('estateNumber', selectedItem.jurirno);
             formData.append('name', nameValue);
@@ -217,8 +229,8 @@ const HomeEnrollment = (args) => {
             formData.append('pw', value);
             formData.append('role', 'ROLE_AGENT');
             formData.append('email', emailValue + "@" + selectedValue);
-
-            // axios를 사용하여 FormData를 서버로 전송
+    
+            // Submit the form data using axios
             axios
                 .post('/api/enrollment/agent/signup', formData)
                 .then(response => {
@@ -229,10 +241,9 @@ const HomeEnrollment = (args) => {
                 .catch(error => {
                     console.error('회원가입 에러:', error);
                 });
-
         }
-
     };
+    
     const handleEmailChange = (e) => {
         const inputValue = e.target.value;
         const regex = /^[^\u3131-\u3163\uac00-\ud7a3]*$/;
@@ -362,12 +373,12 @@ const HomeEnrollment = (args) => {
                                     )}
                                     {showAddressInputs && (
                                         <div>
-                                            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip].join(' ')}></input>
-                                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
+                                            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip].join(' ')} />
+                                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal} /><br></br>
                                             <div className={style.blank}></div>
-                                            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1} className={[style.inputInfo, style.inputAddr].join(' ')}></input><br></br>
+                                            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1} className={[style.inputInfo, style.inputAddr].join(' ')} /><br></br>
                                             <div className={style.blank}></div>
-                                            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2} className={[style.inputInfo, style.inputAddr].join(' ')}></input>
+                                            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2} className={[style.inputInfo, style.inputAddr].join(' ')} />
                                         </div>
                                     )}
 
@@ -403,17 +414,19 @@ const HomeEnrollment = (args) => {
                                 <Modal isOpen={modal} toggle={toggle} className="style.custom-modal" {...args}>
                                     <ModalHeader toggle={toggle}>중개사무소 찾기</ModalHeader>
                                     <ModalBody>
-                                        <input
-                                            type="text"
-                                            placeholder='예) 대빵 공인중개사'
-                                            value={searchValue || ''}
-                                            onChange={handleApiInputChange}
-                                            onKeyDown={handleKeyDown}
-                                        />
-                                        <button onClick={searchButtonClick}>검색</button>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2%' }}>
+                                            <input
+                                                type="text"
+                                                placeholder='예) 대빵 공인중개사'
+                                                value={searchValue || ''}
+                                                onChange={handleApiInputChange}
+                                                onKeyDown={handleKeyDown}
+                                            />
+                                            <Button color="primary" outline onClick={searchButtonClick} style={{ marginLeft: '2%' }}>검색</Button>
+                                        </div>
                                         {searchResult !== null ? (
                                             // map 함수를 호출하는 부분
-                                            <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
+                                            <div style={{ overflowY: 'scroll', maxHeight: '300px', margin: '2%' }}>
                                                 {searchResult.map((item, index) => (
                                                     <div key={index}>
                                                         <p
@@ -433,7 +446,7 @@ const HomeEnrollment = (args) => {
                                             </div>
                                         ) : (
                                             // searchResult가 null인 경우 표시할 내용
-                                            <p>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된 정보를 검색할 수 있습니다.<br></br>
+                                            <p style={{padding:'1%'}}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
                                                 중개사무소가 검색되지 않을 경우010-3470-1399로 문의주세요.</p>
                                         )}
 
@@ -444,7 +457,7 @@ const HomeEnrollment = (args) => {
                         <hr></hr>
                         <li>
                             <h5 className={style.list}>대표공인중개사 휴대폰 번호</h5>
-                            <input type="text" placeholder='예) 01012345678' value={value} onChange={handleInputChange}></input>
+                            <input type="text" placeholder='- 빼고 입력해주세요.' value={value} onChange={handleInputChange} />
                         </li>
                         <hr></hr>
                         <li>
@@ -468,7 +481,7 @@ const HomeEnrollment = (args) => {
                                     value={emailValue}
                                     onChange={handleEmailChange}
                                 />
-                                <span style={{ marginLeft: '5px', marginRight: '5px' }}>@</span>
+                                <span style={{ marginLeft: '5px', marginRight: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>@</span>
                                 <select value={selectedValue} onChange={handleSelectChange}>
                                     <option value="">선택하세요</option>
                                     <option value="naver.com">naver.com</option>
@@ -484,7 +497,7 @@ const HomeEnrollment = (args) => {
                 </div>
             </div>
             <div style={{ textAlign: 'center', marginBottom: "20px" }}>
-                <Button onClick={handleSubmit}>
+                <Button color="primary" onClick={handleSubmit}>
                     가입 신청하기
                 </Button>
             </div>
