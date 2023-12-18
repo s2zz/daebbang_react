@@ -30,6 +30,7 @@
     "react-ga": "^3.3.1",
     "react-helmet": "^6.1.0",
     "react-hook-geolocation": "^1.1.0",
+    "react-items-carousel": "^2.8.0",
     "react-kakao-maps-sdk": "^1.1.24",
     "react-modal": "^3.16.1",
     "react-quill": "^2.0.0",
