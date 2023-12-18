@@ -11,9 +11,8 @@ const EditReview = () => {
 
     const location = useLocation();
     const navi = useNavigate();
-    const estateId = location.state !== null && location.state.estateCode!== null ? location.state.estateCode : 0;
-    const approvalCode = location.state !== null && location.state.approvalCode!== null ? location.state.approvalCode :"";
-    const [formData, setFormData] = useState({ estateId: estateId, approvalCode: approvalCode, traffic: "", surroundings: "", facility: "", files: {} });
+    const seq=0;
+    const [formData, setFormData] = useState({ seq:seq, traffic: "", surroundings: "", facility: "", files: {} });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -85,8 +84,6 @@ const EditReview = () => {
 
         console.log(formData.files);
         const submitFormData = new FormData();
-        submitFormData.append("estateId",formData.estateId);
-        submitFormData.append("approvalCode",formData.approvalCode);
         submitFormData.append("traffic",formData.traffic);
         submitFormData.append("surroundings",formData.surroundings);
         submitFormData.append("facility",formData.facility);
@@ -114,7 +111,7 @@ const EditReview = () => {
    
     return (
         <>
-            <div>매물 번호 : {estateId}</div>
+            <div>매물 번호 : {}</div>
             <div className={style.scoreBox}>
                 <div>
                     {
