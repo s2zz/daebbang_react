@@ -1,32 +1,61 @@
-*{box-sizing: border-box;}
-.scoreBox{
-    overflow: hidden;
+* {
+    box-sizing: border-box;
 }
-.scoreBox>div{
-    float:left;
-    width:30px;
-    margin-right:20px;
-}
-.scoreBox img{width:100%;}
-.imgInfo{overflow: hidden;}
-.imgInfo>div{float:left;}
-.imgBox{
+
+.scoreBox {
     overflow: hidden;
 }
 
-.imgBox>div{
-    float:left;
-    margin-right:20px;
-    background-color: gainsboro;
-    width:90px;
-    height:90px;
+.scoreBox>div {
+    float: left;
+    width: 30px;
+    margin-right: 20px;
+}
+
+.scoreBox img {
+    width: 100%;
+}
+
+.imgInfo {
+    overflow: hidden;
+}
+
+.imgInfo>div {
+    float: left;
+}
+
+.imgBox {
+    overflow: hidden;
+}
+
+.imgBox>div {
+    float: left;
+    position: relative;
+    margin-right: 20px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.imgBox label {
+    position: absolute;
+    font-size: xx-large;
+    width: 35px;
+    background-color: rgb(0,0,0,0.1);
+    height: 35px;
+    margin: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.imgBox button{
+
+.imgBox img {
     border: none;
     background-color: gainsboro;
     font-size: xx-large;
     font-weight: bold;
+    width: 100%;
 }
