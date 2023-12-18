@@ -99,7 +99,7 @@ const Review = () => {
                 <div map={i}>
                     {s.estateCode}
                     {s.approvalCode}
-                    {s.approvalCode === 'a3' && <button>리뷰 쓰기</button>}
+                    {s.approvalCode === 'a3' && <Link to="/review/writeReview" state={{estateCode:s.estateCode, approvalCode:s.approvalCode}}><button>리뷰 쓰기</button></Link>}
                     {s.approvalCode === 'a4' && <button>승인 거절</button>}
                 </div>
             ))}
