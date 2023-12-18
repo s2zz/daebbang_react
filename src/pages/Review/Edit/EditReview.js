@@ -5,21 +5,45 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const EditReview = () => {
 
     const location = useLocation();
     const navi = useNavigate();
-    const seq=0;
-    const [formData, setFormData] = useState({ seq:seq, traffic: "", surroundings: "", facility: "", files: {} });
+    const seq = location.state !== null && location.state.seq !== null ? location.state.seq : 0;
+    const [allPrevImg, setAllPrevImg] = useState([]);
+    const [score, setScore] = useState({ 0: false, 1: false, 2: false, 3: false, 4: false });
+    const [url, setUrl] = useState({ files0: "", files1: "", files2: "", files3: "", files4: "" });
+    const [formData, setFormData] = useState({});
+
+    useEffect(() => {
+        axios.get(`/api/review/selectReviewBySeq/${seq}`).then(resp => {
+            setFormData(resp.data);
+
+            let array = {};
+            for (let i = 0; i < resp.data.score; i++) {
+                array = { ...array, [i]: true };
+            }
+            setScore(prev => ({ ...prev, ...array }));
+
+            let urlArr = {};
+            let prevImgs = [];
+            resp.data.files.map((e, i) => {
+                let key = "files" + i
+                prevImgs.push(e.sysName);
+                urlArr = { ...urlArr, [key]: "/uploads/review/" + e.sysName }
+            });
+            setAllPrevImg([...prevImgs]);
+            setUrl({ ...urlArr });
+        })
+    }, [])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     }
 
-    const [url, setUrl] = useState({ files0: "", files1: "", files2: "", files3: "", files4: "" });
     const handleFileChange = async (e) => {
         const files = e.target.files[0];
 
@@ -38,11 +62,11 @@ const EditReview = () => {
     }
 
     const imgDel = (files) => {
-        setUrl(prev=>({...prev,[files]:""}));
-        setFormData(prev=>({...prev,files:{...prev.files,[files]:""}}))
+        setUrl(prev => ({ ...prev, [files]: "" }));
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [files]: "" } }))
     }
 
-    const [score, setScore] = useState({ 0: false, 1: false, 2: false, 3: false, 4: false });
+
     const addScore = (seq) => {
         let array = {};
         for (let i = 0; i <= seq; i++) {
@@ -62,56 +86,73 @@ const EditReview = () => {
     const handleAdd = () => {
         let totalScore = Object.values(score).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
         console.log(totalScore)
-        if(totalScore===0){
+        if (totalScore === 0) {
             alert("별점을 입력해주세요");
             return;
         }
 
-        if(formData.traffic===""){
+        if (formData.traffic === "") {
             alert("교통 리뷰를 입력해주세요");
             return;
         }
 
-        if(formData.surroundings===""){
+        if (formData.surroundings === "") {
             alert("주변 환경 리뷰를 입력해주세요");
             return;
         }
 
-        if(formData.facility===""){
+        if (formData.facility === "") {
             alert("시설 리뷰를 입력해주세요");
             return;
         }
 
         console.log(formData.files);
         const submitFormData = new FormData();
-        submitFormData.append("traffic",formData.traffic);
-        submitFormData.append("surroundings",formData.surroundings);
-        submitFormData.append("facility",formData.facility);
-        submitFormData.append("score",totalScore);
+        submitFormData.append("traffic", formData.traffic);
+        submitFormData.append("surroundings", formData.surroundings);
+        submitFormData.append("facility", formData.facility);
+        submitFormData.append("score", totalScore);
 
         let filesList = Object.values(formData.files);
-        
-        filesList.forEach((e)=>{
-            if(e!==""){
-                console.log(e);
-                submitFormData.append("files",e);
+        console.log("d")
+        console.log(filesList);
+        filesList.forEach((e) => {
+            if (e !== "" && e instanceof File) {
+                submitFormData.append("files", e);
             }
         })
-        
-        axios.post("/api/review",submitFormData).then(resp=>{
-            alert("리뷰 등록에 성공하였습니다");
-            navi("/");
-        }).catch(err=>{
+
+        let existFile = Object.values(url).filter(e => e.includes("/uploads/review/"));
+        let existFileSysName = [];
+        existFile.forEach((e) => { existFileSysName.push(e.split("/uploads/review/")[1]); });
+
+        let delFileList = [];
+        let exist = false;
+        for (let i = 0; i < allPrevImg.length; i++) {
+            for (let j = 0; j < existFileSysName.length; j++) {
+                if (allPrevImg[i] === existFileSysName[j]) {
+                    exist = true;
+                    break;
+                }
+            }
+            exist ? exist = false : delFileList.push(allPrevImg[i]);
+        }
+
+        submitFormData.append("delFileList", delFileList);
+        axios.put(`/api/review/${seq}`, submitFormData).then(resp => {
+            alert("리뷰 수정에 성공하였습니다");
+            navi("/home/oneroom/list");
+        }).catch(err => {
             alert("리뷰 등록에 실패하였습니다");
             console.log(err);
         })
 
     }
 
-   
+
     return (
         <>
-            <div>매물 번호 : {}</div>
+            <div>매물 번호 : {formData.estateId}</div>
             <div className={style.scoreBox}>
                 <div>
                     {
@@ -143,19 +184,19 @@ const EditReview = () => {
             <div>
                 <div>교통</div>
                 <div>
-                    <textarea placeholder="교통 리뷰 입력" onChange={handleChange} name="traffic"></textarea>
+                    <textarea placeholder="교통 리뷰 입력" onChange={handleChange} name="traffic" value={formData.traffic}></textarea>
                 </div>
             </div>
             <div>
                 <div>주변 환경</div>
                 <div>
-                    <textarea placeholder="주변 환경 리뷰 입력" onChange={handleChange} name="surroundings"></textarea>
+                    <textarea placeholder="주변 환경 리뷰 입력" onChange={handleChange} name="surroundings" value={formData.surroundings}></textarea>
                 </div>
             </div>
             <div>
                 <div>시설</div>
                 <div>
-                    <textarea placeholder="시설 리뷰 입력" onChange={handleChange} name="facility"></textarea>
+                    <textarea placeholder="시설 리뷰 입력" onChange={handleChange} name="facility" value={formData.facility}></textarea>
                 </div>
             </div>
             <hr />
