@@ -8,12 +8,15 @@ import ChangePw from './ChangePw';
 
 const Info = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
+
     const [info, setInfo] = useState([{}]);
+
     useEffect(() => {
         axios.get("/api/member/myInfo/" + storedLoginId).then(resp => {
             setInfo(resp.data);
         });
     }, []);
+
     return (
         <div className={style.infoContainer}>
             <div className={style.infoBox}>
@@ -37,6 +40,7 @@ const Info = () => {
         </div>
     );
 }
+
 const Jjim = () => {
     return (
         <div className={style.JjimContainer}>
@@ -44,8 +48,6 @@ const Jjim = () => {
         </div>
     );
 }
-
-
 
 const Review = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
