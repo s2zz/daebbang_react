@@ -53,7 +53,6 @@ const Review = () => {
 
     useEffect(() => {
         axios.get("/api/reviewApproval/sawEstate/" + storedLoginId).then(resp => {
-            console.log(resp.data);
             setSawEstate(resp.data);
         });
     }, []);
@@ -72,7 +71,7 @@ const Review = () => {
                                 <div className={style.sawTitle}>{title.length > 15 ? title.substring(0, 15) + "..." : title}</div>
                                 {e.approvalCode === 'a1' || e.approvalCode === 'a2' ? <button>승인 대기</button> : null}
                                 {e.approvalCode === 'a3' ? <button>리뷰 작성</button> : null}
-                                {e.approvalCode === 'a4' ? <button>승인 거절</button> : null}
+                                {e.approvalCode === 'a4' || e.approvalCode === 'b1' ? <button>승인 거절</button> : null}
                             </div>
                         )
                     })}

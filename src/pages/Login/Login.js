@@ -1,5 +1,5 @@
 import style from "./Login.module.css"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
@@ -96,6 +96,28 @@ const LoginBox = ({ setLoginId }) => {
     });
   }
 
+  const memberLogin = useRef(null);
+  const estateLogin = useRef(null);
+  const adminLogin = useRef(null);
+
+  const handleMemberKeyup = (e) => {
+    if(e.code === 'Enter') {
+      memberLogin.current.click();
+    }
+  }
+
+  const handleEstateKeyup = (e) => {
+    if(e.code === 'Enter') {
+      estateLogin.current.click();
+    }
+  }
+
+  const handleAdminKeyup = (e) => {
+    if(e.code === 'Enter') {
+      adminLogin.current.click();
+    }
+  }
+
   return (
     <div className={style.container}>
       <div className={style.loginBox}>
@@ -103,14 +125,14 @@ const LoginBox = ({ setLoginId }) => {
         <div className={style.inputLoginBox}>
           <div className={style.inputLogin}>
             <div className={style.loginFont}>아이디</div>
-            <input type="text" name="id" placeholder="input your ID" onChange={handleChange} value={user.id} className={style.inputInfo}></input>
+            <input type="text" name="id" placeholder="input your ID" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.id} className={style.inputInfo}></input>
             <div className={style.blank}></div>
             <div className={style.loginFont}>비밀번호</div>
-            <input type="password" name="pw" placeholder="input your PW" onChange={handleChange} value={user.pw} className={style.inputInfo}></input>
+            <input type="password" name="pw" placeholder="input your PW" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.pw} className={style.inputInfo}></input>
           </div>
         </div>
         <div className={style.btnBox}>
-          <button className={style.loginBtn} onClick={handleLogin}>로그인</button>
+          <button className={style.loginBtn} ref={memberLogin} onClick={handleLogin}>로그인</button>
         </div>
         <div className={style.findBox}>
           <Link to="/signUp" className={style.findId}>회원가입</Link>
@@ -123,14 +145,14 @@ const LoginBox = ({ setLoginId }) => {
         <div className={style.inputLoginBox}>
           <div className={style.inputLogin}>
             <div className={style.loginFont}>아이디</div>
-            <input type="text" name="id" placeholder="input your ID" onChange={handleEstateChange} value={estate.id} className={style.inputInfo}></input>
+            <input type="text" name="id" placeholder="input your ID" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.id} className={style.inputInfo}></input>
             <div className={style.blank}></div>
             <div className={style.loginFont}>비밀번호</div>
-            <input type="password" name="pw" placeholder="input your PW" onChange={handleEstateChange} value={estate.pw} className={style.inputInfo}></input>
+            <input type="password" name="pw" placeholder="input your PW" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.pw} className={style.inputInfo}></input>
           </div>
         </div>
         <div className={style.btnBox}>
-          <button className={style.loginBtn} onClick={handleEstateLogin}>로그인</button>
+          <button className={style.loginBtn} ref={estateLogin} onClick={handleEstateLogin}>로그인</button>
         </div>
       </div>
       <Modal
@@ -159,12 +181,12 @@ const LoginBox = ({ setLoginId }) => {
             <div className={style.adminTitle}>관리자 로그인</div>
             <div>
               <FontAwesomeIcon icon={faHammer} className={style.icon} />
-              <input type="text" placeholder="input admin ID" onChange={handleAdminChange} name="id" value={admin.id}></input><br></br><br></br>
+              <input type="text" placeholder="input admin ID" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="id" value={admin.id}></input><br></br><br></br>
               <FontAwesomeIcon icon={faLock} className={style.icon} />
-              <input type="password" placeholder="input admin PW" onChange={handleAdminChange} name="pw" value={admin.pw}></input><br></br>
+              <input type="password" placeholder="input admin PW" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="pw" value={admin.pw}></input><br></br>
             </div>
             <div className={style.adminBtnDiv}>
-              <button className={style.adminBtn} onClick={handleAdminLogin}>로그인</button>
+              <button className={style.adminBtn} ref={adminLogin} onClick={handleAdminLogin}>로그인</button>
             </div>
           </div>
         </div>
