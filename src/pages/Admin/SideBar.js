@@ -12,7 +12,7 @@ const SideBar = () => {
                 <Link to="/admin/toAgentManagement">공인중개사 관리</Link>
             </div>
             <div>
-                <Link to="/admin/toNotificationManagement">신고 관리</Link>
+                <Link to="/admin/toNotificationManagement">리뷰 관리</Link>
             </div>
         </>
     );
