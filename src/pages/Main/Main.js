@@ -82,7 +82,6 @@ const Main = () => {
                 activeItemIndex={activeItemIndex}
                 numberOfCards={3}
                 gutter={20}
-                infiniteLoop={true}
                 leftChevron={<button>{'<'}</button>}
                 rightChevron={<button>{'>'}</button>}
                 outsideChevron
