@@ -48,11 +48,11 @@
     border: 1px solid #B0B8C4; /* 이 색은 grey[400]에 해당합니다 */
     box-shadow: 0px 2px 2px #E5EAF2;
 }
-input:hover, select:hover {
+.input_style:hover, .select_style:hover {
     border-color: #007FFF; /* 이 색은 blue[500]에 해당합니다 */
 }
 
-input:focus, select:focus {
+.input_style:focus, .select_style:hover:focus {
     border-color: #007FFF; /* 이 색은 blue[500]에 해당합니다 */
     box-shadow: 0 0 0 3px #80BFFF; /* 이 색은 blue[200]에 해당합니다 */
     outline: 0; /* Firefox 등에서 추가적인 포커스 효과를 없애는 것 */
