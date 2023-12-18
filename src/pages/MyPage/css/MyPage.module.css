@@ -1,4 +1,6 @@
-*{box-sizing: border-box;}
+* {
+    box-sizing: border-box;
+}
 
 .myLogo {
     display: flex;
@@ -8,80 +10,113 @@
     font-weight: bold;
 }
 
-.infoContainer, .JjimContainer, .ReviewContainer {
-    margin:auto;
-    border:1px solid black;
-    width:800px;
-    margin-top:30px;
+.infoContainer,
+.JjimContainer,
+.ReviewContainer {
+    margin: auto;
+    border: 1px solid black;
+    width: 800px;
+    margin-top: 30px;
 }
 
 .menuDiv {
-    width:810px;
-    margin:auto;
-    height:120px;
-    margin-top:50px;
+    width: 810px;
+    margin: auto;
+    height: 120px;
+    margin-top: 50px;
 }
 
 .menu {
-    display:flex;
+    display: flex;
     justify-content: center;
-    height:120px;
-    margin-top:50px;
+    height: 120px;
+    margin-top: 50px;
 }
 
-.menuInfo, .menuJjim, .menuReview {
-    width:270px;
-    height:100%;
+.menuInfo,
+.menuJjim,
+.menuReview {
+    width: 270px;
+    height: 100%;
     background-color: white;
-    color:black;
+    color: black;
 }
 
-.menuInfoSelected, .menuJjimSelected, .menuReviewSelected {
-    width:270px;
-    height:100%;
+.menuInfoSelected,
+.menuJjimSelected,
+.menuReviewSelected {
+    width: 270px;
+    height: 100%;
     background-color: black;
-    color:white;
+    color: white;
 }
 
-.menuInfo:hover, .menuJjim:hover, .menuReview:hover {
+.menuInfo:hover,
+.menuJjim:hover,
+.menuReview:hover {
     cursor: pointer;
 }
 
 .infoBox {
     display: flex;
     justify-content: center;
-    margin-top:50px;
+    margin-top: 50px;
     margin-bottom: 50px;
 }
 
 .leftInfo {
     font-weight: bold;
-    float:left;
-    width:100px;
+    float: left;
+    width: 100px;
 }
 
 .eleftInfo {
     font-weight: bold;
-    float:left;
-    width:200px;
+    float: left;
+    width: 200px;
 }
 
 .cBtnBox {
     display: flex;
-    justify-content:center;
-    margin-bottom:50px;
+    justify-content: center;
+    margin-bottom: 50px;
 }
 
 .changeBtn {
-    width:150px;
-    height:50px;
+    width: 150px;
+    height: 50px;
     background-color: white;
-    color:black;
-    margin-right:10px;
+    color: black;
+    margin-right: 10px;
 }
 
 .changeBtn:hover {
     cursor: pointer;
     background-color: black;
-    color:white;
+    color: white;
+}
+
+
+/*내가 본 방*/
+.SawEstate {
+    height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+.SawEstate img {
+    width: 100px;
+    height: 70px;
+    border: 1px solid black;
+}
+
+.sawAddress {
+    width:400px;
+    height:100%;
+    border: 1px solid black;
+}
+.sawTitle {
+    width:200px;
+    height:100%;
+    border: 1px solid black;
 }
