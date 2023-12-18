@@ -3,12 +3,12 @@
     width: 100%;
 }
 .sideBar {
-    width: 20%;
+    width: 16%;
     background-color: antiquewhite;
     padding: 40px;
     min-height: 89vh;
   }
   
   .mainContent {
-    width: 80%;
+    width: 84%;
   }
