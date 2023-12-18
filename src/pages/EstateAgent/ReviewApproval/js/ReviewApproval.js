@@ -5,13 +5,13 @@ import style from '../css/ReviewApproval.module.css';
 import Pagination from "@mui/material/Pagination";
 
 function ReviewApproval() {
-  const [reviewApproval, setreviewApproval] = useState([]);
+  const [reviewApproval, setReviewApproval] = useState([]);
 
   useEffect(() => {
     axios.get(`/api/reviewApproval/agentReview/${sessionStorage.getItem('loginId')}`)
       .then((resp) => {
         console.log(resp.data);
-        setreviewApproval(resp.data);
+        setReviewApproval(resp.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -49,16 +49,34 @@ function ReviewApproval() {
 
   };
 
-
   const boardItem = (item, i) => {
+    const handleApproval = () => {
+      const updatedReviewApproval = [...reviewApproval];
+      if (item.approvalCode === 'a1') {
+        updatedReviewApproval[i] = { ...item, approvalCode: 'a2' };
+      } else {
+        updatedReviewApproval[i] = { ...item, approvalCode: 'a1' };
+      }
+
+      setReviewApproval(updatedReviewApproval);
+
+      axios.put(`/api/estateManage/estateUpdate/${item.seq}`, item.approvalCode)
+        .then(resp => {
+          console.log(resp);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    };
+
     return (
       <tr key={i}>
         <td>{item.seq}</td>
         <td>{item.userId}</td>
         <td>{item.estateCode}</td>
-        <td>{item.approvalCode}</td>
+        <td>{item.approvalCode === 'a1' ? "X" : "O"}</td>
         <td>
-          <button>리뷰 권한 부여</button>
+          <button onClick={handleApproval}>리뷰 권한 부여</button>
           <button>취소</button>
         </td>
       </tr>
@@ -70,11 +88,10 @@ function ReviewApproval() {
       <table className={style.estateTable}>
         <thead>
           <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>번호</th>
+            <th>신청인</th>
+            <th>매물번호</th>
+            <th>권한</th>
             <th></th>
           </tr>
         </thead>
