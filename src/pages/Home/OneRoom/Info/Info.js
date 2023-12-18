@@ -302,7 +302,7 @@ function Info() {
                 </div>
                 <div>
                   <button onClick={() => { delReview(e.seq) }}>삭제</button>
-                  <Link to="/review/editReview" state={{ estateId: markerInfo.estateId }}><button>수정</button></Link>
+                  <Link to="/review/editReview" state={{ seq:e.seq }}><button>수정</button></Link>
                 </div>
 
               </div>
