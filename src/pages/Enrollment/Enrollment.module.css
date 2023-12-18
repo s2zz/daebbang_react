@@ -35,7 +35,7 @@
     display: inline-block;
     font-size: small;
 }
-input,select{
+.input_style,.select_style{
     width: 180px;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 0.875rem;
