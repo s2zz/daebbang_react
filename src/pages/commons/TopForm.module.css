@@ -38,14 +38,14 @@
     margin-right: 15px;
     cursor: pointer;
 }
-.gnb > ul > li > Button> a {
+.gnb > ul > li >  a {
     display: block;
     line-height: 30px;
     padding: 19px 15px 17px;
     text-decoration: none;
     color: black;
 }
-.gnb>ul>li> Button>a>span {
+.gnb>ul>li> a>Button>span {
     display: block;
     font-size: 17px;
     color: rgb(34, 34, 34);
