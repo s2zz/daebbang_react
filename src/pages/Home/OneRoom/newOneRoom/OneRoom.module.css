@@ -97,7 +97,7 @@
     background-color: #fff;
     z-index: 9999;
     font-size: 14px;
-    display: block;
+    display: none;
 }
 
 .option_box_1, .option_box_2, .option_box_3 {
@@ -110,11 +110,7 @@
 
 
 .option_box_1{
-    max-height: 490px;
-}
-
-.option_box_1{
-    display: block;
+    max-height: 480px;
 }
 
 .option_box_2{
@@ -264,7 +260,7 @@
 
 .search_list_box {
     position: absolute;
-    max-height: 400px;
+    height: 400px;
     width: 305px;
     border: 1px solid #d9d9d9;
     border-radius: 4px;
@@ -273,7 +269,6 @@
     background-color: #fff;
     z-index: 9999;
     display: none;
-    overflow-y: auto;
 }
 
 .search_list_box div {
