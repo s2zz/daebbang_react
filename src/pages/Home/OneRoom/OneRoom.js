@@ -140,6 +140,10 @@ function OneRoom() {
           },
         })
         .then((resp) => {
+          console.log(resp.data);
+          console.log(resp.data.regionList);
+          console.log(resp.data.length);
+
           // resp.data를 순회하며 각 지역의 시군구 정보를 <div>에 추가
           const examDiv = document.querySelector(".exam");
           searchListBox.innerHTML = ""; // 기존 내용을 초기화
@@ -155,8 +159,9 @@ function OneRoom() {
             searchListBox.appendChild(nullRegionDiv);
           }
 
+          // 각 지역에 대한 검색
           // region에는 각 지역 정보가 들어 있음
-          resp.data.forEach((region) => {
+          resp.data.regionList.forEach((region) => {
             // List에 넣을 CSS를 사용하기 위해 만드는 마크업
             const regionSpan = document.createElement("span");
             const regionDiv = document.createElement("div");
@@ -243,6 +248,31 @@ function OneRoom() {
               searchListBox.appendChild(regionDiv);
             }
           });
+
+          // 지하철역에 대한 검색
+          // subway 각 지역 정보가 들어 있음
+          resp.data.subwayList.forEach((subway) => {
+            // List에 넣을 CSS를 사용하기 위해 만드는 마크업
+            const subwaySpan = document.createElement("span");
+            const subwayDiv = document.createElement("div");
+
+            // 메인 상단 대표 검색된 키워드
+            subwaySpan.textContent = `${subway.name}`;
+
+            // 상세 주소
+            const subwayText = document.createTextNode(`${subway.address}`);
+
+            // Span 태그(메인 상단 키워드), 일반 Text (상세 주소) Div에 추가
+            // 이후 List에 만들어진 Div 추가
+            subwayDiv.appendChild(subwaySpan);
+            subwayDiv.appendChild(subwayText);
+            searchListBox.appendChild(subwayDiv);
+          });
+
+          
+
+
+
         })
         .catch((err) => {
           console.log("API 호출 오류:", err);
