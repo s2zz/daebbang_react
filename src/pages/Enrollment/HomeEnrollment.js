@@ -205,7 +205,7 @@ const HomeEnrollment = (args) => {
             // If all fields are filled, proceed with form submission
             const formData = new FormData();
             let addressValue = '';
-    
+
             if (address) {
                 addressValue = address;
             } else if (address1.address1) {
@@ -214,10 +214,10 @@ const HomeEnrollment = (args) => {
                 alert('중개사무소 찾기를 눌러주세요.');
                 return;
             }
-    
+
             const xValueToSend = xValue || 0;
             const yValueToSend = yValue || 0;
-    
+
             // Populate formData with necessary values
             formData.append('address', addressValue);
             formData.append('longitude', xValueToSend);
@@ -229,7 +229,7 @@ const HomeEnrollment = (args) => {
             formData.append('pw', value);
             formData.append('role', 'ROLE_AGENT');
             formData.append('email', emailValue + "@" + selectedValue);
-    
+
             // Submit the form data using axios
             axios
                 .post('/api/enrollment/agent/signup', formData)
@@ -243,7 +243,7 @@ const HomeEnrollment = (args) => {
                 });
         }
     };
-    
+
     const handleEmailChange = (e) => {
         const inputValue = e.target.value;
         const regex = /^[^\u3131-\u3163\uac00-\ud7a3]*$/;
@@ -365,20 +365,23 @@ const HomeEnrollment = (args) => {
                                         <div style={{ marginTop: '10px' }}>
                                             {showAddressInfo && (
                                                 <div>
-                                                    <input value={selectedItem.bsnmCmpnm} disabled style={{ width: '210px', textAlign: 'center' }} />
-                                                    <input value={address} disabled style={{ width: '300px', textAlign: 'center' }} />
+                                                    <input className={style.input_style} value={selectedItem.bsnmCmpnm} disabled style={{ width: '210px', textAlign: 'center' }} />
+                                                    <input className={style.input_style} value={address} disabled style={{ width: '300px', textAlign: 'center' }} />
                                                 </div>
                                             )}
                                         </div>
                                     )}
                                     {showAddressInputs && (
                                         <div>
-                                            <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip].join(' ')} />
-                                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal} /><br></br>
+                                            <input type="text" style={{ marginBottom: '1%',marginRight:'1%' }} name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip, style.input_style].join(' ')} />
+                                            <Button type="button" onClick={handleOpenModal}>
+                                                우편번호 찾기
+                                            </Button>
+                                            <br></br>
                                             <div className={style.blank}></div>
-                                            <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1} className={[style.inputInfo, style.inputAddr].join(' ')} /><br></br>
+                                            <input type="text" style={{ marginBottom: '1%' }} name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1} className={[style.inputInfo, style.inputAddr, style.input_style].join(' ')} /><br></br>
                                             <div className={style.blank}></div>
-                                            <input type="text" name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2} className={[style.inputInfo, style.inputAddr].join(' ')} />
+                                            <input type="text" style={{ marginBottom: '1%' }} name="address2" id="sample6_detailAddress" placeholder="상세주소" onChange={handleChangeAddress2} value={address2.address2} className={[style.inputInfo, style.inputAddr, style.input_style].join(' ')} />
                                         </div>
                                     )}
 
@@ -416,6 +419,7 @@ const HomeEnrollment = (args) => {
                                     <ModalBody>
                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2%' }}>
                                             <input
+                                                className={style.input_style}
                                                 type="text"
                                                 placeholder='예) 대빵 공인중개사'
                                                 value={searchValue || ''}
@@ -446,7 +450,7 @@ const HomeEnrollment = (args) => {
                                             </div>
                                         ) : (
                                             // searchResult가 null인 경우 표시할 내용
-                                            <p style={{padding:'1%'}}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
+                                            <p style={{ padding: '1%' }}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
                                                 중개사무소가 검색되지 않을 경우010-3470-1399로 문의주세요.</p>
                                         )}
 
@@ -457,12 +461,13 @@ const HomeEnrollment = (args) => {
                         <hr></hr>
                         <li>
                             <h5 className={style.list}>대표공인중개사 휴대폰 번호</h5>
-                            <input type="text" placeholder='- 빼고 입력해주세요.' value={value} onChange={handleInputChange} />
+                            <input className={style.input_style} type="text" placeholder='- 빼고 입력해주세요.' value={value} onChange={handleInputChange} />
                         </li>
                         <hr></hr>
                         <li>
                             <h5 className={style.list}>대표이름</h5>
                             <input
+                                className={style.input_style}
                                 type="text"
                                 placeholder="이름을 입력하세요."
                                 value={nameValue}
@@ -476,13 +481,14 @@ const HomeEnrollment = (args) => {
                             <h5 className={style.list}>대표공인중개사 이메일</h5>
                             <div className={style.nextId}>
                                 <input
+                                    className={style.input_style}
                                     type="text"
                                     placeholder='이메일을 입력하세요.'
                                     value={emailValue}
                                     onChange={handleEmailChange}
                                 />
                                 <span style={{ marginLeft: '5px', marginRight: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>@</span>
-                                <select value={selectedValue} onChange={handleSelectChange}>
+                                <select className={style.select_style} value={selectedValue} onChange={handleSelectChange}>
                                     <option value="">선택하세요</option>
                                     <option value="naver.com">naver.com</option>
                                     <option value="hanmail.net">hanmail.net</option>
