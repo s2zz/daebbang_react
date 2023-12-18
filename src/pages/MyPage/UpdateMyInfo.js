@@ -26,6 +26,9 @@ const UpdateMyInfo = () => {
     const [emailRegex, setEmailRegex] = useState(false);
     const [phoneRegex, setPhoneRegex] = useState(false);
 
+    const { kakao } = window;
+    const [estateGeo, setEstateGeo] = useState({ latitude: '', longitude: '' })
+
     const handleChangeName = (e) => {
         const { name, value } = e.target;
         setName(prev => ({ ...prev, [name]: value }));
@@ -88,6 +91,12 @@ const UpdateMyInfo = () => {
         setFill(e.target.value !== '');
         setEfill(e.target.value !== '');
     }
+
+    useEffect(() => {
+        if (address1.address1) {
+            handleGeocoding(address1.address1);
+        }
+    }, [address1.address1]);
 
     const handleChangeAddress2 = (e) => {
         const { name, value } = e.target;
@@ -175,7 +184,9 @@ const UpdateMyInfo = () => {
                     id: storedLoginId,
                     name: name.name,
                     phone: phone.phone,
-                    address : address1.address1 + address2.address2
+                    address: address1.address1 + address2.address2,
+                    latitude: estateGeo.latitude,
+                    longitude: estateGeo.longitude
                 };
                 await axios.post("/api/estate/updateMyInfo", userData);
                 alert("회원정보 수정이 완료되었습니다.");
@@ -236,6 +247,28 @@ const UpdateMyInfo = () => {
     const handleOpenModal = () => {
         // 우편번호 찾기 모달 열기
         setShowModal(true);
+    };
+
+    // 좌표 입력
+    const handleGeocoding = (address1) => {
+        // 주소-좌표 변환 객체를 생성합니다
+        const geocoder = new kakao.maps.services.Geocoder();
+
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch(address1, function (result, status) {
+            // 정상적으로 검색이 완료됐으면
+            if (status === kakao.maps.services.Status.OK) {
+                const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                // 결과값으로 받은 위치를 realEstate 객체에 자동 입력합니다
+                setEstateGeo(prevState => ({
+                    ...prevState,
+                    latitude: result[0].y,
+                    longitude: result[0].x
+                }));
+                // ... (마커, 인포윈도우 설정 등 이전 코드와 동일한 부분)
+            }
+        });
     };
 
     return (
