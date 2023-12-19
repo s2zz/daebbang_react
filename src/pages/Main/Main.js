@@ -45,12 +45,12 @@ const Main = () => {
 
   // 게시글 목록 불러오기
   useEffect(() => {
-    axios.get(`/api/board/freeBoardList`).then(resp => {
+    axios.get(`/api/board/limitFreeBoardList`).then(resp => {
       setfreeBoard(resp.data.sort(compareBySeq));
     })
   }, []);
   useEffect(() => {
-    axios.get(`/api/board/roomBoardList`).then(resp => {
+    axios.get(`/api/board/limitRoomBoardList`).then(resp => {
       setroomBoard(resp.data.sort(compareBySeq));
     })
   }, [])
@@ -153,9 +153,6 @@ const Main = () => {
             <div className={style.contents}>
               {
                 sliceRoomContentsList().map((e, i) => {
-                  if (i >= 6) {
-                    return
-                  }
                   return (
                     <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none", color: "black" }} state={{ sysSeq: e.seq }}>
                       <div className={style.cbgdiv} key={i} data-seq={e.seq}>
@@ -183,9 +180,6 @@ const Main = () => {
             <div className={style.contents}>
               {
                 sliceFreeContentsList().map((e, i) => {
-                  if (i >= 6) {
-                    return
-                  }
                   return (
                     <Link to={`/board/toFreeBoardContents/${(countPerPage * (currentPage - 1)) - i}`} style={{ textDecoration: "none", color: "black" }} state={{ oriSeq: freeboard.length - (i), sysSeq: e.seq }}>
                       <div className={style.cbgdiv} key={i} data-seq={e.seq}>
