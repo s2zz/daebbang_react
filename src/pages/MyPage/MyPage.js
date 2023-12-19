@@ -72,7 +72,7 @@ const Review = () => {
                                 <div className={style.sawAddress}>{address.length > 30 ? address.substring(0, 30) + "..." : address}</div>
                                 <div className={style.sawTitle}>{title.length > 15 ? title.substring(0, 15) + "..." : title}</div>
                                 {e.approvalCode === 'a1' || e.approvalCode === 'a2' ? <button>승인 대기</button> : null}
-                                {e.approvalCode === 'a3' ? <button>리뷰 작성</button> : null}
+                                {e.approvalCode === 'a3' ? <Link to="/review/writeReview" state={{estateCode:e.estateId, approvalCode:e.approvalCode}}><button>리뷰 작성</button></Link> : null}
                                 {e.approvalCode === 'a4' || e.approvalCode === 'b1' ? <button>승인 거절</button> : null}
                             </div>
                         )
