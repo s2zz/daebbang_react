@@ -114,35 +114,17 @@ const WriteReview = () => {
         <div className={style.borderBox}>
             <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>
             <hr></hr>
-            
+
             <div className={style.scoreInfo}>
                 <div>별점<span>*</span> &nbsp;| </div>
                 <div className={style.scoreBox}>
-                    <div>
-                        {
-                            score[0] ? <img src={fav} alt="..." onClick={() => delScore(0)} /> : <img src={notFav} alt="..." onClick={() => addScore(0)} />
-                        }
-                    </div>
-                    <div>
-                        {
-                            score[1] ? <img src={fav} alt="..." onClick={() => delScore(1)} /> : <img src={notFav} alt="..." onClick={() => addScore(1)} />
-                        }
-                    </div>
-                    <div>
-                        {
-                            score[2] ? <img src={fav} alt="..." onClick={() => delScore(2)} /> : <img src={notFav} alt="..." onClick={() => addScore(2)} />
-                        }
-                    </div>
-                    <div>
-                        {
-                            score[3] ? <img src={fav} alt="..." onClick={() => delScore(3)} /> : <img src={notFav} alt="..." onClick={() => addScore(3)} />
-                        }
-                    </div>
-                    <div>
-                        {
-                            score[4] ? <img src={fav} alt="..." onClick={() => delScore(4)} /> : <img src={notFav} alt="..." onClick={() => addScore(4)} />
-                        }
-                    </div>
+                    {
+                        [0, 1, 2, 3, 4].map((e, i) => (
+                            <div key={i}>
+                                {score[e] ? <img src={fav} alt="..." onClick={() => delScore(e)} /> : <img src={notFav} alt="..." onClick={() => addScore(e)} />}
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
             <div className={style.reviewInsert}>
@@ -170,61 +152,20 @@ const WriteReview = () => {
                     <div>10MB 이하 파일만 등록 가능</div>
                 </div>
                 <div className={style.imgBox}>
-                    <input type="file" name="files0" style={{ display: 'none' }} id="fileInput0" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files1" style={{ display: 'none' }} id="fileInput1" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files2" style={{ display: 'none' }} id="fileInput2" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files3" style={{ display: 'none' }} id="fileInput3" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files4" style={{ display: 'none' }} id="fileInput4" onChange={handleFileChange} accept="image/*" />
-                    <div>
-                        {url.files0 ?
-                            <>
-                                <img src={url.files0} alt="..." />
-                                <label onClick={() => imgDel("files0")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput0"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-                        }
-
-                    </div>
-                    <div>
-                        {url.files1 ?
-                            <>
-                                <img src={url.files1} alt="..." />
-                                <label onClick={() => imgDel("files1")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput1"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
-                    </div>
-                    <div>
-                        {url.files2 ?
-                            <>
-                                <img src={url.files2} alt="..." />
-                                <label onClick={() => imgDel("files2")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput2"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
-                    </div>
-                    <div>
-                        {url.files3 ?
-                            <>
-                                <img src={url.files3} alt="..." />
-                                <label onClick={() => imgDel("files3")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput3"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
-                    </div>
-                    <div>
-                        {url.files4 ?
-                            <>
-                                <img src={url.files4} alt="..." />
-                                <label onClick={() => imgDel("files4")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput4"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
-                    </div>
+                    {
+                        [0, 1, 2, 3, 4].map((e, i) => (
+                            <div key={i}>
+                                <input type="file" name="files0" style={{ display: 'none' }} id="fileInput0" onChange={handleFileChange} accept="image/*" />
+                                {url[`files${i}`] ?
+                                    <>
+                                        <img src={`url.files${i}`} alt="..." />
+                                        <label onClick={() => imgDel(`files${i}`)}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
+                                    </> :
+                                    <label htmlFor={`fileInput${i}`}><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
+                                }
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
             <hr />
