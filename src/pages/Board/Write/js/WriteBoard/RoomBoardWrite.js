@@ -15,11 +15,11 @@ const RoomBoardWrite = () => {
         title: "",
         header: "",
         contents: "",
-        files: []
+        files: {}
     });
 
     const handleFileChange = (e) => {
-        setFormData(prev => ({ ...prev, files: [...prev.files, e.target.files[0]] }));
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: e.target.files[0] } }));
     }
 
     const handleChange = (e) => {
@@ -126,8 +126,12 @@ const RoomBoardWrite = () => {
         submitFormData.append("delImgList", delImgList);
         submitFormData.append("header", formData.header);
 
-        formData.files.forEach((e) => {
-            submitFormData.append("files", e);
+        let fileList = Object.values(formData.files);
+
+        fileList.forEach((e) => {
+            if (e !== "" && e instanceof File) {
+                submitFormData.append("files", e);
+            }
         });
 
         axios.post("/api/board", submitFormData).then(resp => {
@@ -174,7 +178,7 @@ const RoomBoardWrite = () => {
         <>
             <div className={style.boardTitle}>양도게시판 글 작성</div>
             <hr></hr>
-            <div className={style.titleBox}> 
+            <div className={style.titleBox}>
                 <div>제목<span>*</span></div>
                 <div>
                     <input placeholder="&nbsp;제목을 입력해주세요" name="title" onChange={handleChange} />
@@ -193,25 +197,25 @@ const RoomBoardWrite = () => {
             <div className={style.fileBox}>
                 <div>파일첨부</div>
                 <div className={style.fileInputDiv}>
-                <div>
-                        <input type="file" onChange={handleFileChange} />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                    <div>
+                        <input type="file" onChange={handleFileChange} name="files0" />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
                     </div>
                     <div>
-                        <input type="file" onChange={handleFileChange} />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                        <input type="file" onChange={handleFileChange} name="files1" />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
                     </div>
                     <div>
-                        <input type="file" onChange={handleFileChange} />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                        <input type="file" onChange={handleFileChange} name="files2" />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
                     </div>
                     <div>
-                        <input type="file" onChange={handleFileChange} />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                        <input type="file" onChange={handleFileChange} name="files3" />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
                     </div>
                     <div>
-                        <input type="file" onChange={handleFileChange} />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                        <input type="file" onChange={handleFileChange} name="files4" />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
                     </div>
                 </div>
             </div>
