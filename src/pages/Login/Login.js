@@ -57,7 +57,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      console.log(resp); // 로그인 실패시
+      alert("아이디와 비밀번호를 다시 확인해주세요.");
       setUser({ id: "", pw: "" });
     });
   }
@@ -74,7 +74,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      console.log(resp); // 로그인 실패시
+      alert("아이디와 비밀번호를 다시 확인해주세요.");
       setEstate({ id: "", pw: "" });
     });
   }
@@ -91,7 +91,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      console.log(resp); // 로그인 실패시
+      alert("아이디와 비밀번호를 다시 확인해주세요.");
       setAdmin({ id: "", pw: "" });
     });
   }
