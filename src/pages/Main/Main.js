@@ -18,7 +18,7 @@ const Main = () => {
     const storedData = localStorage.getItem('watch');
     const recent = JSON.parse(storedData);
     axios
-      .get(`/api/map/getAll`)
+      .get(`/api/map/getLimitAll`)
       .then((resp) => {
         setMapList(resp.data.sort(compareByestate_id));
       })
