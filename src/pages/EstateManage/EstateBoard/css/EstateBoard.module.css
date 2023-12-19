@@ -1,7 +1,3 @@
-.container {
-  width: 90%;
-  margin: auto;
-}
 
 .estateTable {
   margin-top: 60px;
@@ -23,4 +19,12 @@
 .searchDiv{
   display: flex;
   justify-content: end;
+}
+
+.bigTitle {
+  font-size: 46px;
+  line-height: 70px;
+  letter-spacing: -1px;
+  font-weight: 700;
+  text-align: center;
 }

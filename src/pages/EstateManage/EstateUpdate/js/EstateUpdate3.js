@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import style from '../css/EstateUpdate.module.css';
 
-function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImages }) {
+function EstateUpdate3({ realEstate, setRealEstate, estateImages, tempImages, setEstateImages }) {
   // 이미지 미리보기
   const [imagePreviews, setImagePreviews] = useState([]);
 
@@ -56,7 +56,9 @@ function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImage
             <img key={index} src={preview} alt={`Preview ${index}`} className={style.imagePreview} />
           ))
         ) : (
-          <p></p>
+          tempImages.map((preview, index) => (
+            <img key={index} src={`..\\..\\uploads\\estateImages\\${preview.sysName}`} alt={`Preview ${index}`} className={style.imagePreview} />
+          ))
         )}
       </div>
 
@@ -88,4 +90,4 @@ function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImage
   );
 }
 
-export default EstateInsert3;
+export default EstateUpdate3;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import style from '../css/EstateInsert.module.css';
 
-function EstateInsert3({ realEstate, setRealEstate, estateImages, setEstateImages }) {
+function EstateInsert3({ setRealEstate, setEstateImages }) {
   // 이미지 미리보기
   const [imagePreviews, setImagePreviews] = useState([]);
 

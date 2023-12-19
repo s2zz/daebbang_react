@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Post from '../../js/Post';
 import style from '../css/EstateUpdate.module.css';
 
-function EstateInsert1({ realEstate, setRealEstate }) {
+function EstateUpdate1({ realEstate, setRealEstate }) {
   const { kakao } = window;
+  const [isLoading, setIsLoading] = useState(true);
 
   // 평수&제곱미터
   const [areas, setAreas] = useState({ area: '', squareMeter: '' });
@@ -49,7 +50,7 @@ function EstateInsert1({ realEstate, setRealEstate }) {
     }
   };
 
-  // 주소 검색 팝업창 닫기
+  // 주소 검색 팝업창 열기/닫기
   const handleComplete = (data) => {
     setPopup(!popup);
   }
@@ -100,76 +101,95 @@ function EstateInsert1({ realEstate, setRealEstate }) {
     }
   }
 
+  useEffect(() => {
+    setEnroll_company(prev => ({
+      zipcode: realEstate.zipcode,
+      address1: realEstate.address1,
+      address2: realEstate.address2
+    }));
+
+    setAreas({squareMeter: realEstate.area * 3.30578.toFixed(2)});
+
+    setIsLoading(false); // 로딩 상태 변경
+  }, [realEstate.address1, enroll_company.address1]);
+
   return (
     <>
-      <div className={style.titleDiv}>
-        <h1 className={style.title}>매물 정보</h1>
-        <p><span className={style.star}>*</span> 필수입력 항목</p>
-      </div>
-      <table>
-        <tr>
-          <th>종류 선택<span className={style.star}>*</span></th>
-          <td>
-            <input type="radio" id="r1" name="roomCode" value="r1" onChange={handleChange} checked={realEstate.roomCode === "r1"} /><label for="r1">원룸</label>
-            <input type="radio" id="r2" name="roomCode" value="r2" onChange={handleChange} checked={realEstate.roomCode === "r2"} /><label for="r2">투룸</label>
-          </td>
-        </tr>
-        <tr>
-          <th>구조 선택<span className={style.star}>*</span></th>
-          <td>
-            <input type="radio" id="s1" name="structureCode" value="s1" onChange={handleChange} checked={realEstate.structureCode === "s1"} /><label for="s1">오픈형 원룸</label>
-            <input type="radio" id="s2" name="structureCode" value="s2" onChange={handleChange} checked={realEstate.structureCode === "s2"} /><label for="s2">분리형 원룸</label>
-            <input type="radio" id="s3" name="structureCode" value="s3" onChange={handleChange} checked={realEstate.structureCode === "s3"} /><label for="s3">복층형 원룸</label>
-          </td>
-        </tr>
-        <tr>
-          <th>건물 유형<span className={style.star}>*</span></th>
-          <td>
-            <input type="radio" id="b1" name="buildingCode" value="b1" onChange={handleChange} checked={realEstate.buildingCode === "b1"} /><label for="b1">단독주택</label>
-            <input type="radio" id="b2" name="buildingCode" value="b2" onChange={handleChange} checked={realEstate.buildingCode === "b2"} /><label for="b2">다가구주택</label>
-            <input type="radio" id="b3" name="buildingCode" value="b3" onChange={handleChange} checked={realEstate.buildingCode === "b3"} /><label for="b3">빌라/연립/다세대</label>
-            <input type="radio" id="b4" name="buildingCode" value="b4" onChange={handleChange} checked={realEstate.buildingCode === "b4"} /><label for="b4">상가주택</label>
-          </td>
-        </tr>
-        <tr>
-          <th>주소<span className={style.star}>*</span></th>
-          <td>
-            <div>
-              <div>
-                <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
-              </div>
-              <div>
-                <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={realEstate.address1} />
-              </div>
-              {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th>매물크기<span className={style.star}>*</span></th>
-          <td>
-            <div>전용면적</div>
-            <div className={style.scaleDiv}>
-              <input type="text" pattern="[0-9]*\.?[0-9]*" className={style.scaleInput} name="area" onChange={handleChange} value={realEstate.area} />
-              <p className={style.scale}>평</p>
-            </div>
-            =
-            <div className={style.scaleDiv}>
-              <input type="text" className={style.scaleInput} value={areas.squareMeter} readOnly />
-              <p className={style.scale}>㎡</p>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th>난방 종류<span className={style.star}>*</span></th>
-          <td>
-            <input type="radio" id="h1" name="heatingCode" value="h1" onChange={handleChange} checked={realEstate.heatingCode === "h1"}/><label for="h1">개별난방</label>
-            <input type="radio" id="h2" name="heatingCode" value="h2" onChange={handleChange} checked={realEstate.heatingCode === "h2"}/><label for="h2">중앙난방</label>
-          </td>
-        </tr>
-      </table>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <div className={style.titleDiv}>
+            <h1 className={style.title}>매물 정보</h1>
+            <p><span className={style.star}>*</span> 필수입력 항목</p>
+          </div>
+          <table>
+            <tr>
+              <th>종류 선택<span className={style.star}>*</span></th>
+              <td>
+                <input type="radio" id="r1" name="roomCode" value="r1" onChange={handleChange} checked={realEstate.roomCode === "r1"} /><label for="r1">원룸</label>
+                <input type="radio" id="r2" name="roomCode" value="r2" onChange={handleChange} checked={realEstate.roomCode === "r2"} /><label for="r2">투룸</label>
+              </td>
+            </tr>
+            <tr>
+              <th>구조 선택<span className={style.star}>*</span></th>
+              <td>
+                <input type="radio" id="s1" name="structureCode" value="s1" onChange={handleChange} checked={realEstate.structureCode === "s1"} /><label for="s1">오픈형 원룸</label>
+                <input type="radio" id="s2" name="structureCode" value="s2" onChange={handleChange} checked={realEstate.structureCode === "s2"} /><label for="s2">분리형 원룸</label>
+                <input type="radio" id="s3" name="structureCode" value="s3" onChange={handleChange} checked={realEstate.structureCode === "s3"} /><label for="s3">복층형 원룸</label>
+              </td>
+            </tr>
+            <tr>
+              <th>건물 유형<span className={style.star}>*</span></th>
+              <td>
+                <input type="radio" id="b1" name="buildingCode" value="b1" onChange={handleChange} checked={realEstate.buildingCode === "b1"} /><label for="b1">단독주택</label>
+                <input type="radio" id="b2" name="buildingCode" value="b2" onChange={handleChange} checked={realEstate.buildingCode === "b2"} /><label for="b2">다가구주택</label>
+                <input type="radio" id="b3" name="buildingCode" value="b3" onChange={handleChange} checked={realEstate.buildingCode === "b3"} /><label for="b3">빌라/연립/다세대</label>
+                <input type="radio" id="b4" name="buildingCode" value="b4" onChange={handleChange} checked={realEstate.buildingCode === "b4"} /><label for="b4">상가주택</label>
+              </td>
+            </tr>
+            <tr>
+              <th>주소<span className={style.star}>*</span></th>
+              <td>
+                <div>
+                  <div>
+                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
+                  </div>
+                  <div>
+                    <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={enroll_company.address1} />
+                  </div>
+                  {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>매물크기<span className={style.star}>*</span></th>
+              <td>
+                <div>전용면적</div>
+                <div className={style.scaleDiv}>
+                  <input type="text" pattern="[0-9]*\.?[0-9]*" className={style.scaleInput} name="area" onChange={handleChange} value={realEstate.area} />
+                  <p className={style.scale}>평</p>
+                </div>
+                =
+                <div className={style.scaleDiv}>
+                  <input type="text" className={style.scaleInput} value={areas.squareMeter} readOnly />
+                  <p className={style.scale}>㎡</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>난방 종류<span className={style.star}>*</span></th>
+              <td>
+                <input type="radio" id="h1" name="heatingCode" value="h1" onChange={handleChange} checked={realEstate.heatingCode === "h1"} /><label for="h1">개별난방</label>
+                <input type="radio" id="h2" name="heatingCode" value="h2" onChange={handleChange} checked={realEstate.heatingCode === "h2"} /><label for="h2">중앙난방</label>
+              </td>
+            </tr>
+          </table>
+        </>
+      )}
     </>
+
   );
 }
 
-export default EstateInsert1;
+export default EstateUpdate1;
