@@ -28,3 +28,11 @@ a {
   display: flex;
   justify-content: end;
 }
+
+.bigTitle {
+  font-size: 46px;
+  line-height: 70px;
+  letter-spacing: -1px;
+  font-weight: 700;
+  text-align: center;
+}

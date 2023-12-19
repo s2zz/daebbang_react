@@ -105,14 +105,15 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
           <td>
             <input type="checkbox" id="o2" name="optionCode" value="o2" onChange={handleOptionCode} checked={optionList.includes("o2")}/><label for="o2">주차장</label>
             <input type="checkbox" id="o3" name="optionCode" value="o3" onChange={handleOptionCode} checked={optionList.includes("o3")}/><label for="o3">엘리베이터</label>
+            <input type="checkbox" id="o4" name="optionCode" value="o4" onChange={handleOptionCode} checked={optionList.includes("o4")}/><label for="o4">에어컨</label>
+            <input type="checkbox" id="o5" name="optionCode" value="o5" onChange={handleOptionCode} checked={optionList.includes("o5")}/><label for="o5">세탁기</label>
+            <input type="checkbox" id="o6" name="optionCode" value="o6" onChange={handleOptionCode} checked={optionList.includes("o6")}/><label for="o6">침대</label>
+            <input type="checkbox" id="o7" name="optionCode" value="o7" onChange={handleOptionCode} checked={optionList.includes("o7")}/><label for="o7">책상</label>
+            <input type="checkbox" id="o8" name="optionCode" value="o8" onChange={handleOptionCode} checked={optionList.includes("o8")}/><label for="o8">옷장</label>
+            <input type="checkbox" id="o9" name="optionCode" value="o9" onChange={handleOptionCode} checked={optionList.includes("o9")}/><label for="o9">TV</label>
+            
             {/* <input type="checkbox" /><label>반려동물</label>
             <input type="checkbox" /><label>베란다/발코니</label>
-            <input type="checkbox" /><label>에어컨</label>
-            <input type="checkbox" /><label>세탁기</label>
-            <input type="checkbox" /><label>침대</label>
-            <input type="checkbox" /><label>책상</label>
-            <input type="checkbox" /><label>옷장</label>
-            <input type="checkbox" /><label>TV</label>
             <input type="checkbox" /><label>신발장</label>
             <input type="checkbox" /><label>냉장고</label>
             <input type="checkbox" /><label>가스레인지</label>

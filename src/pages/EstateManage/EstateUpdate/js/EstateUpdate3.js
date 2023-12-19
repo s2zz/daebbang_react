@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import style from '../css/EstateUpdate.module.css';
 
-function EstateUpdate3({ realEstate, setRealEstate, estateImages, tempImages, setEstateImages }) {
+function EstateUpdate3({ realEstate, setRealEstate, tempImages, setEstateImages }) {
   // 이미지 미리보기
   const [imagePreviews, setImagePreviews] = useState([]);
 

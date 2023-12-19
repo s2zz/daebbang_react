@@ -63,6 +63,12 @@ function EstateInsert() {
       return false;
     }
 
+    // roomFloors가 buildingFloors보다 큰지 확인
+    if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
+      alert("방 층수는 건물의 층수보다 클 수 없습니다.");
+      return false;
+    }
+
     const formData = new FormData();
 
     const imageLength = estateImages.length;
