@@ -59,10 +59,9 @@ function EstateBoard() {
   const boardItem = (estate, i) => {
     return (
       <tr key={i}>
-        {<td><img src={`uploads\\estateImages\\${estate.images[0].sysName}`} alt="Estate Image"></img></td>}
+        {<td><img src={`..\\..\\uploads\\estateImages\\${estate.images[0].sysName}`} alt="Estate Image"></img></td>}
         <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>
-        <td>{estate.title}</td>
-        <td>{estate.contents}</td>
+        <td><Link to={`/estateManage/estateInfo/${estate.estateId}`}>{estate.title}</Link></td>
         <td>{estate.address1}</td>
         <td>{estate.memo}</td>
         <td>
@@ -82,7 +81,6 @@ function EstateBoard() {
             <th></th>
             <th>보증금/월세(전세)</th>
             <th>제목</th>
-            <th>설명</th>
             <th>위치</th>
             <th>메모</th>
           </tr>
