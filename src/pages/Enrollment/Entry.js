@@ -14,8 +14,8 @@ const Entry = () => {
       <div>
         <img style={{width:'100%'}} src={successImage} alt="이미지 설명" />
       </div>
-      <div style={{display:'flex', justifyContent:'center',marginTop:'20px'}}>
-        <Link to={`/`}>&raquo; 홈으로 돌아가기</Link>
+      <div style={{display:'flex', justifyContent:'center',marginTop:'3%'}}>
+        <Link to={`/`} style={{ textDecoration: 'none'}}>&raquo; 홈으로 돌아가기</Link>
       </div>
       <div>
       <Footer/>

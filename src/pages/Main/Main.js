@@ -4,17 +4,19 @@ import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import Footer from "../commons/Footer";
+import ItemsCarousel from 'react-items-carousel';
 
 const Main = () => {
   const [freeboard, setfreeBoard] = useState([]);
   const [roomboard, setroomBoard] = useState([]);
   const [mapList, setMapList] = useState([]);
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const chevronWidth = 40;
 
   useEffect(() => {
     axios
       .get(`/api/map/getAll`)
       .then((resp) => {
-        console.log(resp.data);
         setMapList(resp.data.sort(compareByestate_id));
       })
       .catch((err) => {
@@ -74,6 +76,23 @@ const Main = () => {
               <span className={style.title}> 최근 본 매물</span>
             </div>
             <hr></hr>
+            <div style={{ padding: `0 ${chevronWidth}px` }}>
+              <ItemsCarousel
+                requestToChangeActive={setActiveItemIndex}
+                activeItemIndex={activeItemIndex}
+                numberOfCards={3}
+                gutter={20}
+                leftChevron={<button>{'<'}</button>}
+                rightChevron={<button>{'>'}</button>}
+                outsideChevron
+                chevronWidth={chevronWidth}
+              >
+                <div style={{ height: 200, background: '#EEE' }}>First card</div>
+                <div style={{ height: 200, background: '#EEE' }}>Second card</div>
+                <div style={{ height: 200, background: '#EEE' }}>Third card</div>
+                <div style={{ height: 200, background: '#EEE' }}>Fourth card</div>
+              </ItemsCarousel>
+            </div>
           </div>
 
         </div>
@@ -83,8 +102,8 @@ const Main = () => {
               <span className={style.title}> 최근 등록된 매물</span>
               <a href="/home/oneroom/list"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
             </div>
-            <div className={style.contents}>
             <hr></hr>
+            <div className={style.contents}>
               {
                 mapList.map((e, i) => {
                   if (i >= 6) {
@@ -99,15 +118,13 @@ const Main = () => {
                         <span className={style.fontcss}>
                           {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
                         </span>
-                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.substring(0, 10)}</span>
+                        <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.substring(0, 10)}</span>
                       </div>
                     </Link>
                   );
                 })
               }
             </div>
-
-            
           </div>
           <div className={style.freeboard}>
             <div className={style.titlebox}>
@@ -130,15 +147,13 @@ const Main = () => {
                         <span className={style.fontcss}>
                           {e.title.length > 9 ? e.title.substring(0, 9) + "..." : e.title}
                         </span>
-                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.split("T")[0]}</span>
+                        <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.split("T")[0]}</span>
                       </div>
                     </Link>
                   );
                 })
               }
             </div>
-
-
           </div>
           <div className={style.board}>
             <div className={style.titlebox}>
@@ -160,15 +175,13 @@ const Main = () => {
                         <span className={style.fontcss}>
                           {e.title.length > 13 ? e.title.substring(0, 13) + "..." : e.title}
                         </span>
-                        <span style={{ float: "right" }} className={style.fontcss}>{e.writeDate.split("T")[0]}</span>
+                        <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.split("T")[0]}</span>
                       </div>
                     </Link>
                   );
                 })
               }
             </div>
-
-
           </div>
         </div>
       </div>

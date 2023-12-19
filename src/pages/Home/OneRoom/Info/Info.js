@@ -1,6 +1,6 @@
 //
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
 
 
@@ -105,6 +105,29 @@ function Info() {
       });
   }
 
+  // 리뷰 목록 가져오기
+  const [review, setReview] = useState([]);
+  useEffect(() => {
+    axios.get(`/api/review/${markerInfo.estateId}`).then(resp => {
+      setReview(resp.data);
+      console.log(resp.data);
+    }).catch(err => {
+      console.log(err);
+    })
+  }, []);
+
+  // 리뷰 삭제하기
+  const delReview = (seq) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      axios.delete(`/api/review/${seq}`).then(resp => {
+        alert("리뷰가 삭제되었습니다");
+        setReview(prev => [...review.filter(e => e.seq !== seq)])
+      }).catch(err => {
+        alert("리뷰 삭제에 실패하였습니다");
+        console.log(err);
+      })
+    }
+  }
 
   return (
     <div
@@ -255,7 +278,37 @@ function Info() {
 
           </div>
         </div>
+        {/*리뷰*/}
+        <div>
+          {
+            review.map((e, i) => (
+              <div style={{ border: '1px solid black' }} key={i}>
+                <div>{e.id}</div>
+                <div>
+                  <div>교통</div>
+                  <div>{e.traffic}</div>
+                  <div>주변 환경</div>
+                  <div>{e.surroundings}</div>
+                  <div>시설</div>
+                  <div>{e.facility}</div>
+                </div>
+                <div>
+                  <div>사진</div>
+                  {
+                    e.files.map((e, i) => (
+                      <div><img alt="..." style={{ width: "30px" }} src={`/uploads/review/${e.sysName}`} /></div>
+                    ))
+                  }
+                </div>
+                <div>
+                  <button onClick={() => { delReview(e.seq) }}>삭제</button>
+                  <Link to="/review/editReview" state={{ seq:e.seq }}><button>수정</button></Link>
+                </div>
 
+              </div>
+            ))
+          }
+        </div>
 
         {/* 맨 하단 문의하기 구역만큼 밀어서 공간확보 */}
         <div style={{ height: '70px' }}></div>

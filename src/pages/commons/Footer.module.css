@@ -2,7 +2,6 @@
     width: 100%;
 }
 .footerbox{
-    min-width: 1290px;
     width: 100%;
     height: 25%;
 }
@@ -12,6 +11,7 @@
     margin: auto;
 }
 .linkbox{
+    min-width: 500px;
     width: 80%;
     margin: auto;
     padding-top: 30px;
@@ -26,6 +26,7 @@
     font-weight: bolder;
 }
 .footermain{
+    min-width: 500px;
     padding-top: 30px;
     text-align: center;
     color: rgb(76, 76, 76);

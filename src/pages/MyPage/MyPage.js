@@ -51,58 +51,34 @@ const Jjim = () => {
 
 const Review = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
-    const [estate, setEstate] = useState([{}]);
     const [sawEstate, setSawEstate] = useState([{}]);
 
-    const [myArray, setMyArray] = useState([]);
-
-    // 배열에 요소 추가하는 함수
-    const addElement = () => {
-        // 새로운 배열 생성 (불변성을 유지하기 위해 spread 연산자 사용)
-        const newArray = [...myArray, '새로운 요소'];
-
-        // 상태 업데이트
-        setMyArray(newArray);
-    };
-
     useEffect(() => {
-        axios.get(`/api/reviewApproval/myReview/${storedLoginId}`).then(resp => {
+        axios.get("/api/reviewApproval/sawEstate/" + storedLoginId).then(resp => {
             setSawEstate(resp.data);
         });
     }, []);
 
-    useEffect(() => {
-        const fetchDataForEstate = async (estateCode) => {
-            try {
-                const resp = await axios.get(`/api/reviewApproval/estate/${estateCode}`);
-                console.log(resp.data);
-                return resp.data;
-            } catch (error) {
-                console.error(error);
-                return null;
-            }
-        };
-
-        const fetchAllData = async () => {
-            const dataArray = await Promise.all(sawEstate.map(review => fetchDataForEstate(review.estateCode)));
-            setEstate(dataArray.filter(data => data !== null));
-        };
-
-        if (sawEstate.length > 0) {
-            fetchAllData();
-        }
-    }, [sawEstate]);
-
     return (
         <div className={style.ReviewContainer}>
-            {sawEstate.map((s, i) => (
-                <div map={i}>
-                    {s.estateCode}
-                    {s.approvalCode}
-                    {s.approvalCode === 'a3' && <button>리뷰 쓰기</button>}
-                    {s.approvalCode === 'a4' && <button>승인 거절</button>}
+            {sawEstate.length > 0 ?
+                <div>
+                    {sawEstate.map((e, i) => {
+                        const address = e.address || '';
+                        const title = e.title || '';
+                        return (
+                            <div key={i} className={style.SawEstate}>
+                                <img src={`uploads\\estateImages\\${e.img}`} alt="Estate Image"></img>
+                                <div className={style.sawAddress}>{address.length > 30 ? address.substring(0, 30) + "..." : address}</div>
+                                <div className={style.sawTitle}>{title.length > 15 ? title.substring(0, 15) + "..." : title}</div>
+                                {e.approvalCode === 'a1' || e.approvalCode === 'a2' ? <button>승인 대기</button> : null}
+                                {e.approvalCode === 'a3' ? <Link to="/review/writeReview" state={{estateCode:e.estateId, approvalCode:e.approvalCode}}><button>리뷰 작성</button></Link> : null}
+                                {e.approvalCode === 'a4' || e.approvalCode === 'b1' ? <button>승인 거절</button> : null}
+                            </div>
+                        )
+                    })}
                 </div>
-            ))}
+                : <div>아직 방을 구경하지 않았어요</div>}
         </div>
     );
 }
