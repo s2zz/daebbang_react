@@ -31,10 +31,10 @@ const FreeBoardContents = ({ loginId, admin }) => {
                 console.log(err);
             })
         }
-    }, [replyList.length])
+    }, [])
 
     // 댓글 추가
-    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: seq});
+    const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: seq });
     const insertReplyHandleChange = (e) => {
         setInsertReply(prev => ({ ...prev, contents: e.target.value }));
     }
@@ -48,7 +48,6 @@ const FreeBoardContents = ({ loginId, admin }) => {
 
         axios.post("/api/reply", insertReply).then(resp => {
             alert("댓글 등록 성공");
-            console.log(resp.data)
             setInsertReply(prev => ({ ...prev, contents: "" }));
             setReplyList(resp.data.sort(compareBySeq));
         }).catch(err => {
@@ -143,7 +142,6 @@ const FreeBoardContents = ({ loginId, admin }) => {
     const replyCountPerPage = 10;
 
     const sliceReplyList = () => {
-        console.log("replyList" + replyList);
         const start = (currentReplyPage - 1) * replyCountPerPage;
         const end = start + replyCountPerPage;
         return replyList.slice(start, end);
@@ -176,27 +174,33 @@ const FreeBoardContents = ({ loginId, admin }) => {
             <div className={style.boardContentsTitle}>{boardContents.title}</div>
             <div className={style.boardContentsInfo}>
                 <div>
-                    작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
+                    작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""} | 조회수 {boardContents.viewCount}
                 </div>
                 <div>
                     {loginId === boardContents.writer || admin !== null ? <button onClick={() => { contentsDel(seq) }}>삭제</button> : ""}
                 </div>
             </div>
             <div>
-                {
-                    fileList.map((e, i) => {
-                        return (
-                            <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>{e.oriName}</div>
-                        );
-                    })
-                }
+                <div className={style.fileBox}>
+                    <div>첨부파일 목록</div>
+                    {
+                        fileList.map((e, i) => {
+                            return (
+
+                                <div>
+                                    <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>파일 {i + 1} | <span className={style.fileName}>{e.oriName}</span></div>
+                                </div>
+
+                            );
+                        })
+                    }
+                </div>
             </div>
             <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}></div>
-            <div>
+            <div className={style.btns}>
                 <Link to="/board/toFreeBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button>뒤로가기</button></Link>
                 {loginId === boardContents.writer || admin !== null ?
-                    <Link to="/board/toEditFreeBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> :
-                    ""
+                    <Link to="/board/toEditFreeBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> : ""
                 }
             </div>
             <hr />
@@ -206,11 +210,11 @@ const FreeBoardContents = ({ loginId, admin }) => {
                         <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange} value={insertReply.contents} />
                     </div>
                 </div>
-                <div>
+                <div className={style.insertReplyBtn}>
                     <button onClick={insertReplyAdd}>등록</button>
                 </div>
             </div>
-            <hr />
+            <hr className={style.replyListStartHr} />
             {
                 sliceReplyList().map((e, i) => {
                     if (i === 0) {
@@ -232,7 +236,7 @@ const FreeBoardContents = ({ loginId, admin }) => {
                                             }
                                         </div>
                                         :
-                                        <div>
+                                        <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
                                                 <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
                                                 ""
@@ -260,7 +264,7 @@ const FreeBoardContents = ({ loginId, admin }) => {
                                             }
                                         </div>
                                         :
-                                        <div>
+                                        <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
                                                 <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
                                                 ""

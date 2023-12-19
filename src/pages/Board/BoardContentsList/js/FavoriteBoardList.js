@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 const FavoriteBoardList = () => {
     const [board, setBoard] = useState([]);
@@ -93,13 +95,22 @@ const FavoriteBoardList = () => {
         }
     }
 
+
+    const noBoardContents = () => {
+        return (
+            <div className={style.noBoardContents}>
+                게시글이 없습니다.
+            </div>
+        );
+    }
+
     const contentslist = () => {
         if (completeSearchText !== "") {
-            return sliceContentsList(searchBoard).map(boardItem);
+            return searchBoard.length === 0 ? noBoardContents() : sliceContentsList(searchBoard).map(boardItem);
         } else if (category !== "전체게시물") {
-            return sliceContentsList(categoryBoard).map(boardItem);
+            return categoryBoard.length === 0 ? noBoardContents() : sliceContentsList(categoryBoard).map(boardItem);
         } else {
-            return sliceContentsList(board).map(boardItem);
+            return board.length === 0 ? noBoardContents() : sliceContentsList(board).map(boardItem);
         }
     }
 
@@ -123,22 +134,30 @@ const FavoriteBoardList = () => {
 
     return (
         <>
-            <div className={style.boardTitle}>즐겨찾기</div>
+            <div className={style.boardTitle}>게시판</div>
             <hr></hr>
+            <div className={style.selectBoard}>
+                <div>즐겨찾기</div>
+                <Link to="/board/toFreeBoardList"><div>자유게시판</div></Link>
+                <Link to="/board/toRoomBoardList"><div>양도게시판</div></Link>
+            </div>
+            <div className={fstyle.triangle}></div>
             <div className={fstyle.searchDiv}>
                 <div className={style.selectBox}>
                     <select onChange={categoryChange}>
                         {["전체게시물", "자유게시판", "양도게시판"].map((e, i) => {
                             return (
-                               category===e ? <option value={e} key={i} selected>{e}</option> : <option value={e} key={i}>{e}</option>
+                                category === e ? <option value={e} key={i} selected>{e}</option> : <option value={e} key={i}>{e}</option>
                             )
                         })}
                     </select>
                 </div>
                 <div className={style.searchBox}>
-                    <div>icon</div>
-                    <div>
-                        <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
+                    <div className={style.searchInput}>
+                        <div><FontAwesomeIcon icon={faMagnifyingGlass} size="xl" /></div>
+                        <div>
+                            <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
+                        </div>
                     </div>
                     <div>
                         <button onClick={() => { search() }}>Search</button>

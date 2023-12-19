@@ -1,6 +1,5 @@
 //
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import cookie from 'react-cookies';
 import { useState, useEffect } from "react";
 
 //
@@ -18,19 +17,24 @@ function List({ onDragEnd }) {
 
   // 전달된 데이터 추출
   const { markersInBounds } = location.state || {};
-
+ 
   // 마커를 클릭하면 해당 마커의 내용을 들고 정보(info)로 감
   // 마커를 클릭하여 쿠키에 정보 추가
-  const [recentlyViewed, setRecentlyViewed] = useState([]);
   const handleMarkerClick = (marker) => {
     navigate("/home/oneroom/info", { state: marker });
-    // 이전 배열의 복사본을 생성하고 새로운 marker를 추가
-  const updatedRecentlyViewed = [...recentlyViewed, marker];
+     // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+  const storedData = localStorage.getItem('watch');
+  const watchedProperties = storedData ? JSON.parse(storedData) : [];
 
-  // 최근 본 매물 배열 업데이트
-  setRecentlyViewed(updatedRecentlyViewed);
-   
-  };
+  // 새로운 마커의 estateId를 감시 중인 속성에 추가
+  const updatedWatchedProperties = [...new Set([marker.estateId, ...watchedProperties])];
+  // 감시 중인 속성을 최대 10개로 제한
+  if (updatedWatchedProperties.length > 10) {
+    updatedWatchedProperties.splice(10);
+  }
+  // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+  localStorage.setItem('watch', JSON.stringify(updatedWatchedProperties));
+};
   return (
     <div className={style.list_main}>
       <div className={style.list_cnt}>

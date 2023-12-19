@@ -1,7 +1,6 @@
 .container{
     overflow: auto;
-    width:1320px;
-    margin:80px 300px;
-    padding:0px 12px;
-    border:1px solid black;
+    width:80%;
+    margin:auto;
+    padding:12px;
 }

@@ -1,3 +1,18 @@
+@font-face {
+  font-family: "NanumBarunGothic";
+  src: url("./fonts/NanumBarunGothic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "NanumBarunGothicLight";
+  src: url("./fonts/NanumBarunGothicLight.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "NanumBarunGothicBold";
+  src: url("./fonts/NanumBarunGothicBold.ttf") format("truetype");
+}
+
 .body_form{
   position: relative;
   top: 80px;

@@ -2,3 +2,14 @@
     display: flex;
     justify-content: end;
 }
+
+.triangle{
+    width: 0;
+    height: 0;
+    border-bottom: 15px solid transparent;
+    border-top: 15px solid #A0A0A0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    margin-left:calc(50% - 10px);
+    margin-bottom:8px;
+}

@@ -2,7 +2,7 @@ import style from "./TopForm.module.css"
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from "../Enrollment/assets/logo.png";
+import logo from "../Enrollment/assets/logo2.png";
 import axios from 'axios';
 
 const TopForm = ({ setLoginId }) => {

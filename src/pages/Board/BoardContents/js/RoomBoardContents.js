@@ -31,7 +31,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
                 console.log(err);
             })
         }
-    }, [replyList.length])
+    }, [])
 
     // 댓글 추가
     const [insertReply, setInsertReply] = useState({ contents: "", parentSeq: seq });
@@ -167,24 +167,25 @@ const RoomBoardContents = ({ loginId, admin }) => {
             </div>
             <div className={style.boardContentsInfo}>
                 <div>
-                    작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""}
+                    작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""} | 조회수 {boardContents.viewCount}
                 </div>
                 <div>
                     {loginId === boardContents.writer || admin !== null ? <button onClick={() => { contentsDel(seq) }}>삭제</button> : ""}
                 </div>
             </div>
-            <div>
+            <div className={style.fileBox}>
+                <div>첨부파일 목록</div>
                 {
                     fileList.map((e, i) => {
                         return (
-                            <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>{e.oriName}</div>
+                            <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>파일 {i+1} | <span className={style.fileName}>{e.oriName}</span></div>
                         );
                     })
                 }
             </div>
             <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}>
             </div>
-            <div>
+            <div className={style.btns}>
                 <Link to="/board/toRoomBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button>뒤로가기</button></Link>
                 {loginId === boardContents.writer || admin !== null ?
                     <Link to="/board/toEditFreeBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> :
@@ -198,11 +199,11 @@ const RoomBoardContents = ({ loginId, admin }) => {
                         <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange} value={insertReply.contents} />
                     </div>
                 </div>
-                <div>
+                <div className={style.insertReplyBtn}>
                     <button onClick={insertReplyAdd}>등록</button>
                 </div>
             </div>
-            <hr />
+            <hr className={style.replyListStartHr}/>
             {
                 sliceReplyList().map((e, i) => {
                     if (i === 0) {
@@ -224,7 +225,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
                                             }
                                         </div>
                                         :
-                                        <div>
+                                        <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
                                                 <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
                                                 ""
@@ -252,7 +253,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
                                             }
                                         </div>
                                         :
-                                        <div>
+                                        <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
                                                 <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
                                                 ""

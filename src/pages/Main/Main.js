@@ -12,17 +12,27 @@ const Main = () => {
   const [mapList, setMapList] = useState([]);
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const chevronWidth = 40;
+  const [watch, setwatch] = useState([]);
 
   useEffect(() => {
+    const storedData = localStorage.getItem('watch');
+    const recent = JSON.parse(storedData);
     axios
-      .get(`/api/map/getAll`)
+      .get(`/api/map/getLimitAll`)
       .then((resp) => {
         setMapList(resp.data.sort(compareByestate_id));
       })
       .catch((err) => {
         console.log(err);
       })
+      axios.get(`/api/map/getWatchAll/${recent}`).then(resp => {
+        setwatch(resp.data);
+        console.log(resp.data);
+      }).catch(err => {
+        console.log(err);
+      })
   }, []);
+  
 
 
   // 내림차순 정렬
@@ -35,12 +45,12 @@ const Main = () => {
 
   // 게시글 목록 불러오기
   useEffect(() => {
-    axios.get(`/api/board/freeBoardList`).then(resp => {
+    axios.get(`/api/board/limitFreeBoardList`).then(resp => {
       setfreeBoard(resp.data.sort(compareBySeq));
     })
   }, []);
   useEffect(() => {
-    axios.get(`/api/board/roomBoardList`).then(resp => {
+    axios.get(`/api/board/limitRoomBoardList`).then(resp => {
       setroomBoard(resp.data.sort(compareBySeq));
     })
   }, [])
@@ -86,11 +96,19 @@ const Main = () => {
                 rightChevron={<button>{'>'}</button>}
                 outsideChevron
                 chevronWidth={chevronWidth}
-              >
-                <div style={{ height: 200, background: '#EEE' }}>First card</div>
-                <div style={{ height: 200, background: '#EEE' }}>Second card</div>
-                <div style={{ height: 200, background: '#EEE' }}>Third card</div>
-                <div style={{ height: 200, background: '#EEE' }}>Fourth card</div>
+              >{
+              watch.map((e, i) => {
+                return (
+                  <div>
+                    <div style={{ height: 200, background: '#EEE' }}>{e.estateId}</div>
+                  </div>
+                  
+                )
+
+              })
+              }
+                 
+                
               </ItemsCarousel>
             </div>
           </div>
@@ -135,9 +153,6 @@ const Main = () => {
             <div className={style.contents}>
               {
                 sliceRoomContentsList().map((e, i) => {
-                  if (i >= 6) {
-                    return
-                  }
                   return (
                     <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none", color: "black" }} state={{ sysSeq: e.seq }}>
                       <div className={style.cbgdiv} key={i} data-seq={e.seq}>
@@ -165,9 +180,6 @@ const Main = () => {
             <div className={style.contents}>
               {
                 sliceFreeContentsList().map((e, i) => {
-                  if (i >= 6) {
-                    return
-                  }
                   return (
                     <Link to={`/board/toFreeBoardContents/${(countPerPage * (currentPage - 1)) - i}`} style={{ textDecoration: "none", color: "black" }} state={{ oriSeq: freeboard.length - (i), sysSeq: e.seq }}>
                       <div className={style.cbgdiv} key={i} data-seq={e.seq}>
