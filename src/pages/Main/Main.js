@@ -12,8 +12,11 @@ const Main = () => {
   const [mapList, setMapList] = useState([]);
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const chevronWidth = 40;
+  const [watch, setwatch] = useState([]);
 
   useEffect(() => {
+    const storedData = localStorage.getItem('watch');
+    const recent = JSON.parse(storedData);
     axios
       .get(`/api/map/getAll`)
       .then((resp) => {
@@ -22,7 +25,14 @@ const Main = () => {
       .catch((err) => {
         console.log(err);
       })
+      axios.get(`/api/map/getWatchAll/${recent}`).then(resp => {
+        setwatch(resp.data);
+        console.log(resp.data);
+      }).catch(err => {
+        console.log(err);
+      })
   }, []);
+  
 
 
   // 내림차순 정렬
@@ -86,11 +96,19 @@ const Main = () => {
                 rightChevron={<button>{'>'}</button>}
                 outsideChevron
                 chevronWidth={chevronWidth}
-              >
-                <div style={{ height: 200, background: '#EEE' }}>First card</div>
-                <div style={{ height: 200, background: '#EEE' }}>Second card</div>
-                <div style={{ height: 200, background: '#EEE' }}>Third card</div>
-                <div style={{ height: 200, background: '#EEE' }}>Fourth card</div>
+              >{
+              watch.map((e, i) => {
+                return (
+                  <div>
+                    <div style={{ height: 200, background: '#EEE' }}>{e.estateId}</div>
+                  </div>
+                  
+                )
+
+              })
+              }
+                 
+                
               </ItemsCarousel>
             </div>
           </div>
