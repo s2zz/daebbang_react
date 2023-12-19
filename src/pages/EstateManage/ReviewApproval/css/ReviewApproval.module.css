@@ -1,3 +1,7 @@
+a {
+  text-decoration-line: none;
+}
+
 .container {
   width: 90%;
   margin: auto;

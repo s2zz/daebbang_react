@@ -64,6 +64,7 @@ function EstateBoard() {
         <td>{estate.title}</td>
         <td>{estate.contents}</td>
         <td>{estate.address1}</td>
+        <td>{estate.memo}</td>
         <td>
           <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><button>수정</button></Link>
           <button onClick={() => handleDelete(estate.estateId)}>삭제</button>
@@ -73,7 +74,8 @@ function EstateBoard() {
   }
 
   return (
-    <div className={style.container}>
+    <>
+      <h1 className={style.bigTitle}>매물관리</h1>
       <table className={style.estateTable}>
         <thead>
           <tr>
@@ -82,7 +84,7 @@ function EstateBoard() {
             <th>제목</th>
             <th>설명</th>
             <th>위치</th>
-            <th> </th>
+            <th>메모</th>
           </tr>
         </thead>
         <tbody>
@@ -94,7 +96,8 @@ function EstateBoard() {
         {pagenation()}
       </div>
       <Link to={`/estateManage/estateInsert`}><button>방 내놓기</button></Link>
-    </div>
+      <Link to={`/estateManage/reviewApproval`}><button>리뷰 관리</button></Link>
+    </>
   );
 }
 

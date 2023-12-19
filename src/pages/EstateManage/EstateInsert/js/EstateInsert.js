@@ -36,7 +36,7 @@ function EstateInsert() {
     buildingFloors: "",
     title: "",
     contents: "",
-    writer:"",
+    writer: "",
     memo: ""
   });
 
@@ -66,7 +66,7 @@ function EstateInsert() {
     const formData = new FormData();
 
     const imageLength = estateImages.length;
-    
+
     if (imageLength < 3 || imageLength > 10) {
       alert("사진을 3장 이상 10장 이하로 등록해주세요.");
       return false;
@@ -94,18 +94,18 @@ function EstateInsert() {
   }
 
   return (
-    <div className={style.container}>
+    <>
       <h1 className={style.bigTitle}>방내놓기</h1>
       <p className={style.explanation}>전/ 월세 매물만 등록할 수 있습니다.</p>
       <p className={style.explanation}>주소를 다르게 입력할 경우 허위매물로 신고될 수 있으니 꼭 동일하게 입력 바랍니다.</p>
       <EstateInsert1 realEstate={realEstate} setRealEstate={setRealEstate} />
       <EstateInsert2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
-      <EstateInsert3 setRealEstate={setRealEstate} estateImages={estateImages} setEstateImages={setEstateImages} />
+      <EstateInsert3 setRealEstate={setRealEstate} setEstateImages={setEstateImages} />
       <div className={style.buttonDiv}>
         <button onClick={handleReturn}>이전으로</button>
         <button onClick={handleSubmit}>다음으로</button>
       </div>
-    </div>
+    </>
   );
 }
 

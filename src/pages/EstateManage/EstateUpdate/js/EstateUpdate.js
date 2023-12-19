@@ -14,6 +14,8 @@ function EstateUpdate() {
   const [optionList, setOptionList] = useState([]);
   // 이미지 파일
   const [estateImages, setEstateImages] = useState([]);
+  // 임시 이미지
+  const [tempImages, setTempImages] = useState([]);
   // 관리비 유무
   const [maintenanceOption, setMaintenanceOption] = useState("true");
 
@@ -37,6 +39,7 @@ function EstateUpdate() {
     buildingFloors: "",
     title: "",
     contents: "",
+    writer: "",
     memo: ""
   });
 
@@ -67,11 +70,15 @@ function EstateUpdate() {
 
     const imageLength = estateImages.length;
 
-    if (imageLength < 3 || imageLength > 10) {
-      alert("사진을 3장 이상 10장 이하로 등록해주세요.");
-      return false;
+    // 이미지를 삽입했을 경우
+    if (imageLength > 0) {
+      // 3장 이상 10장 이하로 넣어야만 함
+      if (imageLength < 3 || imageLength > 10) {
+        alert("사진을 3장 이상 10장 이하로 등록해주세요.");
+        return false;
+      }
     }
-    
+
     formData.append('realEstate', JSON.stringify(realEstate));
     formData.append('optionList', JSON.stringify(optionList));
 
@@ -90,32 +97,74 @@ function EstateUpdate() {
       })
       .catch(error => {
         console.error("Error:", error);
+        console.log(formData);
       });
   }
 
   useEffect(() => {
-    axios.get(`/api/estateManage/estateUpdate/${estateId}`)
+    axios.get(`/api/estateManage/estateInfo/${estateId}`)
       .then(resp => {
         console.log("Fetched data:", resp.data);
-        
-        setRealEstate(resp.data);
+
+        setRealEstate({
+          roomCode: resp.data.room.roomId,
+          structureCode: resp.data.structure.structureId,
+          buildingCode: resp.data.building.buildingId,
+          heatingCode: resp.data.heatingSystem.heatingId,
+          area: resp.data.area,
+          zipcode: resp.data.zipcode,
+          address1: resp.data.address1,
+          address2: resp.data.address2,
+          latitude: resp.data.latitude,
+          longitude: resp.data.longitude,
+          transactionCode: resp.data.transaction.transactionId,
+          deposit: resp.data.deposit,
+          price: resp.data.price,
+          maintenanceCost: resp.data.maintenanceCost,
+          roomFloors: resp.data.roomFloors,
+          buildingFloors: resp.data.buildingFloors,
+          title: resp.data.title,
+          contents: resp.data.contents,
+          writer: resp.data.writer,
+          memo: resp.data.memo
+        });
+
+        setOptionList(resp.data.optionList.map((option) => option.optionTitle.optionId));
+
+        if (resp.data.maintenanceCost === 0) {
+          setMaintenanceOption("false");
+        } else {
+          setMaintenanceOption("true");
+        }
+
+        // 이미지 태그를 상태에 설정
+        setTempImages(resp.data.images);
       })
       .catch(error => {
         console.error("Error fetching data:", error);
       });
   }, [estateId]);
 
+  const Loading = realEstate.images !== "";
+
   return (
-    <div className={style.container}>
-      <h1 className={style.bigTitle}>정보수정</h1>
-      <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
-      <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
-      <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} estateImages={estateImages} setEstateImages={setEstateImages} />
-      <div className={style.buttonDiv}>
-        <button onClick={handleReturn}>이전으로</button>
-        <button onClick={handleSubmit}>다음으로</button>
-      </div>
-    </div>
+    <>
+      {Loading ? (
+        <>
+          <h1 className={style.bigTitle}>정보수정</h1>
+          <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
+          <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
+          <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
+          <div className={style.buttonDiv}>
+            <button onClick={handleReturn}>이전으로</button>
+            <button onClick={handleSubmit}>다음으로</button>
+          </div>
+        </>
+      ) : (
+        <p>Loading...</p>
+      )
+      }
+    </>
   );
 }
 

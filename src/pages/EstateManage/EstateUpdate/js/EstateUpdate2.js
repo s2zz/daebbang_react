@@ -1,6 +1,6 @@
 import style from '../css/EstateUpdate.module.css';
 
-function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOption, setMaintenanceOption }) {
+function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, maintenanceOption, setMaintenanceOption }) {
 
   const handleMaintenanceChange = (e) => {
     setMaintenanceOption(e.target.value);
@@ -46,7 +46,7 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
           <td>
             <input type="radio" id="t1" name="transactionCode" value="t1" onChange={handleChange} checked={realEstate.transactionCode === "t1"} /><label for="t1">월세</label>
             <input type="radio" id="t2" name="transactionCode" value="t2" onChange={handleChange} checked={realEstate.transactionCode === "t2"} /><label for="t2">전세</label>
-            {realEstate.transactionCode === 't1' && <span><input type="checkbox" id="o1" name="optionCode" value="o1" onChange={handleOptionCode} /><label for="o1">단기가능</label></span>}
+            {realEstate.transactionCode === 't1' && <span><input type="checkbox" id="o1" name="optionCode" value="o1" onChange={handleOptionCode} checked={optionList.includes("o1")}/><label for="o1">단기가능</label></span>}
           </td>
         </tr>
         <tr>
@@ -103,8 +103,8 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
         <tr>
           <th>옵션항목</th>
           <td>
-            <input type="checkbox" id="o2" name="optionCode" value="o2" onChange={handleOptionCode} /><label for="o2">주차장</label>
-            <input type="checkbox" id="o3" name="optionCode" value="o3" onChange={handleOptionCode} /><label for="o3">엘리베이터</label>
+            <input type="checkbox" id="o2" name="optionCode" value="o2" onChange={handleOptionCode} checked={optionList.includes("o2")}/><label for="o2">주차장</label>
+            <input type="checkbox" id="o3" name="optionCode" value="o3" onChange={handleOptionCode} checked={optionList.includes("o3")}/><label for="o3">엘리베이터</label>
             {/* <input type="checkbox" /><label>반려동물</label>
             <input type="checkbox" /><label>베란다/발코니</label>
             <input type="checkbox" /><label>에어컨</label>
@@ -127,4 +127,4 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
   );
 }
 
-export default EstateInsert2;
+export default EstateUpdate2;

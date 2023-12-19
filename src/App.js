@@ -5,7 +5,6 @@ import TopForm from './pages/commons/TopForm';
 import Home from './pages/Home/Home';
 import Board from './pages/Board/Board';
 import Admin from './pages/Admin/Admin';
-import EstateManage from './pages/EstateManage/js/EstateManage';
 import Login from './pages/Login/Login';
 import Enrollment from './pages/Enrollment/Enrollment';
 import SignUp from './pages/SignUp/SignUp';
@@ -16,7 +15,7 @@ import FindPw from './pages/Login/FindPw/FindPw';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import Review from './pages/Review/Review';
-import EstateAgent from './pages/EstateAgent/js/EstateAgent';
+import EstateManage from './pages/EstateManage/js/EstateManage';
 
 function App() {
   const storedLoginId = sessionStorage.getItem('loginId');
@@ -36,7 +35,6 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/home/*" element={<Home />} />
           <Route path="/board/*" element={<Board loginId={storedLoginId} admin={isAdmin}/>} />
-          <Route path="/estateManage/*" element={<EstateManage />} />
           <Route path="/login/*" element={<Login/>} />
           <Route path="/login/findId/*" element={<FindId/>} />
           <Route path="/login/findPw/*" element={<FindPw/>} />
@@ -45,7 +43,7 @@ function App() {
           <Route path="/admin/*" element={isAdmin?<Admin />:<Navigate to="/" replace/>} />
           <Route path="/enrollment/*" element={<Enrollment />} />
           <Route path="/review/*" element={<Review />} />
-          <Route path="/estateAgent/*" element={<EstateAgent />} />
+          <Route path="/estateManage/*" element={<EstateManage />} />
         </Routes>
         </div>
       </div>

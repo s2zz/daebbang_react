@@ -34,17 +34,39 @@ const Notification = () => {
     const handlePageChange = (newPage) => {
         setPage(newPage);
     };
-    // const handleReturn = (seq) => {
-    //   const confirmReturn = window.confirm('반려하시겠습니까?');
-
-    //   if (handleReturn) {
-    //     const updatedContacts = contacts.filter((contact) => contact.seq !== seq);
-    //     setContacts(updatedContacts);
-    //     setTotalRows(updatedContacts.length);
-
-    //     axios.put(`/api/reviewApproval/admin/return/${seq}`);
-    //   }
-    // };
+    //최종 반려
+    const handleFinalReturn = (seq, approvalCode) => {
+        console.log(approvalCode);
+        const confirmationMessage = approvalCode === 'a4' ? '최종 반려 취소하시겠습니까?' : '최종 반려하시겠습니까?';
+        const confirmReturn = window.confirm(confirmationMessage);
+    
+        if (confirmReturn) {
+            const updatedContacts = contacts.map((contact) => {
+                if (contact.seq === seq) {
+                    return { ...contact, approvalCode: approvalCode === 'a4' ? 'a2' : 'a4' };
+                }
+                return contact;
+            });
+            setContacts(updatedContacts); // 상태 변경
+    
+            const endpoint = approvalCode === 'a4'
+                ? `/api/reviewApproval/admin/revoke-approval/${seq}` // 반려 취소
+                : `/api/reviewApproval/admin/finalBack/${seq}`; // 반려
+                const newApprovalCode = approvalCode === 'a2' ? 'a4' : 'a2'; 
+            axios.put(endpoint, { approvalCode: newApprovalCode })
+                .then((response) => {
+                    console.log(`Return ${approvalCode === 'a4' ? 'successful' : 'revoked'} for ${seq}`);
+                    // 데이터를 다시 가져와서 화면을 업데이트
+                    fetchData();
+                })
+                .catch((error) => {
+                    console.error(`Error while ${approvalCode === 'a4' ? 'returning' : 'revoking return'}:`, error);
+                });
+        } else {
+            console.log('Return action cancelled');
+        }
+    };
+    //반려
     const handleReturn = (seq, approvalCode) => {
         console.log(approvalCode);
         const confirmationMessage = approvalCode === 'b1' ? '반려 취소하시겠습니까?' : '반려하시겠습니까?';
@@ -77,24 +99,20 @@ const Notification = () => {
         }
     };
     
-    
-
-
     const handleApproval = (seq, approvalCode) => {
         const confirmationMessage = approvalCode === 'a2' ? '승인하시겠습니까?' : '승인을 취소하시겠습니까?';
         const confirmed = window.confirm(confirmationMessage);
 
         if (confirmed) {
             const endpoint = approvalCode === 'a2'
-                ? `/api/reviewApproval/admin/approval/${seq}` // a2이면 승인
-                : `/api/reviewApproval/admin/revoke-approval/${seq}`; // a3이면 취소
+                ? `/api/reviewApproval/admin/approval/${seq}`
+                : `/api/reviewApproval/admin/revoke-approval/${seq}`; 
 
-            const newApprovalCode = approvalCode === 'a2' ? 'a3' : 'a2'; // 승인/취소 코드 변경
+            const newApprovalCode = approvalCode === 'a2' ? 'a3' : 'a2';
 
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
                     console.log(`Approval ${approvalCode === 'a2' ? 'successful' : 'revoked'} for ${seq}`);
-                    // 데이터를 다시 가져와서 화면을 업데이트
                     fetchData();
                 })
                 .catch((error) => {
@@ -109,34 +127,34 @@ const Notification = () => {
     const approvalButton = (seq, approvalCode) => (
         <Button
             variant="outlined"
-            color={approvalCode === 'a2' ? 'primary' : 'secondary'} // a2인 경우 승인 버튼(primary), 그 외는 승인 취소 버튼(secondary)
+            color={approvalCode === 'a2' ? 'primary' : 'secondary'}
             onClick={() => handleApproval(seq, approvalCode)}
-            disabled={approvalCode === 'b1'}
+            disabled={approvalCode === 'b1' || approvalCode === 'a4'}
         >
             {approvalCode === 'a2' ? '승인' : '승인 취소'}
         </Button>
     );
 
-
-    // const returnButton = (seq) => (
-    //   <Button variant="outlined" color="error" onClick={() => handleReturn(seq)}>
-    //     반려
-    //   </Button>
-    // );
     const returnButton = (seq, approvalCode) => (
         <Button
             variant="outlined"
             color={approvalCode === 'b1' ? 'primary' : 'secondary'}
             onClick={() => handleReturn(seq, approvalCode)}
+            disabled={approvalCode === 'a4'}
         >
             {approvalCode === 'b1' ? '반려 취소' : '반려'}
         </Button>
     );
+    const finalreturnButton = (seq, approvalCode) => (
+        <Button
+            variant="outlined"
+            color={approvalCode === 'a4' ? 'primary' : 'secondary'}
+            onClick={() => handleFinalReturn(seq, approvalCode)}
+        >
+            {approvalCode === 'a4' ? '최종 반려 취소' : '최종 반려'}
+        </Button>
+    );
     
-
-
-
-
     const toggleEnabled = (seq) => {
         const updatedContacts = contacts.map((contact) => {
             if (contact.seq === seq) {
@@ -151,7 +169,8 @@ const Notification = () => {
     const columns = [
         { field: 'seq', headerName: 'Seq', width: 90, headerAlign: "center", align: "center" },
         { field: 'userId', headerName: 'UserId', width: 100, headerAlign: "center", align: "center" },
-        { field: 'estateCode', headerName: 'EstateCode', width: 100, headerAlign: "center", align: "center" },
+        { field: 'estateName', headerName: 'EstateName', width: 200, headerAlign: "center", align: "center" },
+        { field: 'estateCode', headerName: 'EstateCode', width: 110, headerAlign: "center", align: "center" },
         { field: 'approvalCode', headerName: 'ApprovalCode', width: 110, headerAlign: "center", align: "center" },
         {
             field: 'approval',
@@ -161,7 +180,8 @@ const Notification = () => {
             width: 120,
             renderCell: (params) => approvalButton(params.row.seq, params.row.approvalCode),
         },
-        { field: 'return', headerName: 'Return', headerAlign: "center", align: "center", width: 100, renderCell: (params) => { return returnButton(params.row.seq, params.row.approvalCode); }, }
+        { field: 'return', headerName: 'Return', headerAlign: "center", align: "center", width: 100, renderCell: (params) => { return returnButton(params.row.seq, params.row.approvalCode); }, },
+        { field: 'finalback', headerName: 'FinalReturn', headerAlign: "center", align: "center", width: 140, renderCell: (params) => { return finalreturnButton(params.row.seq, params.row.approvalCode); }, }
 
     ];
 

@@ -1,16 +1,21 @@
 import { Route, Routes } from 'react-router-dom';
+import EstateBoard from '../EstateBoard/js/EstateBoard';
 import EstateInsert from '../EstateInsert/js/EstateInsert';
 import EstateUpdate from '../EstateUpdate/js/EstateUpdate';
-import EstateBoard from '../EstateBoard/js/EstateBoard';
+import ReviewApproval from '../ReviewApproval/js/ReviewApproval';
+import EstateInfo from '../EstateInfo/js/EstateInfo';
+import style from '../css/EstateManage.module.css';
 
 const EstateManage = () => {
     return (
-        <div>
+        <div className={style.container}>
             <div>
                 <Routes>
                     <Route path="/" element={<EstateBoard />}></Route>
                     <Route path="/estateInsert" element={<EstateInsert />}></Route>
                     <Route path="/estateUpdate/:estateId" element={<EstateUpdate />}></Route>
+                    <Route path="/reviewApproval" element={<ReviewApproval />}></Route>
+                    <Route path="/estateInfo/:estateId" element={<EstateInfo />}></Route>
                 </Routes>
             </div>
         </div >
