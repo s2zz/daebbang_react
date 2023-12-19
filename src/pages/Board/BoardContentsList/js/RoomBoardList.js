@@ -6,6 +6,8 @@ import notFavorite from "../../assets/notFavorite.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 const RoomBoardList = () => {
     const location = useLocation();
@@ -115,20 +117,28 @@ const RoomBoardList = () => {
         }
     }
 
+    const noBoardContents = () => {
+        return (
+            <div className={style.noBoardContents}>
+                게시글이 없습니다.
+            </div>
+        );
+    }
+
     const contentslist = () => {
         if (completeSearchText !== "") {
-            return sliceContentsList(searchBoard).map(boardItem);
+            return searchBoard.length === 0 ? noBoardContents() : sliceContentsList(searchBoard).map(boardItem);
         } else if (category !== "전체게시물") {
-            return sliceContentsList(categoryBoard).map(boardItem);
+            return categoryBoard.length === 0 ? noBoardContents() : sliceContentsList(categoryBoard).map(boardItem);
         } else {
-            return sliceContentsList(board).map(boardItem);
+            return board.length === 0 ? noBoardContents() : sliceContentsList(board).map(boardItem);
         }
     }
 
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..."/>}</div>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." />}</div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
@@ -138,13 +148,20 @@ const RoomBoardList = () => {
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>
+                <div>{e.viewCount}</div>
             </div>
         );
     }
     return (
         <>
-            <div className={style.boardTitle}>양도게시판</div>
+            <div className={style.boardTitle}>게시판</div>
             <hr></hr>
+            <div className={style.selectBoard}>
+                <Link to="/board/toFavoriteBoardList"><div>즐겨찾기</div></Link>
+                <Link to="/board/toFreeBoardList"><div>자유게시판</div></Link>
+                <div>양도게시판</div>
+            </div>
+            <div className={roomStyle.triangle}></div>
             <div className={roomStyle.searchDiv}>
                 <div className={style.selectBox}>
                     <select onChange={categoryChange}>
@@ -156,22 +173,26 @@ const RoomBoardList = () => {
                     </select>
                 </div>
                 <div className={style.searchBox}>
-                    <div>icon</div>
-                    <div>
-                        <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
+                    <div className={style.searchInput}>
+                        <div><FontAwesomeIcon icon={faMagnifyingGlass} size="xl" /></div>
+                        <div>
+                            <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
+                        </div>
                     </div>
                     <div>
                         <button onClick={() => { search() }}>Search</button>
                     </div>
                 </div>
             </div>
+
             <div className={style.boardContentsBox}>
                 <div className={style.boardInfo}>
-                    <div><img src={notFavorite} alt="..."/></div>
+                    <div><img src={notFavorite} alt="..." /></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
                     <div>날짜</div>
+                    <div>조회수</div>
                 </div>
                 <div className={style.boardListContents}>
                     {contentslist()}

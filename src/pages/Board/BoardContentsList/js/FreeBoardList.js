@@ -6,6 +6,8 @@ import notFavorite from "../../assets/notFavorite.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 const FreeBoardList = () => {
     const location = useLocation();
@@ -21,7 +23,7 @@ const FreeBoardList = () => {
     useEffect(() => {
         axios.get(`/api/board/freeBoardList`).then(resp => {
             setBoard(resp.data.sort(compareBySeq));
-            if(searchText!==""){
+            if (searchText !== "") {
                 setSearchBoard(resp.data.sort(compareBySeq).filter(e => e.contents.includes(searchText) || e.title.includes(searchText)));
             }
         })
@@ -78,42 +80,70 @@ const FreeBoardList = () => {
     }
 
     // 검색 기능
+    const [completeSearchText, setCompleteSearchText] = useState("");
     const handleSearchChange = (e) => {
+        setCompleteSearchText("");
         setSearchText(e.target.value);
     }
 
     const search = () => {
         setCurrentPage(1);
+        setCompleteSearchText(searchText);
         searchText === "" ?
             setSearchBoard([]) :
             setSearchBoard(board.filter(e => e.contents.includes(searchText) || e.title.includes(searchText)));
     }
 
+    const noBoardContents = () => {
+        return (
+            <div className={style.noBoardContents}>
+                게시글이 없습니다.
+            </div>
+        );
+    }
+
+    const contentslist = () => {
+        if (completeSearchText === "" && searchBoard.length === 0) {
+            return board.length === 0 ? noBoardContents() : sliceContentsList().map(boardItem);
+        } else {
+            return searchBoard.length === 0 ? noBoardContents() : sliceSearchContentsList().map(boardItem);
+        }
+    }
+
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..."/> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..."/>}</div>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." />}</div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
-                    <Link to={`/board/toFreeBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq, searchText:searchText }}>
+                    <Link to={`/board/toFreeBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq, searchText: searchText }}>
                         {e.title.length > 80 ? e.title.substring(0, 80) + "..." : e.title}
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>
+                <div>{e.viewCount}</div>
             </div>
         );
     }
 
     return (
         <>
-            <div className={style.boardTitle}>자유게시판</div>
+            <div className={style.boardTitle}>게시판</div>
             <hr></hr>
+            <div className={style.selectBoard}>
+                <Link to="/board/toFavoriteBoardList"><div>즐겨찾기</div></Link>
+                <div>자유게시판</div>
+                <Link to="/board/toRoomBoardList"><div>양도게시판</div></Link>
+            </div>
+            <div className={freeStyle.triangle}></div>
             <div className={freeStyle.searchDiv}>
                 <div className={style.searchBox}>
-                    <div>icon</div>
-                    <div>
-                        <input placeholder="검색어" onChange={handleSearchChange}  value={searchText}/>
+                    <div className={style.searchInput}>
+                        <div><FontAwesomeIcon icon={faMagnifyingGlass} size="xl" /></div>
+                        <div>
+                            <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
+                        </div>
                     </div>
                     <div>
                         <button onClick={() => { search() }}>Search</button>
@@ -122,18 +152,15 @@ const FreeBoardList = () => {
             </div>
             <div className={style.boardContentsBox}>
                 <div className={style.boardInfo}>
-                    <div><img src={notFavorite} alt="..."/></div>
+                    <div><img src={favorite} alt="..." /></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
                     <div>날짜</div>
+                    <div>조회수</div>
                 </div>
                 <div className={style.boardListContents}>
-                    {
-                        searchBoard.length === 0?
-                            sliceContentsList().map(boardItem) :
-                            sliceSearchContentsList().map(boardItem)
-                    }
+                    {contentslist()}
                 </div>
             </div>
             <div className={style.writeBtnDiv}>
@@ -141,9 +168,9 @@ const FreeBoardList = () => {
             </div>
             <div className={style.naviFooter}>
                 {
-                    searchBoard.length === 0 ? 
-                    <Pagination count={Math.ceil(board.length / countPerPage)} page={currentPage} onChange={currentPageHandle}/> :
-                    <Pagination count={Math.ceil(searchBoard.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />
+                    searchBoard.length === 0 ?
+                        <Pagination count={Math.ceil(board.length / countPerPage)} page={currentPage} onChange={currentPageHandle} /> :
+                        <Pagination count={Math.ceil(searchBoard.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />
                 }
             </div>
 
