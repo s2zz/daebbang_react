@@ -27,8 +27,6 @@ const Post = (props) => {
             address1: fullAddress,
             address2: data.sigungu + data.bname1 + " " + data.bname2
         })
-
-        console.log(props.company);
     }
 
     return (

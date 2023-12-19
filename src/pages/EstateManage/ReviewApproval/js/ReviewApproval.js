@@ -52,10 +52,10 @@ function ReviewApproval() {
   const boardItem = (item, i) => {
     const handleApproval = () => {
       const updatedReviewApproval = [...reviewApproval];
-      if (item.approvalCode === 'a1') {
-        updatedReviewApproval[i] = { ...item, approvalCode: 'a2' };
-      } else {
+      if (item.approvalCode === 'a2') {
         updatedReviewApproval[i] = { ...item, approvalCode: 'a1' };
+      } else {
+        updatedReviewApproval[i] = { ...item, approvalCode: 'a2' };
       }
 
       setReviewApproval(updatedReviewApproval);
@@ -67,6 +67,17 @@ function ReviewApproval() {
         .catch(error => {
           console.error("Error:", error);
         });
+    };
+
+    const getApprovalStatus = () => {
+      if (item.approvalCode === 'a1') {
+        return '미결';
+      } else if (item.approvalCode === 'a2') {
+        return '공인중개사 승인';
+      } else if (item.approvalCode === 'a4') {
+        return '취소';
+      }
+      return '';
     };
 
     const handleCancel = () => {
@@ -94,9 +105,9 @@ function ReviewApproval() {
         <td>{item.seq}</td>
         <td>{item.userId}</td>
         <td><Link to={`/estateManage/estateInfo/${item.estateCode}`}>{item.estateCode}</Link></td>
-        <td>{item.approvalCode}</td>
+        <td>{getApprovalStatus()}</td>
         <td>
-          <button onClick={handleApproval}>리뷰 권한 부여</button>
+          <button onClick={handleApproval}>권한 부여</button>
           <button onClick={handleCancel}>취소</button>
         </td>
       </tr>
@@ -105,6 +116,7 @@ function ReviewApproval() {
 
   return (
     <div className={style.container}>
+      <h1 className={style.bigTitle}>리뷰 관리</h1>
       <table className={style.estateTable}>
         <thead>
           <tr>
@@ -123,6 +135,7 @@ function ReviewApproval() {
       <div className={style.naviFooter}>
         {pagenation()}
       </div>
+      <Link to={`/estateManage/`}><button>매물 관리</button></Link>
     </div>
   );
 }

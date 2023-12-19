@@ -1,10 +1,17 @@
-import style from '../css/EstateInsert.module.css';
+import style from '../css/EstateInfo.module.css';
 
 function EstateInfo2({ realEstate }) {
 
   const hasOption = (optionCode) => {
     return realEstate.optionList.some(option => option.optionCode === optionCode);
   };
+
+  const renderAllOptionTitles = () => {
+    return realEstate.optionList.map(option => (
+      <span key={option.optionCode}>{option.optionTitle.optionName}</span> 
+    ));
+  };
+
   return (
     <>
       <div className={style.titleDiv}>
@@ -58,8 +65,7 @@ function EstateInfo2({ realEstate }) {
         <tr>
           <th>옵션항목</th>
           <td>
-          {hasOption('o2') ? "주차장" : ""}
-          {hasOption('o3') ? "엘리베이터" : ""}
+          {realEstate.optionList.length > 0 ? renderAllOptionTitles() : "옵션 없음"}
           </td>
         </tr>
       </table>

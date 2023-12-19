@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import style from '../css/EstateInsert.module.css';
-import { useNavigate, useParams } from "react-router-dom";
+import style from '../css/EstateInfo.module.css';
+import { useNavigate, useParams  } from "react-router-dom";
 import EstateInfo1 from './EstateInfo1';
 import EstateInfo2 from './EstateInfo2';
 import EstateInfo3 from './EstateInfo3';
@@ -33,7 +33,7 @@ function EstateInsert() {
   });
 
   const handleReturn = () => {
-    navi("/EstateManage/reviewApproval");
+    navi(-1);
   }
 
   useEffect(() => {

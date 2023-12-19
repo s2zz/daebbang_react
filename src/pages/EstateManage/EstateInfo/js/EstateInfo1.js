@@ -1,6 +1,4 @@
-import { useState } from "react";
-import Post from '../../js/Post';
-import style from '../css/EstateInsert.module.css';
+import style from '../css/EstateInfo.module.css';
 
 function EstateInfo1({ realEstate }) {
 

@@ -108,7 +108,7 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
       address2: realEstate.address2
     }));
 
-    setAreas({squareMeter: realEstate.area * 3.30578.toFixed(2)});
+    setAreas({ squareMeter: (realEstate.area * 3.30578).toFixed(2) });
 
     setIsLoading(false); // 로딩 상태 변경
   }, [realEstate.address1, enroll_company.address1]);
@@ -153,10 +153,10 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
               <td>
                 <div>
                   <div>
-                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
+                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} readOnly />
                   </div>
                   <div>
-                    <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={enroll_company.address1} />
+                    <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={enroll_company.address1} readOnly />
                   </div>
                   {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
                 </div>
