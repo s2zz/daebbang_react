@@ -188,7 +188,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
             <div className={style.btns}>
                 <Link to="/board/toRoomBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button>뒤로가기</button></Link>
                 {loginId === boardContents.writer || admin !== null ?
-                    <Link to="/board/toEditFreeBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> :
+                    <Link to="/board/toEditRoomBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> :
                     ""
                 }
             </div>

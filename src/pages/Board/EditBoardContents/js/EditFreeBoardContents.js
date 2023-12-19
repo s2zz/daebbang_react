@@ -10,33 +10,33 @@ const EditFreeBoardContents = () => {
     const navi = useNavigate();
     const quillRef = useRef();
     const [formData, setFormData] = useState({
-        set:0,
+        set: 0,
         title: "",
         contents: "",
-        files: []
+        files: {}
     });
     const [fileList, setFileList] = useState([{}]);
-    const [sysNameList,setSysNameList] = useState([]);
+    const [sysNameList, setSysNameList] = useState([]);
     // 게시글 내용 받아오기
-    useEffect(()=>{
-        axios.get(`/api/board/boardContents/${location.state.sysSeq}`).then(resp=>{
-            setFormData(prev=>({...prev,title:resp.data.title,contents:resp.data.contents,seq:resp.data.seq}));
+    useEffect(() => {
+        axios.get(`/api/board/boardContents/${location.state.sysSeq}`).then(resp => {
+            setFormData(prev => ({ ...prev, title: resp.data.title, contents: resp.data.contents, seq: resp.data.seq }));
             setFileList(resp.data.files);
-            setSysNameList(prev=>existImgSearch(resp.data.contents));
+            setSysNameList(prev => existImgSearch(resp.data.contents));
         }).catch(err => {
             console.log(err);
         })
-    },[]);
+    }, []);
 
     const handleFileChange = (e) => {
-        setFormData(prev => ({ ...prev, files: [...prev.files, e.target.files[0]] }));
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: e.target.files[0] } }));
     }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     }
-    
+
 
     const imageHandler = (file) => {
         // 이미지 선택 창 나타나게 하기
@@ -60,10 +60,10 @@ const EditFreeBoardContents = () => {
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev=>[...prev,imgUrl.data[i].split("/uploads/board/")[1]]);
+                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
                     editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
                 }
-                
+
             } catch (error) {
                 console.log(error);
             }
@@ -83,23 +83,23 @@ const EditFreeBoardContents = () => {
     let submitImgSearch = (uploadList, sysNameList) => { // 삭제된 이미지 태그 뽑아내기
         let exist = false;
         let delImgList = [];
-        for(let i=0;i<sysNameList.length;i++){
-            for(let j=0;j<uploadList.length;j++){
-                if(sysNameList[i] === uploadList[j]){
+        for (let i = 0; i < sysNameList.length; i++) {
+            for (let j = 0; j < uploadList.length; j++) {
+                if (sysNameList[i] === uploadList[j]) {
                     exist = true;
                     break;
                 }
             }
-            exist ? exist=false : delImgList.push(sysNameList[i]);
+            exist ? exist = false : delImgList.push(sysNameList[i]);
         }
         return delImgList;
     }
 
-    const [delFileList,setDelFileList] =useState([]);
+    const [delFileList, setDelFileList] = useState([]);
     const handleRemoveFileChange = (sysName) => {
-        if(window.confirm("파일을 정말 삭제하시겠습니까?")){
-            setDelFileList(prev=>[...prev,sysName]);
-            setFileList(fileList.filter(e=>e.sysName!==sysName));
+        if (window.confirm("파일을 정말 삭제하시겠습니까?")) {
+            setDelFileList(prev => [...prev, sysName]);
+            setFileList(fileList.filter(e => e.sysName !== sysName));
             alert("삭제되었습니다");
         }
     }
@@ -108,7 +108,7 @@ const EditFreeBoardContents = () => {
         console.log(delFileList);
 
         let existImgList = existImgSearch(formData.contents);
-        let delImgList = submitImgSearch(existImgList,sysNameList);
+        let delImgList = submitImgSearch(existImgList, sysNameList);
 
         if (formData.title === "") {
             alert("제목을 입력해주세요");
@@ -135,22 +135,37 @@ const EditFreeBoardContents = () => {
         submitFormData.append("seq", formData.seq);
         submitFormData.append("title", formData.title);
         submitFormData.append("contents", formData.contents);
-        submitFormData.append("delImgList",delImgList);
-        submitFormData.append("delFileList",delFileList);
+        submitFormData.append("delImgList", delImgList);
+        submitFormData.append("delFileList", delFileList);
 
-        formData.files.forEach((e) => {
-            console.log(e.oriName+"oriName");
-            submitFormData.append("files", e);
+        let fileList = Object.values(formData.files);
+
+        fileList.forEach((e) => {
+            if (e !== "" && e instanceof File) {
+                submitFormData.append("files", e);
+            }
         });
 
         axios.put("/api/board", submitFormData).then(resp => {
             alert("게시글 수정에 성공하였습니다");
-            navi("/board/toFreeBoardContents",{state:{sysSeq:location.state.sysSeq}});
+            navi("/board/toFreeBoardContents", { state: { sysSeq: location.state.sysSeq } });
         }).catch(err => {
             alert("게시글 수정에 실패하였습니다");
             console.log(err);
         })
     }
+
+    const numberOfInputs = 5 - fileList.length;
+    const fileListDiv = () => (
+        <>
+            {[...Array(numberOfInputs)].map((_, index) => (
+                <div key={index}>
+                    <input type="file" onChange={handleFileChange} name={`files${index}`}/>
+                </div>
+            ))}
+        </>
+    )
+
 
     const modules = useMemo(() => ({
         toolbar: {
@@ -190,26 +205,22 @@ const EditFreeBoardContents = () => {
             <div>
                 <div>제목</div>
                 <div>
-                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title}/>
+                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} />
                 </div>
             </div>
             <div>
                 <div>파일 목록</div>
                 {
-                    fileList.map((e,i)=>{
+                    fileList.map((e, i) => {
                         return (
-                            <div key={i}>{e.oriName}<span onClick={()=>{handleRemoveFileChange(e.sysName)}}>x</span></div>
+                            <div key={i}>{e.oriName}<span onClick={() => { handleRemoveFileChange(e.sysName) }}>x</span></div>
                         );
                     })
                 }
             </div>
             <div>
                 <div>파일첨부</div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
+                {fileListDiv()}
             </div>
             <div>
                 <div>내용</div>
@@ -220,7 +231,7 @@ const EditFreeBoardContents = () => {
             </div>
 
             <div>
-                <Link to="/board/toFreeBoardContents" state={{sysSeq:location.state.sysSeq}}><button>작성 취소</button></Link>
+                <Link to="/board/toFreeBoardContents" state={{ sysSeq: location.state.sysSeq }}><button>작성 취소</button></Link>
                 <button onClick={handleAdd}>수정 완료</button>
             </div>
         </>
