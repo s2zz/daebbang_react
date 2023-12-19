@@ -60,7 +60,27 @@ function ReviewApproval() {
 
       setReviewApproval(updatedReviewApproval);
 
-      axios.put(`/api/estateManage/estateUpdate/${item.seq}`, item.approvalCode)
+      axios.put(`/api/reviewApproval/updateStatus/${item.seq}`, { approvalCode: updatedReviewApproval[i].approvalCode })
+        .then(resp => {
+          console.log(resp);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    };
+
+    const handleCancel = () => {
+      const updatedReviewApproval = [...reviewApproval];
+
+      if (item.approvalCode === 'a4') {
+        updatedReviewApproval[i] = { ...item, approvalCode: 'a1' };
+      } else {
+        updatedReviewApproval[i] = { ...item, approvalCode: 'a4' };
+      }
+
+      setReviewApproval(updatedReviewApproval);
+
+      axios.put(`/api/reviewApproval/updateStatus/${item.seq}`, { approvalCode: updatedReviewApproval[i].approvalCode })
         .then(resp => {
           console.log(resp);
         })
@@ -73,11 +93,11 @@ function ReviewApproval() {
       <tr key={i}>
         <td>{item.seq}</td>
         <td>{item.userId}</td>
-        <td>{item.estateCode}</td>
-        <td>{item.approvalCode === 'a1' ? "X" : "O"}</td>
+        <td><Link to={`/estateManage/estateInfo/${item.estateCode}`}>{item.estateCode}</Link></td>
+        <td>{item.approvalCode}</td>
         <td>
           <button onClick={handleApproval}>리뷰 권한 부여</button>
-          <button>취소</button>
+          <button onClick={handleCancel}>취소</button>
         </td>
       </tr>
     );

@@ -64,6 +64,11 @@ const TopForm = ({ setLoginId }) => {
                                         {isAdmin ?
                                             <a href="/admin">관리자 페이지</a>
                                             : <a href="/myPage">마이페이지</a>}
+                                        {isEstate ?
+                                            <>
+                                                <a href="/estateManage">매물관리</a>
+                                            </>
+                                            : ""}
                                         <a href="#" onClick={handleLogout}>로그아웃</a>
                                     </div>
                                 </li>
