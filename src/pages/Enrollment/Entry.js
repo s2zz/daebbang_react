@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import signupImage from './assets/signup.png';
+import signupImage from './assets/enroll2.png';
 import successImage from './assets/success.png';
 import style from "./Enrollment.module.css"
 import { Link } from 'react-router-dom';
