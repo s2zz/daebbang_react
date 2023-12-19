@@ -1,4 +1,14 @@
-
+.boardTitle{
+    font-size:xx-large;
+    font-weight:bold;
+    margin-top:10px;
+}
+.boardTitle+hr{
+    height:4px;
+    color:black;
+    background-color: black;
+    margin-bottom:30px;
+}
 .selectBoard{
     overflow: hidden;
 }
@@ -125,8 +135,9 @@
 .boardInfo>div:nth-child(1)>img{width:20%;}
 .boardInfo>div:nth-child(2){width:5%;}
 .boardInfo>div:nth-child(3){width:15%;}
-.boardInfo>div:nth-child(4){width:60%;}
+.boardInfo>div:nth-child(4){width:50%;}
 .boardInfo>div:nth-child(5){width:15%;}
+.boardInfo>div:nth-child(6){width:10%;}
 .boardListContents span{
     color:rgb(1, 140, 247);
     margin-right:10px;
@@ -158,8 +169,9 @@
 .boardListContents>div>div:nth-child(1)>img{width:20%}
 .boardListContents>div>div:nth-child(2){width:5%;}
 .boardListContents>div>div:nth-child(3){width:15%;}
-.boardListContents>div>div:nth-child(4){width:60%;}
+.boardListContents>div>div:nth-child(4){width:50%;}
 .boardListContents>div>div:nth-child(5){width:15%;}
+.boardListContents>div>div:nth-child(6){width:10%;}
 
 .writeBtnDiv{
     text-align: right;

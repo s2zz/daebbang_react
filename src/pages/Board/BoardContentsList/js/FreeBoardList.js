@@ -103,8 +103,8 @@ const FreeBoardList = () => {
     }
 
     const contentslist = () => {
-        if (completeSearchText === "" && searchBoard.length===0) {
-           return board.length===0 ? noBoardContents() : sliceContentsList().map(boardItem);
+        if (completeSearchText === "" && searchBoard.length === 0) {
+            return board.length === 0 ? noBoardContents() : sliceContentsList().map(boardItem);
         } else {
             return searchBoard.length === 0 ? noBoardContents() : sliceSearchContentsList().map(boardItem);
         }
@@ -122,12 +122,15 @@ const FreeBoardList = () => {
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>
+                <div>{e.viewCount}</div>
             </div>
         );
     }
 
     return (
         <>
+            <div className={style.boardTitle}>게시판</div>
+            <hr></hr>
             <div className={style.selectBoard}>
                 <Link to="/board/toFavoriteBoardList"><div>즐겨찾기</div></Link>
                 <div>자유게시판</div>
@@ -154,6 +157,7 @@ const FreeBoardList = () => {
                     <div>작성자</div>
                     <div>제목</div>
                     <div>날짜</div>
+                    <div>조회수</div>
                 </div>
                 <div className={style.boardListContents}>
                     {contentslist()}

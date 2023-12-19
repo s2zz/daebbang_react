@@ -4,6 +4,8 @@ import style from "../../css/WriteBoard/WriteBoard.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useMemo, useRef } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const FreeBoardWrite = () => {
     const navi = useNavigate();
@@ -160,22 +162,39 @@ const FreeBoardWrite = () => {
         <>
             <div className={style.boardTitle}>자유게시판 글 작성</div>
             <hr></hr>
-            <div>
-                <div>제목</div>
+            <div className={style.titleBox}>
+                <div>제목<span>*</span></div>
                 <div>
-                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} />
+                    <input placeholder="&nbsp;제목을 입력해주세요" name="title" onChange={handleChange} />
+                </div>
+            </div>
+            <div className={style.fileBox}>
+                <div>파일첨부</div>
+                <div className={style.fileInputDiv}>
+                    <div>
+                        <input type="file" onChange={handleFileChange} />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                    </div>
+                    <div>
+                        <input type="file" onChange={handleFileChange} />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                    </div>
+                    <div>
+                        <input type="file" onChange={handleFileChange} />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                    </div>
+                    <div>
+                        <input type="file" onChange={handleFileChange} />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                    </div>
+                    <div>
+                        <input type="file" onChange={handleFileChange} />
+                        <span><FontAwesomeIcon icon={faXmark} size="lg"/></span>
+                    </div>
                 </div>
             </div>
             <div>
-                <div>파일첨부</div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-            </div>
-            <div>
-                <div>내용</div>
+                <div className={style.contents}>내용<span>*</span></div>
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents}
@@ -189,7 +208,7 @@ const FreeBoardWrite = () => {
                 </div>
             </div>
 
-            <div>
+            <div className={style.btns}>
                 <Link to="/board/toFreeBoardList"><button>작성 취소</button></Link>
                 <button onClick={handleAdd}>작성 완료</button>
             </div>

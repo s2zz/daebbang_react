@@ -6,16 +6,6 @@
     overflow: hidden;
     margin:auto;
 }
-.boardTitle{
-    font-size:xx-large;
-    font-weight:bold;
-    margin-top:10px;
-}
-.boardTitle+hr{
-    height:4px;
-    color:black;
-    background-color: black;
-    margin-bottom:30px;
-}
+
 /* .boardContainer div{border:1px solid black;} */
 

@@ -1,9 +1,10 @@
 .boardContentsTitle{
+    margin-top:20px;
     font-weight: bold;
     font-size:xx-large;
-    margin-bottom:5px;
     display: flex;
     align-items: center;
+    border-bottom:1px solid #A0A0A0;
 }
 .boardContentsTitle>span{
     color:rgb(1, 140, 247);
@@ -13,45 +14,133 @@
 }
 
 .boardContentsInfo{
-    margin-bottom:20px;
+    margin-bottom:10px;
     overflow: hidden;
 }
-.boardContentsInfo>div{float:left;}
+.boardContentsInfo>div{
+    float:left;
+    margin-top:5px;
+}
 .boardContentsInfo>div:nth-child(1){width:75%;}
 .boardContentsInfo>div:nth-child(2){
     width:25%;
     text-align: end;
 }
+.boardContentsInfo button{
+    height:100%;
+    width:80px;
+    height:30px;
+    border:1px solid gainsboro;
+    border-radius: 5px;
+}
+.boardContentsInfo button:hover{
+    cursor: pointer;
+    background-color: #A0A0A0;
+    border:1px solid #939393;
+    color:white;
+}
 
+.fileBox{
+    margin-bottom:20px;
+    background-color: rgba(243, 243, 243, 0.535);
+    border:1px solid gainsboro;
+    padding:10px;
+}
+.fileBox>div:nth-child(1){
+    width:8%;
+    margin-bottom:5px;
+    font-weight: bold;
+}
+.fileName:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
 .boardContentsDiv{
-    border:1px solid black;
+    border:1px solid #A0A0A0;
+    padding:10px;
     margin-bottom:20px;
     min-height:100px;
 }
-
+.btns{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.btns button{
+    height:100%;
+    width:80px;
+    height:35px;
+    border:1px solid gainsboro;
+    border-radius: 5px;
+}
+.btns button:hover{
+    cursor: pointer;
+    background-color: #A0A0A0;
+    border:1px solid #939393;
+    color:white;
+}
 .insertReplyDiv textarea{
     width:100%;
     resize: none;
+    border:1px solid #A0A0A0;
 }
+.insertReplyBtn button{
+    height:100%;
+    width:80px;
+    height:30px;
+    border:1px solid gainsboro;
+    border-radius: 5px;
+}
+.insertReplyBtn button:hover{
+    cursor: pointer;
+    background-color: #A0A0A0;
+    border:1px solid #939393;
+    color:white;
+}
+.replyListStartHr{margin-bottom:0px;}
 .replyBoxFirst{
+    margin-top:5px;
     border-bottom:1px solid gainsboro;
 }
 .replyBoxFirst>div:nth-child(3){margin-bottom:20px;}
 
 .replyBox{
     border-bottom:1px solid gainsboro;
-    padding-top:10px;
+    padding:5px 0px;
 }
 .replyBox:nth-child(1){padding-top:0px;}
 .replyBox>div:nth-child(3){margin-bottom:20px;}
-.replyInfo{overflow: hidden;}
+.replyInfo{
+    overflow: hidden;
+}
 .replyInfo>div{
     float:left;
     width:50%;
+    margin-bottom:3px;
+}
+.replyInfo>div:nth-child(1){
+    text-decoration: underline;
 }
 .replyInfo>div:nth-child(2){text-align: end;}
-
+.replyListBtn{
+    display: flex;
+    justify-content: space-between;
+}
+.replyListBtn button{
+    height:100%;
+    width:80px;
+    height:30px;
+    border:1px solid gainsboro;
+    border-radius: 5px;
+}
+.replyListBtn button:hover{
+    cursor: pointer;
+    background-color: #A0A0A0;
+    border:1px solid #939393;
+    color:white;
+}
 .naviFooter{
+    margin-top:10px;
     display: flex;
     justify-content: space-evenly;
     font-size: large;

@@ -127,11 +127,11 @@ const RoomBoardList = () => {
 
     const contentslist = () => {
         if (completeSearchText !== "") {
-            return searchBoard.length===0 ? noBoardContents() : sliceContentsList(searchBoard).map(boardItem);
+            return searchBoard.length === 0 ? noBoardContents() : sliceContentsList(searchBoard).map(boardItem);
         } else if (category !== "전체게시물") {
-            return categoryBoard.length===0 ? noBoardContents() : sliceContentsList(categoryBoard).map(boardItem);
+            return categoryBoard.length === 0 ? noBoardContents() : sliceContentsList(categoryBoard).map(boardItem);
         } else {
-            return board.length===0 ? noBoardContents() : sliceContentsList(board).map(boardItem);
+            return board.length === 0 ? noBoardContents() : sliceContentsList(board).map(boardItem);
         }
     }
 
@@ -148,11 +148,14 @@ const RoomBoardList = () => {
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>
+                <div>{e.viewCount}</div>
             </div>
         );
     }
     return (
         <>
+            <div className={style.boardTitle}>게시판</div>
+            <hr></hr>
             <div className={style.selectBoard}>
                 <Link to="/board/toFavoriteBoardList"><div>즐겨찾기</div></Link>
                 <Link to="/board/toFreeBoardList"><div>자유게시판</div></Link>
@@ -189,6 +192,7 @@ const RoomBoardList = () => {
                     <div>작성자</div>
                     <div>제목</div>
                     <div>날짜</div>
+                    <div>조회수</div>
                 </div>
                 <div className={style.boardListContents}>
                     {contentslist()}

@@ -106,11 +106,11 @@ const FavoriteBoardList = () => {
 
     const contentslist = () => {
         if (completeSearchText !== "") {
-            return searchBoard.length===0 ? noBoardContents() : sliceContentsList(searchBoard).map(boardItem);
+            return searchBoard.length === 0 ? noBoardContents() : sliceContentsList(searchBoard).map(boardItem);
         } else if (category !== "전체게시물") {
-            return categoryBoard.length===0 ? noBoardContents() : sliceContentsList(categoryBoard).map(boardItem);
+            return categoryBoard.length === 0 ? noBoardContents() : sliceContentsList(categoryBoard).map(boardItem);
         } else {
-            return board.length===0 ? noBoardContents() :sliceContentsList(board).map(boardItem);
+            return board.length === 0 ? noBoardContents() : sliceContentsList(board).map(boardItem);
         }
     }
 
@@ -134,6 +134,8 @@ const FavoriteBoardList = () => {
 
     return (
         <>
+            <div className={style.boardTitle}>게시판</div>
+            <hr></hr>
             <div className={style.selectBoard}>
                 <div>즐겨찾기</div>
                 <Link to="/board/toFreeBoardList"><div>자유게시판</div></Link>

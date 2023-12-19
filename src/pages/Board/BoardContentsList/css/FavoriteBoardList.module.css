@@ -42,6 +42,7 @@
     margin-right:10px;
     text-decoration: none!important;
 }
+.boardListContents a{color:black;}
 .boardListContents>div{
     overflow:hidden;
     padding-top:8px;
@@ -56,9 +57,12 @@
 }
 .boardListContents>div>div:nth-child(1){
     width:5%;
-    padding-top:1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top:8px;
 }
-.boardListContents>div>div:nth-child(1)>img{width:30%}
+.boardListContents>div>div:nth-child(1)>img{width:20%}
 .boardListContents>div>div:nth-child(2){width:5%;}
 .boardListContents>div>div:nth-child(3){width:15%;}
 .boardListContents>div>div:nth-child(4){width:45%;}
