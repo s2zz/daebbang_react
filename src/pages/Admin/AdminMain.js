@@ -100,7 +100,7 @@ const AdminMain = () => {
 
     return (
         <div style={{ paddingTop: '3%', paddingLeft: '2%' }}>
-            <div style={{ fontSize: '2.5rem', marginLeft: '2%' }}>관리자 메인페이지</div>
+            <div style={{ fontSize: '2.5rem', marginLeft: '2%' }}>관리자 메인 페이지</div>
             {visitorCount !== null ? (
                 <div style={{ border: '1px solid #eeeeee', width: "90%", margin: 'auto', marginTop: '2%', display: 'flex', padding: '2%' }}>
                     <div>

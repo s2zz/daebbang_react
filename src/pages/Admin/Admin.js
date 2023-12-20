@@ -5,6 +5,7 @@ import AdminMain from './AdminMain';
 import AgentManagement from './AgentManagement';
 import MemberManagement from './MemberManagement';
 import NotificationManagement from './NotificationManagement';
+
 const Admin = () => {
     return (
         <div className={style.adminContainer}>

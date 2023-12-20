@@ -3,13 +3,14 @@
     height: 100%;
 }
 .img{
-    width: 600px;
+    width: 800px;
     height: auto;
 }
 .imgbag{
     width: 100%;
     background-color: #dae3f3;
     text-align: center;
+    padding: 2%;
 }
 .box{
     width: 100%;
@@ -50,12 +51,12 @@
     box-shadow: 0px 2px 2px #E5EAF2;
 }
 .input_style:hover, .select_style:hover {
-    border-color: #007FFF; /* 이 색은 blue[500]에 해당합니다 */
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
 }
 
 .input_style:focus, .select_style:hover:focus {
-    border-color: #007FFF; /* 이 색은 blue[500]에 해당합니다 */
-    box-shadow: 0 0 0 3px #80BFFF; /* 이 색은 blue[200]에 해당합니다 */
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
+    box-shadow: 0 0 0 3px #dae3f3; /* 이 색은 blue[200]에 해당합니다 */
     outline: 0; /* Firefox 등에서 추가적인 포커스 효과를 없애는 것 */
 }
 ul {
@@ -65,5 +66,22 @@ hr{
     color: #e1e1e1;
     margin-top: 13px;
 }
- 
-  
+
+.font,.list{
+    font-family: "NanumBarunGothic"; 
+}
+.serachBtn{
+    background-color: #8faadc;
+    border-color: #8faadc;
+}
+
+.searchBtn:hover {
+    background-color: #32495c;
+}
+.fontLight{
+    font-family: "NanumBarunGothicLight";
+}
+.inline{
+    padding: 2%;
+    border-radius: 10px;
+}
