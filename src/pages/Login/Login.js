@@ -154,6 +154,11 @@ const LoginBox = ({ setLoginId }) => {
         <div className={style.btnBox}>
           <button className={style.loginBtn} ref={estateLogin} onClick={handleEstateLogin}>로그인</button>
         </div>
+        <div className={style.findBox}>
+          <Link to="/enrollment" className={style.findId}>회원가입</Link>
+          <a className={style.findId} href="/login/findId/findenrollmentId">아이디 찾기</a>
+          <a className={style.findPw} href="/login/findPw/findenrollmentPw">비밀번호 찾기</a>
+        </div>
       </div>
       <Modal
         isOpen={showModal}
