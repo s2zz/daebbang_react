@@ -9,7 +9,7 @@ const Entry = () => {
   return (
     <div className={style.container}>
       <div className={style.imgbag} style={{padding:"50px"}}>
-        <img style={{width:'50%'}} className={style.img} src={signupImage} alt="이미지 설명" />
+        <img style={{width:'60%'}} className={style.img} src={signupImage} alt="이미지 설명" />
       </div>
       <div>
         <img style={{width:'100%'}} src={successImage} alt="이미지 설명" />

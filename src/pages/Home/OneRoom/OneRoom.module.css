@@ -178,10 +178,6 @@
     cursor: pointer;
 }
 
-.structure_select div{
-    border: 1px solid #000;
-}
-
 .area_box{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;

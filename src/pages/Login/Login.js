@@ -125,10 +125,10 @@ const LoginBox = ({ setLoginId }) => {
         <div className={style.inputLoginBox}>
           <div className={style.inputLogin}>
             <div className={style.loginFont}>아이디</div>
-            <input type="text" name="id" placeholder="input your ID" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.id} className={style.inputInfo}></input>
+            <input type="text" name="id" placeholder="아이디를 입력해주세요" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.id} className={style.inputInfo}></input>
             <div className={style.blank}></div>
             <div className={style.loginFont}>비밀번호</div>
-            <input type="password" name="pw" placeholder="input your PW" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.pw} className={style.inputInfo}></input>
+            <input type="password" name="pw" placeholder="비밀번호를 입력해주세요" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.pw} className={style.inputInfo}></input>
           </div>
         </div>
         <div className={style.btnBox}>
@@ -145,14 +145,19 @@ const LoginBox = ({ setLoginId }) => {
         <div className={style.inputLoginBox}>
           <div className={style.inputLogin}>
             <div className={style.loginFont}>아이디</div>
-            <input type="text" name="id" placeholder="input your ID" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.id} className={style.inputInfo}></input>
+            <input type="text" name="id" placeholder="아이디를 입력해주세요" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.id} className={style.inputInfo}></input>
             <div className={style.blank}></div>
             <div className={style.loginFont}>비밀번호</div>
-            <input type="password" name="pw" placeholder="input your PW" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.pw} className={style.inputInfo}></input>
+            <input type="password" name="pw" placeholder="비밀번호를 입력해주세요" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.pw} className={style.inputInfo}></input>
           </div>
         </div>
         <div className={style.btnBox}>
           <button className={style.loginBtn} ref={estateLogin} onClick={handleEstateLogin}>로그인</button>
+        </div>
+        <div className={style.findBox}>
+          <Link to="/enrollment" className={style.findId}>회원가입</Link>
+          <a className={style.findId} href="/login/findId/findenrollmentId">아이디 찾기</a>
+          <a className={style.findPw} href="/login/findPw/findenrollmentPw">비밀번호 찾기</a>
         </div>
       </div>
       <Modal
@@ -181,9 +186,9 @@ const LoginBox = ({ setLoginId }) => {
             <div className={style.adminTitle}>관리자 로그인</div>
             <div>
               <FontAwesomeIcon icon={faHammer} className={style.icon} />
-              <input type="text" placeholder="input admin ID" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="id" value={admin.id}></input><br></br><br></br>
+              <input type="text" placeholder="관리자 아이디" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="id" value={admin.id}></input><br></br><br></br>
               <FontAwesomeIcon icon={faLock} className={style.icon} />
-              <input type="password" placeholder="input admin PW" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="pw" value={admin.pw}></input><br></br>
+              <input type="password" placeholder="관리자 비밀번호" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="pw" value={admin.pw}></input><br></br>
             </div>
             <div className={style.adminBtnDiv}>
               <button className={style.adminBtn} ref={adminLogin} onClick={handleAdminLogin}>로그인</button>
