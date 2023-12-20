@@ -1,6 +1,8 @@
 import style from '../css/EstateInsert.module.css';
+import { useState } from "react";
 
-function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOption, setMaintenanceOption }) {
+function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOption, setMaintenanceOption, showFloorInput, setShowFloorInput }) {
+
 
   const handleMaintenanceChange = (e) => {
     setMaintenanceOption(e.target.value);
@@ -28,10 +30,29 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
     const sanitizedValue = value.replace(/[^0-9]/g, "");
 
     if (name === 'transactionCode') {
+      if (value === 't2') {
+        setRealEstate(prev => ({ ...prev, deposit: "" }));
+      }
       setRealEstate(prev => ({ ...prev, [name]: value }));
     } else {
       setRealEstate(prev => ({ ...prev, [name]: sanitizedValue }));
     }
+
+  }
+
+  const handleFloorInput = (e) => {
+    const { value } = e.target;
+
+    setShowFloorInput(value);
+
+    if (value === 'f1') {
+      setRealEstate(prev => ({ ...prev, roomFloors: -1 }));
+    } else if (value === 'f2') {
+      setRealEstate(prev => ({ ...prev, roomFloors: 0 }));
+    } else {
+      setRealEstate(prev => ({ ...prev, roomFloors: "" }));
+    }
+
   }
 
   return (
@@ -52,13 +73,14 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
         <tr>
           <th>가격 정보<span className={style.star}>*</span></th>
           <td className={style.flexTd}>
-            <div>
-              <div>보증금</div>
-              <div className={style.scaleDiv}>
-                <input type="text" className={style.scaleInput} name="deposit" onChange={handleChange} value={realEstate.deposit} />
-                <p className={style.scale}>만원</p>
-              </div>
-            </div>
+            {realEstate.transactionCode === 't1' &&
+              <div>
+                <div>보증금</div>
+                <div className={style.scaleDiv}>
+                  <input type="text" className={style.scaleInput} name="deposit" onChange={handleChange} value={realEstate.deposit} />
+                  <p className={style.scale}>만원</p>
+                </div>
+              </div>}
             <div>
               <div>{realEstate.transactionCode === 't1' ? "월세" : "전세"}</div>
               <div className={style.scaleDiv}>
@@ -91,13 +113,22 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
           <th>층수<span className={style.star}>*</span></th>
           <td>
             <div>
+              <input type="radio" id="f1" value="f1" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f1"} /><label for="f1">반지하</label>
+              <input type="radio" id="f2" value="f2" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f2"} /><label for="f2">옥탑</label>
+              <input type="radio" id="f3" value="f3" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f3"} /><label for="f3">해당없음</label>
+            </div>
+
+            <div>
               <label>전체 층 수</label>
               <input type="text" name="buildingFloors" onChange={handleChange} value={realEstate.buildingFloors} />
             </div>
-            <div>
-              <label>해당 층 수</label>
-              <input type="text" name="roomFloors" onChange={handleChange} value={realEstate.roomFloors} />
-            </div>
+            {showFloorInput === 'f3' &&
+              <div>
+                <label>해당 층 수</label>
+                <input type="text" name="roomFloors" onChange={handleChange} value={realEstate.roomFloors} />
+              </div>
+            }
+
           </td>
         </tr>
         <tr>

@@ -18,6 +18,8 @@ function EstateUpdate() {
   const [tempImages, setTempImages] = useState([]);
   // 관리비 유무
   const [maintenanceOption, setMaintenanceOption] = useState("true");
+  // 반지하, 옥탑 확인(f1=반지하, f2=옥탑, f3=해당없음)
+  const [showFloorInput, setShowFloorInput] = useState("f3");
 
   // 보낼 데이터
   const [realEstate, setRealEstate] = useState({
@@ -47,31 +49,42 @@ function EstateUpdate() {
     navi("/EstateManage");
   }
 
-  const handleSubmit = () => {
-    // 필수 항목
+  function validateFields(realEstate, maintenanceOption, showFloorInput) {
     const requiredFields = [
       'roomCode', 'structureCode', 'buildingCode', 'heatingCode', 'area', 'zipcode', 'address1', 'address2', 'latitude', 'longitude',
-      'transactionCode', 'price', 'buildingFloors', 'roomFloors',
-      'title', 'contents'];
-
-    // 필수 항목이 비어있는지 검사
+      'transactionCode', 'price', 'buildingFloors',
+      'title', 'contents'
+    ];
+  
     if (requiredFields.some(name => !realEstate[name])) {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-
-    // 관리비 '있음' AND 관리비 입력 안한 경우 
+  
     if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-
-    // roomFloors가 buildingFloors보다 큰지 확인
+  
     if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
       alert("방 층수는 건물의 층수보다 클 수 없습니다.");
       return false;
     }
+  
+    if (parseInt(realEstate.buildingFloors) < 1) {
+      alert("건물의 층수는 1층보다 낮을 수 없습니다.");
+      return false;
+    }
+  
+    if (showFloorInput === 'f3' && (parseInt(realEstate.roomFloors) < 1 || realEstate.roomFloors === '')) {
+      alert("해당 층수는 1층보다 낮을 수 없습니다.");
+      return false;
+    }
+  
+    return true;
+  }
 
+  const handleSubmit = () => {
     const formData = new FormData();
 
     const imageLength = estateImages.length;
