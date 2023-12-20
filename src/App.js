@@ -1,6 +1,6 @@
 import './App.css';
 
-import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import TopForm from './pages/commons/TopForm';
 import Home from './pages/Home/Home';
 import Board from './pages/Board/Board';
@@ -18,37 +18,39 @@ import Review from './pages/Review/Review';
 import EstateManage from './pages/EstateManage/js/EstateManage';
 import FindEnrollmentId from './pages/Login/FindId/FindenrollmentId';
 import FindEnrollmentPw from './pages/Login/FindPw/FindenrollmentPw';
+import ScrollToTop from './pages/commons/ScrollToTop';
 
 function App() {
   const storedLoginId = sessionStorage.getItem('loginId');
   const isAdmin = sessionStorage.getItem('isAdmin');
-    //방문자수
-    useEffect(() => {
-      axios.get(`/api/visit/test`).then(resp => {
-        
-      })
-    }, []);
+  //방문자수
+  useEffect(() => {
+    axios.get(`/api/visit/test`).then(resp => {
+
+    })
+  }, []);
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="main_container">
         <TopForm />
         <div className='body_form'>
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/home/*" element={<Home />} />
-          <Route path="/board/*" element={<Board loginId={storedLoginId} admin={isAdmin}/>} />
-          <Route path="/login/*" element={<Login/>} />
-          <Route path="/login/findId/*" element={<FindId/>} />
-          <Route path="/login/findId/findenrollmentId" element={<FindEnrollmentId/>} />
-          <Route path="/login/findPw/*" element={<FindPw/>} />
-          <Route path="/login/findPw/findenrollmentPw" element={<FindEnrollmentPw/>} />
-          <Route path="/signUp/*" element={<SignUp/>} />
-          <Route path="/myPage/*" element={storedLoginId?<MyPage/>:<Navigate to="/" replace/>} />
-          <Route path="/admin/*" element={isAdmin?<Admin />:<Navigate to="/" replace/>} />
-          <Route path="/enrollment/*" element={<Enrollment />} />
-          <Route path="/review/*" element={<Review />} />
-          <Route path="/estateManage/*" element={<EstateManage />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/home/*" element={<Home />} />
+            <Route path="/board/*" element={<Board loginId={storedLoginId} admin={isAdmin} />} />
+            <Route path="/login/*" element={<Login />} />
+            <Route path="/login/findId/*" element={<FindId />} />
+            <Route path="/login/findId/findenrollmentId" element={<FindEnrollmentId />} />
+            <Route path="/login/findPw/*" element={<FindPw />} />
+            <Route path="/login/findPw/findenrollmentPw" element={<FindEnrollmentPw />} />
+            <Route path="/signUp/*" element={<SignUp />} />
+            <Route path="/myPage/*" element={storedLoginId ? <MyPage /> : <Navigate to="/" replace />} />
+            <Route path="/admin/*" element={isAdmin ? <Admin /> : <Navigate to="/" replace />} />
+            <Route path="/enrollment/*" element={<Enrollment />} />
+            <Route path="/review/*" element={<Review />} />
+            <Route path="/estateManage/*" element={<EstateManage />} />
+          </Routes>
         </div>
       </div>
     </BrowserRouter>
