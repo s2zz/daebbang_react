@@ -478,7 +478,7 @@ function Info() {
               )}
             </div>
           </div>
-          
+
           <div className={style.option_more_info_parent}>
             {markerInfo.optionList.filter(
               (option) =>
@@ -509,7 +509,7 @@ function Info() {
             <div className={style.more_info_box_top}>
               <div onClick={toggleVisibility_more}>
                 {" "}
-                {/* 뒤로가기 아이콘 넣을것 */}X{" "}
+                {/* 뒤로가기 아이콘 넣을겅 */}X{" "}
               </div>
               옵션 정보
             </div>
