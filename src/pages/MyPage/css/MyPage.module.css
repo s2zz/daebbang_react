@@ -12,7 +12,6 @@
 }
 
 .infoContainer,
-.JjimContainer,
 .ReviewContainer {
     margin: auto;
     border: 1px solid black;
@@ -35,7 +34,6 @@
 }
 
 .menuInfo,
-.menuJjim,
 .menuReview {
     font-family: "NanumBarunGothic";
     width: 270px;
@@ -45,7 +43,6 @@
 }
 
 .menuInfoSelected,
-.menuJjimSelected,
 .menuReviewSelected {
     font-family: "NanumBarunGothic";
     width: 270px;
@@ -55,7 +52,6 @@
 }
 
 .menuInfo:hover,
-.menuJjim:hover,
 .menuReview:hover {
     cursor: pointer;
 }
