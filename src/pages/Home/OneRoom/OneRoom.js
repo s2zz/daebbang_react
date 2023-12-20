@@ -13,6 +13,7 @@ import axios from "axios";
 //
 import List from "./List/List";
 import Info from "./Info/Info";
+import exam_icon from "./assets/exam_icon.png";
 
 //
 import style from "./OneRoom.module.css";
@@ -24,6 +25,11 @@ function OneRoom() {
   const [zoomLevel, setZoomLevel] = useState(6);
 
   const [mapList, setMapList] = useState([{}]);
+  const [filterMapList, setFilterMapList] = useState(mapList);
+  const [listReady, setlistReady] = useState(false);
+
+  const [randData, setRandData] = useState([{}]);
+
   // const [markersInBounds, setMarkersInBounds] = useState([]);
   // const [positions, setPositions] = useState([]);
 
@@ -49,14 +55,33 @@ function OneRoom() {
         console.log("API 호출 오류:", err);
       });
   }, []);
-
-  // 1. 랜더링 변경 값이 있을때 의존성 실행
-  // 2. 랜더링이 완료로 변경되면 이벤트 드레그 실행
+  {
+    /* 여기 */
+  }
   useEffect(() => {
-    if (mapRendered) {
+    // setFilterMapList를 비동기로 처리
+    const fetchData = async () => {
+      setFilterMapList(mapList);
       handleDragEnd();
+      setlistReady(true);
+      console.log(mapList);
+    };
+    {
+      /* 바로가기 */
     }
-  }, [mapRendered]);
+    fetchData();
+  }, [mapRendered, mapList]);
+
+  useEffect(() => {
+    // setFilterMapList를 비동기로 처리
+    const fetchData = async () => {
+      handleDragEnd();
+    };
+    {
+      /* 바로가기 */
+    }
+    fetchData();
+  }, [filterMapList]);
 
   // 페이지 로딩 시 사용할 기본 경계 반환
   const getDefaultBounds = () => {
@@ -70,6 +95,7 @@ function OneRoom() {
   const handleDragEnd = (map) => {
     // map 인자가 받지 못한건 처음 페이지 켤때니까
     // get Bouns에 기본 바운스를 넣어줌 안 그럼 맵이 없어서 값이 없음
+
     if (!map) {
       map = {
         getBounds: () => getDefaultBounds(),
@@ -80,7 +106,7 @@ function OneRoom() {
     const bounds = map.getBounds();
 
     // 경계(현재 화면)에 포함된 마커들 찾기
-    const markersInBounds = mapList.filter((marker) => {
+    const markersInBounds = filterMapList.filter((marker) => {
       const markerPosition = new kakao.maps.LatLng(
         marker.latitude,
         marker.longitude
@@ -88,8 +114,8 @@ function OneRoom() {
       return bounds.contain(markerPosition);
     });
 
-    // 이벤트가 발생하면 페이지 이동
-    navigate("/home/oneroom/list", { state: { markersInBounds } });
+    // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
+    navigate(`/home/oneroom/list`, { state: { markersInBounds } });
   };
 
   // 지도에서 휠을 활용한 줌 이벤트 발생시 마커 새로 불러오기
@@ -101,7 +127,7 @@ function OneRoom() {
     const bounds = map.getBounds();
 
     // 경계(현재 화면)에 포함된 마커들 찾기
-    const markersInBounds = mapList.filter((marker) => {
+    const markersInBounds = filterMapList.filter((marker) => {
       const markerPosition = new kakao.maps.LatLng(
         marker.latitude,
         marker.longitude
@@ -322,10 +348,515 @@ function OneRoom() {
 
   // 양쪽 범위 슬라이더 - 보증금
   const [range, setRange] = useState({ left: 0, right: 100 });
+  const [afterRange, setAfterRange] = useState({
+    start: 0,
+    end: 0,
+  });
   const [isDraggingLeft, setDraggingLeft] = useState(false);
   const [isDraggingRight, setDraggingRight] = useState(false);
   const sliderRef = useRef(null);
 
+  // 드레그 바
+  useEffect(() => {
+    // 설정
+    // 0만원부터 ~ [0 ~ 50만원]까지
+
+    // 오른쪽 끝에 바가 왼쪽에 닿았을때임
+    if (range.left === 0 && range.right === 0) {
+      setAfterRange((prevValues) => ({
+        ...prevValues,
+        start: 0,
+        end: 50,
+      }));
+
+      // 0만원부터 ~ [50 ~ 500만원]까지 전부
+    } else if (range.left === 0 && range.right <= 99.9) {
+      const returnNum = Math.floor(range.right / 3.3);
+      // 0만원부터 ~ [50 ~ 100만원]까지
+      if (returnNum <= 2) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          end: returnNum * 50,
+        }));
+      }
+
+      // 0만원부터 ~ [100 ~ 300만원]까지
+      else if (2 < returnNum && returnNum <= 4) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          end: 100 + (returnNum - 2) * 100,
+        }));
+      }
+
+      // 0만원부터 ~ [300 ~ 500만원]까지
+      else if (returnNum === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 500 }));
+      }
+
+      // 0만원부터 ~ [500 ~ 1000만원]까지
+      else if (returnNum === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1000 }));
+      }
+
+      // 0만원부터 ~ [1000 ~ 2000만원]까지
+      else if (returnNum === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 2000 }));
+      }
+
+      // 0만원부터 ~ [2000 ~ 3000만원]까지
+      else if (returnNum === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 3000 }));
+      }
+
+      // 0만원부터 ~ [3000 ~ 4000만원]까지
+      else if (returnNum === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 4000 }));
+      }
+
+      // 0만원부터 ~ [4000 ~ 5000만원]까지
+      else if (returnNum === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 5000 }));
+      }
+
+      // 0만원부터 ~ [5000 ~ 6000만원]까지
+      else if (returnNum === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 5000 }));
+      }
+
+      // 0만원부터 ~ [6000 ~ 7000만원]까지
+      else if (returnNum === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 7000 }));
+      }
+
+      // 0만원부터 ~ [7000 ~ 8000만원]까지
+      else if (returnNum === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 8000 }));
+      }
+
+      // 0만원부터 ~ [8000 ~ 9000만원]까지
+      else if (returnNum === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 9000 }));
+      }
+
+      // 0만원부터 ~ [9000 ~ 1억]까지
+      else if (returnNum === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 10000 }));
+      }
+
+      // 0만원부터 ~ [1억 ~ 1억 2천]까지
+      else if (returnNum === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 12000 }));
+      }
+
+      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
+      else if (returnNum === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 15000 }));
+      }
+
+      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
+      else if (returnNum === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 17000 }));
+      }
+
+      // 0만원부터 ~ [1억 7천 ~ 2억]까지
+      else if (returnNum === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 20000 }));
+      }
+
+      // 0만원부터 ~ [2억 ~ 2억 5천]까지
+      else if (returnNum === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 25000 }));
+      } else if (returnNum === 21) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 30000 }));
+      } else if (returnNum === 22) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 35000 }));
+      } else if (returnNum === 23) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 40000 }));
+      } else if (returnNum === 24) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 50000 }));
+      } else if (returnNum === 25) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 70000 }));
+      } else if (returnNum === 26) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 100000 }));
+      } else if (returnNum === 27) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 120000 }));
+      } else if (returnNum === 28) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 150000 }));
+      } else if (returnNum === 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 200000 }));
+      } else if (returnNum > 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 0 }));
+      }
+
+      // [0 ~ 500만원]부터 ~ 0만원 까지
+    } else if (range.left >= 1 && range.right === 100) {
+      const returnNum = Math.floor(range.left / 3.3);
+
+      // 0만원부터 ~ [50 ~ 100만원]까지
+      if (returnNum <= 2) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          start: returnNum * 50,
+        }));
+      }
+
+      // 0만원부터 ~ [100 ~ 300만원]까지
+      else if (2 < returnNum && returnNum <= 4) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          start: 100 + (returnNum - 2) * 100,
+        }));
+      }
+
+      // 0만원부터 ~ [300 ~ 500만원]까지
+      else if (returnNum === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 500 }));
+      }
+
+      // 0만원부터 ~ [500 ~ 1000만원]까지
+      else if (returnNum === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1000 }));
+      }
+
+      // 0만원부터 ~ [1000 ~ 2000만원]까지
+      else if (returnNum === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 2000 }));
+      }
+
+      // 0만원부터 ~ [2000 ~ 3000만원]까지
+      else if (returnNum === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 3000 }));
+      }
+
+      // 0만원부터 ~ [3000 ~ 4000만원]까지
+      else if (returnNum === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 4000 }));
+      }
+
+      // 0만원부터 ~ [4000 ~ 5000만원]까지
+      else if (returnNum === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 5000 }));
+      }
+
+      // 0만원부터 ~ [5000 ~ 6000만원]까지
+      else if (returnNum === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 6000 }));
+      }
+
+      // 0만원부터 ~ [6000 ~ 7000만원]까지
+      else if (returnNum === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 7000 }));
+      }
+
+      // 0만원부터 ~ [7000 ~ 8000만원]까지
+      else if (returnNum === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 8000 }));
+      }
+
+      // 0만원부터 ~ [8000 ~ 9000만원]까지
+      else if (returnNum === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 9000 }));
+      }
+
+      // 0만원부터 ~ [9000 ~ 1억]까지
+      else if (returnNum === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 10000 }));
+      }
+
+      // 0만원부터 ~ [1억 ~ 1억 2천]까지
+      else if (returnNum === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 20000 }));
+      }
+
+      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
+      else if (returnNum === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 15000 }));
+      }
+
+      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
+      else if (returnNum === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 17000 }));
+      }
+
+      // 0만원부터 ~ [1억 7천 ~ 2억]까지
+      else if (returnNum === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 20000 }));
+      }
+
+      // 0만원부터 ~ [2억 ~ 2억 5천]까지
+      else if (returnNum === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 25000 }));
+      } else if (returnNum === 21) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 30000 }));
+      } else if (returnNum === 22) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 35000 }));
+      } else if (returnNum === 23) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 40000 }));
+      } else if (returnNum === 24) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 50000 }));
+      } else if (returnNum === 25) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 70000 }));
+      } else if (returnNum === 26) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 100000 }));
+      } else if (returnNum === 27) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 120000 }));
+      } else if (returnNum === 28) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 150000 }));
+      } else if (returnNum === 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 200000 }));
+      } else if (returnNum > 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 0 }));
+      }
+
+      // [0 ~ 20억]부터 ~ [0 ~ 20억]까지 // 설정
+    } else if (range.left >= 0.01 && range.right <= 99.9) {
+      // [0 ~ 20억]부터에 사용할 상수
+      const returnNum = Math.floor(range.right / 3.3);
+
+      // [0 ~ 20억]까지에 사용할 상수
+      const returnNum2 = Math.floor(range.left / 3.3);
+
+      // 0만원부터 ~ [50 ~ 100만원]까지
+      if (returnNum <= 2) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          end: returnNum * 50,
+        }));
+      }
+
+      // 0만원부터 ~ [100 ~ 300만원]까지
+      else if (2 < returnNum && returnNum <= 4) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          end: 100 + (returnNum - 2) * 100,
+        }));
+      }
+
+      // 0만원부터 ~ [300 ~ 500만원]까지
+      else if (returnNum === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 500 }));
+      }
+
+      // 0만원부터 ~ [500 ~ 1000만원]까지
+      else if (returnNum === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1000 }));
+      }
+
+      // 0만원부터 ~ [1000 ~ 2000만원]까지
+      else if (returnNum === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 2000 }));
+      }
+
+      // 0만원부터 ~ [2000 ~ 3000만원]까지
+      else if (returnNum === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 3000 }));
+      }
+
+      // 0만원부터 ~ [3000 ~ 4000만원]까지
+      else if (returnNum === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 4000 }));
+      }
+
+      // 0만원부터 ~ [4000 ~ 5000만원]까지
+      else if (returnNum === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 5000 }));
+      }
+
+      // 0만원부터 ~ [5000 ~ 6000만원]까지
+      else if (returnNum === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 6000 }));
+      }
+
+      // 0만원부터 ~ [6000 ~ 7000만원]까지
+      else if (returnNum === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 7000 }));
+      }
+
+      // 0만원부터 ~ [7000 ~ 8000만원]까지
+      else if (returnNum === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 8000 }));
+      }
+
+      // 0만원부터 ~ [8000 ~ 9000만원]까지
+      else if (returnNum === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 9000 }));
+      }
+
+      // 0만원부터 ~ [9000 ~ 1억]까지
+      else if (returnNum === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 10000 }));
+      }
+
+      // 0만원부터 ~ [1억 ~ 1억 2천]까지
+      else if (returnNum === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 12000 }));
+      }
+
+      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
+      else if (returnNum === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 15000 }));
+      }
+
+      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
+      else if (returnNum === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 17000 }));
+      }
+
+      // 0만원부터 ~ [1억 7천 ~ 2억]까지
+      else if (returnNum === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 20000 }));
+      }
+
+      // 0만원부터 ~ [2억 ~ 2억 5천]까지
+      else if (returnNum === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 25000 }));
+      } else if (returnNum === 21) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 30000 }));
+      } else if (returnNum === 22) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 35000 }));
+      } else if (returnNum === 23) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 40000 }));
+      } else if (returnNum === 24) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 50000 }));
+      } else if (returnNum === 25) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 70000 }));
+      } else if (returnNum === 26) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 100000 }));
+      } else if (returnNum === 27) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 120000 }));
+      } else if (returnNum === 28) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 150000 }));
+      } else if (returnNum === 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 200000 }));
+      } else if (returnNum > 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 0 }));
+      }
+
+      // 0만원부터 ~ [50 ~ 100만원]까지
+      if (returnNum2 <= 2) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          start: returnNum2 * 50,
+        }));
+      }
+
+      // 0만원부터 ~ [100 ~ 300만원]까지
+      else if (2 < returnNum2 && returnNum2 <= 4) {
+        setAfterRange((prevValues) => ({
+          ...prevValues,
+          start: 100 + (returnNum2 - 2) * 100,
+        }));
+      }
+
+      // 0만원부터 ~ [300 ~ 500만원]까지
+      else if (returnNum2 === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 500 }));
+      }
+
+      // 0만원부터 ~ [500 ~ 1000만원]까지
+      else if (returnNum2 === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1000 }));
+      }
+
+      // 0만원부터 ~ [1000 ~ 2000만원]까지
+      else if (returnNum2 === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 2000 }));
+      }
+
+      // 0만원부터 ~ [2000 ~ 3000만원]까지
+      else if (returnNum2 === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 3000 }));
+      }
+
+      // 0만원부터 ~ [3000 ~ 4000만원]까지
+      else if (returnNum2 === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 4000 }));
+      }
+
+      // 0만원부터 ~ [4000 ~ 5000만원]까지
+      else if (returnNum2 === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 5000 }));
+      }
+
+      // 0만원부터 ~ [5000 ~ 6000만원]까지
+      else if (returnNum2 === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 6000 }));
+      }
+
+      // 0만원부터 ~ [6000 ~ 7000만원]까지
+      else if (returnNum2 === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 7000 }));
+      }
+
+      // 0만원부터 ~ [7000 ~ 8000만원]까지
+      else if (returnNum2 === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 8000 }));
+      }
+
+      // 0만원부터 ~ [8000 ~ 9000만원]까지
+      else if (returnNum2 === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 9000 }));
+      }
+
+      // 0만원부터 ~ [9000 ~ 1억]까지
+      else if (returnNum2 === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 10000 }));
+      }
+
+      // 0만원부터 ~ [1억 ~ 1억 2천]까지
+      else if (returnNum2 === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 12000 }));
+      }
+
+      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
+      else if (returnNum2 === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 15000 }));
+      }
+
+      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
+      else if (returnNum2 === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 17000 }));
+      }
+
+      // 0만원부터 ~ [1억 7천 ~ 2억]까지
+      else if (returnNum2 === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 20000 }));
+      }
+
+      // 0만원부터 ~ [2억 ~ 2억 5천]까지
+      else if (returnNum2 === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 25000 }));
+      } else if (returnNum2 === 21) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 30000 }));
+      } else if (returnNum2 === 22) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 35000 }));
+      } else if (returnNum2 === 23) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 40000 }));
+      } else if (returnNum2 === 24) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 50000 }));
+      } else if (returnNum2 === 25) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 70000 }));
+      } else if (returnNum2 === 26) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 100000 }));
+      } else if (returnNum2 === 27) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 120000 }));
+      } else if (returnNum2 === 28) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 150000 }));
+      } else if (returnNum2 === 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 200000 }));
+      } else if (returnNum2 > 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 0 }));
+      }
+    }
+
+    // 만약 양쪽 끝 값이 다 최대로 들어가 있다면 0만원부터 0만원까지
+    // 즉 전체로 다시 설정
+    else if (range.left === 0 && range.right === 100) {
+      setAfterRange({ start: 0, end: 0 });
+    }
+  }, [range]);
+
+  // 드레그 바
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isDraggingLeft || isDraggingRight) {
@@ -358,10 +889,12 @@ function OneRoom() {
     };
   }, [isDraggingLeft, isDraggingRight]);
 
+  // 드레그 바
   const handleMouseDownLeft = () => {
     setDraggingLeft(true);
   };
 
+  // 드레그 바
   const handleMouseDownRight = () => {
     setDraggingRight(true);
   };
@@ -376,6 +909,7 @@ function OneRoom() {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const sliderRef_month = useRef(null);
 
+  // 드레그 바
   useEffect(() => {
     // 설정
     // 0만원부터 ~ [0 ~ 5만원]까지
@@ -480,7 +1014,6 @@ function OneRoom() {
 
       // [0 ~ 500만원]부터 ~ [0 ~ 500만원]까지 // 설정
     } else if (rangeValues.start >= 0.01 && rangeValues.end <= 99.9) {
-
       // 0만원부터 ~ [0 ~ 500만원] 까지에 사용할 상수
       const returnNum = Math.floor(rangeValues.end / 5) + 1;
 
@@ -548,7 +1081,7 @@ function OneRoom() {
         }));
       }
 
-     // [40 ~ 70만원]부터 0만원까지
+      // [40 ~ 70만원]부터 0만원까지
       else if (9 < returnNum2 && returnNum2 <= 12) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
@@ -588,6 +1121,7 @@ function OneRoom() {
     }
   }, [rangeValues]);
 
+  // 드레그 바
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isDraggingStart || isDraggingEnd) {
@@ -638,6 +1172,7 @@ function OneRoom() {
   const [isRightHandleDragging, setIsRightHandleDragging] = useState(false);
   const sliderCustomRef = useRef(null);
 
+  // 드레그 바
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isLeftHandleDragging || isRightHandleDragging) {
@@ -680,6 +1215,209 @@ function OneRoom() {
 
   const handleMouseDownRightHandle = () => {
     setIsRightHandleDragging(true);
+  };
+
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  // 필터 옵션 박스 설정
+  const handleOptionClick = (option) => {
+    // 클릭된 옵션이 현재 선택된 옵션과 동일한 경우
+    if (selectedOption === option) {
+      // 선택된 옵션을 해제하여 해당 옵션 박스를 숨김
+      setSelectedOption(null);
+    } else {
+      // 아닌 경우, 선택된 옵션을 업데이트하여 해당 옵션 박스를 보여줌
+      setSelectedOption(option);
+    }
+  };
+
+  const [selectedDealType, setSelectedDealType] = useState("전체");
+  const [showDealTypeRange, setShowDealTypeRange] = useState(false);
+
+  // 거래 유형 필터
+  const filterMapListByDealType = (item) => {
+    if (selectedDealType === "전체") {
+      return true; // 전체를 선택한 경우 모든 항목을 보여줍니다.
+    } else if (selectedDealType === "월세") {
+      return item.dealType === "월세";
+    } else if (selectedDealType === "전세") {
+      return item.dealType === "전세";
+    }
+  };
+
+  // 거래 유형 설정
+  const handleDealTypeClick = (dealType) => {
+    setSelectedDealType(dealType);
+
+    // 선택된 거래 유형에 따라서 값을 설정
+    if (dealType === "전체") {
+      setRange({ left: 0, right: 100 }); // 보증금 리셋
+      setAfterRange({ left: 0, right: 100 }); // 보증금 드레그 바 리셋
+      setRangeValues({ start: 0, end: 100 }); // 월세 리셋
+      setAfterRangeValues({ start: 0, end: 100 }); // 월세 드레그 바
+      setShowDealTypeRange(true); // 전체인 경우에는 보증금, 월세 모두 보여줌
+    } else if (dealType === "월세") {
+      setRange({ left: 0, right: 100 });
+      setAfterRange({ left: 0, right: 100 });
+      setRangeValues({ start: 0, end: 100 });
+      setAfterRangeValues({ start: 0, end: 100 });
+      setShowDealTypeRange(true); // 월세인 경우에는 보증금, 월세 모두 보여줌
+    } else if (dealType === "전세") {
+      setRange({ left: 0, right: 100 }); // 보증금 리셋
+      setAfterRange({ left: 0, right: 100 }); // 보증금 드레그 바 리셋
+      setShowDealTypeRange(false); // 전세인 경우에는 보증금만 보여줌
+    }
+  };
+
+  // 구조 선택하기
+  const [selectedStructure, setSelectedStructure] = useState("전체");
+
+  const handleStructureSelect = (structure) => {
+    setSelectedStructure(structure);
+  };
+
+  // 층수 옵션
+  const [selectedFloor, setSelectedFloor] = useState("전체");
+
+  const handleFloorSelect = (floor) => {
+    setSelectedFloor(floor);
+  };
+
+  // 전용 면적 선택하기
+  const [selectedArea, setSelectedArea] = useState("전체");
+
+  const handleAreaSelect = (area) => {
+    setSelectedArea(area);
+  };
+
+  // 옵션 (에어컨, 냉장고 등등) 선택하고 리스트에 남기기
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const handleOptionSelect = (option) => {
+    // 클릭한 옵션이 이미 선택되어 있는지 확인
+    const isSelected = selectedOptions.includes(option);
+
+    // 선택되어 있으면 배열에서 제거, 아니면 배열에 추가
+    const updatedOptions = isSelected
+      ? selectedOptions.filter((selectedOption) => selectedOption !== option)
+      : [...selectedOptions, option];
+
+    setSelectedOptions(updatedOptions);
+  };
+
+  // 필터 상태가 변경될 때마다 filterMapList 호출
+  useEffect(() => {
+    async function fetchData() {
+      await applyFilters();
+      handleDragEnd();
+    }
+
+    fetchData();
+  }, [
+    selectedDealType,
+    selectedStructure,
+    selectedFloor,
+    selectedArea,
+    selectedOptions,
+    rangeValues,
+    range,
+    isToggled,
+    isChecked2,
+  ]);
+
+  {
+    /* 바로가기 */
+  }
+
+  // MapList에서 데이터를 필터링하여 filterMapList에 저장하는 함수
+  const applyFilters = () => {
+    // 필터링 조건에 따라 mapList 업데이트
+    const price = afterRange.start * 10000;
+    let newString = selectedStructure + " 원룸";
+
+    // 거래 유형(전월세)
+    let filtered =
+      selectedDealType === "전체"
+        ? mapList
+        : mapList.filter(
+            (item) => item.transaction.transactionType === selectedDealType
+          );
+
+    // 구조
+    if (selectedStructure !== "전체") {
+      filtered = filtered.filter(
+        (item) => item.structure.structureType === newString
+      );
+    }
+
+    // 전용 면적
+    if (selectedArea === "10평 이하") {
+      filtered = filtered.filter((item) => item.area <= 9);
+    } else if (selectedArea === "10평대") {
+      filtered = filtered.filter((item) => item.area >= 10 && item.area <= 19);
+    } else if (selectedArea === "20평대") {
+      filtered = filtered.filter((item) => item.area >= 20 && item.area <= 29);
+    } else if (selectedArea === "30평대") {
+      filtered = filtered.filter((item) => item.area >= 30 && item.area <= 39);
+    } else if (selectedArea === "40평대") {
+      filtered = filtered.filter((item) => item.area >= 40 && item.area <= 49);
+    } else if (selectedArea === "50평대") {
+      filtered = filtered.filter((item) => item.area >= 50 && item.area <= 59);
+    } else if (selectedArea === "60평 이상") {
+      filtered = filtered.filter((item) => item.area >= 60);
+    }
+
+    // 주차만 가능
+    if (isToggled) {
+      filtered = filtered.filter((item) => {
+        const hasParking = item.optionList.some((option) => {
+          const isParking = option.optionTitle.optionName === "주차장";
+          if (isParking) {
+          }
+          return isParking;
+        });
+
+        return item.optionList.length > 0 && hasParking;
+      });
+    }
+
+    // 옵션 선택
+    if (selectedOptions.length > 0) {
+      // selectedOptions 배열에 항목이 있는 경우 필터링 적용
+      filtered = filtered.filter((item) => {
+        // item의 optionList에 selectedOptions의 모든 항목이 포함되어 있는지 확인
+        return selectedOptions.every((option) =>
+          item.optionList.some(
+            (itemOption) => itemOption.optionTitle.optionName === option
+          )
+        );
+      });
+    }
+
+    // 층수 선택
+    if (selectedFloor !== "전체") {
+      if (selectedFloor === "지상층") {
+        filtered = filtered.filter((item) => item.roomFloors >= 1);
+      } else if (selectedFloor === "반지하") {
+        filtered = filtered.filter((item) => item.roomFloors == -1);
+      } else if (selectedFloor === "옥탑") {
+        filtered = filtered.filter((item) => item.roomFloors == 0);
+      }
+    }
+
+    // 단기가능 옵션만 가능
+    if (isChecked2) {
+      filtered = filtered.filter((item) => {
+        const hasShortTermOption = item.optionList.some((option) => {
+          return option.optionTitle.optionName === "단기가능";
+        });
+
+        return hasShortTermOption;
+      });
+    }
+
+    // 최종 필터링된 데이터를 상태에 업데이트
+    setFilterMapList(filtered);
   };
 
   return (
@@ -750,7 +1488,7 @@ function OneRoom() {
                     },
                   ]}
                 >
-                  {mapList.map((marker, index) => (
+                  {filterMapList.map((marker, index) => (
                     <MapMarker
                       key={index}
                       position={{ lat: marker.latitude, lng: marker.longitude }}
@@ -782,342 +1520,813 @@ function OneRoom() {
 
             {/* 검색 옵션 선택 */}
             <div className={style.search_option}>
-              <div>전월세 (~40만)</div>
-              <div>구조 ･ 면적</div>
-              <div>옵션</div>
+              <div onClick={() => handleOptionClick("전월세")}>전 ･ 월세</div>
+              <div onClick={() => handleOptionClick("구조 ･ 면적")}>
+                구조 ･ 면적
+              </div>
+              <div onClick={() => handleOptionClick("옵션")}>옵션</div>
               {/* <div>ㅇ</div> */}
             </div>
           </div>
 
           {/* 검색창 옵션 박스 위치 설정 (display:none / 이게 block 처리 되어야 밑에 box_1,2,3 이 나타남 )*/}
-          <div className={style.search_option_box}>
+          <div
+            className={`${style.search_option_box}`}
+            style={{ display: selectedOption ? "block" : "none" }}
+          >
             {/* 전월세 선택시 */}
-
-            <div className={style.option_box_1}>
-              <div>
-                <span>거래유형</span>
-                <div className={style.deal_type}>
-                  <div className={style.deal_type_on}>전체</div>
-                  <div>전세</div>
-                  <div style={{ margin: "0px" }}>월세</div>
-                </div>
-              </div>
-
-              {/* 월세 조건 선택했을 시 표출하는 토글버튼 (display : none) */}
-
+            {selectedOption === "전월세" && (
               <div
-                style={{
-                  marginTop: "30px",
-                  position: "relative",
-                  display: "none",
-                }}
+                className={`${style.option_box_1}`}
+                style={{ display: "block" }}
               >
-                <span>단기 임대만 보기</span>
-                <div className={`slider-toggle ${isChecked2 ? "checked" : ""}`}>
-                  <label className="switch" htmlFor="activeSwitch">
-                    <input
-                      type="checkbox"
-                      id="activeSwitch"
-                      checked={isChecked2}
-                      onChange={handleToggle2}
-                    />
-                    <span className="slider"></span>
-                  </label>
-                  {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
-                </div>
-              </div>
-
-              {/* 보증금 범위 슬라이더 */}
-              <div style={{ marginTop: "30px" }}>
-                <span>보증금</span>
-
-                <div className={style.option_range}>
-                  <div className="range-slider" ref={sliderRef}>
-                    <div className="range-bar-base-line"></div>
+                {/* 내용 */}
+                <div>
+                  <span>거래유형</span>
+                  <div className={style.deal_type}>
                     <div
-                      className="range-bar"
-                      style={{
-                        left: range.left + "%",
-                        width: range.right - range.left + "%",
-                      }}
+                      className={
+                        selectedDealType === "전체" ? style.deal_type_on : ""
+                      }
+                      onClick={() => handleDealTypeClick("전체")}
                     >
-                      <div className="value_box">값</div>
+                      전체
                     </div>
                     <div
-                      className="range-handle left"
-                      style={{ left: range.left + "%" }}
-                      onMouseDown={handleMouseDownLeft}
-                    ></div>
+                      className={
+                        selectedDealType === "전세" ? style.deal_type_on : ""
+                      }
+                      onClick={() => handleDealTypeClick("전세")}
+                    >
+                      전세
+                    </div>
                     <div
-                      className="range-handle right"
-                      style={{ left: range.right + "%" }}
-                      onMouseDown={handleMouseDownRight}
-                    ></div>
-                    {/* <p>Left: {range.left}</p>
-          <p>Right: {range.right}</p> */}
-                  </div>
-
-                  <div className="range_info_bar">
-                    <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
-                    <div
-                      style={{
-                        borderLeft: "1px solid #b3b3b3",
-                        borderRight: "1px solid #b3b3b3",
-                      }}
-                    ></div>
-                    <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
-                  </div>
-                  <div className="range_info">
-                    <div>최소</div>
-                    <div style={{ marginLeft: "72px" }}>5천만</div>
-                    <div style={{ marginLeft: "70px" }}>2.5억</div>
-                    <div style={{ marginLeft: "70px" }}>최대</div>
+                      className={
+                        selectedDealType === "월세" ? style.deal_type_on : ""
+                      }
+                      style={{ margin: "0px" }}
+                      onClick={() => handleDealTypeClick("월세")}
+                    >
+                      월세
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* 월세 범위 슬라이더 */}
-              <div style={{ marginTop: "30px" }}>
-                <span>월세</span>
+                {/* 월세 조건 선택했을 시 표출하는 단기임대 토글버튼 (display : none) */}
+                <div
+                  style={{
+                    marginTop: "30px",
+                    position: "relative",
+                    display: selectedDealType === "월세" ? "block" : "none",
+                  }}
+                >
+                  <span>단기 임대만 보기</span>
+                  <div
+                    className={`slider-toggle ${isChecked2 ? "checked" : ""}`}
+                  >
+                    <label className="switch" htmlFor="activeSwitch">
+                      <input
+                        type="checkbox"
+                        id="activeSwitch"
+                        checked={isChecked2}
+                        onChange={handleToggle2}
+                      />
+                      <span className="slider"></span>
+                    </label>
+                    {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
+                  </div>
+                </div>
 
-                <div className={style.option_range}>
-                  <div className="custom-range-slider" ref={sliderRef_month}>
-                    <div className="range-bar-base-line"></div>
-                    <div
-                      className="range-bar"
-                      style={{
-                        left: rangeValues.start + "%",
-                        width: rangeValues.end - rangeValues.start + "%",
-                      }}
-                    >
-                      {/* 바로가기 */}
-                      <div className="value_box">
-                        {afterRangeValues.start === 0 &&
-                        afterRangeValues.end === 0
-                          ? "전체"
-                          : afterRangeValues.start === 0
-                          ? `${afterRangeValues.end}까지`
-                          : afterRangeValues.end === 0
-                          ? `${afterRangeValues.start}부터~`
-                          : `${afterRangeValues.start}부터~${afterRangeValues.end}까지`}
+                {/* 보증금 범위 슬라이더 */}
+                <div style={{ marginTop: "30px", display: "block" }}>
+                  <span>
+                    {selectedDealType === "전세" ? "전세금" : "보증금"}
+                  </span>
+                  <div className={style.option_range}>
+                    <div className="range-slider" ref={sliderRef}>
+                      <div className="range-bar-base-line"></div>
+                      <div
+                        className="range-bar"
+                        style={{
+                          left: range.left + "%",
+                          width: range.right - range.left + "%",
+                        }}
+                      >
+                        <div className="value_box">
+                          {afterRange.start === 0 && afterRange.end === 0
+                            ? "전체"
+                            : afterRange.start === 0
+                            ? `${afterRange.end}까지`
+                            : afterRange.end === 0
+                            ? `${afterRange.start}부터`
+                            : `${afterRange.start} ~ ${afterRange.end}`}
+                        </div>
                       </div>
+                      <div
+                        className="range-handle left"
+                        style={{ left: range.left + "%" }}
+                        onMouseDown={handleMouseDownLeft}
+                      ></div>
+                      <div
+                        className="range-handle right"
+                        style={{ left: range.right + "%" }}
+                        onMouseDown={handleMouseDownRight}
+                      ></div>
                     </div>
-                    <div
-                      className="range-handle start"
-                      style={{ left: rangeValues.start + "%" }}
-                      onMouseDown={handleMouseDownStart}
-                    ></div>
-                    <div
-                      className="range-handle end"
-                      style={{ left: rangeValues.end + "%" }}
-                      onMouseDown={handleMouseDownEnd}
-                    ></div>
-                  </div>
 
-                  <div className="range_info_bar">
-                    <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
-                    <div
-                      style={{
-                        borderLeft: "1px solid #b3b3b3",
-                        borderRight: "1px solid #b3b3b3",
-                      }}
-                    ></div>
-                    <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
-                  </div>
-                  <div className="range_info">
-                    <div>최소</div>
-                    <div style={{ marginLeft: "75px" }}>35만</div>
-                    <div style={{ marginLeft: "73px" }}>150만</div>
-                    <div style={{ marginLeft: "65px" }}>최대</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 전세 범위 슬라이더 ( 조건 선택시 [전세 조건 선택] 나오게 바꿔야함 / 현재 display:none )*/}
-
-              <div style={{ marginTop: "30px", display: "none" }}>
-                <span>전세</span>
-
-                <div className={style.option_range}>
-                  <div className="custom-range-slider" ref={sliderCustomRef}>
-                    <div className="range-bar-base-line"></div>
-                    <div
-                      className="range-bar"
-                      style={{
-                        left: sliderValues.left + "%",
-                        width: sliderValues.right - sliderValues.left + "%",
-                      }}
-                    >
-                      <div className="value_box">값</div>
+                    <div className="range_info_bar">
+                      <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
+                      <div
+                        style={{
+                          borderLeft: "1px solid #b3b3b3",
+                          borderRight: "1px solid #b3b3b3",
+                        }}
+                      ></div>
+                      <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
                     </div>
-                    <div
-                      className="range-handle left"
-                      style={{ left: sliderValues.left + "%" }}
-                      onMouseDown={handleMouseDownLeftHandle}
-                    ></div>
-                    <div
-                      className="range-handle right"
-                      style={{ left: sliderValues.right + "%" }}
-                      onMouseDown={handleMouseDownRightHandle}
-                    ></div>
-                    {/* <p>Left: {sliderValues.left}</p>
-        <p>Right: {sliderValues.right}</p> */}
+                    <div className="range_info">
+                      <div>최소</div>
+                      <div style={{ marginLeft: "72px" }}>5천만</div>
+                      <div style={{ marginLeft: "70px" }}>2.5억</div>
+                      <div style={{ marginLeft: "70px" }}>최대</div>
+                    </div>
                   </div>
+                </div>
 
-                  <div className="range_info_bar">
-                    <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
-                    <div
-                      style={{
-                        borderLeft: "1px solid #b3b3b3",
-                        borderRight: "1px solid #b3b3b3",
-                      }}
-                    ></div>
-                    <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
+                {/* 월세 범위 슬라이더 */}
+                <div
+                  style={{
+                    marginTop: "30px",
+                    display: selectedDealType !== "전세" ? "block" : "none",
+                  }}
+                >
+                  <span>월세</span>
+
+                  <div className={style.option_range}>
+                    <div className="custom-range-slider" ref={sliderRef_month}>
+                      <div className="range-bar-base-line"></div>
+                      <div
+                        className="range-bar"
+                        style={{
+                          left: rangeValues.start + "%",
+                          width: rangeValues.end - rangeValues.start + "%",
+                        }}
+                      >
+                        {/* 바로가기 */}
+                        <div className="value_box">
+                          {afterRangeValues.start === 0 &&
+                          afterRangeValues.end === 0
+                            ? "전체"
+                            : afterRangeValues.start === 0
+                            ? `${afterRangeValues.end}까지`
+                            : afterRangeValues.end === 0
+                            ? `${afterRangeValues.start}부터~`
+                            : `${afterRangeValues.start} ~ ${afterRangeValues.end}`}
+                        </div>
+                      </div>
+                      <div
+                        className="range-handle start"
+                        style={{ left: rangeValues.start + "%" }}
+                        onMouseDown={handleMouseDownStart}
+                      ></div>
+                      <div
+                        className="range-handle end"
+                        style={{ left: rangeValues.end + "%" }}
+                        onMouseDown={handleMouseDownEnd}
+                      ></div>
+                    </div>
+
+                    <div className="range_info_bar">
+                      <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
+                      <div
+                        style={{
+                          borderLeft: "1px solid #b3b3b3",
+                          borderRight: "1px solid #b3b3b3",
+                        }}
+                      ></div>
+                      <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
+                    </div>
+                    <div className="range_info">
+                      <div>최소</div>
+                      <div style={{ marginLeft: "75px" }}>35만</div>
+                      <div style={{ marginLeft: "73px" }}>150만</div>
+                      <div style={{ marginLeft: "65px" }}>최대</div>
+                    </div>
                   </div>
-                  <div className="range_info">
-                    <div>최소</div>
-                    <div style={{ marginLeft: "75px" }}>35만</div>
-                    <div style={{ marginLeft: "73px" }}>150만</div>
-                    <div style={{ marginLeft: "65px" }}>최대</div>
+                </div>
+
+                {/* 전세 범위 슬라이더 ( 조건 선택시 [전세 조건 선택] 나오게 바꿔야함 / 현재 display:none )*/}
+                {/* <div
+                  style={{
+                    marginTop: "30px",
+                    display: selectedDealType === "전세" ? "block" : "none",
+                  }}
+                >
+                  <span>전세</span>
+
+                  <div className={style.option_range}>
+                    <div className="custom-range-slider" ref={sliderCustomRef}>
+                      <div className="range-bar-base-line"></div>
+                      <div
+                        className="range-bar"
+                        style={{
+                          left: sliderValues.left + "%",
+                          width: sliderValues.right - sliderValues.left + "%",
+                        }}
+                      >
+                        <div className="value_box">값</div>
+                      </div>
+                      <div
+                        className="range-handle left"
+                        style={{ left: sliderValues.left + "%" }}
+                        onMouseDown={handleMouseDownLeftHandle}
+                      ></div>
+                      <div
+                        className="range-handle right"
+                        style={{ left: sliderValues.right + "%" }}
+                        onMouseDown={handleMouseDownRightHandle}
+                      ></div>
+                    </div>
+
+                    <div className="range_info_bar">
+                      <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
+                      <div
+                        style={{
+                          borderLeft: "1px solid #b3b3b3",
+                          borderRight: "1px solid #b3b3b3",
+                        }}
+                      ></div>
+                      <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
+                    </div>
+                    <div className="range_info">
+                      <div>최소</div>
+                      <div style={{ marginLeft: "75px" }}>35만</div>
+                      <div style={{ marginLeft: "73px" }}>150만</div>
+                      <div style={{ marginLeft: "65px" }}>최대</div>
+                    </div>
+                  </div>
+                </div> */}
+
+                <div
+                  style={{
+                    marginTop: "30px",
+                    position: "relative",
+                    display:
+                      selectedDealType === "전체" || selectedDealType === "월세"
+                        ? "block"
+                        : "none",
+                  }}
+                >
+                  <span>관리비 포함하여 찾기</span>
+                  <div
+                    style={{
+                      opacity:
+                        rangeValues.start !== 0 || rangeValues.end !== 100
+                          ? 1
+                          : 0.2,
+                      pointerEvents:
+                        rangeValues.start !== 0 || rangeValues.end !== 100
+                          ? "auto"
+                          : "none",
+                    }}
+                    className={`slider-toggle ${isChecked ? "checked" : ""}`}
+                  >
+                    <label className="switch" htmlFor="toggleSwitch">
+                      <input
+                        type="checkbox"
+                        id="toggleSwitch"
+                        checked={isChecked}
+                        onChange={handleToggle}
+                      />
+                      <span className="slider"></span>
+                    </label>
+                    {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
                   </div>
                 </div>
               </div>
-
-              <div style={{ marginTop: "30px", position: "relative" }}>
-                <span>관리비 포함하여 찾기</span>
-                <div className={`slider-toggle ${isChecked ? "checked" : ""}`}>
-                  <label className="switch" htmlFor="toggleSwitch">
-                    <input
-                      type="checkbox"
-                      id="toggleSwitch"
-                      checked={isChecked}
-                      onChange={handleToggle}
-                    />
-                    <span className="slider"></span>
-                  </label>
-                  {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
-                </div>
-              </div>
-            </div>
+            )}
 
             {/* 구조면적 선택시 */}
-            <div className={style.option_box_2}>
-              <div>
-                <span>구조</span>
-                <div className={style.structure_box}>
-                  {/* .structure_select div 테두리 지울 것 */}
-                  <div className={style.structure_select}>
-                    <div>아이콘</div>
-                    <div>전체</div>
-                  </div>
+            {selectedOption === "구조 ･ 면적" && (
+              <div
+                className={`${style.option_box_2}`}
+                style={{ display: "block" }}
+              >
+                {/* 구조 */}
+                <div>
+                  <span>구조</span>
+                  <div className={style.structure_box}>
+                    <div
+                      className={style.structure_select}
+                      style={{
+                        borderWidth:
+                          selectedStructure === "전체" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedStructure === "전체"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedStructure === "전체" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleStructureSelect("전체")}
+                    >
+                      <div>
+                        <img
+                          style={{ maxHeight: "24px" }}
+                          src={exam_icon}
+                          alt="exam icon"
+                        />
+                      </div>
+                      <div>전체</div>
+                    </div>
 
-                  <div className={style.structure_select}>
-                    <div>아이콘</div>
-                    <div>오픈형(방1)</div>
-                  </div>
+                    <div
+                      className={style.structure_select}
+                      style={{
+                        borderWidth:
+                          selectedStructure === "오픈형" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedStructure === "오픈형"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedStructure === "오픈형" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleStructureSelect("오픈형")}
+                    >
+                      <div>
+                        <img
+                          style={{ maxHeight: "24px" }}
+                          src={exam_icon}
+                          alt="exam icon"
+                        />
+                      </div>
+                      <div>오픈형(방1)</div>
+                    </div>
 
-                  <div className={style.structure_select}>
-                    <div>아이콘</div>
-                    <div>분리형(방1,거실1)</div>
-                  </div>
+                    <div
+                      className={style.structure_select}
+                      style={{
+                        borderWidth:
+                          selectedStructure === "분리형" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedStructure === "분리형"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedStructure === "분리형" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleStructureSelect("분리형")}
+                    >
+                      <div>
+                        <img
+                          style={{ maxHeight: "24px" }}
+                          src={exam_icon}
+                          alt="exam icon"
+                        />
+                      </div>
+                      <div>분리형(방1,거실1)</div>
+                    </div>
 
-                  <div className={style.structure_select}>
-                    <div>아이콘</div>
-                    <div>복층형</div>
+                    <div
+                      className={style.structure_select}
+                      style={{
+                        borderWidth:
+                          selectedStructure === "복층형" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedStructure === "복층형"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedStructure === "분리형" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleStructureSelect("복층형")}
+                    >
+                      <div>
+                        <img
+                          style={{ maxHeight: "24px" }}
+                          src={exam_icon}
+                          alt="exam icon"
+                        />
+                      </div>
+                      <div>복층형</div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div style={{ marginTop: "30px" }}>
-                <span>층 수 옵션</span>
-                <div className={style.floor_box}>
-                  {/* .structure_select div 테두리 지울 것 */}
-                  <div>전체</div>
+                {/* 층 수 옵션 */}
+                <div style={{ marginTop: "30px" }}>
+                  <span>층 수 옵션</span>
+                  <div className={style.floor_box}>
+                    <div
+                      style={{
+                        borderWidth: selectedFloor === "전체" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedFloor === "전체"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedFloor === "전체" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleFloorSelect("전체")}
+                    >
+                      전체
+                    </div>
 
-                  <div>지상층</div>
+                    <div
+                      style={{
+                        borderWidth:
+                          selectedFloor === "지상층" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedFloor === "지상층"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedFloor === "지상층" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleFloorSelect("지상층")}
+                    >
+                      지상층
+                    </div>
 
-                  <div>반지하</div>
+                    <div
+                      style={{
+                        borderWidth:
+                          selectedFloor === "반지하" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedFloor === "반지하"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedFloor === "반지하" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleFloorSelect("반지하")}
+                    >
+                      반지하
+                    </div>
 
-                  <div>옥탑</div>
+                    <div
+                      style={{
+                        borderWidth: selectedFloor === "옥탑" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedFloor === "옥탑"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedFloor === "옥탑" ? "bold" : "normal",
+                      }}
+                      onClick={() => handleFloorSelect("옥탑")}
+                    >
+                      옥탑
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div style={{ marginTop: "30px" }}>
-                <span>전용 면적</span>
-                <div className={style.area_box}>
-                  {/* .structure_select div 테두리 지울 것 */}
-                  <div style={{ borderTopLeftRadius: "4px" }}>전체</div>
+                {/* 전용 면적 */}
+                <div style={{ marginTop: "30px" }}>
+                  <span>전용 면적</span>
+                  <div className={style.area_box}>
+                    <div
+                      style={{
+                        borderTopLeftRadius: "4px",
+                        borderWidth: selectedArea === "전체" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "전체"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight: selectedArea === "전체" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "전체"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "전체"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("전체")}
+                    >
+                      전체
+                    </div>
 
-                  <div>10평 이하</div>
+                    <div
+                      style={{
+                        borderWidth:
+                          selectedArea === "10평 이하" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "10평 이하"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedArea === "10평 이하" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "10평 이하"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "10평 이하"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("10평 이하")}
+                    >
+                      10평 이하
+                    </div>
 
-                  <div>10평대</div>
+                    <div
+                      style={{
+                        borderWidth:
+                          selectedArea === "10평대" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "10평대"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedArea === "10평대" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "10평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "10평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("10평대")}
+                    >
+                      10평대
+                    </div>
 
+                    <div
+                      style={{
+                        borderRight: "none",
+                        borderTopRightRadius: "4px",
+                        borderWidth:
+                          selectedArea === "20평대" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "20평대"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedArea === "20평대" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "20평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "20평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderRight:
+                          selectedArea === "20평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("20평대")}
+                    >
+                      20평대
+                    </div>
+
+                    <div
+                      style={{
+                        borderBottom: "none",
+                        borderBottomLeftRadius: "4px",
+                        borderWidth:
+                          selectedArea === "30평대" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "30평대"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedArea === "30평대" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "30평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "30평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderRight:
+                          selectedArea === "30평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderBottom:
+                          selectedArea === "30평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("30평대")}
+                    >
+                      30평대
+                    </div>
+
+                    <div
+                      style={{
+                        borderBottom: "none",
+                        borderWidth:
+                          selectedArea === "40평대" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "40평대"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedArea === "40평대" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "40평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "40평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderRight:
+                          selectedArea === "40평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderBottom:
+                          selectedArea === "40평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("40평대")}
+                    >
+                      40평대
+                    </div>
+
+                    <div
+                      style={{
+                        borderBottom: "none",
+                        borderWidth:
+                          selectedArea === "50평대" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "50평대"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedArea === "50평대" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "50평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "50평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderRight:
+                          selectedArea === "50평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderBottom:
+                          selectedArea === "50평대"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("50평대")}
+                    >
+                      50평대
+                    </div>
+
+                    <div
+                      style={{
+                        borderRight: "none",
+                        borderBottom: "none",
+                        borderBottomRightRadius: "4px",
+                        borderWidth:
+                          selectedArea === "60평 이상" ? "1.4px" : "1px",
+                        borderColor:
+                          selectedArea === "60평 이상"
+                            ? "black"
+                            : "rgb(230, 230, 230)",
+                        fontWeight:
+                          selectedArea === "60평 이상" ? "bold" : "normal",
+                        borderLeft:
+                          selectedArea === "60평 이상"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderTop:
+                          selectedArea === "60평 이상"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderRight:
+                          selectedArea === "60평 이상"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                        borderBottom:
+                          selectedArea === "60평 이상"
+                            ? "1.4px solid black"
+                            : "none", // 추가
+                      }}
+                      onClick={() => handleAreaSelect("60평 이상")}
+                    >
+                      60평 이상
+                    </div>
+                  </div>
+                </div>
+
+                {/* 주차 가능 */}
+                <div style={{ marginTop: "30px", position: "relative" }}>
+                  <span>주차 가능만 보기</span>
                   <div
-                    style={{ borderRight: "none", borderTopRightRadius: "4px" }}
+                    className={`slider-toggle ${isToggled ? "checked" : ""}`}
                   >
-                    20평대
-                  </div>
-
-                  <div
-                    style={{
-                      borderBottom: "none",
-                      borderBottomLeftRadius: "4px",
-                    }}
-                  >
-                    30평대
-                  </div>
-
-                  <div style={{ borderBottom: "none" }}>40평대</div>
-
-                  <div style={{ borderBottom: "none" }}>50평대</div>
-
-                  <div
-                    style={{
-                      borderRight: "none",
-                      borderBottom: "none",
-                      borderBottomRightRadius: "4px",
-                    }}
-                  >
-                    60평 이상
+                    <label className="switch" htmlFor="toggleSwitch_car">
+                      <input
+                        type="checkbox"
+                        id="toggleSwitch_car"
+                        checked={isToggled}
+                        onChange={handleCheckboxChange}
+                      />
+                      <span className="slider"></span>
+                    </label>
+                    {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
                   </div>
                 </div>
               </div>
-
-              <div style={{ marginTop: "30px", position: "relative" }}>
-                <span>주차 가능만 보기</span>
-                <div className={`slider-toggle ${isToggled ? "checked" : ""}`}>
-                  <label className="switch" htmlFor="toggleSwitch_car">
-                    <input
-                      type="checkbox"
-                      id="toggleSwitch_car"
-                      checked={isToggled}
-                      onChange={handleCheckboxChange}
-                    />
-                    <span className="slider"></span>
-                  </label>
-                  {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
-                </div>
-              </div>
-            </div>
+            )}
 
             {/* 옵션 선택시 */}
-            <div className={style.option_box_3}>
-              <div>
-                <span>매물 옵션</span>
-                <div className={style.item_box}>
-                  <div className={style.structure_select}>에어컨</div>
+            {selectedOption === "옵션" && (
+              <div
+                className={`${style.option_box_3}`}
+                style={{ display: "block" }}
+              >
+                <div>
+                  <span>매물 옵션</span>
+                  <div className={style.item_box}>
+                    <div
+                      className={`${style.structure_select} ${
+                        selectedOptions.includes("에어컨") ? style.selected : ""
+                      }`}
+                      onClick={() => handleOptionSelect("에어컨")}
+                      style={{
+                        borderWidth: selectedOptions.includes("에어컨")
+                          ? "1.4px"
+                          : "1px",
+                        borderColor: selectedOptions.includes("에어컨")
+                          ? "black"
+                          : "rgb(230, 230, 230)",
+                        fontWeight: selectedOptions.includes("에어컨")
+                          ? "bold"
+                          : "normal",
+                      }}
+                    >
+                      에어컨
+                    </div>
 
-                  <div className={style.structure_select}>냉장고</div>
+                    <div
+                      className={`${style.structure_select} ${
+                        selectedOptions.includes("냉장고") ? style.selected : ""
+                      }`}
+                      onClick={() => handleOptionSelect("냉장고")}
+                      style={{
+                        borderWidth: selectedOptions.includes("냉장고")
+                          ? "1.4px"
+                          : "1px",
+                        borderColor: selectedOptions.includes("냉장고")
+                          ? "black"
+                          : "rgb(230, 230, 230)",
+                        fontWeight: selectedOptions.includes("냉장고")
+                          ? "bold"
+                          : "normal",
+                      }}
+                    >
+                      냉장고
+                    </div>
 
-                  <div className={style.structure_select}>세탁기</div>
+                    <div
+                      className={`${style.structure_select} ${
+                        selectedOptions.includes("세탁기") ? style.selected : ""
+                      }`}
+                      onClick={() => handleOptionSelect("세탁기")}
+                      style={{
+                        borderWidth: selectedOptions.includes("세탁기")
+                          ? "1.4px"
+                          : "1px",
+                        borderColor: selectedOptions.includes("세탁기")
+                          ? "black"
+                          : "rgb(230, 230, 230)",
+                        fontWeight: selectedOptions.includes("세탁기")
+                          ? "bold"
+                          : "normal",
+                      }}
+                    >
+                      세탁기
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* 초기화, 확인 버튼 부분*/}
             <div className={style.option_btn_box}>
               <div className={style.option_reset}>초기화</div>
-              <div className={style.option_check}>확인</div>
+              <div
+                className={style.option_check}
+                onClick={() => setSelectedOption(null)}
+              >
+                확인
+              </div>
             </div>
           </div>
 
@@ -1126,10 +2335,15 @@ function OneRoom() {
             {/* 검색창 리스트 세부박스 아래와 같이 세팅할것 */}
           </div>
         </div>
-
+        {/* 여기 */}
         <div className={style.home_body_side}>
           <Routes>
-            <Route path="list/*" element={<List />} />
+            <Route
+              path="list/*"
+              element={
+                <List filterMapList={filterMapList} listReady={listReady} />
+              }
+            />
             <Route path="info/*" element={<Info />} />
           </Routes>
         </div>
