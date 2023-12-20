@@ -8,9 +8,19 @@ function EstateInfo2({ realEstate }) {
 
   const renderAllOptionTitles = () => {
     return realEstate.optionList.map(option => (
-      <span key={option.optionCode}>{option.optionTitle.optionName}</span> 
+      <span key={option.optionCode}>{option.optionTitle.optionName}</span>
     ));
   };
+
+  const roomFloors = () => {
+    if(realEstate.roomFloors === -1) {
+      return "반지하";
+    } else if(realEstate.roomFloors === 0) {
+      return "옥탑";
+    } else {
+      return realEstate.roomFloors;
+    }
+  }
 
   return (
     <>
@@ -58,14 +68,14 @@ function EstateInfo2({ realEstate }) {
             </div>
             <div>
               <label>해당 층 수</label>
-              {realEstate.roomFloors}
+              {roomFloors()}
             </div>
           </td>
         </tr>
         <tr>
           <th>옵션항목</th>
           <td>
-          {realEstate.optionList.length > 0 ? renderAllOptionTitles() : "옵션 없음"}
+            {realEstate.optionList.length > 0 ? renderAllOptionTitles() : "옵션 없음"}
           </td>
         </tr>
       </table>

@@ -52,7 +52,6 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
     } else {
       setRealEstate(prev => ({ ...prev, roomFloors: "" }));
     }
-
   }
 
   return (
@@ -142,6 +141,7 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
             <input type="checkbox" id="o7" name="optionCode" value="o7" onChange={handleOptionCode} /><label for="o7">책상</label>
             <input type="checkbox" id="o8" name="optionCode" value="o8" onChange={handleOptionCode} /><label for="o8">옷장</label>
             <input type="checkbox" id="o9" name="optionCode" value="o9" onChange={handleOptionCode} /><label for="o9">TV</label>
+            <input type="checkbox" id="o10" name="optionCode" value="o10" onChange={handleOptionCode} /><label for="o10">냉장고</label>
             {/* <input type="checkbox" /><label>반려동물</label>
             <input type="checkbox" /><label>베란다/발코니</label>
             <input type="checkbox" /><label>신발장</label>
