@@ -15,7 +15,7 @@ const EditRoomBoardContents = () => {
         title: "",
         header: "",
         contents: "",
-        files: []
+        files: {}
     });
 
     function compareBySeq(a, b) {
@@ -36,7 +36,7 @@ const EditRoomBoardContents = () => {
     }, []);
 
     const handleFileChange = (e) => {
-        setFormData(prev => ({ ...prev, files: [...prev.files, e.target.files[0]] }));
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: e.target.files[0] } }));
     }
 
     const handleChange = (e) => {
@@ -151,8 +151,12 @@ const EditRoomBoardContents = () => {
         submitFormData.append("header", formData.header);
         submitFormData.append("delFileList", delFileList);
 
-        formData.files.forEach((e) => {
-            submitFormData.append("files", e);
+        let fileList = Object.values(formData.files);
+
+        fileList.forEach((e) => {
+            if (e !== "" && e instanceof File) {
+                submitFormData.append("files", e);
+            }
         });
 
         axios.put("/api/board", submitFormData).then(resp => {
@@ -163,6 +167,17 @@ const EditRoomBoardContents = () => {
             console.log(err);
         })
     }
+
+    const numberOfInputs = 5 - fileList.length;
+    const fileListDiv = () => (
+        <>
+            {[...Array(numberOfInputs)].map((_, index) => (
+                <div key={index}>
+                    <input type="file" onChange={handleFileChange} name={`files${index}`}/>
+                </div>
+            ))}
+        </>
+    )
 
     const modules = useMemo(() => ({
         toolbar: {
@@ -228,11 +243,7 @@ const EditRoomBoardContents = () => {
             </div>
             <div>
                 <div>파일첨부</div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
-                <div><input type="file" onChange={handleFileChange} /></div>
+                {fileListDiv()}
             </div>
             <div>
                 <div>내용</div>
