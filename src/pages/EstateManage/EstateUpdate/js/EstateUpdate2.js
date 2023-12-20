@@ -1,6 +1,6 @@
 import style from '../css/EstateUpdate.module.css';
 
-function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, maintenanceOption, setMaintenanceOption }) {
+function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, maintenanceOption, setMaintenanceOption, showFloorInput, setShowFloorInput }) {
 
   const handleMaintenanceChange = (e) => {
     setMaintenanceOption(e.target.value);
@@ -31,6 +31,20 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
       setRealEstate(prev => ({ ...prev, [name]: value }));
     } else {
       setRealEstate(prev => ({ ...prev, [name]: sanitizedValue }));
+    }
+  }
+
+  const handleFloorInput = (e) => {
+    const { value } = e.target;
+
+    setShowFloorInput(value);
+
+    if (value === 'f1') {
+      setRealEstate(prev => ({ ...prev, roomFloors: -1 }));
+    } else if (value === 'f2') {
+      setRealEstate(prev => ({ ...prev, roomFloors: 0 }));
+    } else {
+      setRealEstate(prev => ({ ...prev, roomFloors: "" }));
     }
   }
 
@@ -92,13 +106,20 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
           <th>층수<span className={style.star}>*</span></th>
           <td>
             <div>
+              <input type="radio" id="f1" value="f1" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f1"} /><label for="f1">반지하</label>
+              <input type="radio" id="f2" value="f2" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f2"} /><label for="f2">옥탑</label>
+              <input type="radio" id="f3" value="f3" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f3"} /><label for="f3">해당없음</label>
+            </div>
+            <div>
               <label>전체 층 수</label>
               <input type="text" name="buildingFloors" onChange={handleChange} value={realEstate.buildingFloors} />
             </div>
-            <div>
-              <label>해당 층 수</label>
-              <input type="text" name="roomFloors" onChange={handleChange} value={realEstate.roomFloors} />
-            </div>
+            {showFloorInput === 'f3' &&
+              <div>
+                <label>해당 층 수</label>
+                <input type="text" name="roomFloors" onChange={handleChange} value={realEstate.roomFloors} />
+              </div>
+            }
           </td>
         </tr>
         <tr>
@@ -112,7 +133,7 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
             <input type="checkbox" id="o7" name="optionCode" value="o7" onChange={handleOptionCode} checked={optionList.includes("o7")} /><label for="o7">책상</label>
             <input type="checkbox" id="o8" name="optionCode" value="o8" onChange={handleOptionCode} checked={optionList.includes("o8")} /><label for="o8">옷장</label>
             <input type="checkbox" id="o9" name="optionCode" value="o9" onChange={handleOptionCode} checked={optionList.includes("o9")} /><label for="o9">TV</label>
-
+            <input type="checkbox" id="o10" name="optionCode" value="o10" onChange={handleOptionCode} checked={optionList.includes("o10")} /><label for="o10">냉장고</label>
             {/* <input type="checkbox" /><label>반려동물</label>
             <input type="checkbox" /><label>베란다/발코니</label>
             <input type="checkbox" /><label>신발장</label>

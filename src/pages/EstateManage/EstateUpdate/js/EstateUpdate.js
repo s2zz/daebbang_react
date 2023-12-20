@@ -156,6 +156,12 @@ function EstateUpdate() {
           setMaintenanceOption("true");
         }
 
+        if(resp.data.roomFloors === -1) {
+          setShowFloorInput("f1");
+        } else if(resp.data.roomFloors === 0) {
+          setShowFloorInput("f2");
+        }
+
         // 이미지 태그를 상태에 설정
         setTempImages(resp.data.images);
       })
@@ -172,7 +178,8 @@ function EstateUpdate() {
         <>
           <h1 className={style.bigTitle}>정보수정</h1>
           <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
-          <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
+          <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList} 
+          maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput}/>
           <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
           <div className={style.buttonDiv}>
             <button onClick={handleReturn}>이전으로</button>
