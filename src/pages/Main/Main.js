@@ -124,17 +124,14 @@ const Main = () => {
             <div className={style.contents}>
               {
                 mapList.map((e, i) => {
-                  if (i >= 6) {
-                    return
-                  }
                   return (
                     <Link to={`#`} style={{ textDecoration: "none", color: "black" }} >
                       <div className={style.cbgdiv} key={i}>
                         <span className={style.fontcss}>
-                          [{e.address2}]
+                        [{e.address2.length > 7 ? e.address2.substring(0, 7) : e.address2}]
                         </span>
                         <span className={style.fontcss}>
-                          {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
+                        {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
                         </span>
                         <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.substring(0, 10)}</span>
                       </div>
