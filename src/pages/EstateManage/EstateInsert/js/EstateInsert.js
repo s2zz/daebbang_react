@@ -15,6 +15,8 @@ function EstateInsert() {
   const [estateImages, setEstateImages] = useState([]);
   // 관리비 유무
   const [maintenanceOption, setMaintenanceOption] = useState("true");
+  // 반지하, 옥탑 확인(f1=반지하, f2=옥탑, f3=해당없음)
+  const [showFloorInput, setShowFloorInput] = useState("f3");
 
   // 보낼 데이터
   const [realEstate, setRealEstate] = useState({
@@ -44,28 +46,45 @@ function EstateInsert() {
     navi("/EstateManage");
   }
 
-  const handleSubmit = () => {
-    // 필수 항목
+  function validateFields(realEstate, maintenanceOption, showFloorInput) {
     const requiredFields = [
       'roomCode', 'structureCode', 'buildingCode', 'heatingCode', 'area', 'zipcode', 'address1', 'address2', 'latitude', 'longitude',
-      'transactionCode', 'price', 'buildingFloors', 'roomFloors',
-      'title', 'contents'];
-
-    // 필수 항목이 비어있는지 검사
+      'transactionCode', 'price', 'buildingFloors',
+      'title', 'contents'
+    ];
+  
     if (requiredFields.some(name => !realEstate[name])) {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-
-    // 관리비 '있음' AND 관리비 입력 안한 경우 
+  
     if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-
-    // roomFloors가 buildingFloors보다 큰지 확인
+  
     if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
       alert("방 층수는 건물의 층수보다 클 수 없습니다.");
+      return false;
+    }
+  
+    if (parseInt(realEstate.buildingFloors) < 1) {
+      alert("건물의 층수는 1층보다 낮을 수 없습니다.");
+      return false;
+    }
+  
+    if (showFloorInput === 'f3' && (parseInt(realEstate.roomFloors) < 1 || realEstate.roomFloors === '')) {
+      alert("해당 층수는 1층보다 낮을 수 없습니다.");
+      return false;
+    }
+  
+    return true;
+  }
+
+  const handleSubmit = () => {
+    console.log(realEstate);
+
+    if (!validateFields(realEstate, maintenanceOption, showFloorInput)) {
       return false;
     }
 
@@ -105,7 +124,9 @@ function EstateInsert() {
       <p className={style.explanation}>전/ 월세 매물만 등록할 수 있습니다.</p>
       <p className={style.explanation}>주소를 다르게 입력할 경우 허위매물로 신고될 수 있으니 꼭 동일하게 입력 바랍니다.</p>
       <EstateInsert1 realEstate={realEstate} setRealEstate={setRealEstate} />
-      <EstateInsert2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList} maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} />
+      <EstateInsert2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList}
+        maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption}
+        showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
       <EstateInsert3 setRealEstate={setRealEstate} setEstateImages={setEstateImages} />
       <div className={style.buttonDiv}>
         <button onClick={handleReturn}>이전으로</button>
