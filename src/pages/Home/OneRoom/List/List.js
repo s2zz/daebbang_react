@@ -1,7 +1,7 @@
 //
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 //
 import Info from "../Info/Info";
@@ -16,7 +16,20 @@ function List({ onDragEnd, listReady }) {
 
   // 전달된 데이터 추출
   const { markersInBounds } = location.state || {};
-  // const size = Object.keys(markersInBounds).length;
+
+  // 작성자(공인중개사) 매너온도 가져오기
+  const [markerSize, setMarkerSize] = useState("");
+
+  // 매너온도를 저장하기 위한 상태
+  const [mannersTemperatureList, setMannersTemperatureList] = useState([]);
+
+  useEffect(() => {
+    // markersInBounds가 존재하고 객체인 경우에만 길이를 계산
+    if (markersInBounds && typeof markersInBounds === "object") {
+      // setMarkerSize 함수를 올바르게 호출
+      setMarkerSize(Object.keys(markersInBounds).length);
+    }
+  }, [markersInBounds]); // markersInBounds 의존성 배열에 포함
 
   // 마커를 클릭하면 해당 마커의 내용을 들고 정보(info)로 감
   // 마커를 클릭하여 쿠키에 정보 추가
@@ -52,59 +65,107 @@ function List({ onDragEnd, listReady }) {
   }
 
   // 작성자(공인중개사) 매너온도 가져오기
-  async function callAgentState() {
-    try {
-      const response = await axios.get('api/map/callAgentState');
-      return response.data; // 응답 데이터 반환
-    } catch (error) {
-      console.error('Error fetching agent state:', error);
-      throw error; // 에러 처리
+  useEffect(() => {
+    // markersInBounds가 null이 아니고, 배열인 경우에만 실행
+    if (markersInBounds && Array.isArray(markersInBounds)) {
+      const emailList = markersInBounds
+        .filter(
+          (marker) => marker.realEstateAgent && marker.realEstateAgent.email
+        )
+        .map((marker) => marker.realEstateAgent.email);
+
+      // 이메일 리스트가 비어있지 않은 경우에만 API 호출
+      if (emailList.length > 0) {
+        const emailQueryString = emailList.join(",");
+        axios
+          .get(
+            `/api/map/callAgentState?email=${encodeURIComponent(
+              emailQueryString
+            )}`
+          )
+          .then((resp) => {
+            // 매너온도 데이터를 배열로 변환하여 상태 업데이트
+            const tempData = resp.data.map((agent) => ({
+              email: agent.email,
+              mannersTemperature: agent.manners_temperature,
+            }));
+            setMannersTemperatureList(tempData);
+
+            mannersTemperatureList.forEach((item) => {});
+          })
+          .catch((err) => {
+            console.log("API 호출 오류:", err);
+          });
+      }
+    }
+  }, [markersInBounds]);
+
+  function getMannersTemperature(email) {
+    if (email) {
+      const matchingAgent = mannersTemperatureList.find(
+        (agent) => mannersTemperatureList.email === email
+      );
+      return matchingAgent ? matchingAgent.mannersTemperature : "";
     }
   }
 
   return (
     <div className={style.list_main}>
       <div className={style.list_cnt}>
-        지역 목록
+        지역 목록 {markerSize ? `${markerSize}개` : ""}
         <span className={style.unit_change}>
           <div>{/* <img src={turn} /> */}</div>
         </span>
       </div>
 
       {listReady &&
-        markersInBounds &&
-        markersInBounds.map((marker, index) => (
-          <div
-            key={index}
-            className={style.list_box}
-            onClick={() => handleMarkerClick(marker)}
-          >
-            <div className={style.list_box_img}>{/* 이미지 */}</div>
+        (markersInBounds && markersInBounds.length > 0 ? (
+          markersInBounds.map((marker, index) => (
+            <div
+              key={index}
+              className={style.list_box}
+              onClick={() => handleMarkerClick(marker)}
+            >
+              <div className={style.list_box_img}>{/* 이미지 */}</div>
 
-            <div className={style.list_box_text}>
-              <div className={style.list_box_top}>
-                <span className={style.recommend}>추천</span> {marker.structure.structureType}
-                {marker.structureType}
+              <div className={style.list_box_text}>
+                <div className={style.list_box_top}>
+                  {mannersTemperatureList[index] &&
+                    mannersTemperatureList[index].mannersTemperature >= 70 && (
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        className={style.recommend}
+                      >
+                        추천
+                      </span>
+                    )}
+                  {marker.structure.structureType}
+                  {marker.structureType}
+                </div>
+                <div className={style.list_title}>
+                  {marker.transaction.transactionType}{" "}
+                  {marker.deposit === 0
+                    ? `${formatPrice(marker.price)}`
+                    : `${formatPrice(marker.deposit)} / ${formatPrice(
+                        marker.price
+                      )}`}
+                </div>
+                <div className={style.list_subtitle}>
+                  {marker.area}평{" "}
+                  {marker.roomFloors === -1
+                    ? "반지하"
+                    : marker.roomFloors === 0
+                    ? "옥탑"
+                    : `${marker.roomFloors}층`}
+                </div>
+                <div className={style.list_subtitle}>{marker.address2}</div>
+                <div className={style.list_simple}>{marker.title}</div>
               </div>
-              <div className={style.list_title}>
-                {marker.transaction.transactionType}{" "}
-                {marker.deposit === 0
-                  ? `${formatPrice(marker.price)}`
-                  : `${formatPrice(marker.deposit)} / ${formatPrice(
-                      marker.price
-                    )}`}
-              </div>
-              <div className={style.list_subtitle}>
-                {marker.area}평{" "}
-                {marker.roomFloors === -1
-                  ? "반지하"
-                  : marker.roomFloors === 0
-                  ? "옥탑"
-                  : `${marker.roomFloors}층`}
-              </div>
-              <div className={style.list_subtitle}>{marker.address2}</div>
-              <div className={style.list_simple}>{marker.contents}</div>
             </div>
+          ))
+        ) : (
+          <div className={style.noData}>
+            검색된 데이터가 없습니다. 곧 꾸밀거긩 ㅋ
           </div>
         ))}
 
