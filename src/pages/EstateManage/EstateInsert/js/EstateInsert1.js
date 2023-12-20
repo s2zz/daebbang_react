@@ -27,7 +27,7 @@ function EstateInsert1({ realEstate, setRealEstate }) {
       address1: enroll_company.address1,
       address2: enroll_company.address2
     }));
-    
+
     handleGeocoding(enroll_company.address1);
   }, [enroll_company]);
 
@@ -123,7 +123,7 @@ function EstateInsert1({ realEstate, setRealEstate }) {
             </div>
             =
             <div className={style.scaleDiv}>
-              <input type="text" className={style.scaleInput} value={(realEstate.area * 3.30578).toFixed(2)} readOnly />
+              <input type="text" className={style.scaleInput} value={isNaN(realEstate.area) ? 0 : (realEstate.area * 3.30578).toFixed(2)} readOnly />
               <p className={style.scale}>㎡</p>
             </div>
           </td>

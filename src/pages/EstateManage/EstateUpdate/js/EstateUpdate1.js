@@ -137,7 +137,7 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
                 </div>
                 =
                 <div className={style.scaleDiv}>
-                  <input type="text" className={style.scaleInput} value={(realEstate.area * 3.30578).toFixed(2)} readOnly />
+                  <input type="text" className={style.scaleInput} value={isNaN(realEstate.area) ? 0 : (realEstate.area * 3.30578).toFixed(2)} readOnly />
                   <p className={style.scale}>㎡</p>
                 </div>
               </td>

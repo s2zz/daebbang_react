@@ -63,6 +63,11 @@ function EstateInsert() {
       return false;
     }
 
+    if (isNaN(realEstate.area) || realEstate.area === '') {
+      alert("면적을 숫자로 입력해주세요");
+      return false;
+    }
+
     if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
       alert("방 층수는 건물의 층수보다 클 수 없습니다.");
       return false;
