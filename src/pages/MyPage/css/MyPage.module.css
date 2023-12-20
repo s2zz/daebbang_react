@@ -6,6 +6,7 @@
     display: flex;
     justify-content: center;
     margin-top: 50px;
+    font-family: "NanumBarunGothic";
     font-size: 30pt;
     font-weight: bold;
 }
@@ -36,6 +37,7 @@
 .menuInfo,
 .menuJjim,
 .menuReview {
+    font-family: "NanumBarunGothic";
     width: 270px;
     height: 100%;
     background-color: white;
@@ -45,6 +47,7 @@
 .menuInfoSelected,
 .menuJjimSelected,
 .menuReviewSelected {
+    font-family: "NanumBarunGothic";
     width: 270px;
     height: 100%;
     background-color: black;
@@ -65,15 +68,21 @@
 }
 
 .leftInfo {
+    font-family: "NanumBarunGothic";
     font-weight: bold;
     float: left;
     width: 100px;
 }
 
 .eleftInfo {
+    font-family: "NanumBarunGothic";
     font-weight: bold;
     float: left;
     width: 200px;
+}
+
+.rightInfo {
+    font-family: "NanumBarunGothic";
 }
 
 .cBtnBox {
@@ -83,11 +92,13 @@
 }
 
 .changeBtn {
+    font-family: "NanumBarunGothic";
     width: 150px;
     height: 50px;
     background-color: white;
     color: black;
     margin-right: 10px;
+    border-radius: 5px;
 }
 
 .changeBtn:hover {
@@ -102,6 +113,8 @@
     height: 70px;
     display: flex;
     align-items: center;
+    font-family: "NanumBarunGothic";
+    border-bottom:1px solid gainsboro;
 }
 
 .SawEstate img {
@@ -113,10 +126,40 @@
 .sawAddress {
     width:400px;
     height:100%;
-    border: 1px solid black;
+    display: flex;
+    align-items: center;
 }
 .sawTitle {
     width:200px;
     height:100%;
-    border: 1px solid black;
+    display: flex;
+    align-items: center;
+}
+
+.waitBtn {
+    background-color: white;
+    border:none;
+}
+
+.writeReviewBtn {
+    background-color: black;
+    color:white;
+}
+
+.writeReviewBtn:hover {
+    background-color: white;
+    color:black;
+}
+
+.refuseBtn {
+    background-color: white;
+    border:none;
+}
+
+.notSawYet {
+    height:500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "NanumBarunGothic";
 }

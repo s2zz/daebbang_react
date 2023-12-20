@@ -71,14 +71,14 @@ const Review = () => {
                                 <img src={`uploads\\estateImages\\${e.img}`} alt="Estate Image"></img>
                                 <div className={style.sawAddress}>{address.length > 30 ? address.substring(0, 30) + "..." : address}</div>
                                 <div className={style.sawTitle}>{title.length > 15 ? title.substring(0, 15) + "..." : title}</div>
-                                {e.approvalCode === 'a1' || e.approvalCode === 'a2' ? <button>승인 대기</button> : null}
-                                {e.approvalCode === 'a3' ? <Link to="/review/writeReview" state={{estateCode:e.estateId, approvalCode:e.approvalCode}}><button>리뷰 작성</button></Link> : null}
-                                {e.approvalCode === 'a4' || e.approvalCode === 'b1' ? <button>승인 거절</button> : null}
+                                {e.approvalCode === 'a1' || e.approvalCode === 'a2' ? <button className={style.waitBtn}>승인 대기</button> : null}
+                                {e.approvalCode === 'a3' ? <Link to="/review/writeReview" state={{ estateCode: e.estateId, approvalCode: e.approvalCode }}><button className={style.writeReviewBtn}>리뷰 작성</button></Link> : null}
+                                {e.approvalCode === 'a4' || e.approvalCode === 'b1' ? <button className={style.refuseBtn}>승인 거절</button> : null}
                             </div>
                         )
                     })}
                 </div>
-                : <div>아직 방을 구경하지 않았어요</div>}
+                : <div className={style.notSawYet}>아직 방을 구경하지 않았어요</div>}
         </div>
     );
 }
@@ -121,11 +121,30 @@ const EstateInfo = () => {
 }
 
 function MyPage() {
-    const [initialRender, setInitialRender] = useState(true);
-
     const isEstate = sessionStorage.getItem('isEstate');
 
-    const [selectedMenu, setSelectedMenu] = useState("info");
+    const [selectedMenu, setSelectedMenu] = useState("");
+
+    // Set selectedMenu based on the current URL
+    useEffect(() => {
+        const currentPath = window.location.pathname;
+        const menuFromPath = getMenuFromPath(currentPath);
+        setSelectedMenu(menuFromPath);
+    }, []);
+
+    // Helper function to get menu from the URL path
+    const getMenuFromPath = (path) => {
+        // You may need to adjust this logic based on your URL structure
+        if (path.includes('jjim')) {
+            return 'jjim';
+        } else if (path.includes('review')) {
+            return 'review';
+        } else if (path.includes('estateInfo')) {
+            return 'estateInfo';
+        }
+        // Default to 'info' if no match is found
+        return 'info';
+    };
 
     const handleMenuClick = (menu) => {
         setSelectedMenu(menu);
@@ -155,7 +174,7 @@ function MyPage() {
                 </div>
             }
             <Routes>
-                {initialRender && !isEstate && <Route path="/" element={<Info />} />} {/* 처음 렌더링 시에만 Info 컴포넌트를 보임 */}
+                {!isEstate && <Route path="/" element={<Info />} />}
                 <Route path="info" element={<Info />} />
                 <Route path="jjim" element={<Jjim />} />
                 <Route path="review" element={<Review />} />
@@ -163,7 +182,7 @@ function MyPage() {
                 <Route path="updateMyInfo" element={<UpdateMyInfo />} />
                 <Route path="changePw" element={<ChangePw />} />
 
-                {initialRender && isEstate && <Route path="/" element={<EstateInfo />} />}
+                {isEstate && <Route path="/" element={<EstateInfo />} />}
                 <Route path="estateInfo" element={<EstateInfo />} />
             </Routes>
         </div>
