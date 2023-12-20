@@ -14,7 +14,7 @@ function EstateInsert3({ realEstate }) {
       <div className={style.imagePreviews}>
         {realEstate.images.length > 0 ? (
           realEstate.images.map((preview, index) => (
-            
+
             <img key={index} src={`..\\..\\uploads\\estateImages\\${preview.sysName}`} alt={`Preview ${index}`} className={style.imagePreview} />
           ))
         ) : (
@@ -35,13 +35,13 @@ function EstateInsert3({ realEstate }) {
         <tr>
           <th>상세설명</th>
           <td>
-            <textarea placeholder="설명을 입력해주세요." className={style.inputContents} name="contents">{realEstate.contents}</textarea>
+            <textarea placeholder="설명을 입력해주세요." className={style.inputContents} name="contents" readOnly>{realEstate.contents}</textarea>
           </td>
         </tr>
         <tr>
           <th>메모</th>
           <td>
-            <textarea placeholder="메모는 본인에게만 보입니다." className={style.inputContents} name="memo">{realEstate.memo}</textarea>
+            <textarea placeholder="메모는 본인에게만 보입니다." className={style.inputContents} name="memo" readOnly>{realEstate.memo}</textarea>
           </td>
         </tr>
       </table>
