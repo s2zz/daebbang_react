@@ -4,13 +4,15 @@
     height: 100%;
 }
 .sideBar {
+  font-family: "NanumBarunGothic"; 
     width: 16%;
-    background-color: antiquewhite;
+    background-color: #c2d2ee;
     padding: 40px;
-    min-height: 89vh;
+    min-height: 91vh;
   }
   
   .mainContent {
+    font-family: "NanumBarunGothic"; 
     width: 84%;
     height: 100%;
   }

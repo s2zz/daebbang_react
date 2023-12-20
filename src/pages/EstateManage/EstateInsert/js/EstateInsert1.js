@@ -1,32 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Post from '../../js/Post';
 import style from '../css/EstateInsert.module.css';
 
 function EstateInsert1({ realEstate, setRealEstate }) {
   const { kakao } = window;
-
-  // 평수&제곱미터
-  const [areas, setAreas] = useState({ area: '', squareMeter: '' });
-
-  // 평수, 제곱미터
-  const handleAreaChange = (e) => {
-    let { name, value } = e.target;
-
-    // 입력한 값이 평수일 떄
-    if (name === 'area') {
-      // 숫자가 아닌 값이 입력되었을 때
-      if (isNaN(value)) {
-        value = 0;
-      }
-
-      // 제곱미터 계산
-      const pyeongValue = parseFloat(value);
-      const squareMeterValue = pyeongValue * 3.30578; // 1평 = 3.30578㎡
-
-      setRealEstate(prev => ({ ...prev, [name]: value }));
-      setAreas({ area: value, squareMeter: squareMeterValue.toFixed(2) });
-    }
-  }
 
   // 우편 번호
   const [enroll_company, setEnroll_company] = useState({
@@ -38,21 +15,22 @@ function EstateInsert1({ realEstate, setRealEstate }) {
   // 주소 검색 팝업
   const [popup, setPopup] = useState(false);
 
-  const handleAddress = async (e) => {
-    const { name, value } = e.target;
-
-    if (name === 'address1') {
-      setEnroll_company({
-        ...enroll_company,
-        [name]: value
-      });
-    }
-  };
-
   // 주소 검색 팝업창 닫기
   const handleComplete = (data) => {
     setPopup(!popup);
-  }
+  };
+
+  useEffect(() => {
+    setRealEstate(prev => ({
+      ...prev,
+      zipcode: enroll_company.zipcode,
+      address1: enroll_company.address1,
+      address2: enroll_company.address2
+    }));
+
+    handleGeocoding(enroll_company.address1);
+  }, [enroll_company]);
+
 
   // 좌표 입력
   const handleGeocoding = (address1) => {
@@ -83,20 +61,10 @@ function EstateInsert1({ realEstate, setRealEstate }) {
     // 숫자 또는 소수점 이외의 문자는 제거
     const sanitizedValue = value.replace(/[^0-9.]/g, "");
 
-    handleAreaChange(e);
-    handleAddress(e);
-
-    setRealEstate(prev => ({ ...prev, zipcode: enroll_company.zipcode, address1: enroll_company.address1, address2: enroll_company.address2 }));
-
     if (name === 'area') {
       setRealEstate(prev => ({ ...prev, [name]: sanitizedValue }));
     } else {
       setRealEstate(prev => ({ ...prev, [name]: value }));
-    }
-
-    // 주소가 입력되었을 때 주소를 이용해 좌표 검색 및 realEstate 업데이트
-    if (realEstate.address1) {
-      handleGeocoding(realEstate.address1);
     }
   }
 
@@ -110,25 +78,25 @@ function EstateInsert1({ realEstate, setRealEstate }) {
         <tr>
           <th>종류 선택<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="r1" name="roomCode" value="r1" onChange={handleChange} /><label for="r1">원룸</label>
-            <input type="radio" id="r2" name="roomCode" value="r2" onChange={handleChange} /><label for="r2">투룸</label>
+            <input type="radio" id="r1" name="roomCode" value="r1" onChange={handleChange} /><label htmlFor="r1">원룸</label>
+            <input type="radio" id="r2" name="roomCode" value="r2" onChange={handleChange} /><label htmlFor="r2">투룸</label>
           </td>
         </tr>
         <tr>
           <th>구조 선택<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="s1" name="structureCode" value="s1" onChange={handleChange} /><label for="s1">오픈형 원룸</label>
-            <input type="radio" id="s2" name="structureCode" value="s2" onChange={handleChange} /><label for="s2">분리형 원룸</label>
-            <input type="radio" id="s3" name="structureCode" value="s3" onChange={handleChange} /><label for="s3">복층형 원룸</label>
+            <input type="radio" id="s1" name="structureCode" value="s1" onChange={handleChange} /><label htmlFor="s1">오픈형 원룸</label>
+            <input type="radio" id="s2" name="structureCode" value="s2" onChange={handleChange} /><label htmlFor="s2">분리형 원룸</label>
+            <input type="radio" id="s3" name="structureCode" value="s3" onChange={handleChange} /><label htmlFor="s3">복층형 원룸</label>
           </td>
         </tr>
         <tr>
           <th>건물 유형<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="b1" name="buildingCode" value="b1" onChange={handleChange} /><label for="b1">단독주택</label>
-            <input type="radio" id="b2" name="buildingCode" value="b2" onChange={handleChange} /><label for="b2">다가구주택</label>
-            <input type="radio" id="b3" name="buildingCode" value="b3" onChange={handleChange} /><label for="b3">빌라/연립/다세대</label>
-            <input type="radio" id="b4" name="buildingCode" value="b4" onChange={handleChange} /><label for="b4">상가주택</label>
+            <input type="radio" id="b1" name="buildingCode" value="b1" onChange={handleChange} /><label htmlFor="b1">단독주택</label>
+            <input type="radio" id="b2" name="buildingCode" value="b2" onChange={handleChange} /><label htmlFor="b2">다가구주택</label>
+            <input type="radio" id="b3" name="buildingCode" value="b3" onChange={handleChange} /><label htmlFor="b3">빌라/연립/다세대</label>
+            <input type="radio" id="b4" name="buildingCode" value="b4" onChange={handleChange} /><label htmlFor="b4">상가주택</label>
           </td>
         </tr>
         <tr>
@@ -155,7 +123,7 @@ function EstateInsert1({ realEstate, setRealEstate }) {
             </div>
             =
             <div className={style.scaleDiv}>
-              <input type="text" className={style.scaleInput} value={areas.squareMeter} readOnly />
+              <input type="text" className={style.scaleInput} value={isNaN(realEstate.area) ? 0 : (realEstate.area * 3.30578).toFixed(2)} readOnly />
               <p className={style.scale}>㎡</p>
             </div>
           </td>
@@ -163,8 +131,8 @@ function EstateInsert1({ realEstate, setRealEstate }) {
         <tr>
           <th>난방 종류<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="h1" name="heatingCode" value="h1" onChange={handleChange} /><label for="h1">개별난방</label>
-            <input type="radio" id="h2" name="heatingCode" value="h2" onChange={handleChange} /><label for="h2">중앙난방</label>
+            <input type="radio" id="h1" name="heatingCode" value="h1" onChange={handleChange} /><label htmlFor="h1">개별난방</label>
+            <input type="radio" id="h2" name="heatingCode" value="h2" onChange={handleChange} /><label htmlFor="h2">중앙난방</label>
           </td>
         </tr>
       </table>

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import style from "./Enrollment.module.css"
 import enrollImage from './assets/enroll.png';
+import marker from './assets/marker.png';
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../commons/Footer";
 import DaumPostcode from "react-daum-postcode";
+import { MapMarker,  Map } from "react-kakao-maps-sdk"
 
 const HomeEnrollment = (args) => {
     const [value, setValue] = useState('');
@@ -14,11 +16,10 @@ const HomeEnrollment = (args) => {
     const [nameValue, setNameValue] = useState('');
     //모달
     const [modal, setModal] = useState(false);
-    const toggle = () => setModal(!modal);
-    // const toggle = () => {
-    //     setModal(!modal);
-    //     setShowAddress(false);
-    // };
+    const toggle = () => {
+        setModal(!modal);
+        setShowAddress(false);
+    };
     //api 검색결과
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState(null);
@@ -58,52 +59,19 @@ const HomeEnrollment = (args) => {
                 setShowAddress(false);
                 setShowAddressInfo(false);
             } else if (dataLength) {
-                setShowAddress(true);
+                
                 setShowAddressInputs(false);
                 setShowAddressInfo(true);
                 if (status === kakao.maps.services.Status.OK) {
-                    console.log(data[0]);
+                    setShowAddress(true);
                     setXValue(data[0].x);
                     setYValue(data[0].y);
                     setAddress(data[0].address_name);
-                    var coords = new kakao.maps.LatLng(data[0].x, data[0].y);
-                    placeMap(coords);
-
                 }
             }
         });
     }
-    // useEffect(() => {
-    function placeMap(coords) {
-        // 주소-좌표 변환 객체를 생성합니다
-        var geocoder = new kakao.maps.services.Geocoder();
 
-        var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
-        var mapContainer = document.getElementsByClassName('map')[0], // 지도를 표시할 div 
-            mapOption = {
-                center: new kakao.maps.LatLng(coords.La, coords.Ma), // 지도의 중심좌표
-                level: 3 // 지도의 확대 레벨
-            };
-
-        // 지도를 생성합니다    
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: new kakao.maps.LatLng(coords.La, coords.Ma)
-        });
-
-        // 인포윈도우로 장소에 대한 설명을 표시합니다
-        var infowindow = new kakao.maps.InfoWindow({
-            content: '<div style="width: 180px; text-align: center; font-family: \'IBM Plex Sans\', sans-serif; font-size: 0.875rem; font-weight: 400; line-height: 1.5; padding: 8px 12px;  color: #000000; background: #fff; border: 1px solid #B0B8C4; box-shadow: 0px 2px 2px #E5EAF2;">이곳이 맞으세요?!</div>'
-        });
-
-        infowindow.open(map, marker);
-
-    }
-    // }, []);
     const navigate = useNavigate();
 
     const handleApiInputChange = (e) => {
@@ -115,7 +83,6 @@ const HomeEnrollment = (args) => {
         toggle(); // 모달 열기/닫기
         setSearchResult(null);
         setSearchValue(null);
-        setShowAddress(true);
         setShowAddressInputs(false);
         setShowAddressInfo(false);
     };
@@ -175,22 +142,17 @@ const HomeEnrollment = (args) => {
         try {
             const response = await axios.get('/api/enrollment/agent/todayNewEstate');
             if (response.data) {
-                console.log('Data exists:', response.data.seq);
                 // 해당 데이터의 방문자 수 증가 요청 (PUT 요청)
                 await axios.put(`/api/enrollment/agent/incrementNewEstate/${response.data.seq}`);
-                console.log('회원 1증가');
             } else {
-                console.log('Data does not exist:', response.data);
                 // 오늘 날짜의 데이터가 없는 경우 새로운 데이터 삽입 (POST 요청)
                 await axios.post('/api/enrollment/agent/createNewEstate');
-                console.log('신규 회원 데이터 생성');
             }
         } catch (error) {
             console.error('Error:', error);
         }
     };
     const handleSubmit = () => {
-        // Check if any required field is empty and display respective alerts
         if (!selectedItem) {
             alert('중개사무소를 선택해주세요.');
         } else if (!value) {
@@ -202,7 +164,6 @@ const HomeEnrollment = (args) => {
         } else if (!address && (!address1.address1 || !address2.address2)) {
             alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
         } else {
-            // If all fields are filled, proceed with form submission
             const formData = new FormData();
             let addressValue = '';
 
@@ -218,7 +179,6 @@ const HomeEnrollment = (args) => {
             const xValueToSend = xValue || 0;
             const yValueToSend = yValue || 0;
 
-            // Populate formData with necessary values
             formData.append('address', addressValue);
             formData.append('longitude', xValueToSend);
             formData.append('latitude', yValueToSend);
@@ -230,7 +190,6 @@ const HomeEnrollment = (args) => {
             formData.append('role', 'ROLE_AGENT');
             formData.append('email', emailValue + "@" + selectedValue);
 
-            // Submit the form data using axios
             axios
                 .post('/api/enrollment/agent/signup', formData)
                 .then(response => {
@@ -357,7 +316,13 @@ const HomeEnrollment = (args) => {
                         <li>
                             <h5 className={style.list}>중개사무소 정보</h5>
                             <div>
-                                <Button color="danger" onClick={handleButtonClick}>
+                                <Button style={{
+                                    borderColor: '#8faadc',
+                                    backgroundColor: '#8faadc',
+                                    '&:hover': {
+                                        backgroundColor: 'black'
+                                    }
+                                }} className={[style.font, style.serachBtn].join(' ')} onClick={handleButtonClick}>
                                     중개사무소 찾기
                                 </Button>
                                 <div>
@@ -373,7 +338,7 @@ const HomeEnrollment = (args) => {
                                     )}
                                     {showAddressInputs && (
                                         <div>
-                                            <input type="text" style={{ marginBottom: '1%',marginRight:'1%' }} name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip, style.input_style].join(' ')} />
+                                            <input type="text" style={{ marginBottom: '1%', marginRight: '1%' }} name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip, style.input_style].join(' ')} />
                                             <Button type="button" onClick={handleOpenModal}>
                                                 우편번호 찾기
                                             </Button>
@@ -409,13 +374,46 @@ const HomeEnrollment = (args) => {
                                         <DaumPostcode onComplete={handleComplete} />
                                     </Modal>
                                 </div>
-                                <div>
+                                <div style={{marginTop:'2%'}}>
                                     {showAddress && (
-                                        <div className="map" style={{ width: '100%', height: '350px' }}></div>
+                                    <Map // 지도를 표시할 Container
+                                        center={{
+                                            // 지도의 중심좌표
+                                            lat: yValue ,
+                                            lng: xValue ,
+                                        }}
+                                        style={{
+                                            // 지도의 크기
+                                            width: "100%",
+                                            height: "450px",
+                                        }}
+                                        level={4} // 지도의 확대 레벨
+                                    >
+                                        <MapMarker // 마커를 생성합니다
+                                            position={{
+                                                // 마커가 표시될 위치입니다
+                                                lat: yValue ,
+                                                lng: xValue ,
+                                            }}
+                                            image={{
+                                                src: marker, // 마커이미지의 주소입니다
+                                                size: {
+                                                    width: 54,
+                                                    height: 59,
+                                                }, // 마커이미지의 크기입니다
+                                                options: {
+                                                    offset: {
+                                                        x: 27,
+                                                        y: 69,
+                                                    }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                                                },
+                                            }}
+                                        />
+                                    </Map>
                                     )}
                                 </div>
                                 <Modal isOpen={modal} toggle={toggle} className="style.custom-modal" {...args}>
-                                    <ModalHeader toggle={toggle}>중개사무소 찾기</ModalHeader>
+                                    <ModalHeader className={style.font} toggle={toggle}>중개사무소 찾기</ModalHeader>
                                     <ModalBody>
                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2%' }}>
                                             <input
@@ -426,20 +424,21 @@ const HomeEnrollment = (args) => {
                                                 onChange={handleApiInputChange}
                                                 onKeyDown={handleKeyDown}
                                             />
-                                            <Button color="primary" outline onClick={searchButtonClick} style={{ marginLeft: '2%' }}>검색</Button>
+                                            <Button style={{ marginLeft: '2%' }} outline onClick={searchButtonClick} >검색</Button>
                                         </div>
                                         {searchResult !== null ? (
                                             // map 함수를 호출하는 부분
-                                            <div style={{ overflowY: 'scroll', maxHeight: '300px', margin: '2%' }}>
+                                            <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
                                                 {searchResult.map((item, index) => (
                                                     <div key={index}>
                                                         <p
                                                             onClick={() => handleItemClick(item)}
                                                             onMouseEnter={() => handleMouseEnter(item)}
                                                             onMouseLeave={handleMouseLeave}
+                                                            className={style.inline}
                                                             style={{
                                                                 cursor: 'pointer', // 마우스 커서 스타일
-                                                                backgroundColor: hoveredItem === item ? 'lightgray' : 'white', // 배경색 변경
+                                                                backgroundColor: hoveredItem === item ? '#dae3f3' : 'white', // 배경색 변경
                                                             }}
                                                         >
                                                             {item.bsnmCmpnm}
@@ -449,9 +448,8 @@ const HomeEnrollment = (args) => {
                                                 ))}
                                             </div>
                                         ) : (
-                                            // searchResult가 null인 경우 표시할 내용
-                                            <p style={{ padding: '1%' }}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
-                                                중개사무소가 검색되지 않을 경우010-3470-1399로 문의주세요.</p>
+                                            <p className={style.fontLight} style={{ padding: '1%' }}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
+                                                중개사무소가 검색되지 않을 경우 010-3470-1399로 문의주세요.</p>
                                         )}
 
                                     </ModalBody>
@@ -460,12 +458,12 @@ const HomeEnrollment = (args) => {
                         </li>
                         <hr></hr>
                         <li>
-                            <h5 className={style.list}>대표공인중개사 휴대폰 번호</h5>
+                            <h5 className={style.list}>대표 공인중개사 휴대폰 번호</h5>
                             <input className={style.input_style} type="text" placeholder='- 빼고 입력해주세요.' value={value} onChange={handleInputChange} />
                         </li>
                         <hr></hr>
                         <li>
-                            <h5 className={style.list}>대표이름</h5>
+                            <h5 className={style.list}>대표 이름</h5>
                             <input
                                 className={style.input_style}
                                 type="text"
@@ -478,7 +476,7 @@ const HomeEnrollment = (args) => {
                         </li>
                         <hr></hr>
                         <li>
-                            <h5 className={style.list}>대표공인중개사 이메일</h5>
+                            <h5 className={style.list}>대표 공인중개사 이메일</h5>
                             <div className={style.nextId}>
                                 <input
                                     className={style.input_style}
@@ -502,8 +500,8 @@ const HomeEnrollment = (args) => {
                     </ul>
                 </div>
             </div>
-            <div style={{ textAlign: 'center', marginBottom: "20px" }}>
-                <Button color="primary" onClick={handleSubmit}>
+            <div style={{ textAlign: 'center', marginBottom: '2%',marginTop:'2%' }}>
+                <Button style={{ backgroundColor: '#456caa' }} className={style.font} onClick={handleSubmit}>
                     가입 신청하기
                 </Button>
             </div>

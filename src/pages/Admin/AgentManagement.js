@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import axios from 'axios';
-
+import Loading from '../commons/Loading';
 const AgentManagement = () => {
   const [page, setPage] = React.useState(1);
   const pageSize = 10;
@@ -132,7 +132,7 @@ const AgentManagement = () => {
   return (
     <Box sx={{ width: '100%' }}>
       {loading ? (
-        <div>Loading...</div>
+        <Loading></Loading>
       ) : (
         <DataGrid
           autoHeight

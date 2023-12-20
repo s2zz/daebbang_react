@@ -52,32 +52,37 @@ function EstateInsert() {
       'transactionCode', 'price', 'buildingFloors',
       'title', 'contents'
     ];
-  
+
     if (requiredFields.some(name => !realEstate[name])) {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-  
+
     if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-  
+
+    if (isNaN(realEstate.area) || realEstate.area === '') {
+      alert("면적을 숫자로 입력해주세요");
+      return false;
+    }
+
     if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
       alert("방 층수는 건물의 층수보다 클 수 없습니다.");
       return false;
     }
-  
+
     if (parseInt(realEstate.buildingFloors) < 1) {
       alert("건물의 층수는 1층보다 낮을 수 없습니다.");
       return false;
     }
-  
+
     if (showFloorInput === 'f3' && (parseInt(realEstate.roomFloors) < 1 || realEstate.roomFloors === '')) {
       alert("해당 층수는 1층보다 낮을 수 없습니다.");
       return false;
     }
-  
+
     return true;
   }
 
@@ -88,14 +93,14 @@ function EstateInsert() {
       return false;
     }
 
-    const formData = new FormData();
-
     const imageLength = estateImages.length;
 
     if (imageLength < 3 || imageLength > 10) {
       alert("사진을 3장 이상 10장 이하로 등록해주세요.");
       return false;
     }
+
+    const formData = new FormData();
 
     formData.append('realEstate', JSON.stringify({ ...realEstate, writer: sessionStorage.getItem('loginId') }));
     formData.append('optionList', JSON.stringify(optionList));

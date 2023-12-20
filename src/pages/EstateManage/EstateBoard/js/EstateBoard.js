@@ -74,7 +74,7 @@ function EstateBoard() {
 
   return (
     <>
-      <h1 className={style.bigTitle}>매물관리</h1>
+      <h1 className={style.bigTitle}>매물 관리</h1>
       <table className={style.estateTable}>
         <thead>
           <tr>

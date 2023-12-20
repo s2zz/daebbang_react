@@ -4,6 +4,7 @@ import { Box, Button } from '@mui/material';
 import Loading from '../commons/Loading';
 import axios from 'axios';
 import style from "./MemberManagement.module.css";
+
 const Notification = () => {
     const [page, setPage] = React.useState(1);
     const pageSize = 10;
@@ -170,10 +171,10 @@ const Notification = () => {
 
     const columns = [
         { field: 'seq', headerName: 'Seq', width: 90, headerAlign: "center", align: "center" },
-        { field: 'estateName', headerName: 'EstateName', width: 200, headerAlign: "center", align: "center" },
-        { field: 'userId', headerName: 'UserId', width: 100, headerAlign: "center", align: "center" },
-        { field: 'estateCode', headerName: 'EstateCode', width: 110, headerAlign: "center", align: "center" },
-        { field: 'approvalCode', headerName: 'ApprovalCode', width: 110, headerAlign: "center", align: "center" },
+        { field: 'estateName', headerName: 'EstateName', width: 250, headerAlign: "center", align: "center" },
+        { field: 'userId', headerName: 'UserId', width: 120, headerAlign: "center", align: "center" },
+        { field: 'estateCode', headerName: 'EstateCode', width: 120, headerAlign: "center", align: "center" },
+        { field: 'approvalCode', headerName: 'ApprovalCode', width: 120, headerAlign: "center", align: "center" },
         {
             field: 'approval',
             headerName: 'Approval',
@@ -183,7 +184,7 @@ const Notification = () => {
             renderCell: (params) => approvalButton(params.row.seq, params.row.approvalCode),
         },
         { field: 'return', headerName: 'Return', headerAlign: "center", align: "center", width: 100, renderCell: (params) => { return returnButton(params.row.seq, params.row.approvalCode); }, },
-        { field: 'finalback', headerName: 'FinalReturn', headerAlign: "center", align: "center", width: 140, renderCell: (params) => { return finalreturnButton(params.row.seq, params.row.approvalCode); }, }
+        { field: 'finalback', headerName: 'FinalReturn', headerAlign: "center", align: "center", width: 150, renderCell: (params) => { return finalreturnButton(params.row.seq, params.row.approvalCode); }, }
 
     ];
 
