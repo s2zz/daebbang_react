@@ -1,8 +1,8 @@
 import style from '../css/EstateInsert.module.css';
-import { useState } from "react";
 
-function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOption, setMaintenanceOption, showFloorInput, setShowFloorInput }) {
-
+function EstateInsert2({ realEstate, setRealEstate, setOptionList,
+  maintenanceOption, setMaintenanceOption,
+  showFloorInput, setShowFloorInput }) {
 
   const handleMaintenanceChange = (e) => {
     setMaintenanceOption(e.target.value);
@@ -64,9 +64,9 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
         <tr>
           <th>거래 종류<span className={style.star}>*</span></th>
           <td>
-            <input type="radio" id="t1" name="transactionCode" value="t1" onChange={handleChange} checked={realEstate.transactionCode === "t1"} /><label for="t1">월세</label>
-            <input type="radio" id="t2" name="transactionCode" value="t2" onChange={handleChange} checked={realEstate.transactionCode === "t2"} /><label for="t2">전세</label>
-            {realEstate.transactionCode === 't1' && <span><input type="checkbox" id="o1" name="optionCode" value="o1" onChange={handleOptionCode} /><label for="o1">단기가능</label></span>}
+            <input type="radio" id="t1" name="transactionCode" value="t1" onChange={handleChange} checked={realEstate.transactionCode === "t1"} /><label htmlFor="t1">월세</label>
+            <input type="radio" id="t2" name="transactionCode" value="t2" onChange={handleChange} checked={realEstate.transactionCode === "t2"} /><label htmlFor="t2">전세</label>
+            {realEstate.transactionCode === 't1' && <span><input type="checkbox" id="o1" name="optionCode" value="o1" onChange={handleOptionCode} /><label htmlFor="o1">단기가능</label></span>}
           </td>
         </tr>
         <tr>
@@ -94,8 +94,8 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
           <td>
             <div>관리비</div>
             <div className={style.scaleDiv}>
-              <input type="radio" id="m1" name="maintenanceOption" value="false" onChange={handleMaintenanceChange} checked={maintenanceOption === "false"} /><label for="m1">없음</label>
-              <input type="radio" id="m2" name="maintenanceOption" value="true" onChange={handleMaintenanceChange} checked={maintenanceOption === "true"} /><label for="m2">있음</label>
+              <input type="radio" id="m1" name="maintenanceOption" value="false" onChange={handleMaintenanceChange} checked={maintenanceOption === "false"} /><label htmlFor="m1">없음</label>
+              <input type="radio" id="m2" name="maintenanceOption" value="true" onChange={handleMaintenanceChange} checked={maintenanceOption === "true"} /><label htmlFor="m2">있음</label>
               <input type="text" className={style.scaleInput} name="maintenanceCost" readOnly={maintenanceOption === "false"} onChange={handleChange} value={realEstate.maintenanceCost} />
               <p className={style.scale}>원</p>
             </div>
@@ -112,9 +112,9 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
           <th>층수<span className={style.star}>*</span></th>
           <td>
             <div>
-              <input type="radio" id="f1" value="f1" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f1"} /><label for="f1">반지하</label>
-              <input type="radio" id="f2" value="f2" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f2"} /><label for="f2">옥탑</label>
-              <input type="radio" id="f3" value="f3" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f3"} /><label for="f3">해당없음</label>
+              <input type="radio" id="f1" value="f1" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f1"} /><label htmlFor="f1">반지하</label>
+              <input type="radio" id="f2" value="f2" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f2"} /><label htmlFor="f2">옥탑</label>
+              <input type="radio" id="f3" value="f3" name="roomFloors" onChange={handleFloorInput} checked={showFloorInput === "f3"} /><label htmlFor="f3">해당없음</label>
             </div>
 
             <div>
@@ -133,15 +133,15 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList, maintenanceOp
         <tr>
           <th>옵션항목</th>
           <td>
-            <input type="checkbox" id="o2" name="optionCode" value="o2" onChange={handleOptionCode} /><label for="o2">주차장</label>
-            <input type="checkbox" id="o3" name="optionCode" value="o3" onChange={handleOptionCode} /><label for="o3">엘리베이터</label>
-            <input type="checkbox" id="o4" name="optionCode" value="o4" onChange={handleOptionCode} /><label for="o4">에어컨</label>
-            <input type="checkbox" id="o5" name="optionCode" value="o5" onChange={handleOptionCode} /><label for="o5">세탁기</label>
-            <input type="checkbox" id="o6" name="optionCode" value="o6" onChange={handleOptionCode} /><label for="o6">침대</label>
-            <input type="checkbox" id="o7" name="optionCode" value="o7" onChange={handleOptionCode} /><label for="o7">책상</label>
-            <input type="checkbox" id="o8" name="optionCode" value="o8" onChange={handleOptionCode} /><label for="o8">옷장</label>
-            <input type="checkbox" id="o9" name="optionCode" value="o9" onChange={handleOptionCode} /><label for="o9">TV</label>
-            <input type="checkbox" id="o10" name="optionCode" value="o10" onChange={handleOptionCode} /><label for="o10">냉장고</label>
+            <input type="checkbox" id="o2" name="optionCode" value="o2" onChange={handleOptionCode} /><label htmlFor="o2">주차장</label>
+            <input type="checkbox" id="o3" name="optionCode" value="o3" onChange={handleOptionCode} /><label htmlFor="o3">엘리베이터</label>
+            <input type="checkbox" id="o4" name="optionCode" value="o4" onChange={handleOptionCode} /><label htmlFor="o4">에어컨</label>
+            <input type="checkbox" id="o5" name="optionCode" value="o5" onChange={handleOptionCode} /><label htmlFor="o5">세탁기</label>
+            <input type="checkbox" id="o6" name="optionCode" value="o6" onChange={handleOptionCode} /><label fhtmlForor="o6">침대</label>
+            <input type="checkbox" id="o7" name="optionCode" value="o7" onChange={handleOptionCode} /><label htmlFor="o7">책상</label>
+            <input type="checkbox" id="o8" name="optionCode" value="o8" onChange={handleOptionCode} /><label htmlFor="o8">옷장</label>
+            <input type="checkbox" id="o9" name="optionCode" value="o9" onChange={handleOptionCode} /><label htmlFor="o9">TV</label>
+            <input type="checkbox" id="o10" name="optionCode" value="o10" onChange={handleOptionCode} /><label htmlFor="o10">냉장고</label>
             {/* <input type="checkbox" /><label>반려동물</label>
             <input type="checkbox" /><label>베란다/발코니</label>
             <input type="checkbox" /><label>신발장</label>

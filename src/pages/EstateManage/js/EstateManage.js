@@ -4,6 +4,7 @@ import EstateInsert from '../EstateInsert/js/EstateInsert';
 import EstateUpdate from '../EstateUpdate/js/EstateUpdate';
 import ReviewApproval from '../ReviewApproval/js/ReviewApproval';
 import EstateInfo from '../EstateInfo/js/EstateInfo';
+import ScrollToTop from './ScrollToTop';
 import style from '../css/EstateManage.module.css';
 
 const EstateManage = () => {

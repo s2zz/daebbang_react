@@ -55,37 +55,41 @@ function EstateUpdate() {
       'transactionCode', 'price', 'buildingFloors',
       'title', 'contents'
     ];
-  
+
     if (requiredFields.some(name => !realEstate[name])) {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-  
+
     if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
       alert("필수 항목을 입력해주세요");
       return false;
     }
-  
+
     if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
       alert("방 층수는 건물의 층수보다 클 수 없습니다.");
       return false;
     }
-  
+
     if (parseInt(realEstate.buildingFloors) < 1) {
       alert("건물의 층수는 1층보다 낮을 수 없습니다.");
       return false;
     }
-  
+
     if (showFloorInput === 'f3' && (parseInt(realEstate.roomFloors) < 1 || realEstate.roomFloors === '')) {
       alert("해당 층수는 1층보다 낮을 수 없습니다.");
       return false;
     }
-  
+
     return true;
   }
 
   const handleSubmit = () => {
-    const formData = new FormData();
+    console.log(realEstate);
+
+    if (!validateFields(realEstate, maintenanceOption, showFloorInput)) {
+      return false;
+    }
 
     const imageLength = estateImages.length;
 
@@ -97,6 +101,8 @@ function EstateUpdate() {
         return false;
       }
     }
+
+    const formData = new FormData();
 
     formData.append('realEstate', JSON.stringify(realEstate));
     formData.append('optionList', JSON.stringify(optionList));
@@ -156,9 +162,9 @@ function EstateUpdate() {
           setMaintenanceOption("true");
         }
 
-        if(resp.data.roomFloors === -1) {
+        if (resp.data.roomFloors === -1) {
           setShowFloorInput("f1");
-        } else if(resp.data.roomFloors === 0) {
+        } else if (resp.data.roomFloors === 0) {
           setShowFloorInput("f2");
         }
 
@@ -170,26 +176,17 @@ function EstateUpdate() {
       });
   }, [estateId]);
 
-  const Loading = realEstate.zipcode !== "";
-
   return (
     <>
-      {Loading ? (
-        <>
-          <h1 className={style.bigTitle}>정보수정</h1>
-          <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
-          <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList} 
-          maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput}/>
-          <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
-          <div className={style.buttonDiv}>
-            <button onClick={handleReturn}>이전으로</button>
-            <button onClick={handleSubmit}>다음으로</button>
-          </div>
-        </>
-      ) : (
-        <p>Loading...</p>
-      )
-      }
+      <h1 className={style.bigTitle}>매물 수정</h1>
+      <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
+      <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList}
+        maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
+      <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
+      <div className={style.buttonDiv}>
+        <button onClick={handleReturn}>이전으로</button>
+        <button onClick={handleSubmit}>다음으로</button>
+      </div>
     </>
   );
 }
