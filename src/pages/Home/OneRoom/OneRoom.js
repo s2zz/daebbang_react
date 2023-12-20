@@ -1,7 +1,12 @@
 //
 import { Routes, Route, useNavigate } from "react-router-dom"; // Link
 import { useState, useEffect, useRef } from "react";
-import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk"; // ZoomControl
+import {
+  Map,
+  MapMarker,
+  MarkerClusterer,
+  ZoomControl,
+} from "react-kakao-maps-sdk"; // ZoomControl
 
 //
 // import { markerdata } from "./data/markerData"; // 마커 데이터 가져오기
@@ -29,6 +34,11 @@ function OneRoom() {
   const [listReady, setlistReady] = useState(false);
 
   const [randData, setRandData] = useState([{}]);
+
+  const [mapCenterState, setMapCenterState] = useState({
+    center: { lat: 36.84142696925057, lng: 127.14542099214732 },
+    isPanto: false,
+  });
 
   // const [markersInBounds, setMarkersInBounds] = useState([]);
   // const [positions, setPositions] = useState([]);
@@ -146,6 +156,15 @@ function OneRoom() {
     navigate("/home/oneroom/info", { state: marker });
   };
 
+  // 부드러운 지도 이동
+  const moveToLocation = (subway) => {
+    console.log(subway)
+    setMapCenterState({
+      center: { lat: subway.latitude, lng: subway.longitude },
+      isPanto: true // 부드러운 이동 사용
+    });
+  };
+
   // 검색창 사용
   const handleInputChange = (event) => {
     // 받은 데이터의 길이 (2글자 이상인지 체크하기 위한거임)
@@ -169,7 +188,6 @@ function OneRoom() {
         })
         .then((resp) => {
           // resp.data를 순회하며 각 지역의 시군구 정보를 <div>에 추가
-          const examDiv = document.querySelector(".exam");
           searchListBox.innerHTML = ""; // 기존 내용을 초기화
 
           // 검색된 데이터가 없을때
@@ -277,22 +295,22 @@ function OneRoom() {
 
           // 지하철역에 대한 검색
           // subway 각 지역 정보가 들어 있음
+          // 지도 이동 이벤트
           resp.data.subwayList.forEach((subway) => {
-            // List에 넣을 CSS를 사용하기 위해 만드는 마크업
             const subwaySpan = document.createElement("span");
             const subwayDiv = document.createElement("div");
-
-            // 메인 상단 대표 검색된 키워드
-            subwaySpan.textContent = `${subway.name}`;
-
-            // 상세 주소
-            const subwayText = document.createTextNode(`${subway.address}`);
-
-            // Span 태그(메인 상단 키워드), 일반 Text (상세 주소) Div에 추가
-            // 이후 List에 만들어진 Div 추가
+          
+            subwaySpan.textContent = subway.name;
+            const subwayText = document.createTextNode(subway.address);
+          
             subwayDiv.appendChild(subwaySpan);
             subwayDiv.appendChild(subwayText);
             searchListBox.appendChild(subwayDiv);
+          
+            // 클릭 이벤트 리스너 추가
+            subwayDiv.addEventListener("click", () => {
+              moveToLocation(subway);
+            });
           });
 
           // 대학교에 대한 검색
@@ -1434,7 +1452,8 @@ function OneRoom() {
           <div className={style.home_body_map_main}>
             {mapRendered && (
               <Map
-                center={{ lat: 36.84142696925057, lng: 127.14542099214732 }}
+                center={mapCenterState.center}
+                isPanto={mapCenterState.isPanto}
                 style={{ width: "100%", height: "100%" }}
                 level={zoomLevel}
                 onDragEnd={handleDragEnd}
