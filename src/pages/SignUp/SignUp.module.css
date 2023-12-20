@@ -1,16 +1,24 @@
 .container {
     width:500px;
-    height:800px;
+    height:850px;
     margin:auto;
     margin-top:30px;
     margin-bottom:50px;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: "NanumBarunGothic";
 }
 
 .blank {
     height:15px;
+}
+
+.horizon {
+    width:350px;
+    border: 1px solid rgb(189, 189, 189);
+    margin:auto;
+    margin-bottom: 50px;
 }
 
 .loginBox{
@@ -28,16 +36,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height:200px;
-    font-size:30pt;
-    font-weight: 700;
+    font-size:20pt;
+    height:150px;
 }
 
 .inputSignUpBox {
     display: flex;
     justify-content: center;
     align-items: center;
-    height:350px;
+    height:410px;
 }
 
 .inputInfo {
@@ -62,11 +69,21 @@
     margin-left:27px;
 }
 
+.testBtn {
+    background-color: white;
+    color:black;
+}
+
+.testBtn:hover {
+    background-color: black;
+    color:white;
+}
+
 .btnBox {
     display: flex;
     justify-content: center;
     align-items: center;
-    height:250px;
+    height:230px;
 }
 
 .signUpBtn {

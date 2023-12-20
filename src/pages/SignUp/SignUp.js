@@ -368,30 +368,33 @@ function SignUp() {
   return (
     <div className={style.container}>
       <div className={style.loginBox}>
-        <div className={style.logo}>DAEBBANG</div>
+        <div className={style.logo}>
+          회원가입
+        </div>
+        <div className={style.horizon}></div>
         <div className={style.inputSignUpBox}>
           <div className={style.inputs}>
             <FontAwesomeIcon icon={faUser} />
-            <input type="text" name="id" id="id" placeholder="input your ID" onChange={handleChangeId} value={id.id} readOnly={readOnlyState} className={[style.inputInfo, style.inputId].join(' ')}></input>
-            <button onClick={() => duplCheck({ id: id.id })} disabled={!isConditionMet}>아이디 중복 확인</button><br></br>
+            <input type="text" name="id" id="id" placeholder="아이디" onChange={handleChangeId} value={id.id} readOnly={readOnlyState} className={[style.inputInfo, style.inputId].join(' ')}></input>
+            <button onClick={() => duplCheck({ id: id.id })} disabled={!isConditionMet} className={style.testBtn}>아이디 중복 확인</button><br></br>
             <div className={style.blank}></div>
             <FontAwesomeIcon icon={faLock} />
-            <input type="password" name="pw" id="pw" placeholder="input your PW" onChange={handleChangePw} value={pw.pw} className={style.inputInfo}></input><br></br>
+            <input type="password" name="pw" id="pw" placeholder="비밀번호" onChange={handleChangePw} value={pw.pw} className={style.inputInfo}></input><br></br>
             <div className={style.blank}></div>
-            <input type="password" name="pw2" id="pw2" placeholder="input your PW Again" onChange={handleChangePw2} value={pw2.pw2} className={[style.inputInfo, style.inputPw2].join(' ')}></input><br></br>
+            <input type="password" name="pw2" id="pw2" placeholder="비밀번호 재입력" onChange={handleChangePw2} value={pw2.pw2} className={[style.inputInfo, style.inputPw2].join(' ')}></input><br></br>
             <div className={style.blank}></div>
             <FontAwesomeIcon icon={faFileSignature} />
-            <input type="text" name="name" id="name" placeholder="input your Name" onChange={handleChangeName} value={name.name} className={style.inputInfo}></input><br></br>
+            <input type="text" name="name" id="name" placeholder="이름" onChange={handleChangeName} value={name.name} className={style.inputInfo}></input><br></br>
             <div className={style.blank}></div>
             <FontAwesomeIcon icon={faEnvelope} />
-            <input type="text" name="email" id="email" placeholder="input your E-Mail" onChange={handleChangeEmail} value={email.email} className={style.inputInfo}></input><br></br>
+            <input type="text" name="email" id="email" placeholder="이메일" onChange={handleChangeEmail} value={email.email} className={style.inputInfo}></input><br></br>
             <div className={style.blank}></div>
             <FontAwesomeIcon icon={faPhone} />
-            <input type="text" name="phone" id="phone" placeholder="input your Phone Number" onChange={handleChangePhone} value={phone.phone} className={style.inputInfo}></input><br></br>
+            <input type="text" name="phone" id="phone" placeholder="전화번호" onChange={handleChangePhone} value={phone.phone} className={style.inputInfo}></input><br></br>
             <div className={style.blank}></div>
             <FontAwesomeIcon icon={faHouse} />
             <input type="text" name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip].join(' ')}></input>
-            <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br></br>
+            <button onClick={handleOpenModal} className={style.testBtn}>우편번호 찾기</button><br></br>
             <div className={style.blank}></div>
             <input type="text" name="address1" id="sample6_address" placeholder="주소" readOnly onChange={handleChangeAddress1} value={address1.address1} className={[style.inputInfo, style.inputAddr].join(' ')}></input><br></br>
             <div className={style.blank}></div>
