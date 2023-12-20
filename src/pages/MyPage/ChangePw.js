@@ -4,6 +4,7 @@ import axios from 'axios';
 import style from "./css/ChangePw.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Swal from 'sweetalert2';
 
 const ChangePw = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -11,7 +12,6 @@ const ChangePw = () => {
     const [pw, setPw] = useState({ pw: "" });
     const [cpw1, setPw1] = useState({ cpw1: "" });
     const [cpw2, setPw2] = useState({ cpw2: "" });
-
     const [pwRegex, setPwRegex] = useState(false);
 
     const handleChangePw = (e) => {
@@ -48,20 +48,35 @@ const ChangePw = () => {
                     formData2.append("id", storedLoginId);
                     formData2.append("pw", cpw1.cpw1);
                     axios.post("/api/member/changePw", formData2).then(resp => {
-                        alert("비밀번호 변경이 완료되었습니다.");
+                        Swal.fire({
+                            icon: "success",
+                            title: "비밀번호 변경이 완료되었습니다",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
                         navi("/mypage");
                         window.location.reload();
                     });
                 } else {
-                    alert("바꿀 비밀번호를 다시 한 번 확인해주세요.");
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "변경할 비밀번호를 다시 한 번 확인해주세요",
+                    });
                 }
             } else {
-                alert('비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.');
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.",
+                });
             }
-
         }).catch(resp => {
-            console.log(resp);
-            alert("비밀번호를 다시 확인해주세요.");
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "비밀번호를 다시 확인해주세요.",
+            });
         });
     }
 
@@ -76,20 +91,36 @@ const ChangePw = () => {
                     formData2.append("id", storedLoginId);
                     formData2.append("pw", cpw1.cpw1);
                     axios.post("/api/estate/changePw", formData2).then(resp => {
-                        alert("비밀번호 변경이 완료되었습니다.");
+                        Swal.fire({
+                            icon: "success",
+                            title: "비밀번호 변경이 완료되었습니다",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
                         navi("/mypage");
                         window.location.reload();
                     });
                 } else {
-                    alert("바꿀 비밀번호를 다시 한 번 확인해주세요.");
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "변경할 비밀번호를 다시 한 번 확인해주세요",
+                    });
                 }
             } else {
-                alert('비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.');
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.",
+                });
             }
 
         }).catch(resp => {
-            console.log(resp);
-            alert("비밀번호를 다시 확인해주세요.");
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "비밀번호를 다시 확인해주세요.",
+            });
         });
     }
 

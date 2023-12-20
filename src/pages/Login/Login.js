@@ -1,6 +1,7 @@
 import style from "./Login.module.css"
 import { useState, useEffect, useRef } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 import axios from 'axios';
 import Modal from 'react-modal';
 import TopForm from "../commons/TopForm";
@@ -57,7 +58,11 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      alert("아이디와 비밀번호를 다시 확인해주세요.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "아이디 또는 비밀번호를 다시 확인해주세요",
+      });
       setUser({ id: "", pw: "" });
     });
   }
@@ -74,7 +79,11 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      alert("아이디와 비밀번호를 다시 확인해주세요.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "아이디 또는 비밀번호를 다시 확인해주세요",
+      });
       setEstate({ id: "", pw: "" });
     });
   }
@@ -91,7 +100,11 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      alert("아이디와 비밀번호를 다시 확인해주세요.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "아이디 또는 비밀번호를 다시 확인해주세요",
+      });
       setAdmin({ id: "", pw: "" });
     });
   }
@@ -101,19 +114,19 @@ const LoginBox = ({ setLoginId }) => {
   const adminLogin = useRef(null);
 
   const handleMemberKeyup = (e) => {
-    if(e.code === 'Enter') {
+    if (e.code === 'Enter') {
       memberLogin.current.click();
     }
   }
 
   const handleEstateKeyup = (e) => {
-    if(e.code === 'Enter') {
+    if (e.code === 'Enter') {
       estateLogin.current.click();
     }
   }
 
   const handleAdminKeyup = (e) => {
-    if(e.code === 'Enter') {
+    if (e.code === 'Enter') {
       adminLogin.current.click();
     }
   }

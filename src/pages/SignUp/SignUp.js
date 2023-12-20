@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEnvelope, faPhone, faHouse, faFileSignature } from "@fortawesome/free-solid-svg-icons";
+import Swal from 'sweetalert2'
 
 function SignUp() {
   const [id, setId] = useState({ id: "" });
@@ -149,30 +150,45 @@ function SignUp() {
   const duplCheck = (value) => {
     axios.post("/api/member/idDuplCheck", value).then(resp => {
       if (resp.data === false) {
-        alert("이미 존재하는 아이디 입니다.");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "이미 존재하는 아이디 입니다"
+        });
         setDuplId(false);
         setId({ id: "" });
       } else if (id.id === '') {
-        alert("아이디를 먼저 입력해주세요.");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "아이디를 먼저 입력해주세요"
+        });
       } else if (!idRegex) {
-        alert('아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다.');
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다"
+        });
         setId({ id: "" });
       }
       if (resp.data !== false && id.id !== '' && idRegex) {
-        let useId = window.confirm("사용 가능한 아이디 입니다. 사용하시겠습니까?");
-        if (useId) {
-          setDuplId(true);
-          setReadOnlyState(true);
-          setIsConditionMet(false);
-        } else {
-          setId({ id: "" });
-          setDuplId(false);
-        }
-
+        Swal.fire({
+          title: "사용 가능한 아이디 입니다. 사용하시겠습니까?",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: "Save",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setDuplId(true);
+            setReadOnlyState(true);
+            setIsConditionMet(false);
+          } else {
+            setId({ id: "" });
+            setDuplId(false);
+          }
+        });
       }
-    }).catch(() => {
-      console.log('아이디 찾기 실패~');
-    });
+    }).catch(() => { });
   }
 
   const navi = useNavigate();
@@ -210,35 +226,67 @@ function SignUp() {
   const handleSignUp = async () => {
 
     if (!fill) {
-      alert('모든 항목을 입력해주세요.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "모든 항목을 입력해주세요",
+      });
       return;
     }
     if (!duplId) {
-      alert('아이디 중복 확인이 필요합니다.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "아이디 중복확인이 필요합니다",
+      });
       return;
     }
     if (!idRegex) {
-      alert('아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다",
+      });
       return;
     }
     if (!pwRegex) {
-      alert('비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다",
+      });
       return;
     }
     if (!nameRegex) {
-      alert('이름은 2~5글자의 한글이어야합니다.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "이름은 2~5글자의 한글이어야합니다",
+    });
       return;
     }
     if (!emailRegex) {
-      alert('이메일 형식을 올바르게 입력해주세요.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "이메일 형식을 올바르게 입력해주세요",
+    });
       return;
     }
     if (!phoneRegex) {
-      alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "휴대폰 번호는 숫자 11자리만 입력해주세요",
+    });
       return;
     }
     if (!samePw) {
-      alert('비밀번호를 다시 확인해주세요.');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "비밀번호를 다시 확인해주세요",
+    });
       return;
     }
     if (fill && duplId && idRegex && pwRegex && nameRegex && emailRegex && phoneRegex && samePw) {
@@ -255,8 +303,12 @@ function SignUp() {
         };
         await increaseNewMemberCount();
         await axios.post("/api/member/signUp", userData);
-        alert("회원가입이 완료되었습니다.");
-
+        Swal.fire({
+          icon: "success",
+          title: "회원가입이 완료되었습니다",
+          showConfirmButton: false,
+          timer: 1500
+        });
         navi("/");
       } catch (error) {
         console.log("회원가입 실패", error);
@@ -360,8 +412,8 @@ function SignUp() {
                   transform: 'translate(-50%, -50%)',
                   width: '430px',
                   height: '400px',
-                  padding:'0px',
-                  overflow:'none'
+                  padding: '0px',
+                  overflow: 'none'
                 }
               }}
             >

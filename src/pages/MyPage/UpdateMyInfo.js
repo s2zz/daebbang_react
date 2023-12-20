@@ -7,6 +7,7 @@ import DaumPostcode from "react-daum-postcode";
 import style from "./css/UpdateMyInfo.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Swal from 'sweetalert2'
 
 const UpdateMyInfo = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -129,19 +130,35 @@ const UpdateMyInfo = () => {
 
     const handleUpdate = async () => {
         if (!fill) {
-            alert('모든 항목을 입력해주세요.');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "모든 항목을 입력해주세요",
+            });
             return;
         }
         if (!nameRegex) {
-            alert('이름은 2~5글자의 한글이어야합니다.');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "이름은 2~5글자의 한글이어야합니다.",
+            });
             return;
         }
         if (!emailRegex) {
-            alert('이메일 형식을 올바르게 입력해주세요.');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "이메일 형식을 올바르게 입력해주세요.",
+            });
             return;
         }
         if (!phoneRegex) {
-            alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "휴대폰 번호는 숫자 11자리만 입력해주세요.",
+            });
             return;
         }
         if (fill && nameRegex && emailRegex && phoneRegex) {
@@ -156,7 +173,12 @@ const UpdateMyInfo = () => {
                     address2: address2.address2
                 };
                 await axios.post("/api/member/updateMyInfo", userData);
-                alert("회원정보 수정이 완료되었습니다.");
+                Swal.fire({
+                    icon: "success",
+                    title: "회원정보 수정이 완료되었습니다",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 navi("/mypage");
                 window.location.reload();
             } catch (error) {
@@ -167,15 +189,27 @@ const UpdateMyInfo = () => {
 
     const handleEstateUpdate = async () => {
         if (!efill) {
-            alert('모든 항목을 입력해주세요.');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "모든 항목을 입력해주세요",
+            });
             return;
         }
         if (!nameRegex) {
-            alert('이름은 2~5글자의 한글이어야합니다.');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "이름은 2~5글자의 한글이어야합니다.",
+            });
             return;
         }
         if (!phoneRegex) {
-            alert('휴대폰 번호는 숫자 11자리만 입력해주세요.');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "휴대폰 번호는 숫자 11자리만 입력해주세요.",
+            });
             return;
         }
         if (efill && nameRegex && phoneRegex) {
@@ -189,7 +223,12 @@ const UpdateMyInfo = () => {
                     longitude: estateGeo.longitude
                 };
                 await axios.post("/api/estate/updateMyInfo", userData);
-                alert("회원정보 수정이 완료되었습니다.");
+                Swal.fire({
+                    icon: "success",
+                    title: "회원정보 수정이 완료되었습니다",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 navi("/mypage");
                 window.location.reload();
             } catch (error) {
