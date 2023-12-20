@@ -15,19 +15,24 @@ function FindEnrollmentId() {
   }
   const handlekeyup = (e) => {
     if (e.code === 'Enter') {
+        if(findId.name==""||findId.phone==""){
+            alert("모든 항목을 입력해주세요.")
+        }
+        else{
+            fetchData();
+        }
     }
 }
   const fetchData = async () => {
     try {
       const name = findId.name;
       const phone = findId.phone;
-      const response = await axios.get(`/api/member/findId/${name}/${phone}`);
+      const response = await axios.get(`/api/estate/findId/${name}/${phone}`);
       setSize(response.data.length);
       setfindId({ ...findId, id: response.data, name: "" ,phone:""});
-
     } catch (error) {
-      
-    }
+      alert("일치하는 정보가 없습니다");
+        }
   };
   return (
     <div className="container">
@@ -39,14 +44,14 @@ function FindEnrollmentId() {
             <div className={style.inputFindId}>
               <div className={style.loginFont}>작성 후 Enter키로 입력해주세요</div>
               <input type="text" name="name" placeholder="이름을 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.name} className={style.inputInfo}></input><br></br>
-              <input type="text" name="phone" placeholder="전화번호를 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.phone} className={style.inputInfo}></input><br></br>
+              <input type="text" name="phone" placeholder="-빼고 번호를 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.phone} className={style.inputInfo}></input><br></br>
             </div>
           </div>
           <div className={style.btnBox}>
             {size == -1 ? <></> : <div>
               <span>확인된 아이디가 {size}개 있습니다</span><br></br>
               {findId.id.map((id, index) => (
-                <div key={index}>  {id.slice(0, -3)}***</div>
+                <div key={index}>  ***{id.slice(3)}</div>
               ))}
             </div>}
           </div>

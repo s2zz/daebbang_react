@@ -15,26 +15,29 @@ const Main = () => {
   const [watch, setwatch] = useState([]);
 
   useEffect(() => {
-    const storedData = localStorage.getItem('watch');
-    const recent = JSON.parse(storedData);
-    axios
-      .get(`/api/map/getLimitAll`)
-      .then((resp) => {
-        setMapList(resp.data.sort(compareByestate_id));
+    axios.get(`/api/map/getLimitAll`).then((resp) => {
+      console.log(resp.data)
+        setMapList(resp.data);
       })
       .catch((err) => {
         console.log(err);
       })
+  }, []);
+  useEffect(() => {
+    const storedData = localStorage.getItem('watch');
+    const recent = JSON.parse(storedData);
+    if (recent == null) {
+      return
+    }
+    else {
       axios.get(`/api/map/getWatchAll/${recent}`).then(resp => {
         setwatch(resp.data);
-        console.log(resp.data);
       }).catch(err => {
         console.log(err);
       })
+    }
+
   }, []);
-  
-
-
   // 내림차순 정렬
   function compareBySeq(a, b) {
     return b.seq - a.seq;
@@ -86,6 +89,7 @@ const Main = () => {
               <span className={style.title}> 최근 본 매물</span>
             </div>
             <hr></hr>
+            {watch==""?<div>최근 본 매물이 없습니다.</div>:
             <div style={{ padding: `0 ${chevronWidth}px` }}>
               <ItemsCarousel
                 requestToChangeActive={setActiveItemIndex}
@@ -97,20 +101,19 @@ const Main = () => {
                 outsideChevron
                 chevronWidth={chevronWidth}
               >{
-              watch.map((e, i) => {
-                return (
-                  <div>
-                    <div style={{ height: 200, background: '#EEE' }}>{e.estateId}</div>
-                  </div>
-                  
-                )
+                  watch.map((e, i) => {
+                      return (
+                        <div>
+                          <div style={{ height: 200, background: '#EEE' }}>{e.estateId}</div>
+                        </div>
+                      )
 
-              })
-              }
-                 
-                
+                  })
+                }
+
+
               </ItemsCarousel>
-            </div>
+            </div>}
           </div>
 
         </div>
@@ -128,10 +131,10 @@ const Main = () => {
                     <Link to={`#`} style={{ textDecoration: "none", color: "black" }} >
                       <div className={style.cbgdiv} key={i}>
                         <span className={style.fontcss}>
-                        [{e.address2.length > 7 ? e.address2.substring(0, 7) : e.address2}]
+                          [{e.address2.length > 7 ? e.address2.substring(0, 7) : e.address2}]
                         </span>
                         <span className={style.fontcss}>
-                        {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
+                          {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
                         </span>
                         <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.substring(0, 10)}</span>
                       </div>
