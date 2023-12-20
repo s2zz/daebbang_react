@@ -157,11 +157,10 @@ function OneRoom() {
   };
 
   // 부드러운 지도 이동
-  const moveToLocation = (subway) => {
-    console.log(subway)
+  const moveToLocation = (moveData) => {
     setMapCenterState({
-      center: { lat: subway.latitude, lng: subway.longitude },
-      isPanto: true // 부드러운 이동 사용
+      center: { lat: moveData.latitude, lng: moveData.longitude },
+      isPanto: true, // 부드러운 이동 사용
     });
   };
 
@@ -291,6 +290,11 @@ function OneRoom() {
               regionDiv.appendChild(regionText);
               searchListBox.appendChild(regionDiv);
             }
+
+            // 클릭 이벤트 리스너 추가
+            regionDiv.addEventListener("click", () => {
+              moveToLocation(region);
+            });
           });
 
           // 지하철역에 대한 검색
@@ -299,14 +303,14 @@ function OneRoom() {
           resp.data.subwayList.forEach((subway) => {
             const subwaySpan = document.createElement("span");
             const subwayDiv = document.createElement("div");
-          
+
             subwaySpan.textContent = subway.name;
             const subwayText = document.createTextNode(subway.address);
-          
+
             subwayDiv.appendChild(subwaySpan);
             subwayDiv.appendChild(subwayText);
             searchListBox.appendChild(subwayDiv);
-          
+
             // 클릭 이벤트 리스너 추가
             subwayDiv.addEventListener("click", () => {
               moveToLocation(subway);
@@ -331,6 +335,11 @@ function OneRoom() {
             subwayDiv.appendChild(subwaySpan);
             subwayDiv.appendChild(subwayText);
             searchListBox.appendChild(subwayDiv);
+
+            // 클릭 이벤트 리스너 추가
+            subwayDiv.addEventListener("click", () => {
+              moveToLocation(school);
+            });
           });
         })
         .catch((err) => {
