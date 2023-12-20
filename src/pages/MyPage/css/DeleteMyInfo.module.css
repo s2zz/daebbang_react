@@ -34,11 +34,13 @@
 }
 
 .title {
+    font-family: "NanumBarunGothic";
     font-size:15pt;
     font-weight: bold;
 }
 
 .inputBox {
+    font-family: "NanumBarunGothic";
     display: flex;
     justify-content: center;
     margin-top:50px;
@@ -56,6 +58,8 @@
     height:50px;
     background-color: white;
     color:black;
+    font-family: "NanumBarunGothic";
+    border-radius: 5px;
 }
 
 .delBtn:hover {

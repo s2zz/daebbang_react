@@ -69,7 +69,7 @@ const DeleteMyInfo = () => {
                             ID<br></br>
                             {storedLoginId}<br></br><br></br>
                             PW<br></br>
-                            <input type="password" placeholder="input your PW" name="pw" onChange={handleChange} value={pw.pw} />
+                            <input type="password" placeholder="비밀번호 입력" name="pw" onChange={handleChange} value={pw.pw} />
                         </div>
                     </div>
                     <div className={style.delBtns}>
@@ -85,7 +85,7 @@ const DeleteMyInfo = () => {
                             ID<br></br>
                             {storedLoginId}<br></br><br></br>
                             PW<br></br>
-                            <input type="password" placeholder="input your PW" name="pw" onChange={handleChange} value={pw.pw} />
+                            <input type="password" placeholder="비밀번호 입력" name="pw" onChange={handleChange} value={pw.pw} />
                         </div>
                     </div>
                     <div className={style.delBtns}>

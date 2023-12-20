@@ -281,18 +281,18 @@ const UpdateMyInfo = () => {
                 <div>
                     <div className={style.inputBox}>
                         <div>
-                            Name<br></br>
-                            <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='input your Name'></input><br /><br />
-                            Phone<br></br>
-                            <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='input your Phone Number'></input><br /><br />
-                            Email<br></br>
-                            <input type="text" name="email" onChange={handleChangeEmail} value={email.email} placeholder='input your Email'></input><br /><br />
-                            ZipCode<br></br>
-                            <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode}></input>
+                            이름<br></br>
+                            <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='이름 입력'></input><br /><br />
+                            휴대전화<br></br>
+                            <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='전화번호 입력'></input><br /><br />
+                            이메일<br></br>
+                            <input type="text" name="email" onChange={handleChangeEmail} value={email.email} placeholder='이메일 입력'></input><br /><br />
+                            우편번호<br></br>
+                            <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode} placeholder='우편번호'></input>
                             <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
-                            Address<br></br>
-                            <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
-                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='input Detail Address'></input>
+                            주소<br></br>
+                            <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1} placeholder='주소'></input><br></br>
+                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력'></input>
                             <Modal
                                 isOpen={showModal}
                                 onRequestClose={() => setShowModal(false)}
@@ -327,16 +327,16 @@ const UpdateMyInfo = () => {
                 <div>
                     <div className={style.inputBox}>
                         <div>
-                            Name<br></br>
-                            <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='input your Name'></input><br /><br />
-                            Phone<br></br>
-                            <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='input your Phone Number'></input><br /><br />
-                            ZipCode<br></br>
-                            <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode}></input>
+                            이름<br></br>
+                            <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='이름 입력'></input><br /><br />
+                            휴대전화<br></br>
+                            <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='전화번호 입력'></input><br /><br />
+                            우편번호<br></br>
+                            <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode} placeholder='우편번호'></input>
                             <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
-                            Address<br></br>
-                            <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1}></input><br></br>
-                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='input Detail Address'></input>
+                            주소<br></br>
+                            <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1} placeholder='주소'></input><br></br>
+                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력'></input>
                             <Modal
                                 isOpen={showModal}
                                 onRequestClose={() => setShowModal(false)}

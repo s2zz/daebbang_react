@@ -34,11 +34,13 @@
 }
 
 .title {
+    font-family: "NanumBarunGothic";
     font-size:15pt;
     font-weight: bold;
 }
 
 .inputBox {
+    font-family: "NanumBarunGothic";
     width:100%;
     display: flex;
     justify-content: center;
@@ -61,6 +63,8 @@
     height:50px;
     background-color: white;
     color:black;
+    font-family: "NanumBarunGothic";
+    border-radius: 5px;
 }
 
 .changeBtn:hover {
