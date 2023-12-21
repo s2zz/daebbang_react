@@ -2,6 +2,7 @@
   width: 90%;
   margin: auto;
 }
+
 .title {
   font-size: 20px;
   line-height: 34px;
@@ -9,30 +10,29 @@
   font-weight: 700;
 }
 
-input:read-only {
-  background-color: rgb(252, 252, 252);
-}
-
-table {
+.estateTable {
+  font-family: "NanumBarunGothic";
   width: 100%;
   border-top: 2px solid black;
 }
 
-table th {
+.estateTable th {
   width: 12.5%;
   background-color: rgb(252, 252, 252);
 }
 
-table>th,
+.estateTable>th,
 td {
   padding: 10px;
 }
 
-table>td {
+.estateTable>td {
   border-left: 1px solid rgb(245, 245, 245);
 }
 
 .bigTitle {
+  font-family: "NanumBarunGothicBold";
+  margin-top: 60px;
   font-size: 46px;
   line-height: 70px;
   letter-spacing: -1px;
@@ -52,7 +52,7 @@ table>td {
   text-align: center;
 }
 
-label {
+.inputLabel {
   margin-right: 10px;
 }
 
@@ -81,6 +81,6 @@ label {
   resize: none;
 }
 
-span {
+.infoSpan {
   margin-right: 20px;
 }

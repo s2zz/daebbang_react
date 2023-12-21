@@ -6,7 +6,7 @@ function EstateInsert3({ realEstate }) {
       <div className={style.titleDiv}>
         <h1 className={style.title}>사진</h1>
       </div>
-      <table>
+      <table className={style.estateTable}>
         <tr>
           <th>일반 사진</th>
         </tr>
@@ -14,7 +14,6 @@ function EstateInsert3({ realEstate }) {
       <div className={style.imagePreviews}>
         {realEstate.images.length > 0 ? (
           realEstate.images.map((preview, index) => (
-
             <img key={index} src={`..\\..\\uploads\\estateImages\\${preview.sysName}`} alt={`Preview ${index}`} className={style.imagePreview} />
           ))
         ) : (
@@ -25,7 +24,7 @@ function EstateInsert3({ realEstate }) {
       <div className={style.titleDiv}>
         <h1 className={style.title} >상세 설명</h1>
       </div>
-      <table>
+      <table className={style.estateTable}>
         <tr>
           <th>제목</th>
           <td>
@@ -50,4 +49,3 @@ function EstateInsert3({ realEstate }) {
 }
 
 export default EstateInsert3;
-

@@ -59,7 +59,11 @@ function EstateBoard() {
   const boardItem = (estate, i) => {
     return (
       <tr key={i}>
-        {<td><img src={`..\\..\\uploads\\estateImages\\${estate.images[0].sysName}`} alt="Estate Image"></img></td>}
+        <td>
+          {estate.images && estate.images.length > 0 ? 
+          (<img src={`../../uploads/estateImages/${estate.images[0].sysName}`} alt="Estate Image"/>) : 
+          (<>No Image</>)}
+        </td>
         <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>
         <td><Link to={`/estateManage/estateInfo/${estate.estateId}`}>{estate.title}</Link></td>
         <td>{estate.address1}</td>
@@ -78,7 +82,7 @@ function EstateBoard() {
       <table className={style.estateTable}>
         <thead>
           <tr>
-            <th></th>
+            <th>대표 이미지</th>
             <th>보증금/월세(전세)</th>
             <th>제목</th>
             <th>위치</th>
@@ -89,12 +93,14 @@ function EstateBoard() {
           {contentslist()}
         </tbody>
       </table>
-  
+
       <div className={style.naviFooter}>
         {pagenation()}
       </div>
-      <Link to={`/estateManage/estateInsert`}><button>방 내놓기</button></Link>
-      <Link to={`/estateManage/reviewApproval`}><button>리뷰 관리</button></Link>
+      <div className={style.buttonDiv} >
+        <Link to={`/estateManage/estateInsert`}><button>방 내놓기</button></Link>
+        <Link to={`/estateManage/reviewApproval`}><button>리뷰 관리</button></Link>
+      </div>
     </>
   );
 }

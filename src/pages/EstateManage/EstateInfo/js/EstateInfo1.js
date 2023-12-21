@@ -7,7 +7,7 @@ function EstateInfo1({ realEstate }) {
       <div className={style.titleDiv}>
         <h1 className={style.title}>매물 정보</h1>
       </div>
-      <table>
+      <table className={style.estateTable}>
         <tr>
           <th>종류</th>
           <td>
@@ -31,7 +31,7 @@ function EstateInfo1({ realEstate }) {
           <td>
             <div>
               <div>
-              {realEstate.zipcode}
+                {realEstate.zipcode}
               </div>
               <div>
                 {realEstate.address1}
@@ -43,19 +43,21 @@ function EstateInfo1({ realEstate }) {
           <th>매물크기</th>
           <td>
             <div>전용면적</div>
-            <span>
+            <span className={style.infoSpan}>
               {realEstate.area}평
             </span>
+            <span className={style.infoSpan}>
             =
-            <span>
-            {realEstate.area* 3.30578.toFixed(2)}㎡
+            </span>
+            <span className={style.infoSpan}>
+              {realEstate.area * 3.30578.toFixed(2)}㎡
             </span>
           </td>
         </tr>
         <tr>
           <th>난방 종류</th>
           <td>
-          {realEstate.heatingSystem.heatingType}
+            {realEstate.heatingSystem.heatingType}
           </td>
         </tr>
       </table>

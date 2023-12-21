@@ -42,7 +42,7 @@ function EstateUpdate3({ realEstate, setRealEstate, tempImages, setEstateImages 
         <p><span className={style.star}>*</span> 필수입력 항목</p>
       </div>
       <div>사진은 3장 이상 10장 이하 등록 가능합니다.</div>
-      <table>
+      <table className={style.estateTable}>
         <tr>
           <th>일반 사진<span className={style.star}>*</span></th>
           <td>
@@ -66,7 +66,7 @@ function EstateUpdate3({ realEstate, setRealEstate, tempImages, setEstateImages 
         <h1 className={style.title} >상세 설명</h1>
         <p><span className={style.star}>*</span> 필수입력 항목</p>
       </div>
-      <table>
+      <table className={style.estateTable}>
         <tr>
           <th>제목<span className={style.star}>*</span></th>
           <td>
