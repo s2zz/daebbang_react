@@ -9,12 +9,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const FreeBoardWrite = ({loginId}) => {
     const navi = useNavigate();
-    useEffect(() => {
-        if (loginId === null) {
-            alert("로그인해주세요")
-            navi("/login");
-        }
-    }, []);
+
     const quillRef = useRef();
     const [formData, setFormData] = useState({
         title: "",
@@ -90,7 +85,11 @@ const FreeBoardWrite = ({loginId}) => {
 
 
     const handleAdd = () => {
-
+        if(loginId===null){
+            alert("로그인해주세요");
+            navi("/login");
+            return;
+        }
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
         console.log(delImgList);
