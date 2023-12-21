@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import style from "../css/BoardList.module.css";
 import roomStyle from "../css/RoomBoardList.module.css";
 import favorite from "../../assets/favorites.png";
@@ -8,8 +8,10 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { alertAddConfirmation, alertAddFailure, alertAddSuccess, alertDeleteConfirmation, alertDeleteFailure, alertDeleteSuccess } from "../../commons_js/alert";
 
-const RoomBoardList = () => {
+const RoomBoardList = ({loginId}) => {
+    const navi = useNavigate();
     const location = useLocation();
     const [board, setBoard] = useState([]);
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
@@ -19,7 +21,14 @@ const RoomBoardList = () => {
     function compareBySeq(a, b) {
         return b.seq - a.seq;
     }
-
+    const moveWrite = (loginId) => {
+        if(loginId===null){
+            alert("로그인해주세요");
+            navi("/login")
+        } else{
+            navi("/board/toFreeBoardWrite");
+        }
+    }
     useEffect(() => {
         axios.get(`/api/board/roomBoardList`).then(resp => {
             setBoard(resp.data.sort(compareBySeq));
@@ -42,35 +51,43 @@ const RoomBoardList = () => {
 
     // 즐겨찾기 추가
     const addFav = (parentSeq) => {
-        if (window.confirm("즐겨찾기를 추가하시겠습니까?")) {
-            let fav = { boardTitle: "양도게시판", parentSeq: parentSeq };
-            axios.post("/api/favoriteBoard", fav).then(resp => {
-                setBoard(board.map((e, i) => {
-                    if (e.seq === parentSeq) { e.favorite = 'true' }
-                    return e;
-                }))
-                alert("즐겨찾기 등록에 성공하였습니다");
-            }).catch(err => {
-                alert("즐겨찾기 등록에 실패하였습니다");
-                console.log(err);
-            })
-        }
+        let fav = { boardTitle: "양도게시판", parentSeq: parentSeq };
+        let str = "즐겨찾기";
+        alertAddConfirmation(str).then(result => {
+            if (result) {
+                axios.post("/api/favoriteBoard", fav).then(resp => {
+                    setBoard(board.map((e, i) => {
+                        if (e.seq === parentSeq) { e.favorite = 'true' }
+                        return e;
+                    }))
+                    alertAddSuccess("즐겨찾기 등록에 성공하였습니다")
+                }).catch(err => {
+                    alertAddFailure("즐겨찾기 등록에 실패하였습니다")
+                    console.log(err);
+                })
+            }
+        })
+
+
     }
 
     // 즐겨찾기 제거
     const delFav = (parentSeq) => {
-        if (window.confirm("즐겨찾기를 삭제하시겠습니까?")) {
-            axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
-                setBoard(board.map((e, i) => {
-                    if (e.seq === parentSeq) { e.favorite = 'false' }
-                    return e;
-                }))
-                alert("즐겨찾기 삭제에 성공하였습니다");
-            }).catch(err => {
-                alert("즐겨찾기 삭제에 실패하였습니다");
-                console.log(err);
-            })
-        }
+        let str="즐겨찾기";
+        alertDeleteConfirmation(str).then(result=>{
+            if(result){
+                axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
+                    setBoard(board.map((e, i) => {
+                        if (e.seq === parentSeq) { e.favorite = 'false' }
+                        return e;
+                    }))
+                    alertDeleteSuccess("즐겨찾기 삭제에 성공하였습니다")
+                }).catch(err => {
+                    alertDeleteFailure("즐겨찾기 삭제에 실패하였습니다")
+                    console.log(err);
+                })
+            }
+        })
     }
 
     const [completeSearchText, setCompleteSearchText] = useState("");
@@ -199,7 +216,7 @@ const RoomBoardList = () => {
                 </div>
             </div>
             <div className={style.writeBtnDiv}>
-                <Link to="/board/toRoomBoardWrite"><button>글 작성</button></Link>
+                <button onClick={()=>{moveWrite(loginId)}}>글 작성</button>
             </div>
             <div className={style.naviFooter}>
                 {pagenation()}
