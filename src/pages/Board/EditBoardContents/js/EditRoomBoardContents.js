@@ -1,6 +1,7 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import style from "../../Write/css/WriteBoard/WriteBoard.module.css";
+import eStyle from "../css/EditBoard.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
@@ -137,8 +138,8 @@ const EditRoomBoardContents = () => {
             return;
         }
 
-        if (formData.contents.length > 3000) {
-            alert("내용은 최대 3000글자 입니다");
+        if (formData.contents.length > 5000) {
+            alert("내용은 최대 5000글자 입니다");
             return;
         }
 
@@ -161,7 +162,7 @@ const EditRoomBoardContents = () => {
 
         axios.put("/api/board", submitFormData).then(resp => {
             alert("게시글 등록에 성공하였습니다");
-            navi("/board/toRoomBoardContents",{state:{sysSeq:location.state.sysSeq}});
+            navi("/board/toRoomBoardContents", { state: { sysSeq: location.state.sysSeq } });
         }).catch(err => {
             alert("게시글 등록에 실패하였습니다");
             console.log(err);
@@ -170,13 +171,13 @@ const EditRoomBoardContents = () => {
 
     const numberOfInputs = 5 - fileList.length;
     const fileListDiv = () => (
-        <>
+        <div className={style.fileInputDiv}>
             {[...Array(numberOfInputs)].map((_, index) => (
                 <div key={index}>
-                    <input type="file" onChange={handleFileChange} name={`files${index}`}/>
+                    <input type="file" onChange={handleFileChange} name={`files${index}`} />
                 </div>
             ))}
-        </>
+        </div>
     )
 
     const modules = useMemo(() => ({
@@ -214,14 +215,14 @@ const EditRoomBoardContents = () => {
         <>
             <div className={style.boardTitle}>양도게시판 글 수정</div>
             <hr></hr>
-            <div>
-                <div>제목</div>
+            <div className={style.titleBox}>
+                <div>제목<span>*</span></div>
                 <div>
-                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} />
+                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} maxLength="50" />
                 </div>
             </div>
-            <div>
-                <div>말머리</div>
+            <div className={style.headerBox}>
+                <div>말머리<span>*</span></div>
                 <div>
                     <select onChange={handleHeaderChange}>
                         {formData.header === '양도합니다'
@@ -231,30 +232,36 @@ const EditRoomBoardContents = () => {
                     </select>
                 </div>
             </div>
-            <div>
+            <div className={eStyle.fileBox}>
                 <div>파일 목록</div>
                 {
-                    fileList.map((e,i)=>{
+                    fileList.map((e, i) => {
                         return (
-                            <div key={i}>{e.oriName}<span onClick={()=>{handleRemoveFileChange(e.sysName)}}>x</span></div>
+                            <div key={i}>{e.oriName}<span onClick={() => { handleRemoveFileChange(e.sysName) }}>x</span></div>
                         );
                     })
                 }
             </div>
-            <div>
+            <div className={style.fileBox}>
                 <div>파일첨부</div>
                 {fileListDiv()}
             </div>
             <div>
-                <div>내용</div>
+                <div className={style.contents}>내용<span>*</span></div>
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents} onChange={(value) => setFormData({ ...formData, contents: value })} />
+                        value={formData.contents} onChange={(value) => {
+                            if (value.length > 5000) {
+                                alert("최대 5000자까지 작성 가능합니다");
+                            } else {
+                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                            }
+                        }} />
                 </div>
             </div>
 
-            <div>
-            <Link to="/board/toRoomBoardContents" state={{sysSeq:location.state.sysSeq}}><button>작성 취소</button></Link>
+            <div className={style.btns}>
+                <Link to="/board/toRoomBoardContents" state={{ sysSeq: location.state.sysSeq }}><button>작성 취소</button></Link>
                 <button onClick={handleAdd}>수정 완료</button>
             </div>
         </>

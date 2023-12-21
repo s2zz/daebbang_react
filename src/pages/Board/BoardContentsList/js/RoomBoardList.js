@@ -144,7 +144,7 @@ const RoomBoardList = () => {
                 <div>
                     <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq, searchText: completeSearchText }}>
                         <span>[{e.header}]</span>
-                        {e.title.length > 80 ? e.title.substring(0, 80) + "..." : e.title}
+                        {e.title.length > 20 ? e.title.substring(0, 20) + "..." : e.title}
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>

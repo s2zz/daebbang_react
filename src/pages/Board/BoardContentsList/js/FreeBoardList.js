@@ -118,7 +118,7 @@ const FreeBoardList = () => {
                 <div>{e.writer}</div>
                 <div>
                     <Link to={`/board/toFreeBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq, searchText: searchText }}>
-                        {e.title.length > 80 ? e.title.substring(0, 80) + "..." : e.title}
+                        {e.title.length > 20 ? e.title.substring(0, 20) + "..." : e.title}
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>

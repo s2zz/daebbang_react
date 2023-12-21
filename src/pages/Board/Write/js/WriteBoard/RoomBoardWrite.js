@@ -99,7 +99,7 @@ const RoomBoardWrite = () => {
             return;
         }
 
-        if (formData.title > 50) {
+        if (formData.title.length > 50) {
             alert("제목은 최대 50글자 입니다");
             return;
         }
@@ -114,8 +114,8 @@ const RoomBoardWrite = () => {
             return;
         }
 
-        if (formData.contents.length > 3000) {
-            alert("내용은 최대 3000글자 입니다");
+        if (formData.contents.length > 5000) {
+            alert("내용은 최대 5000글자 입니다");
             return;
         }
 

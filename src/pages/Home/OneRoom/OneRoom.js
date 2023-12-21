@@ -1,6 +1,6 @@
 //
 import { Routes, Route, useNavigate } from "react-router-dom"; // Link
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import {
   Map,
   MapMarker,
@@ -60,6 +60,7 @@ function OneRoom() {
       .then((resp) => {
         setMapList(resp.data);
         setMapRendered(true);
+        console.log(mapList);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
@@ -72,15 +73,15 @@ function OneRoom() {
     // setFilterMapList를 비동기로 처리
     const fetchData = async () => {
       setFilterMapList(mapList);
-      handleDragEnd();
       setlistReady(true);
+      handleDragEnd();
       console.log(mapList);
     };
     {
       /* 바로가기 */
     }
     fetchData();
-  }, [mapRendered, mapList]);
+  }, [mapRendered, mapList, mapCenterState]);
 
   useEffect(() => {
     // setFilterMapList를 비동기로 처리
@@ -93,6 +94,15 @@ function OneRoom() {
     fetchData();
   }, [filterMapList]);
 
+  // 지도 업데이트 바로가기
+  const handleMapCenter = (map) => {};
+
+  const handleMapBounds = (map) => {};
+
+  function handleMapLoad(map) {
+    // You can use the map instance here as needed
+  }
+
   // 페이지 로딩 시 사용할 기본 경계 반환
   const getDefaultBounds = () => {
     return new kakao.maps.LatLngBounds(
@@ -101,6 +111,24 @@ function OneRoom() {
     );
   };
 
+  // 페이지 로딩 시 사용할 기본 경계 반환
+  const getNewDefaultBounds = () => {
+    if (mapRef.current) {
+      return mapRef.current.getBounds();
+    } else {
+      // mapRef.current가 유효하지 않은 경우, 기본 경계 반환
+      return getDefaultBounds();
+    }
+  };
+
+  const mapRef = useRef(null);
+
+  function handleMapLoad(map) {
+    if (!mapRef) {
+      mapRef.current = map;
+    }
+  }
+
   // 지도에서 마우스 드레그 이벤트 발생시 마커 새로 불러오기
   const handleDragEnd = (map) => {
     // map 인자가 받지 못한건 처음 페이지 켤때니까
@@ -108,7 +136,7 @@ function OneRoom() {
 
     if (!map) {
       map = {
-        getBounds: () => getDefaultBounds(),
+        getBounds: () => getNewDefaultBounds(),
       };
     }
 
@@ -158,6 +186,7 @@ function OneRoom() {
 
   // 부드러운 지도 이동
   const moveToLocation = (moveData) => {
+    setZoomLevel(4);
     setMapCenterState({
       center: { lat: moveData.latitude, lng: moveData.longitude },
       isPanto: true, // 부드러운 이동 사용
@@ -1453,20 +1482,24 @@ function OneRoom() {
       {/* className="container"*/}
       <div className={style.home_top}>
         <div>방 찾기</div>
-        <div>찜한 매물</div>
-        <div>방 내놓기(전월세만)</div>
+        {/*<div>찜한 매물</div>
+        <div>방 내놓기(전월세만)</div> */}
       </div>
       <div className={style.main_box}>
         <div className={style.home_body_map}>
           <div className={style.home_body_map_main}>
             {mapRendered && (
               <Map
+                onCreate={handleMapLoad}
                 center={mapCenterState.center}
                 isPanto={mapCenterState.isPanto}
                 style={{ width: "100%", height: "100%" }}
                 level={zoomLevel}
                 onDragEnd={handleDragEnd}
                 onZoomChanged={handleZoomChanged}
+                onBoundsChanged={handleMapBounds}
+                onCenterChanged={handleMapCenter}
+                ref={mapRef}
               >
                 <MarkerClusterer
                   averageCenter={true}
