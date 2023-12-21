@@ -104,7 +104,7 @@ function ReviewApproval() {
       <tr key={i}>
         <td>{item.seq}</td>
         <td>{item.userId}</td>
-        <td><Link to={`/estateManage/estateInfo/${item.estateCode}`}>{item.estateCode}</Link></td>
+        <td><Link to={`/estateManage/estateInfo/${item.estateCode}`} className={style.infoLink} >{item.estateCode}</Link></td>
         <td>{getApprovalStatus()}</td>
         <td>
           <button onClick={handleApproval}>권한 부여</button>

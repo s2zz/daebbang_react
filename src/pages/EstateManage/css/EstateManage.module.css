@@ -1,6 +1,22 @@
-.container {
-    width: 90%;
-    margin: auto;
-    overflow: hidden;
+.adminContainer {
+    display: flex;
+    width: 100%;
+    height: 100%;
 }
 
+.sideBar {
+    font-family: "NanumBarunGothic";
+    width: 16%;
+    background-color: #c2d2ee;
+    padding: 40px;
+    padding-top: 60px;
+    min-height: 130vh;
+    float: left;
+}
+
+.mainContent {
+    font-family: "NanumBarunGothic";
+    width: 84%;
+    height: 100%;
+    float: left;
+}

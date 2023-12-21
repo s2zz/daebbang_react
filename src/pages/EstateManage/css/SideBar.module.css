@@ -1,0 +1,15 @@
+.menu{
+    width: 100%;
+    margin-bottom: 24%;
+}
+.link {
+    text-decoration: none;
+    color: inherit;
+    font-size: large;
+    color: #32495c;
+    font-weight: bolder;
+  }
+  .link:hover {
+    color: black;
+    font-size: larger; 
+}

@@ -1,13 +1,16 @@
 import style from "./TopForm.module.css"
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from "react";
 import logo from "../Enrollment/assets/logo2.png";
 import axios from 'axios';
 
 const TopForm = ({ setLoginId }) => {
 
     const navi = useNavigate();
+    const location = useLocation();
+
     const storedLoginId = sessionStorage.getItem('loginId');
     const isAdmin = sessionStorage.getItem('isAdmin');
     const isEstate = sessionStorage.getItem('isEstate');
@@ -24,6 +27,20 @@ const TopForm = ({ setLoginId }) => {
             console.log(resp);
         })
     }
+
+    const [reviewCount, setReviewCount] = useState(null);
+
+    useEffect(() => {
+        if (isEstate) {
+            axios.get(`/api/reviewApproval/agentReview/count/${storedLoginId}`)
+                .then(resp => {
+                    setReviewCount(resp.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching review count:', error);
+                });
+        }
+    }, [isEstate, storedLoginId, location.pathname]);
 
 
     return (
@@ -64,7 +81,7 @@ const TopForm = ({ setLoginId }) => {
                                             : <a href="/myPage">마이페이지</a>}
                                         {isEstate ?
                                             <>
-                                                <a href="/estateManage">매물관리</a>
+                                                <a href="/estateManage">매물관리 {isEstate && reviewCount !== 0 && (<Button sx={{ml: 5}}>{reviewCount}</Button>)}</a> 
                                             </>
                                             : ""}
                                         <a href="#" onClick={handleLogout}>로그아웃</a>
