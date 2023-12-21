@@ -44,7 +44,7 @@ const TopForm = ({ setLoginId }) => {
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                             <a href="/board"><Button><span>게시판</span></Button> </a>
+                            <a href="/board"><Button><span>게시판</span></Button> </a>
                             <div className={style.depth2_bx}>
                                 <a href="#">즐겨찾기</a>
                                 <a href="#">자유게시판</a>
@@ -78,7 +78,8 @@ const TopForm = ({ setLoginId }) => {
 
 
                     <div className={style.top_right_menu}>
-                        <Button><a href="/enrollment">중개사무소 가입</a></Button>
+                        {isEstate ? <> </>: <Button><a href="/enrollment">중개사무소 가입</a></Button>}
+
                     </div>
 
                 </div>

@@ -28,12 +28,23 @@ function FindEnrollmentId() {
       const name = findId.name;
       const phone = findId.phone;
       const response = await axios.get(`/api/estate/findId/${name}/${phone}`);
+      if(response.data.length==0){
+        alert("일치하는 정보가 없습니다.")
+      }
       setSize(response.data.length);
       setfindId({ ...findId, id: response.data, name: "" ,phone:""});
     } catch (error) {
       alert("일치하는 정보가 없습니다");
         }
   };
+  const handlesubmit = () => {
+    if(findId.name==""||findId.phone==""){
+      alert("모든 항목을 입력해주세요.")
+  }
+  else{
+      fetchData();
+  }
+  }
   return (
     <div className="container">
 
@@ -42,12 +53,15 @@ function FindEnrollmentId() {
           <div className={style.logo}>DAEBBANG</div>
           <div className={style.inputFindIdBox}>
             <div className={style.inputFindId}>
-              <div className={style.loginFont}>작성 후 Enter키로 입력해주세요</div>
+            <div className={style.loginFont}>이름</div>
               <input type="text" name="name" placeholder="이름을 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.name} className={style.inputInfo}></input><br></br>
+              <div className={style.blank}></div>
+              <div className={style.loginFont}>전화번호</div>
               <input type="text" name="phone" placeholder="-빼고 번호를 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.phone} className={style.inputInfo}></input><br></br>
             </div>
           </div>
           <div className={style.btnBox}>
+            
             {size == -1 ? <></> : <div>
               <span>확인된 아이디가 {size}개 있습니다</span><br></br>
               {findId.id.map((id, index) => (
@@ -55,6 +69,10 @@ function FindEnrollmentId() {
               ))}
             </div>}
           </div>
+          <div className={style.btnBox}>
+          <button className={style.loginBtn} onClick={handlesubmit}>작성완료</button>
+          </div>
+         
           <div className={style.findBox}>
           <Link to="/login" className={style.findId}>로그인</Link>
             <Link to="/enrollment" className={style.findId}>회원가입</Link>
