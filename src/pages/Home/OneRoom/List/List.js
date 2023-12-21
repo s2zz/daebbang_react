@@ -126,12 +126,21 @@ function List({ onDragEnd, listReady }) {
               className={style.list_box}
               onClick={() => handleMarkerClick(marker)}
             >
-              <div className={style.list_box_img}>{/* 이미지 */}</div>
+              <div className={style.list_box_img}>
+                {marker.images &&
+                  marker.images.length > 0 &&
+                  marker.images[0].sysName && (
+                    <img
+                      src={`/uploads/estateImages/${marker.images[0].sysName}`}
+                      alt="Estate"
+                    />
+                  )}
+              </div>
 
               <div className={style.list_box_text}>
                 <div className={style.list_box_top}>
                   {mannersTemperatureList[index] &&
-                    mannersTemperatureList[index].mannersTemperature >= 70 && (
+                    mannersTemperatureList[index].mannersTemperature >= 45 && (
                       <span
                         style={{ fontWeight: "bold" }}
                         className={style.recommend}

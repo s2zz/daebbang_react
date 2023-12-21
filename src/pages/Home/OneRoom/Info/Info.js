@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
+import ItemsCarousel from "react-items-carousel";
 
 //
 import style from "./Info.module.css";
@@ -16,8 +17,16 @@ function Info() {
 
   const { kakao } = window;
 
-  // 임시로 일단 지도 그냥 뻘하니 떠있는거 좀 그래서 임시로 박아둠
-  // 위치는 한기대임
+  // 캐러셀 넓이
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const chevronWidth = 40;
+
+  // markerInfo.images 배열에서 이미지 URL을 생성
+  const imageUrls = markerInfo.images.map(
+    (image) => `/uploads/estateImages/${image.sysName}`
+  );
+
+  // 지도 밖에서 생성
   useEffect(() => {
     var container = document.getElementById("map");
     var options = {
@@ -232,8 +241,31 @@ function Info() {
 
         {/* 슬라이드 쇼*/}
         <div className={style.info_img}>
-          <div onClick={() => back()}> {/* 뒤로가기 아이콘 넣을것 */} </div>
-          {/* 슬라이드 알아서 넣을것 */}
+          <div className={style.info_img_top} onClick={() => back()}> {/* 뒤로가기 아이콘 넣을것 */} </div>
+
+          <div>
+            {" "}
+            <ItemsCarousel
+              requestToChangeActive={setActiveItemIndex}
+              activeItemIndex={activeItemIndex}
+              numberOfCards={1}
+              gutter={20}
+              leftChevron={<button>{"<"}</button>}
+              rightChevron={<button>{">"}</button>}
+              outsideChevron
+              chevronWidth={chevronWidth}
+            >
+              {imageUrls.map((url, index) => (
+                <div key={index} style={{ height: "300px", background: "#EEE" }}>
+                  <img
+                    src={url}
+                    alt={`Item ${index}`}
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                </div>
+              ))}
+            </ItemsCarousel>
+          </div>
         </div>
 
         {/* box_1 */}

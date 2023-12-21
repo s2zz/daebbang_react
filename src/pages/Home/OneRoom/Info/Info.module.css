@@ -14,7 +14,7 @@
   position: relative;
 }
 
-.info_img div {
+.info_img_top {
   position: absolute;
   left: 20px;
   width: 28px;
@@ -23,6 +23,11 @@
   cursor: pointer;
   color: #000;
   background-color: #000;
+  z-index: 5000;
+}
+
+.info_img_main {
+  position: absolute;
 }
 
 .address_box {
@@ -246,9 +251,8 @@
 }
 
 .option_more_info_parent {
-    display: flex;
-    justify-content: flex-end;
-    
+  display: flex;
+  justify-content: flex-end;
 }
 
 .option_more_info {

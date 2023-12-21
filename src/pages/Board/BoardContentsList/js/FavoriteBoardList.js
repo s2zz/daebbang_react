@@ -7,6 +7,7 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { alertDeleteSuccess, alertDeleteFailure, alertDeleteConfirmation } from '../../commons_js/alert.js';
 
 const FavoriteBoardList = () => {
     const [board, setBoard] = useState([]);
@@ -14,6 +15,8 @@ const FavoriteBoardList = () => {
     const [searchText, setSearchText] = useState("");
     const [category, setCategory] = useState("전체게시물");
     const [categoryBoard, setCategoryBoard] = useState([]);
+
+
     // 내림차순 정렬
     function compareBySeq(a, b) {
         return b.seq - a.seq;
@@ -41,16 +44,21 @@ const FavoriteBoardList = () => {
 
     // 즐겨찾기 제거
     const delFav = (parentSeq) => {
-        if (window.confirm("즐겨찾기를 삭제하시겠습니까?")) {
-            axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
-                setBoard(board.filter(e => e.seq !== parentSeq));
-                alert("즐겨찾기 삭제에 성공하였습니다");
-            }).catch(err => {
-                alert("즐겨찾기 삭제에 실패하였습니다");
-                console.log(err);
-            })
-        }
+        let str = "즐겨찾기"
+        alertDeleteConfirmation(str).then(result => {
+            if (result) {
+                axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
+                    setBoard(board.filter(e => e.seq !== parentSeq));
+                    alertDeleteSuccess(str);
+                }).catch(err => {
+                    alertDeleteFailure(str)
+                    console.log(err);
+                })
+            }
+        })
+
     }
+
 
     const [completeSearchText, setCompleteSearchText] = useState("");
 
