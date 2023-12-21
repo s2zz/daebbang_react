@@ -14,6 +14,7 @@ const WriteReview = () => {
     const estateId = location.state !== null && location.state.estateCode !== null ? location.state.estateCode : 0;
     const approvalCode = location.state !== null && location.state.approvalCode !== null ? location.state.approvalCode : "";
     const [formData, setFormData] = useState({ estateId: estateId, approvalCode: approvalCode, traffic: "", surroundings: "", facility: "", files: {} });
+    const storedLoginId = sessionStorage.getItem('loginId');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -100,6 +101,13 @@ const WriteReview = () => {
                 submitFormData.append("files", e);
             }
         })
+
+        const writeComplete = new FormData();
+        writeComplete.append("userId",storedLoginId);
+        writeComplete.append("estateId",formData.estateId);
+        writeComplete.append("approvalCode",'a5');
+
+        axios.put("/api/reviewApproval/writeComplete",writeComplete);
 
         axios.post("/api/review", submitFormData).then(resp => {
             alert("리뷰 등록에 성공하였습니다");
