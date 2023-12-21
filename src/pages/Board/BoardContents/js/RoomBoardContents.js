@@ -162,7 +162,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
     return (
         <>
             <div className={style.boardContentsTitle}>
-                <span>[{boardContents.header}]</span>
+                <span style={{whiteSpace:"nowrap"}}>[{boardContents.header}]</span>
                 {boardContents.title}
             </div>
             <div className={style.boardContentsInfo}>

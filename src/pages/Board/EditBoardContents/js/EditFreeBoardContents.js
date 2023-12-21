@@ -116,7 +116,7 @@ const EditFreeBoardContents = () => {
             return;
         }
 
-        if (formData.title > 50) {
+        if (formData.title.length > 50) {
             alert("제목은 최대 50글자 입니다");
             return;
         }
@@ -126,8 +126,8 @@ const EditFreeBoardContents = () => {
             return;
         }
 
-        if (formData.contents.length > 3000) {
-            alert("내용은 최대 3000글자 입니다");
+        if (formData.contents.length > 5000) {
+            alert("내용은 최대 5000글자 입니다");
             return;
         }
         console.log(delFileList);
@@ -161,7 +161,7 @@ const EditFreeBoardContents = () => {
         <div className={style.fileInputDiv}>
             {[...Array(numberOfInputs)].map((_, index) => (
                 <div key={index}>
-                    <input type="file" onChange={handleFileChange} name={`files${index}`}/>
+                    <input type="file" onChange={handleFileChange} name={`files${index}`} />
                 </div>
             ))}
         </div>
@@ -203,10 +203,10 @@ const EditFreeBoardContents = () => {
         <>
             <div className={style.boardTitle}>자유게시판 글 수정</div>
             <hr></hr>
-            <div className={style.titleBox}> 
+            <div className={style.titleBox}>
                 <div>제목<span>*</span></div>
                 <div>
-                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} />
+                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} maxLength="50"/>
                 </div>
             </div>
             <div className={eStyle.fileBox}>
@@ -227,7 +227,13 @@ const EditFreeBoardContents = () => {
                 <div className={style.contents}>내용<span>*</span></div>
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents} onChange={(value) => setFormData({ ...formData, contents: value })} />
+                        value={formData.contents} onChange={(value) => {
+                            if (value.length > 5000) {
+                                alert("최대 5000자까지 작성 가능합니다");
+                            } else {
+                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                            }
+                        }} />
                 </div>
             </div>
 

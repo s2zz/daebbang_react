@@ -94,7 +94,7 @@ const FreeBoardWrite = () => {
             return;
         }
 
-        if (formData.title > 50) {
+        if (formData.title.length > 50) {
             alert("제목은 최대 50글자 입니다");
             return;
         }
@@ -104,8 +104,8 @@ const FreeBoardWrite = () => {
             return;
         }
 
-        if (formData.contents.length > 3000) {
-            alert("내용은 최대 3000글자 입니다");
+        if (formData.contents.length > 5000) {
+            alert("내용은 최대 5000글자 입니다");
             return;
         }
 
@@ -169,7 +169,7 @@ const FreeBoardWrite = () => {
             <div className={style.titleBox}>
                 <div>제목<span>*</span></div>
                 <div>
-                    <input placeholder="&nbsp;제목을 입력해주세요" name="title" onChange={handleChange} />
+                    <input placeholder="&nbsp;제목을 입력해주세요" name="title" onChange={handleChange} maxLength="50"/>
                 </div>
             </div>
             <div className={style.fileBox}>

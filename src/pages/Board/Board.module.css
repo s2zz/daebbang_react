@@ -5,6 +5,7 @@
     width:80%;
     overflow: hidden;
     margin:auto;
+    word-break:break-all;
 }
 
 /* .boardContainer div{border:1px solid black;} */
