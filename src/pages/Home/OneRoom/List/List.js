@@ -140,7 +140,7 @@ function List({ onDragEnd, listReady }) {
               <div className={style.list_box_text}>
                 <div className={style.list_box_top}>
                   {mannersTemperatureList[index] &&
-                    mannersTemperatureList[index].mannersTemperature >= 70 && (
+                    mannersTemperatureList[index].mannersTemperature >= 45 && (
                       <span
                         style={{ fontWeight: "bold" }}
                         className={style.recommend}
