@@ -1,105 +1,113 @@
+.container {
+  width: 90%;
+  margin: auto;
+}
+
 .scaleDiv {
-    display: inline-block;
-    position: relative;
+  display: inline-block;
+  position: relative;
 }
 
 .scale {
-    position: absolute;
-    top: 4px;
-    right: 5px;
+  position: absolute;
+  top: 4px;
+  right: 5px;
 }
 
 .scaleInput {
-    width: 140px;
-    padding-right: 20px;
+  width: 140px;
+  padding-right: 20px;
 }
 
 .title {
-    font-size: 20px;
-    line-height: 34px;
-    letter-spacing: -0.5px;
-    font-weight: 700;
+  font-family: "NanumBarunGothicBold";
+  font-size: 20px;
+  line-height: 34px;
+  letter-spacing: -0.5px;
+  font-weight: 700;
 }
 
 .star {
-    margin-left: 4px;
-    color: rgb(50, 108, 249);
+  margin-left: 4px;
+  color: rgb(50, 108, 249);
 }
 
-input:read-only {
-    background-color: rgb(252, 252, 252);
+.estateTable {
+  font-family: "NanumBarunGothic";
+  width: 100%;
+  border-top: 2px solid black;
 }
 
-table {
-    width: 100%;
-    border-top: 2px solid black;
+.estateTable th {
+  width: 12.5%;
+  background-color: rgb(252, 252, 252);
 }
 
-table th {
-    width: 12.5%;
-    background-color: rgb(252, 252, 252);
-}
-
-table>th,
+.estateTable>th,
 td {
-    padding: 10px;
+  padding: 10px;
 }
 
-table>td {
-    border-left: 1px solid rgb(245, 245, 245);
+.estateTable>td {
+  border-left: 1px solid rgb(245, 245, 245);
 }
 
 .bigTitle {
-    font-size: 46px;
-    line-height: 70px;
-    letter-spacing: -1px;
-    font-weight: 700;
-    text-align: center;
+  font-family: "NanumBarunGothicBold";
+  margin-top: 60px;
+  font-size: 46px;
+  line-height: 70px;
+  letter-spacing: -1px;
+  font-weight: 700;
+  text-align: center;
 }
 
 .explanation {
-    font-size: 14px;
-    line-height: 24px;
-    font-weight: 400;
+  font-family: "NanumBarunGothic";
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 400;
 }
 
 .titleDiv {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-top: 50px;
-    margin-bottom: 16px;
+  font-family: "NanumBarunGothic";
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 50px;
+  margin-bottom: 16px;
 }
 
 .buttonDiv {
-    text-align: center;
+  font-family: "NanumBarunGothic";
+  text-align: center;
 }
 
-label {
-    margin-right: 10px;
+.inputLabel {
+  margin-right: 10px;
 }
 
 .flexTd {
-    display: flex;
+  display: flex;
 }
 
 .flexTd>div {
-    margin-right: 30px;
+  margin-right: 30px;
 }
 
 .imagePreviews>img {
-    width: 240px;
-    height: 200px;
+  width: 240px;
+  height: 200px;
 }
 
 .inputTitle {
-    width: 100%;
-    border: 1px solid rgb(237, 237, 237);
+  width: 100%;
+  border: 1px solid rgb(237, 237, 237);
 }
 
 .inputContents {
-    width: 100%;
-    height: 100px;
-    border: 1px solid rgb(237, 237, 237);
-    resize: none;
+  width: 100%;
+  height: 100px;
+  border: 1px solid rgb(237, 237, 237);
+  resize: none;
 }

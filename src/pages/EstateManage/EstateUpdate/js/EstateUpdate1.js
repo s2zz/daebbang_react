@@ -88,7 +88,7 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
             <h1 className={style.title}>매물 정보</h1>
             <p><span className={style.star}>*</span> 필수입력 항목</p>
           </div>
-          <table>
+          <table className={style.estateTable}>
             <tr>
               <th>종류 선택<span className={style.star}>*</span></th>
               <td>
@@ -118,10 +118,10 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
               <td>
                 <div>
                   <div>
-                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
+                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} readOnly/><button onClick={handleComplete}>우편번호 찾기</button>
                   </div>
                   <div>
-                    <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={realEstate.address1} />
+                    <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={realEstate.address1} readOnly/>
                   </div>
                   {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
                 </div>
