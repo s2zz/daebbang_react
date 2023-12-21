@@ -6,9 +6,15 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
 
-const EditRoomBoardContents = () => {
+const EditRoomBoardContents = ({loginId}) => {
     const location = useLocation();
     const navi = useNavigate();
+    useEffect(() => {
+        if (loginId === null) {
+            alert("로그인해주세요")
+            navi("/login");
+        }
+    }, []);
     const quillRef = useRef();
 
     const [formData, setFormData] = useState({
