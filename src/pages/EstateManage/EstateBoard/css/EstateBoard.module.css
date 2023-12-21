@@ -43,3 +43,7 @@
   font-family: "NanumBarunGothic";
   text-align: center;
 }
+
+.infoLink {
+  text-decoration: none;
+}

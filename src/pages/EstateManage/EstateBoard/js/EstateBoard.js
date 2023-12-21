@@ -65,7 +65,7 @@ function EstateBoard() {
           (<>No Image</>)}
         </td>
         <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>
-        <td><Link to={`/estateManage/estateInfo/${estate.estateId}`}>{estate.title}</Link></td>
+        <td><Link to={`/estateManage/estateInfo/${estate.estateId}`} className={style.infoLink}>{estate.title}</Link></td>
         <td>{estate.address1}</td>
         <td>{estate.memo}</td>
         <td>
