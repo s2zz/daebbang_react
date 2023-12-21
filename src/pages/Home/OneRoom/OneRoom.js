@@ -35,9 +35,14 @@ function OneRoom() {
 
   const [randData, setRandData] = useState([{}]);
 
+  const [mapCenterDefaultState, setMapCenterDefaultState] = useState({
+    center: { lat: 36.84142696925057, lng: 127.14542099214732 },
+    isPanto: true,
+  });
+
   const [mapCenterState, setMapCenterState] = useState({
     center: { lat: 36.84142696925057, lng: 127.14542099214732 },
-    isPanto: false,
+    isPanto: true,
   });
 
   // const [markersInBounds, setMarkersInBounds] = useState([]);
@@ -74,14 +79,21 @@ function OneRoom() {
     const fetchData = async () => {
       setFilterMapList(mapList);
       setlistReady(true);
-      handleDragEnd();
+      // handleDragEnd();
       console.log(mapList);
     };
     {
       /* 바로가기 */
     }
     fetchData();
-  }, [mapRendered, mapList, mapCenterState]);
+  }, [mapRendered, mapList, mapCenterState, zoomLevel]);
+
+  // 지도 객체의 줌 레벨 변경
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setLevel(zoomLevel);
+    }
+  }, [zoomLevel]);
 
   useEffect(() => {
     // setFilterMapList를 비동기로 처리
@@ -95,13 +107,13 @@ function OneRoom() {
   }, [filterMapList]);
 
   // 지도 업데이트 바로가기
-  const handleMapCenter = (map) => {};
+  const handleMapCenter = (map) => {
+    console.log(map.getCenter());
+  };
 
-  const handleMapBounds = (map) => {};
-
-  function handleMapLoad(map) {
-    // You can use the map instance here as needed
-  }
+  const handleMapBounds = (map) => {
+    console.log(map.getCenter());
+  };
 
   // 페이지 로딩 시 사용할 기본 경계 반환
   const getDefaultBounds = () => {
@@ -158,6 +170,12 @@ function OneRoom() {
 
   // 지도에서 휠을 활용한 줌 이벤트 발생시 마커 새로 불러오기
   const handleZoomChanged = (map) => {
+    if (!map) {
+      map = {
+        getBounds: () => getNewDefaultBounds(),
+      };
+    }
+
     // Zoom level이 변경되면 페이지 이동
     setZoomLevel(map.getLevel());
 
@@ -185,12 +203,40 @@ function OneRoom() {
   };
 
   // 부드러운 지도 이동
-  const moveToLocation = (moveData) => {
+  const moveToLocation = (moveData, map) => {
+    // 얘보다 한층 위에 display none해야함
+    const searchListBox = searchListBoxRef.current;
+    searchListBox.innerHTML = "";
+    searchListBox.style.display = "none";
+
+    setSearchValue("");
+
     setZoomLevel(4);
-    setMapCenterState({
-      center: { lat: moveData.latitude, lng: moveData.longitude },
-      isPanto: true, // 부드러운 이동 사용
+
+    mapRef.current.setCenter(
+      new kakao.maps.LatLng(moveData.latitude, moveData.longitude)
+    );
+
+    if (!map) {
+      map = {
+        getBounds: () => getNewDefaultBounds(),
+      };
+    }
+
+    // 현재 지도의 경계를 맵 인자에서 가져옴
+    const bounds = map.getBounds();
+
+    // 경계(현재 화면)에 포함된 마커들 찾기
+    const markersInBounds = filterMapList.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(
+        marker.latitude,
+        marker.longitude
+      );
+      return bounds.contain(markerPosition);
     });
+
+    // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
+    navigate(`/home/oneroom/list`, { state: { markersInBounds } });
   };
 
   // 검색창 사용
@@ -1500,6 +1546,7 @@ function OneRoom() {
                 onBoundsChanged={handleMapBounds}
                 onCenterChanged={handleMapCenter}
                 ref={mapRef}
+                maxLevel={13}
               >
                 <MarkerClusterer
                   averageCenter={true}
