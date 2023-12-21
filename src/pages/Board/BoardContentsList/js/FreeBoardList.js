@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import style from "../css/BoardList.module.css";
 import freeStyle from "../css/FreeBoardList.module.css";
 import favorite from "../../assets/favorites.png";
@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { alertDeleteSuccess, alertDeleteFailure, alertDeleteConfirmation,alertAddSuccess, alertAddFailure, alertAddConfirmation } from '../../commons_js/alert.js';
 
-const FreeBoardList = () => {
+const FreeBoardList = ({loginId}) => {
+    const navi = useNavigate();
     const location = useLocation();
     const [board, setBoard] = useState([]); // 검색어 없을 때
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
@@ -47,6 +48,15 @@ const FreeBoardList = () => {
         setCurrentPage(currentPage);
     }
 
+    const moveWrite = (loginId) => {
+        if(loginId===null){
+            alert("로그인해주세요");
+            navi("/login")
+        } else{
+            navi("/board/toFreeBoardWrite");
+        }
+    }
+
     // 즐겨찾기 추가
     const addFav = (parentSeq) => {
         let str = "즐겨찾기";
@@ -70,18 +80,21 @@ const FreeBoardList = () => {
 
     // 즐겨찾기 제거
     const delFav = (parentSeq) => {
-        if (window.confirm("즐겨찾기를 삭제하시겠습니까?")) {
-            axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
-                setBoard(board.map((e, i) => {
-                    if (e.seq === parentSeq) { e.favorite = 'false' }
-                    return e;
-                }))
-                alert("즐겨찾기 삭제에 성공하였습니다");
-            }).catch(err => {
-                alert("즐겨찾기 삭제에 실패하였습니다");
-                console.log(err);
-            })
-        }
+        let str="즐겨찾기"
+        alertDeleteConfirmation(str).then(result=>{
+            if(result){
+                axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
+                    setBoard(board.map((e, i) => {
+                        if (e.seq === parentSeq) { e.favorite = 'false' }
+                        return e;
+                    }))
+                    alertDeleteSuccess(str);
+                }).catch(err => {
+                    alertDeleteFailure(str)
+                    console.log(err);
+                })
+            }
+        })
     }
 
     // 검색 기능
@@ -169,7 +182,7 @@ const FreeBoardList = () => {
                 </div>
             </div>
             <div className={style.writeBtnDiv}>
-                <Link to="/board/toFreeBoardWrite"><button>글 작성</button></Link>
+                <button onClick={()=>{moveWrite(loginId)}}>글 작성</button>
             </div>
             <div className={style.naviFooter}>
                 {
