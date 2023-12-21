@@ -13,6 +13,7 @@ const WriteReview = () => {
     const navi = useNavigate();
     const estateId = location.state !== null && location.state.estateCode !== null ? location.state.estateCode : 0;
     const approvalCode = location.state !== null && location.state.approvalCode !== null ? location.state.approvalCode : "";
+
     const [formData, setFormData] = useState({ estateId: estateId, approvalCode: approvalCode, traffic: "", surroundings: "", facility: "", files: {} });
     const storedLoginId = sessionStorage.getItem('loginId');
 
@@ -132,7 +133,7 @@ const WriteReview = () => {
 
     return (
         <div>
-            {estateId === 0 ? refuseWrite()
+            {estateId === 0 || approvalCode===""? refuseWrite()
                 :
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>
