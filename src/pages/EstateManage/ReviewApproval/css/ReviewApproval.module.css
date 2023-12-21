@@ -1,4 +1,4 @@
-a {
+.infoLink {
   text-decoration-line: none;
 }
 
@@ -8,6 +8,7 @@ a {
 }
 
 .estateTable {
+  width: 100%;
   margin-top: 60px;
   text-align: center;
 }
@@ -31,6 +32,7 @@ a {
 
 .bigTitle {
   font-size: 46px;
+  margin-top: 60px;
   line-height: 70px;
   letter-spacing: -1px;
   font-weight: 700;
