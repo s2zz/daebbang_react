@@ -7,7 +7,7 @@ const SideBar = () => {
         <>
             <div className={style.menu}>
                 <Link className={style.link} to="/admin"><FontAwesomeIcon icon={faAnglesRight} /> 메인 페이지</Link>
-            </div>=
+            </div>
             <div className={style.menu}>
                 <Link className={style.link} to="/admin/toMemberManagement"><FontAwesomeIcon icon={faAnglesRight} /> 회원 관리</Link>
             </div>
