@@ -1,6 +1,7 @@
 .container {
-  width: 90%;
-  margin: auto;
+  margin-top: 60px;
+  margin-left: 70px;
+  margin-right: 70px;
 }
 
 .scaleDiv {
@@ -30,10 +31,6 @@
 .star {
   margin-left: 4px;
   color: rgb(50, 108, 249);
-}
-
-input:read-only {
-  background-color: rgb(240, 240, 240);
 }
 
 .estateTable {
@@ -85,6 +82,7 @@ td {
 .buttonDiv {
   font-family: "NanumBarunGothic";
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .inputLabel {
@@ -114,4 +112,9 @@ td {
   height: 100px;
   border: 1px solid rgb(237, 237, 237);
   resize: none;
+}
+
+.estateBtn {
+  margin-left: 10px;
+  margin-right: 10px;
 }

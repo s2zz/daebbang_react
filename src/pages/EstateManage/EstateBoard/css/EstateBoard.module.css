@@ -17,6 +17,8 @@
   justify-content: space-evenly;
   font-size: large;
   text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .searchDiv{
@@ -39,11 +41,10 @@
   width: 25%;
 }
 
-.buttonDiv {
-  font-family: "NanumBarunGothic";
-  text-align: center;
+.infoLink {
+  text-decoration-line: none;
 }
 
-.infoLink {
-  text-decoration: none;
+.updateBtn {
+  margin-right: 5px;
 }

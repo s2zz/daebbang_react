@@ -1,16 +1,10 @@
-.infoLink {
-  text-decoration-line: none;
-}
-
-.container {
-  width: 90%;
-  margin: auto;
-}
-
 .estateTable {
-  width: 100%;
+  font-family: "NanumBarunGothic";
   margin-top: 60px;
   text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 .estateTable img {
@@ -23,6 +17,8 @@
   justify-content: space-evenly;
   font-size: large;
   text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .searchDiv{
@@ -31,10 +27,29 @@
 }
 
 .bigTitle {
-  font-size: 46px;
+  font-family: "NanumBarunGothicBold";
   margin-top: 60px;
+  font-size: 46px;
   line-height: 70px;
   letter-spacing: -1px;
   font-weight: 700;
   text-align: center;
+}
+
+.estateTable th:nth-child(4),
+.estateTable td:nth-child(4) {
+  width: 25%;
+}
+
+.buttonDiv {
+  font-family: "NanumBarunGothic";
+  text-align: center;
+}
+
+.infoLink {
+  text-decoration-line: none;
+}
+
+.approvalBtn {
+  margin-right: 5px;
 }
