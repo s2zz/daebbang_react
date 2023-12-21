@@ -8,6 +8,7 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { alertDeleteSuccess, alertDeleteFailure, alertDeleteConfirmation,alertAddSuccess, alertAddFailure, alertAddConfirmation } from '../../commons_js/alert.js';
 
 const FreeBoardList = () => {
     const location = useLocation();
@@ -48,19 +49,23 @@ const FreeBoardList = () => {
 
     // 즐겨찾기 추가
     const addFav = (parentSeq) => {
-        if (window.confirm("즐겨찾기를 추가하시겠습니까?")) {
-            let fav = { boardTitle: "자유게시판", parentSeq: parentSeq };
-            axios.post("/api/favoriteBoard", fav).then(resp => {
-                setBoard(board.map((e, i) => {
-                    if (e.seq === parentSeq) { e.favorite = 'true' }
-                    return e;
-                }))
-                alert("즐겨찾기 등록에 성공하였습니다");
-            }).catch(err => {
-                alert("즐겨찾기 등록에 실패하였습니다");
-                console.log(err);
-            })
-        }
+        let str = "즐겨찾기";
+        alertAddConfirmation(str).then(result => {
+            if (result) {
+                let fav = { boardTitle: "자유게시판", parentSeq: parentSeq };
+                axios.post("/api/favoriteBoard", fav).then(resp => {
+                    setBoard(board.map((e, i) => {
+                        if (e.seq === parentSeq) { e.favorite = 'true' }
+                        return e;
+                    }))
+                    alertAddSuccess("즐겨찾기 등록에 성공하였습니다");
+                }).catch(err => {
+                    alertAddSuccess("즐겨찾기 등록에 실패하였습니다");
+                    console.log(err);
+                })
+
+            }
+        })
     }
 
     // 즐겨찾기 제거

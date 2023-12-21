@@ -2,13 +2,19 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import style from "../../css/WriteBoard/WriteBoard.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef,useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-const FreeBoardWrite = () => {
+const FreeBoardWrite = ({loginId}) => {
     const navi = useNavigate();
+    useEffect(() => {
+        if (loginId === null) {
+            alert("로그인해주세요")
+            navi("/login");
+        }
+    }, []);
     const quillRef = useRef();
     const [formData, setFormData] = useState({
         title: "",

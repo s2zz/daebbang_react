@@ -16,16 +16,16 @@ const Board = ({ loginId, admin }) => {
     return (
         <div className={style.boardContainer}>
             <Routes>
-                <Route path="/" element={<FreeBoardList />}></Route>
-                <Route path="/toFreeBoardList" element={<FreeBoardList />} ></Route>
+                <Route path="/" element={<FreeBoardList loginId={loginId}/>}></Route>
+                <Route path="/toFreeBoardList" element={<FreeBoardList loginId={loginId}/>} ></Route>
                 <Route path="/toFavoriteBoardList" element={<FavoriteBoardList />}  ></Route>
-                <Route path="/toRoomBoardList" element={<RoomBoardList />}  ></Route>
-                <Route path="/toRoomBoardWrite" element={<RoomBoardWrite />}></Route>
-                <Route path="/toFreeBoardWrite" element={<FreeBoardWrite />}></Route>
+                <Route path="/toRoomBoardList" element={<RoomBoardList loginId={loginId}/>}  ></Route>
+                <Route path="/toRoomBoardWrite" element={<RoomBoardWrite loginId={loginId}/>}></Route>
+                <Route path="/toFreeBoardWrite" element={<FreeBoardWrite loginId={loginId}/>}></Route>
                 <Route path="/toFreeBoardContents/*" element={<FreeBoardContents loginId={loginId} admin={admin} />} ></Route>
                 <Route path="/toRoomBoardContents/*" element={<RoomBoardContents loginId={loginId} admin={admin} />}></Route>
-                <Route path="/toEditFreeBoardContents/*" element={<EditFreeBoardContents />}></Route>
-                <Route path="/toEditRoomBoardContents/*" element={<EditRoomBoardContents />}></Route>
+                <Route path="/toEditFreeBoardContents/*" element={<EditFreeBoardContents loginId={loginId}/>}></Route>
+                <Route path="/toEditRoomBoardContents/*" element={<EditRoomBoardContents loginId={loginId}/>}></Route>
             </Routes>
         </div >
     );
