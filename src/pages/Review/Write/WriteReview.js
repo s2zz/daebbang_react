@@ -6,6 +6,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2'
 
 const WriteReview = () => {
     const location = useLocation();
@@ -110,69 +111,85 @@ const WriteReview = () => {
 
     }
 
-    return (
-        <div className={style.borderBox}>
-            <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>
-            <hr></hr>
+    /*리뷰 쓰기 권한 없을 시*/
+    const refuseWrite = () => {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "리뷰 작성 권한이 없습니다",
+        }).then(() => {
+            navi("/");
+        });
+    }
 
-            <div className={style.scoreInfo}>
-                <div>별점<span>*</span> &nbsp;| </div>
-                <div className={style.scoreBox}>
-                    {
-                        [0, 1, 2, 3, 4].map((e, i) => (
-                            <div key={i}>
-                                {score[e] ? <img src={fav} alt="..." onClick={() => delScore(e)} /> : <img src={notFav} alt="..." onClick={() => addScore(e)} />}
-                            </div>
-                        ))
-                    }
+    return (
+        <div>
+            {estateId === 0 ? refuseWrite()
+                :
+                <div className={style.borderBox}>
+                    <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>
+                    <hr></hr>
+
+                    <div className={style.scoreInfo}>
+                        <div>별점<span>*</span> &nbsp;| </div>
+                        <div className={style.scoreBox}>
+                            {
+                                [0, 1, 2, 3, 4].map((e, i) => (
+                                    <div key={i}>
+                                        {score[e] ? <img src={fav} alt="..." onClick={() => delScore(e)} /> : <img src={notFav} alt="..." onClick={() => addScore(e)} />}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                    <div className={style.reviewInsert}>
+                        <div>교통<span>*</span></div>
+                        <div>
+                            <textarea placeholder="교통 리뷰 입력" onChange={handleChange} name="traffic"></textarea>
+                        </div>
+                    </div>
+                    <div className={style.reviewInsert}>
+                        <div>주변 환경<span>*</span></div>
+                        <div>
+                            <textarea placeholder="주변 환경 리뷰 입력" onChange={handleChange} name="surroundings"></textarea>
+                        </div>
+                    </div>
+                    <div className={style.reviewInsert}>
+                        <div>시설<span>*</span></div>
+                        <div>
+                            <textarea placeholder="시설 리뷰 입력" onChange={handleChange} name="facility"></textarea>
+                        </div>
+                    </div>
+                    <hr />
+                    <div>
+                        <div className={style.imgInfo}>
+                            <div>사진 첨부 |&nbsp;</div>
+                            <div>10MB 이하 파일만 등록 가능</div>
+                        </div>
+                        <div className={style.imgBox}>
+                            {
+                                [0, 1, 2, 3, 4].map((e, i) => (
+                                    <div key={i}>
+                                        <input type="file" name="files0" style={{ display: 'none' }} id="fileInput0" onChange={handleFileChange} accept="image/*" />
+                                        {url[`files${i}`] ?
+                                            <>
+                                                <img src={`url.files${i}`} alt="..." />
+                                                <label onClick={() => imgDel(`files${i}`)}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
+                                            </> :
+                                            <label htmlFor={`fileInput${i}`}><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
+                                        }
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                    <hr />
+                    <div className={style.btns}>
+                        <Link to="/myPage"><button>작성 취소</button></Link>
+                        <button onClick={handleAdd}>리뷰 등록</button>
+                    </div>
                 </div>
-            </div>
-            <div className={style.reviewInsert}>
-                <div>교통<span>*</span></div>
-                <div>
-                    <textarea placeholder="교통 리뷰 입력" onChange={handleChange} name="traffic"></textarea>
-                </div>
-            </div>
-            <div className={style.reviewInsert}>
-                <div>주변 환경<span>*</span></div>
-                <div>
-                    <textarea placeholder="주변 환경 리뷰 입력" onChange={handleChange} name="surroundings"></textarea>
-                </div>
-            </div>
-            <div className={style.reviewInsert}>
-                <div>시설<span>*</span></div>
-                <div>
-                    <textarea placeholder="시설 리뷰 입력" onChange={handleChange} name="facility"></textarea>
-                </div>
-            </div>
-            <hr />
-            <div>
-                <div className={style.imgInfo}>
-                    <div>사진 첨부 |&nbsp;</div>
-                    <div>10MB 이하 파일만 등록 가능</div>
-                </div>
-                <div className={style.imgBox}>
-                    {
-                        [0, 1, 2, 3, 4].map((e, i) => (
-                            <div key={i}>
-                                <input type="file" name="files0" style={{ display: 'none' }} id="fileInput0" onChange={handleFileChange} accept="image/*" />
-                                {url[`files${i}`] ?
-                                    <>
-                                        <img src={`url.files${i}`} alt="..." />
-                                        <label onClick={() => imgDel(`files${i}`)}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                                    </> :
-                                    <label htmlFor={`fileInput${i}`}><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-                                }
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-            <hr />
-            <div className={style.btns}>
-                <Link to="/myPage"><button>작성 취소</button></Link>
-                <button onClick={handleAdd}>리뷰 등록</button>
-            </div>
+            }
         </div>
     );
 }

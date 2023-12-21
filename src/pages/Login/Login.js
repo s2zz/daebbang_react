@@ -1,6 +1,6 @@
 import style from "./Login.module.css"
 import { useState, useEffect, useRef } from 'react';
-import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 import Modal from 'react-modal';
@@ -61,7 +61,7 @@ const LoginBox = ({ setLoginId }) => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "아이디 또는 비밀번호를 다시 확인해주세요",
+        text: "아이디 또는 비밀번호를 다시 확인해주세요"
       });
       setUser({ id: "", pw: "" });
     });
@@ -82,7 +82,7 @@ const LoginBox = ({ setLoginId }) => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "아이디 또는 비밀번호를 다시 확인해주세요",
+        text: "아이디 또는 비밀번호를 다시 확인해주세요"
       });
       setEstate({ id: "", pw: "" });
     });
@@ -103,7 +103,7 @@ const LoginBox = ({ setLoginId }) => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "아이디 또는 비밀번호를 다시 확인해주세요",
+        text: "아이디 또는 비밀번호를 다시 확인해주세요"
       });
       setAdmin({ id: "", pw: "" });
     });
