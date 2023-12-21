@@ -38,13 +38,13 @@ const FreeBoardWrite = ({loginId}) => {
         // 이미지 선택 시 동작
         input.addEventListener("change", async () => {
             const files = input.files;
-
             const formImg = new FormData();
             for (let i = 0; i < files.length; i++) {
                 formImg.append("files", files[i]);
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
+                console.log(imgUrl)
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
