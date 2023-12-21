@@ -16,8 +16,8 @@ const Main = () => {
 
   useEffect(() => {
     axios.get(`/api/map/getLimitAll`).then((resp) => {
-        setMapList(resp.data);
-      })
+      setMapList(resp.data);
+    })
       .catch((err) => {
         console.log(err);
       })
@@ -81,40 +81,6 @@ const Main = () => {
         <div className={style.overlay_text}>어떤 방을 찾으세요?</div>
       </div>
       <div className={style.middlebox}>
-        <div className={style.middle_up}>
-          <div className={style.recent_read}>
-            <div className={style.titlebox}>
-              <span className={style.title}> 최근 본 매물</span>
-            </div>
-            <hr></hr>
-            {watch==""?<div className={style.recentdiv}>최근 본 매물이 없습니다.</div>:
-            <div style={{ padding: `0 ${chevronWidth}px` }}>
-              <ItemsCarousel
-                requestToChangeActive={setActiveItemIndex}
-                activeItemIndex={activeItemIndex}
-                numberOfCards={3}
-                gutter={20}
-                leftChevron={<button>{'<'}</button>}
-                rightChevron={<button>{'>'}</button>}
-                outsideChevron
-                chevronWidth={chevronWidth}
-              >{
-                  watch.map((e, i) => {
-                      return (
-                        <div key={i}>
-                          <div style={{ height: 200, background: '#EEE' }}>{e.estateId}</div>
-                        </div>
-                      )
-
-                  })
-                }
-
-
-              </ItemsCarousel>
-            </div>}
-          </div>
-
-        </div>
         <div className={style.middle_down}>
           <div className={style.recent_estate}>
             <div className={style.titlebox}>
@@ -153,7 +119,7 @@ const Main = () => {
                 sliceRoomContentsList().map((e, i) => {
                   return (
                     <Link key={i} to={`/board/toRoomBoardContents`} style={{ textDecoration: "none", color: "black" }} state={{ sysSeq: e.seq }}>
-                      <div className={style.cbgdiv}  data-seq={e.seq}>
+                      <div className={style.cbgdiv} data-seq={e.seq}>
                         <span className={style.fontcss}>
                           [{e.header}]
                         </span>
@@ -180,7 +146,7 @@ const Main = () => {
                 sliceFreeContentsList().map((e, i) => {
                   return (
                     <Link key={i} to={`/board/toFreeBoardContents/${(countPerPage * (currentPage - 1)) - i}`} style={{ textDecoration: "none", color: "black" }} state={{ oriSeq: freeboard.length - (i), sysSeq: e.seq }}>
-                      <div className={style.cbgdiv}  data-seq={e.seq}>
+                      <div className={style.cbgdiv} data-seq={e.seq}>
                         <span className={style.fontcss}>[자유]  </span>
                         <span className={style.fontcss}>
                           {e.title.length > 13 ? e.title.substring(0, 10) + "..." : e.title}
@@ -194,10 +160,10 @@ const Main = () => {
             </div>
           </div>
         </div>
+        <div middle_up>
+          <Footer></Footer>
+        </div>
       </div>
-
-
-      <Footer></Footer>
     </div>
 
   );
