@@ -1,0 +1,11 @@
+.fileBox{
+    margin-bottom:20px;
+    background-color: rgba(243, 243, 243, 0.535);
+    border:1px solid gainsboro;
+    padding:10px;
+}
+.fileBox>div:nth-child(1){
+    width:8%;
+    margin-bottom:5px;
+    font-weight: bold;
+}

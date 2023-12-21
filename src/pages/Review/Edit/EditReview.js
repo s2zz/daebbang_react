@@ -151,50 +151,35 @@ const EditReview = () => {
 
 
     return (
-        <>
-            <div>매물 번호 : {formData.estateId}</div>
-            <div className={style.scoreBox}>
-                <div>
+        <div className={style.borderBox}>
+            <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
+            <hr></hr>
+            <div className={style.scoreInfo}>
+                <div>별점<span>*</span> &nbsp;| </div>
+                <div className={style.scoreBox}>
                     {
-                        score[0] ? <img src={fav} alt="..." onClick={() => delScore(0)} /> : <img src={notFav} alt="..." onClick={() => addScore(0)} />
-                    }
-                </div>
-                <div>
-                    {
-                        score[1] ? <img src={fav} alt="..." onClick={() => delScore(1)} /> : <img src={notFav} alt="..." onClick={() => addScore(1)} />
-                    }
-                </div>
-                <div>
-                    {
-                        score[2] ? <img src={fav} alt="..." onClick={() => delScore(2)} /> : <img src={notFav} alt="..." onClick={() => addScore(2)} />
-                    }
-                </div>
-                <div>
-                    {
-                        score[3] ? <img src={fav} alt="..." onClick={() => delScore(3)} /> : <img src={notFav} alt="..." onClick={() => addScore(3)} />
-                    }
-                </div>
-                <div>
-                    {
-                        score[4] ? <img src={fav} alt="..." onClick={() => delScore(4)} /> : <img src={notFav} alt="..." onClick={() => addScore(4)} />
+                        [0, 1, 2, 3, 4].map((e, i) => (
+                            <div key={i}>
+                                {score[e] ? <img src={fav} alt="..." onClick={() => delScore(e)} /> : <img src={notFav} alt="..." onClick={() => addScore(e)} />}
+                            </div>
+                        ))
                     }
                 </div>
             </div>
-            <hr />
-            <div>
-                <div>교통</div>
+            <div className={style.reviewInsert}>
+                <div>교통<span>*</span></div>
                 <div>
                     <textarea placeholder="교통 리뷰 입력" onChange={handleChange} name="traffic" value={formData.traffic}></textarea>
                 </div>
             </div>
-            <div>
-                <div>주변 환경</div>
+            <div className={style.reviewInsert}>
+                <div>주변 환경<span>*</span></div>
                 <div>
                     <textarea placeholder="주변 환경 리뷰 입력" onChange={handleChange} name="surroundings" value={formData.surroundings}></textarea>
                 </div>
             </div>
-            <div>
-                <div>시설</div>
+            <div className={style.reviewInsert}>
+                <div>시설<span>*</span></div>
                 <div>
                     <textarea placeholder="시설 리뷰 입력" onChange={handleChange} name="facility" value={formData.facility}></textarea>
                 </div>
@@ -264,11 +249,11 @@ const EditReview = () => {
                 </div>
             </div>
             <hr />
-            <div>
-                <button>작성 취소</button>
-                <button onClick={handleAdd}>리뷰 등록</button>
+            <div className={style.btns}>
+                <button onClick={()=>{navi(-1)}}>작성 취소</button>
+                <button onClick={handleAdd}>리뷰 수정</button>
             </div>
-        </>
+        </div>
     );
 }
 
