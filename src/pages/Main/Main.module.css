@@ -115,3 +115,10 @@
     font-size: 30px;
     font-weight: bold;
 }
+.recentdiv{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 200px;
+}

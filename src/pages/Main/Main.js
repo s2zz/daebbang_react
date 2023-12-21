@@ -16,7 +16,6 @@ const Main = () => {
 
   useEffect(() => {
     axios.get(`/api/map/getLimitAll`).then((resp) => {
-      console.log(resp.data)
         setMapList(resp.data);
       })
       .catch((err) => {
@@ -36,7 +35,6 @@ const Main = () => {
         console.log(err);
       })
     }
-
   }, []);
   // 내림차순 정렬
   function compareBySeq(a, b) {
@@ -89,7 +87,7 @@ const Main = () => {
               <span className={style.title}> 최근 본 매물</span>
             </div>
             <hr></hr>
-            {watch==""?<div>최근 본 매물이 없습니다.</div>:
+            {watch==""?<div className={style.recentdiv}>최근 본 매물이 없습니다.</div>:
             <div style={{ padding: `0 ${chevronWidth}px` }}>
               <ItemsCarousel
                 requestToChangeActive={setActiveItemIndex}
@@ -103,7 +101,7 @@ const Main = () => {
               >{
                   watch.map((e, i) => {
                       return (
-                        <div>
+                        <div key={i}>
                           <div style={{ height: 200, background: '#EEE' }}>{e.estateId}</div>
                         </div>
                       )
@@ -128,8 +126,8 @@ const Main = () => {
               {
                 mapList.map((e, i) => {
                   return (
-                    <Link to={`#`} style={{ textDecoration: "none", color: "black" }} >
-                      <div className={style.cbgdiv} key={i}>
+                    <Link key={i} to={`#`} style={{ textDecoration: "none", color: "black" }} >
+                      <div className={style.cbgdiv} >
                         <span className={style.fontcss}>
                           [{e.address2.length > 7 ? e.address2.substring(0, 7) : e.address2}]
                         </span>
@@ -154,8 +152,8 @@ const Main = () => {
               {
                 sliceRoomContentsList().map((e, i) => {
                   return (
-                    <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none", color: "black" }} state={{ sysSeq: e.seq }}>
-                      <div className={style.cbgdiv} key={i} data-seq={e.seq}>
+                    <Link key={i} to={`/board/toRoomBoardContents`} style={{ textDecoration: "none", color: "black" }} state={{ sysSeq: e.seq }}>
+                      <div className={style.cbgdiv}  data-seq={e.seq}>
                         <span className={style.fontcss}>
                           [{e.header}]
                         </span>
@@ -181,11 +179,11 @@ const Main = () => {
               {
                 sliceFreeContentsList().map((e, i) => {
                   return (
-                    <Link to={`/board/toFreeBoardContents/${(countPerPage * (currentPage - 1)) - i}`} style={{ textDecoration: "none", color: "black" }} state={{ oriSeq: freeboard.length - (i), sysSeq: e.seq }}>
-                      <div className={style.cbgdiv} key={i} data-seq={e.seq}>
+                    <Link key={i} to={`/board/toFreeBoardContents/${(countPerPage * (currentPage - 1)) - i}`} style={{ textDecoration: "none", color: "black" }} state={{ oriSeq: freeboard.length - (i), sysSeq: e.seq }}>
+                      <div className={style.cbgdiv}  data-seq={e.seq}>
                         <span className={style.fontcss}>[자유]  </span>
                         <span className={style.fontcss}>
-                          {e.title.length > 13 ? e.title.substring(0, 13) + "..." : e.title}
+                          {e.title.length > 13 ? e.title.substring(0, 10) + "..." : e.title}
                         </span>
                         <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.split("T")[0]}</span>
                       </div>

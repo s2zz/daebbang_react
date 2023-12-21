@@ -36,7 +36,7 @@
 }
 
 .inputFindPwBox {
-    height:190px;
+    height:250px;
     display: flex;
     justify-content: center;
 }
@@ -87,4 +87,20 @@
 .notgood{
     margin-top: 10px;
     color: rgb(255, 55, 55);
+}
+.findId:hover, .findPw:hover, .signUp:hover {
+    font-weight: bold;
+}
+.loginBtn {
+    width:200px;
+    height:80px;
+    border-radius: 5px;
+    background-color: black;
+    color:white;
+    font-family: "NanumBarunGothicBold";
+    font-size:12pt;
+}
+.loginFont {
+    font-family: "NanumBarunGothic";
+    font-size:11pt;
 }
