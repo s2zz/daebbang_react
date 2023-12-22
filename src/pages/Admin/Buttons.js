@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 function Buttons(args) {
@@ -6,7 +6,15 @@ function Buttons(args) {
   const [modal, setModal] = useState(false);
 
   const toggle = () => setModal(!modal);
-
+  //모달을 자동으로 닫게 해주려면 이 코드를 추가 하시면 됩니다.
+  /*useEffect(() => {
+    if (modal) {
+      const timer = setTimeout(() => {
+        setModal(false);
+      }, 3000); // 3초 후에 모달이 닫히도록 설정
+      return () => clearTimeout(timer);
+    }
+  }, [modal]);*/
   //두번째 모달창입니다.(이중모달) 
   const [modal1, setModal1] = useState(false);
   const [nestedModal, setNestedModal] = useState(false);
