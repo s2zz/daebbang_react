@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+.info_main * {
+  font-family: "NanumBarunGothic";
+}
+
 /* 사이드 메뉴 스크롤 숨김처리 */
 .info_main::-webkit-scrollbar {
   display: none;

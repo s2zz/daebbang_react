@@ -1,5 +1,5 @@
 
-* {
+.all * {
     font-family: "NanumBarunGothic";
 }
 
@@ -68,6 +68,7 @@
     border-radius: 4px;
     overflow: hidden;
     position: relative;
+    font-size: 13px;
 }
 
 .search_box input {
@@ -224,7 +225,7 @@
 }
 
 .option_range {
-    margin-top: 20px;
+    margin-top: 5px;
     height: 85px;
 }
 
@@ -345,3 +346,8 @@
 .home_body_side::-webkit-scrollbar {
     display: none;
 }
+
+.silderTop {
+    display: flex;
+    justify-content: space-between;
+  }

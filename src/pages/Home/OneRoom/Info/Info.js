@@ -223,7 +223,6 @@ function Info() {
       onScroll={() => handleScroll(info_scroll.current)}
     >
       {/* 정보 표기 구역*/}
-
       <div>
         {/* 드래그 이벤트에 의한 최상단 박스 (구현 못함 현재 display:none 상태임)*/}
         {isVisible_drag ? null : (
@@ -241,7 +240,10 @@ function Info() {
 
         {/* 슬라이드 쇼*/}
         <div className={style.info_img}>
-          <div className={style.info_img_top} onClick={() => back()}> {/* 뒤로가기 아이콘 넣을것 */} </div>
+          <div className={style.info_img_top} onClick={() => back()}>
+            {" "}
+            {/* 뒤로가기 아이콘 넣을것 */}{" "}
+          </div>
 
           <div>
             {" "}
@@ -249,14 +251,43 @@ function Info() {
               requestToChangeActive={setActiveItemIndex}
               activeItemIndex={activeItemIndex}
               numberOfCards={1}
-              gutter={20}
-              leftChevron={<button>{"<"}</button>}
-              rightChevron={<button>{">"}</button>}
-              outsideChevron
+              gutter={10}
+              leftChevron={
+                <button
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "white",
+                    fontSize: "20px",
+                    border: "none",
+                    fontWeight: "bold",
+                    textShadow: "3px 3px 6px rgba(0, 0, 0, 0.8)",
+                  }}
+                >
+                  {"<"}
+                </button>
+              }
+              rightChevron={
+                <button
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "white",
+                    border: "none",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    textShadow: "3px 3px 6px rgba(0, 0, 0, 0.8)",
+                  }}
+                >
+                  {">"}
+                </button>
+              }
+              outsideChevron={false}
               chevronWidth={chevronWidth}
             >
               {imageUrls.map((url, index) => (
-                <div key={index} style={{ height: "300px", background: "#EEE" }}>
+                <div
+                  key={index}
+                  style={{ height: "300px", background: "#EEE" }}
+                >
                   <img
                     src={url}
                     alt={`Item ${index}`}
@@ -506,7 +537,7 @@ function Info() {
                     </div>
                   ))
               ) : (
-                <div>옵션 정보가 하나도 없습니다.</div>
+                <div>옵션 정보가 없습니다.</div>
               )}
             </div>
           </div>
