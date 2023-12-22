@@ -31,6 +31,7 @@ import "./RangeSlider.css";
 function OneRoom() {
   const [mapRendered, setMapRendered] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(6);
+  const [zoomLevelRanded, setZoomLevelRanded] = useState(true);
 
   const [mapList, setMapList] = useState([{}]);
   const [filterMapList, setFilterMapList] = useState(mapList);
@@ -86,9 +87,7 @@ function OneRoom() {
       // handleDragEnd();
       console.log(mapList);
     };
-    {
-      /* 바로가기 */
-    }
+
     fetchData();
   }, [mapRendered, mapList, mapCenterState]);
 
@@ -110,13 +109,23 @@ function OneRoom() {
     fetchData();
   }, [filterMapList]);
 
+  // 줌 최대 크기 9까지 밖에 못 하게 설정
+  useEffect(() => {
+    if(zoomLevel <= 9) {
+      setZoomLevelRanded(true);
+    }
+    else {
+      setZoomLevelRanded(false);
+    }
+  }, [zoomLevel]);
+
   // 지도 업데이트 바로가기
   const handleMapCenter = (map) => {
-    console.log(map.getCenter());
+
   };
 
   const handleMapBounds = (map) => {
-    console.log(map.getCenter());
+
   };
 
   // 페이지 로딩 시 사용할 기본 경계 반환
@@ -1241,9 +1250,6 @@ function OneRoom() {
           start: 0,
         }));
       }
-
-      console.log("둘다 움직임");
-      console.log(afterRangeValues);
     }
     // 만약 양쪽 끝 값이 다 최대로 들어가 있다면 0만원부터 0만원까지
     // 즉 전체로 다시 설정
@@ -1687,8 +1693,6 @@ function OneRoom() {
       }
     }
 
-    console.log(rangeValues.start + " : " + rangeValues.end);
-
     // 최종 필터링된 데이터를 상태에 업데이트
     setFilterMapList(filtered);
   };
@@ -1719,63 +1723,74 @@ function OneRoom() {
                 ref={mapRef}
                 maxLevel={13}
               >
-                <MarkerClusterer
-                  averageCenter={true}
-                  minLevel={1}
-                  calculator={[1, 2, 5]}
-                  styles={[
-                    {
-                      // calculator 각 사이 값 마다 적용될 스타일을 지정한다
-                      width: "30px",
-                      height: "30px",
-                      background: "rgba(51, 204, 255, .8)",
-                      borderRadius: "15px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "31px",
-                    },
-                    {
-                      width: "40px",
-                      height: "40px",
-                      background: "rgba(255, 153, 0, .8)",
-                      borderRadius: "20px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "41px",
-                    },
-                    {
-                      width: "50px",
-                      height: "50px",
-                      background: "rgba(255, 51, 204, .8)",
-                      borderRadius: "25px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "51px",
-                    },
-                    {
-                      width: "60px",
-                      height: "60px",
-                      background: "rgba(255, 80, 80, .8)",
-                      borderRadius: "30px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "61px",
-                    },
-                  ]}
-                >
-                  {filterMapList.map((marker, index) => (
-                    <MapMarker
-                      key={index}
-                      position={{ lat: marker.latitude, lng: marker.longitude }}
-                      options={{ title: marker.title }}
-                      onClick={() => handleMarkerClick(marker)}
-                    />
-                  ))}
-                </MarkerClusterer>
+                {zoomLevelRanded && (
+                    <MarkerClusterer
+                      averageCenter={true}
+                      minLevel={1}
+                      calculator={[5, 10, 15]}
+                      styles={[
+                        {
+                          // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+                          width: "42px",
+                          height: "42px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "21px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "16px",
+                        },
+                        {
+                          width: "48px",
+                          height: "48px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "24px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          lineHeight: "41px",
+                          fontSize: "17px",
+                        },
+                        {
+                          width: "68px",
+                          height: "68px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "34px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          lineHeight: "51px",
+                          fontSize: "19px",
+                        },
+                        {
+                          width: "84px",
+                          height: "84px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "42px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          lineHeight: "51px",
+                          fontSize: "19px",
+                        },
+                      ]}
+                    >
+                      {filterMapList.map((marker, index) => (
+                        <MapMarker
+                          key={index}
+                          position={{
+                            lat: marker.latitude,
+                            lng: marker.longitude,
+                          }}
+                          options={{ title: marker.title }}
+                          onClick={() => handleMarkerClick(marker)}
+                        />
+                      ))}
+                    </MarkerClusterer>
+                  )}
               </Map>
             )}
           </div>
