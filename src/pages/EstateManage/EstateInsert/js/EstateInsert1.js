@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Button } from 'reactstrap';
 import Post from '../../js/Post';
 import style from '../css/EstateInsert.module.css';
 
@@ -104,7 +105,7 @@ function EstateInsert1({ realEstate, setRealEstate }) {
           <td>
             <div>
               <div>
-                <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} /><button onClick={handleComplete}>우편번호 찾기</button>
+                <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={enroll_company.zipcode} /><Button className={style.estateBtn} onClick={handleComplete}>우편번호 찾기</Button>
               </div>
               <div>
                 <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={enroll_company.address1} />

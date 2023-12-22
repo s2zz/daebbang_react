@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Button } from 'reactstrap';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import style from '../css/EstateBoard.module.css';
@@ -69,8 +70,8 @@ function EstateBoard() {
         <td>{estate.address1}</td>
         <td>{estate.memo}</td>
         <td>
-          <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><button>수정</button></Link>
-          <button onClick={() => handleDelete(estate.estateId)}>삭제</button>
+          <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><Button className={style.updateBtn}>수정</Button></Link>
+          <Button color="danger" onClick={() => handleDelete(estate.estateId)}>삭제</Button>
         </td>
       </tr>
     );
@@ -96,10 +97,6 @@ function EstateBoard() {
 
       <div className={style.naviFooter}>
         {pagenation()}
-      </div>
-      <div className={style.buttonDiv} >
-        <Link to={`/estateManage/estateInsert`}><button>방 내놓기</button></Link>
-        <Link to={`/estateManage/reviewApproval`}><button>리뷰 관리</button></Link>
       </div>
     </>
   );

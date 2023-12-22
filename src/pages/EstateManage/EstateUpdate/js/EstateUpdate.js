@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Button } from 'reactstrap';
 import axios from "axios";
 import style from '../css/EstateUpdate.module.css';
 import { useNavigate, useParams } from "react-router-dom";
@@ -184,13 +185,15 @@ function EstateUpdate() {
   return (
     <>
       <h1 className={style.bigTitle}>매물 수정</h1>
-      <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
-      <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList}
-        maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
-      <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
-      <div className={style.buttonDiv}>
-        <button onClick={handleReturn}>이전으로</button>
-        <button onClick={handleSubmit}>다음으로</button>
+      <div className={style.container}>
+        <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
+        <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList}
+          maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
+        <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
+        <div className={style.buttonDiv}>
+          <Button className={style.estateBtn} onClick={handleReturn}>이전으로</Button>
+          <Button className={style.estateBtn} onClick={handleSubmit}>다음으로</Button>
+        </div>
       </div>
     </>
   );
