@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from 'reactstrap';
 import axios from "axios";
 import style from '../css/EstateInsert.module.css';
 import { useNavigate } from "react-router-dom";
@@ -126,16 +127,18 @@ function EstateInsert() {
   return (
     <>
       <h1 className={style.bigTitle}>방내놓기</h1>
-      <p className={style.explanation}>전/ 월세 매물만 등록할 수 있습니다.</p>
-      <p className={style.explanation}>주소를 다르게 입력할 경우 허위매물로 신고될 수 있으니 꼭 동일하게 입력 바랍니다.</p>
-      <EstateInsert1 realEstate={realEstate} setRealEstate={setRealEstate} />
-      <EstateInsert2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList}
-        maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption}
-        showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
-      <EstateInsert3 setRealEstate={setRealEstate} setEstateImages={setEstateImages} />
-      <div className={style.buttonDiv}>
-        <button onClick={handleReturn}>이전으로</button>
-        <button onClick={handleSubmit}>다음으로</button>
+      <div className={style.container}>
+        <p className={style.explanation}>전/ 월세 매물만 등록할 수 있습니다.</p>
+        <p className={style.explanation}>주소를 다르게 입력할 경우 허위매물로 신고될 수 있으니 꼭 동일하게 입력 바랍니다.</p>
+        <EstateInsert1 realEstate={realEstate} setRealEstate={setRealEstate} />
+        <EstateInsert2 realEstate={realEstate} setRealEstate={setRealEstate} setOptionList={setOptionList}
+          maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption}
+          showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
+        <EstateInsert3 setRealEstate={setRealEstate} setEstateImages={setEstateImages} />
+        <div className={style.buttonDiv}>
+          <Button className={style.estateBtn} onClick={handleReturn}>이전으로</Button>
+          <Button onClick={handleSubmit}>다음으로</Button>
+        </div>
       </div>
     </>
   );

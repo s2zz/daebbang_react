@@ -1,6 +1,7 @@
 .container {
-  width: 90%;
-  margin: auto;
+  margin-top: 60px;
+  margin-left: 70px;
+  margin-right: 70px;
 }
 
 .title {
@@ -49,7 +50,9 @@ td {
 }
 
 .buttonDiv {
+  font-family: "NanumBarunGothic";
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .inputLabel {

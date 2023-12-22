@@ -13,7 +13,7 @@
 
 .range-bar {
   position: absolute;
-  height: 5px;
+  height: 4px;
   background-color: #666;
   border-radius: 5px;
   top: 50%;
@@ -23,7 +23,7 @@
 .range-bar-base-line {
   width: 100%;
   position: absolute;
-  height: 5px;
+  height: 4px;
   background-color: #d9d9d9;
   border-radius: 5px;
   top: 50%;
@@ -41,6 +41,7 @@
   transform: translateY(-50%);
   cursor: pointer;
   margin-left: -10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .range-handle.left {
@@ -74,18 +75,13 @@
   color: #4d4d4d;
 }
 
+
 .value_box {
-  width: 100px;
-  height: 26px;
   position: relative;
   border-radius: 0.4em;
-  margin: 0 auto;
-  margin-top: -38px;
   text-align: center;
   font-size: 13px;
-  line-height: 26px;
   color: #000;
-  border: 1px solid #4d4d4d;
 }
 
 /* .value_box:after {
