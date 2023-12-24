@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from "../commons/Footer";
 import DaumPostcode from "react-daum-postcode";
 import { MapMarker, Map } from "react-kakao-maps-sdk"
+import style1 from "../commons/Modal.module.css";
 
 const HomeEnrollment = (args) => {
     const [value, setValue] = useState('');
@@ -41,8 +42,17 @@ const HomeEnrollment = (args) => {
     const [zipcode, setZipcode] = useState({ zipcode: "" });
     const [address1, setAddress1] = useState({ address1: "" });
     const [address2, setAddress2] = useState({ address2: "" });
+    //alert창
+    const [modal3, setModal3] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
-   
+    const toggle3 = () => setModal3(!modal3);
+
+    const handleAlert = (message) => {
+        setAlertMessage(message);
+        toggle3();
+    };
+
 
     const { kakao } = window;
 
@@ -56,7 +66,7 @@ const HomeEnrollment = (args) => {
             var dataLength = Object.keys(data).length;
 
             if (!dataLength) {
-                alert("주소를 수동으로 입력해주세요.");
+                handleAlert("주소를 수동으로 입력해주세요.");
                 setShowAddressInputs(true);
                 setShowAddress(false);
                 setShowAddressInfo(false);
@@ -95,7 +105,7 @@ const HomeEnrollment = (args) => {
                 setSearchResult(response.data.EDOffices.field);
             })
             .catch(error => {
-                alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
+                handleAlert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
             });
     }
     const handleKeyDown = (event) => {
@@ -121,7 +131,7 @@ const HomeEnrollment = (args) => {
             .then(response => {
                 if (response.data) {
                     setSelectedItem('');
-                    alert("이미 가입된 공인중개사무소 입니다.")
+                    handleAlert("이미 가입된 공인중개사무소 입니다.")
                 } else {
                     setSelectedItem(item);
                     searchPlaces(item.ldCodeNm + " " + item.bsnmCmpnm);
@@ -156,16 +166,22 @@ const HomeEnrollment = (args) => {
     };
     const handleSubmit = () => {
         if (!selectedItem) {
-            alert('중개사무소를 선택해주세요.');
+            // alert('중개사무소를 선택해주세요.');
+            handleAlert('중개사무소를 선택해주세요.');
         } else if (!value) {
-            alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
+            // alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
+            handleAlert('대표공인중개사 휴대폰 번호를 입력해주세요.');
         } else if (!nameValue) {
-            alert('대표이름을 입력해주세요.');
+            // alert('대표이름을 입력해주세요.');
+            handleAlert('대표이름을 입력해주세요.');
         } else if (!emailValue || !selectedValue) {
-            alert('대표공인중개사 이메일을 입력해주세요.');
+            // alert('대표공인중개사 이메일을 입력해주세요.');
+            handleAlert('대표공인중개사 이메일을 입력해주세요.');
         } else if (!address && (!address1.address1 || !address2.address2)) {
-            alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
+            // alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
+            handleAlert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
         } else {
+           
             const formData = new FormData();
             let addressValue = '';
 
@@ -174,7 +190,7 @@ const HomeEnrollment = (args) => {
             } else if (address1.address1) {
                 addressValue = address1.address1 + " " + address2.address2 + "";
             } else {
-                alert('중개사무소 찾기를 눌러주세요.');
+                handleAlert('중개사무소 찾기를 눌러주세요.');
                 return;
             }
 
@@ -195,8 +211,8 @@ const HomeEnrollment = (args) => {
             axios
                 .post('/api/enrollment/agent/signup', formData)
                 .then(response => {
-                    increaseNewEstateCount();
                     alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');
+                    increaseNewEstateCount();
                     navigate('/enrollment/entry');
                 })
                 .catch(error => {
@@ -303,6 +319,17 @@ const HomeEnrollment = (args) => {
 
     return (
         <div className={style.container}>
+             {modal3 &&<div>
+                <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
+                    <ModalBody className={style1.alertBody}>
+                        <p className={style1.alertContents}>{alertMessage}</p>
+                        <br></br>
+                        <Button color="primary" style={{fontSize:'small'}} className={style1.alertBtn} onClick={toggle3} >
+                            확인
+                        </Button>{' '}
+                    </ModalBody>
+                </Modal>
+            </div>}
             <div className={style.imgbag}>
                 <img className={style.img} src={enrollImage} alt="이미지 설명" />
             </div>

@@ -74,11 +74,11 @@ function Buttons(args) {
         <Button color="danger" onClick={toggle3} >
           alert
         </Button>
-        <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style.mydiv}>
-          <ModalBody style={{paddingTop:'30px',position:'relative',left:'20px'}}>
-            제목을 입력해주세요.
+        <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style.alert}>
+          <ModalBody className={style.alertBody}>
+            <p className={style.alertContents}>제목을 입력해주세요.</p>
             <br></br>
-            <Button color="primary" onClick={toggle3} style={{marginTop:'20px',fontSize:'small',position:'relative',left:'380px'}}>
+            <Button color="primary" className={style.alertBtn} onClick={toggle3}>
               확인
             </Button>{' '}
           </ModalBody>
