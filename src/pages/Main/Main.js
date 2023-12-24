@@ -1,7 +1,7 @@
 import style from "./Main.module.css"
 import homeimg from "../Enrollment/assets/homeimg.jpg";
-import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Footer from "../commons/Footer";
 import ItemsCarousel from 'react-items-carousel';
@@ -13,7 +13,45 @@ const Main = () => {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const chevronWidth = 40;
   const [watch, setwatch] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [zoomLevel, setZoomLevel] = useState(6);
+  const searchListBoxRef = useRef(null);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [filterMapList, setFilterMapList] = useState(mapList);
 
+  const navigate = useNavigate();
+
+
+
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setLevel(zoomLevel);
+    }
+  }, [zoomLevel]);
+
+  const getNewDefaultBounds = () => {
+    if (mapRef.current) {
+      return mapRef.current.getBounds();
+    } else {
+      // mapRef.current가 유효하지 않은 경우, 기본 경계 반환
+      return getDefaultBounds();
+    }
+  };
+  const mapRef = useRef(null);
+  const getDefaultBounds = () => {
+    return new kakao.maps.LatLngBounds(
+      new kakao.maps.LatLng(36, 127),
+      new kakao.maps.LatLng(37, 128)
+    );
+  };
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setLevel(zoomLevel);
+    }
+  }, [zoomLevel]);
+  const { kakao } = window;
   useEffect(() => {
     axios.get(`/api/map/getLimitAll`).then((resp) => {
       setMapList(resp.data);
@@ -69,6 +107,237 @@ const Main = () => {
     const end = start + countPerPage;
     return freeboard.slice(start, end);
   }
+  const handleInputChange = (event) => {
+    // 받은 데이터의 길이 (2글자 이상인지 체크하기 위한거임)
+    const inputValue = event.target.value;
+    setSearchValue(inputValue);
+
+    // 리스트 박스를 찾기 위해서 쓰는 Ref
+    const searchListBox = searchListBoxRef.current;
+
+    // 2글자 이상일 때 active 클래스를 추가하고, display를 block으로 설정
+    if (inputValue.length >= 2) {
+      // 숨겨놨던 리스트 Div를 풀어줌
+      searchListBox.classList.add(style.active);
+      searchListBox.style.display = "block";
+
+      axios
+        .get(`/api/map/getKeywordSearch`, {
+          params: {
+            keyword: inputValue, // inputValue를 'keyword'라는 이름으로 전달
+          },
+        })
+        .then((resp) => {
+          // resp.data를 순회하며 각 지역의 시군구 정보를 <div>에 추가
+          searchListBox.innerHTML = ""; // 기존 내용을 초기화
+
+          // 검색된 데이터가 없을때
+          if (
+            resp.data.regionList.length === 0 &&
+            resp.data.subwayList.length === 0 &&
+            resp.data.schoolList.length === 0
+          ) {
+            // NULL 값일때 List에 넣을 CSS를 사용하기 위해 만드는 마크업
+            const nullRegionSpan = document.createElement("span");
+            const nullRegionDiv = document.createElement("div");
+
+            nullRegionSpan.textContent = `검색된 항목이 없습니다.`;
+            nullRegionDiv.appendChild(nullRegionSpan);
+            searchListBox.appendChild(nullRegionDiv);
+          }
+
+          // 각 지역에 대한 검색
+          // region에는 각 지역 정보가 들어 있음
+          resp.data.regionList.forEach((region) => {
+            // List에 넣을 CSS를 사용하기 위해 만드는 마크업
+            const regionSpan = document.createElement("span");
+            const regionDiv = document.createElement("div");
+
+            // 리에 대한 검색
+            if (region.re) {
+              // 메인 상단 대표 검색된 키워드
+              regionSpan.textContent = `${region.re}`;
+
+              // 상세 주소
+              const regionText = document.createTextNode(
+                `${region.sido} ${region.sigungu} ${region.eup_myeon_re_dong} ${region.re}`
+              );
+
+              // Span 태그(메인 상단 키워드), 일반 Text (상세 주소) Div에 추가
+              // 이후 List에 만들어진 Div 추가
+              regionDiv.appendChild(regionSpan);
+              regionDiv.appendChild(regionText);
+              searchListBox.appendChild(regionDiv);
+
+              // 읍면리동에 대한 검색
+            } else if (region.eup_myeon_re_dong && !region.re) {
+              regionSpan.textContent = `${region.eup_myeon_re_dong}`;
+
+              const regionText = document.createTextNode(
+                `${region.sido} ${region.sigungu} ${region.eup_myeon_re_dong}`
+              );
+
+              regionDiv.appendChild(regionSpan);
+              regionDiv.appendChild(regionText);
+              searchListBox.appendChild(regionDiv);
+
+              // 읍면동구에 대한 검색
+            } else if (
+              region.eup_myeon_dong_gu &&
+              !region.eup_myeon_re_dong &&
+              !region.re
+            ) {
+              regionSpan.textContent = `${region.eup_myeon_dong_gu}`;
+
+              const regionText = document.createTextNode(
+                `${region.sido} ${region.sigungu}`
+              );
+
+              regionDiv.appendChild(regionSpan);
+              regionDiv.appendChild(regionText);
+              searchListBox.appendChild(regionDiv);
+            }
+
+            // 시군구에 대한 검색
+            else if (
+              region.sigungu &&
+              !region.eup_myeon_dong_gu &&
+              !region.eup_myeon_re_dong &&
+              !region.re
+            ) {
+              regionSpan.textContent = `${region.sigungu}`;
+
+              const regionText = document.createTextNode(
+                `${region.sido} ${region.sigungu}`
+              );
+
+              regionDiv.appendChild(regionSpan);
+              regionDiv.appendChild(regionText);
+              searchListBox.appendChild(regionDiv);
+            }
+
+            // 시도에 대한 검색
+            else if (
+              region.sido &&
+              !region.sigungu &&
+              !region.eup_myeon_dong_gu &&
+              !region.eup_myeon_re_dong &&
+              !region.re
+            ) {
+              regionSpan.textContent = `${region.sido}`;
+
+              const regionText = document.createTextNode(`${region.sido}`);
+
+              regionDiv.appendChild(regionSpan);
+              regionDiv.appendChild(regionText);
+              searchListBox.appendChild(regionDiv);
+            }
+
+            // 클릭 이벤트 리스너 추가
+            regionDiv.addEventListener("click", () => {
+              moveToLocation(region);
+            });
+          });
+
+          // 지하철역에 대한 검색
+          // subway 각 지역 정보가 들어 있음
+          // 지도 이동 이벤트
+          resp.data.subwayList.forEach((subway) => {
+            const subwaySpan = document.createElement("span");
+            const subwayDiv = document.createElement("div");
+
+            subwaySpan.textContent = subway.name;
+            const subwayText = document.createTextNode(subway.address);
+
+            subwayDiv.appendChild(subwaySpan);
+            subwayDiv.appendChild(subwayText);
+            searchListBox.appendChild(subwayDiv);
+
+            // 클릭 이벤트 리스너 추가
+            subwayDiv.addEventListener("click", () => {
+              moveToLocation(subway);
+            });
+          });
+
+          // 대학교에 대한 검색
+          // subway 각 지역 정보가 들어 있음
+          resp.data.schoolList.forEach((school) => {
+            // List에 넣을 CSS를 사용하기 위해 만드는 마크업
+            const subwaySpan = document.createElement("span");
+            const subwayDiv = document.createElement("div");
+
+            // 메인 상단 대표 검색된 키워드
+            subwaySpan.textContent = `${school.name}`;
+
+            // 상세 주소
+            const subwayText = document.createTextNode(`${school.address}`);
+
+            // Span 태그(메인 상단 키워드), 일반 Text (상세 주소) Div에 추가
+            // 이후 List에 만들어진 Div 추가
+            subwayDiv.appendChild(subwaySpan);
+            subwayDiv.appendChild(subwayText);
+            searchListBox.appendChild(subwayDiv);
+
+            // 클릭 이벤트 리스너 추가
+            subwayDiv.addEventListener("click", () => {
+              moveToLocation(school);
+            });
+          });
+        })
+        .catch((err) => {
+          console.log("API 호출 오류:", err);
+        });
+    } else if (inputValue.length === 0) {
+      // 2글자 미만일 때 active 클래스를 제거하고, display를 none으로 설정
+      searchListBox.classList.remove(style.active);
+      searchListBox.style.display = "none";
+    }
+  };
+  const moveToLocation = (moveData, map) => {
+    // 얘보다 한층 위에 display none해야함
+    const searchListBox = searchListBoxRef.current;
+    searchListBox.innerHTML = "";
+    searchListBox.style.display = "none";
+
+    setSearchValue("");
+
+    setZoomLevel(4);
+
+    mapRef.current.setCenter(
+      new kakao.maps.LatLng(moveData.latitude, moveData.longitude)
+    );
+
+    if (!map) {
+      map = {
+        getBounds: () => getNewDefaultBounds(),
+      };
+    }
+
+    // 현재 지도의 경계를 맵 인자에서 가져옴
+    const bounds = map.getBounds();
+
+    // 경계(현재 화면)에 포함된 마커들 찾기
+    const markersInBounds = filterMapList.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(
+        marker.latitude,
+        marker.longitude
+      );
+      return bounds.contain(markerPosition);
+    });
+
+    // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
+    navigate(`/home/oneroom/list`, { state: { markersInBounds } });
+  };
+  const handleOptionClick = (option) => {
+    // 클릭된 옵션이 현재 선택된 옵션과 동일한 경우
+    if (selectedOption === option) {
+      // 선택된 옵션을 해제하여 해당 옵션 박스를 숨김
+      setSelectedOption(null);
+    } else {
+      // 아닌 경우, 선택된 옵션을 업데이트하여 해당 옵션 박스를 보여줌
+      setSelectedOption(option);
+    }
+  };
 
 
 
@@ -79,6 +348,30 @@ const Main = () => {
       <div className={style.imgbox}>
         <img className={style.homeimg} src={homeimg} alt="..." />
         <div className={style.overlay_text}>어떤 방을 찾으세요?</div>
+        <div>
+
+          <div className={style.home_body_map_search}>
+            <div className={style.search_box}>
+              {/* 검색 텍스트 입력 */}
+              <input
+                type="text"
+                placeholder="지역, 지하철역, 학교 검색"
+                value={searchValue}
+                onChange={handleInputChange}
+              ></input>
+
+              {/* 검색창 리스트 X 아이콘 위치 설정 (display:none) */}
+              <button>X</button>
+
+              {/* 아이콘 */}
+              <div className={style.search_icon}>ㅇ</div>
+            </div>
+          </div>
+
+          <div className={style.search_list_box} ref={searchListBoxRef}>
+            {/* 검색창 리스트 세부박스 아래와 같이 세팅할것 */}
+          </div>
+        </div>
       </div>
       <div className={style.middlebox}>
         <div className={style.middle_down}>

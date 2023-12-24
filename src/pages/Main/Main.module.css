@@ -122,3 +122,40 @@
     justify-content: center;
     line-height: 200px;
 }
+.home_body_map_search {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 360px;
+    height: 100px;
+    border: 1px solid #d9d9d9;
+    box-sizing: border-box;
+    max-height: calc(100% - 40px);
+    z-index: 100;
+    background-color: rgb(255, 255, 255);
+}
+.search_box {
+    margin: 10px;
+    width: 340px;
+    height: 30px;
+    border: 1px solid rgb(250, 136, 11);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+.search_icon {
+    border: 1px solid rgb(250, 136, 11);
+    border-left: none;
+    width: 10%;
+    height: 29px;
+    line-height: 29px;
+    text-align: center;
+    border: none;
+    background-color: rgb(250, 136, 11);
+    ;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    cursor: pointer;
+}
