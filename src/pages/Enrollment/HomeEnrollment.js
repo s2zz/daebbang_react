@@ -7,7 +7,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../commons/Footer";
 import DaumPostcode from "react-daum-postcode";
-import { MapMarker, Map } from "react-kakao-maps-sdk"
+import { MapMarker, Map } from "react-kakao-maps-sdk";
 import style1 from "../commons/Modal.module.css";
 
 const HomeEnrollment = (args) => {
