@@ -76,7 +76,7 @@ function Buttons(args) {
         </Button>
         <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style.alert}>
           <ModalBody className={style.alertBody}>
-            <p className={style.alertContents}>제목을 입력해주세요.</p>
+            <p className={style.alertContents} >제목을 입력해주세요.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaassssssssssssss</p>
             <br></br>
             <Button color="primary" className={style.alertBtn} onClick={toggle3}>
               확인

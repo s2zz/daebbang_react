@@ -3,10 +3,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import axios from 'axios';
 import Loading from '../commons/Loading';
+
 const AgentManagement = () => {
-  const [page, setPage] = React.useState(1);
-  const pageSize = 10;
-  const [totalRows, setTotalRows] = React.useState(0);
   const [contacts, setContacts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -18,7 +16,6 @@ const AgentManagement = () => {
     try {
       const response = await axios.get('/api/admin/agent/getAll');
       setContacts(response.data);
-      setTotalRows(response.data.length);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data: ', error);
@@ -26,15 +23,8 @@ const AgentManagement = () => {
     }
   };
 
-  const generateData = (page) => {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, totalRows);
-    return contacts.slice(startIndex, endIndex);
-  };
 
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-  };
+
 
   const handleDelete = async (email) => {
     const confirmDelete = window.confirm('정말로 삭제하시겠습니까?');
@@ -44,7 +34,6 @@ const AgentManagement = () => {
         await axios.delete(`/api/admin/agent/delete/${email}`);
         const updatedContacts = contacts.filter((contact) => contact.email !== email);
         setContacts(updatedContacts);
-        setTotalRows(updatedContacts.length);
       } catch (error) {
         console.error('Error deleting data: ', error);
       }
@@ -132,20 +121,18 @@ const AgentManagement = () => {
   return (
     <Box sx={{ width: '100%' }}>
       {loading ? (
-        <Loading></Loading>
+        <Loading />
       ) : (
-        <DataGrid
-          autoHeight
-          pagination
-          pageSize={pageSize}
-          rowsPerPageOptions={[pageSize]}
-          rowCount={totalRows}
-          onPageChange={(newPage) => handlePageChange(newPage)}
-          columns={columns}
-          rows={generateData(page)}
-          pageSizeOptions={[10, 50, 100]}
-          getRowId={(row) => row.email} 
-        />
+        <div style={{ height: '100%', width: '100%' }}>
+          <DataGrid
+            columns={columns}
+            rows={contacts}
+            pageSize={contacts.length} // 페이지 사이즈를 데이터 길이로 설정
+            rowsPerPageOptions={[contacts.length]} // 페이지 옵션도 데이터 길이로 설정
+            // rowsPerPageOptions={[10, 20, 50]}
+            getRowId={(row) => row.email}
+          />
+        </div>
       )}
     </Box>
   );
