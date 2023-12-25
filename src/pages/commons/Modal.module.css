@@ -1,0 +1,23 @@
+.alert {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.alertBody {
+    padding-top: 20px;
+    position: relative;
+    left: 20px;
+    top: 10px;
+}
+.alertContents{
+    margin: 0px;
+    font-family: "NanumBarunGothic";
+
+}
+.alertBtn{
+    font-size: small;
+    position: relative;
+    left: 380px;
+    bottom: 7px;
+    font-family: "NanumBarunGothic";
+}

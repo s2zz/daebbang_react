@@ -64,7 +64,7 @@
     margin: 10px;
     width: 340px;
     height: 30px;
-    border: 1px solid rgb(250, 136, 11);
+    border: 1px solid rgb(50, 108, 249);
     border-radius: 4px;
     overflow: hidden;
     position: relative;
@@ -258,7 +258,7 @@
     color: #fff;
     font-weight: 600;
     font-size: 16px;
-    background-color: #FF6905;
+    background-color: rgb(50, 108, 249);
     line-height: 45px;
     text-align: center;
     cursor: pointer;
@@ -300,14 +300,14 @@
 }
 
 .search_icon {
-    border: 1px solid rgb(250, 136, 11);
+    border: 1px solid rgb(50, 108, 249);
     border-left: none;
     width: 10%;
     height: 29px;
     line-height: 29px;
     text-align: center;
     border: none;
-    background-color: rgb(250, 136, 11);
+    background-color: rgb(50, 108, 249);
     ;
     position: absolute;
     top: 0;
@@ -324,9 +324,9 @@
 }
 
 .search_option div {
-    border: 1px solid rgb(250, 136, 11);
+    border: 1px solid rgb(50, 108, 249);
     border-radius: 4px;
-    color: rgb(250, 136, 11);
+    color: rgb(50, 108, 249);
     height: 32px;
     line-height: 32px;
     text-align: center;
