@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalBody } from 'reactstrap';
 import axios from "axios";
 import style from '../css/EstateUpdate.module.css';
+import moduleStyle from "../../../commons/Modal.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import EstateUpdate1 from './EstateUpdate1';
 import EstateUpdate2 from './EstateUpdate2';
@@ -58,14 +59,11 @@ function EstateUpdate() {
 
   const modalContent = (
     <Modal isOpen={show} toggle={handleClose}>
-      <ModalBody>
+      <ModalBody className={moduleStyle.alertBody}>
         {modalMessage}
+        <br></br>
+        <Button color="primary" className={moduleStyle.alertBtn} onClick={handleClose}>닫기</Button>
       </ModalBody>
-      <ModalFooter>
-        <Button color="secondary" onClick={handleClose}>
-          닫기
-        </Button>
-      </ModalFooter>
     </Modal>
   );
 

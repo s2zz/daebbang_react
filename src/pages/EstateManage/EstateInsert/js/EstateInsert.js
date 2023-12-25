@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalBody } from 'reactstrap';
 import axios from "axios";
 import style from '../css/EstateInsert.module.css';
+import moduleStyle from "../../../commons/Modal.module.css";
 import { useNavigate } from "react-router-dom";
 import EstateInsert1 from './EstateInsert1';
 import EstateInsert2 from './EstateInsert2';
@@ -57,14 +58,11 @@ function EstateInsert() {
 
   const modalContent = (
     <Modal isOpen={show} toggle={handleClose}>
-      <ModalBody>
+      <ModalBody className={moduleStyle.alertBody}>
         {modalMessage}
+        <br></br>
+        <Button color="primary" className={moduleStyle.alertBtn} onClick={handleClose}>닫기</Button>
       </ModalBody>
-      <ModalFooter>
-        <Button color="secondary" onClick={handleClose}>
-          닫기
-        </Button>
-      </ModalFooter>
     </Modal>
   );
 
@@ -160,7 +158,7 @@ function EstateInsert() {
     if (imageLength < 3 || imageLength > 10) {
       setModalMessage("사진을 3장 이상 10장 이하로 등록해주세요.");
       handleShow();
-      
+
       return false;
     }
 
