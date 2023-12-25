@@ -1,12 +1,20 @@
 import React, { useState,useEffect } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import style from "../commons/Modal.module.css";
 
 function Buttons(args) {
   //첫번째 일단 모달창
   const [modal, setModal] = useState(false);
 
   const toggle = () => setModal(!modal);
-  //모달을 자동으로 닫게 해주려면 이 코드를 추가 하시면 됩니다.
+
+  //alert
+  const [modal3, setModal3] = useState(false);
+
+  const toggle3 = () => setModal3(!modal3);
+
+  
+  //모달을 자동으로 닫게 해주려면 이 코드를 추가 하시면 됩니다.(옵션)
   /*useEffect(() => {
     if (modal) {
       const timer = setTimeout(() => {
@@ -15,7 +23,8 @@ function Buttons(args) {
       return () => clearTimeout(timer);
     }
   }, [modal]);*/
-  //두번째 모달창입니다.(이중모달) 
+
+  //이중 모달창
   const [modal1, setModal1] = useState(false);
   const [nestedModal, setNestedModal] = useState(false);
   const [closeAll, setCloseAll] = useState(false);
@@ -29,13 +38,15 @@ function Buttons(args) {
     setNestedModal(!nestedModal);
     setCloseAll(true);
   };
+  
   return (
     <div>
+      {/* 첫번째 모달 */}
       <div>
         <Button color="danger" onClick={toggle}>
           모달 열기
         </Button>
-        <Modal isOpen={modal} toggle={toggle} {...args}>
+        <Modal isOpen={modal} toggle={toggle} {...args} >
           <ModalHeader toggle={toggle}>Modal title</ModalHeader>
           <ModalBody>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
@@ -56,6 +67,25 @@ function Buttons(args) {
           </ModalFooter>
         </Modal>
       </div>
+
+      {/* alert */}
+      {/* import style from "../commons/Modal.module.css";이거 무조건 추가해야합니다 */}
+      <div>
+        <Button color="danger" onClick={toggle3} >
+          alert
+        </Button>
+        <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style.alert}>
+          <ModalBody className={style.alertBody}>
+            <p className={style.alertContents}>제목을 입력해주세요.</p>
+            <br></br>
+            <Button color="primary" className={style.alertBtn} onClick={toggle3}>
+              확인
+            </Button>{' '}
+          </ModalBody>
+        </Modal>
+      </div>
+
+      {/* 이중모달 */}
       <div>
         <Button color="danger" onClick={toggle1}>
           이중 모달 열기
