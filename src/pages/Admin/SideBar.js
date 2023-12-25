@@ -21,7 +21,13 @@ const SideBar = () => {
                 <Link className={style.link} to="/admin/toNotificationManagement"><FontAwesomeIcon icon={faAnglesRight} /> 문의 관리</Link>
             </div>
             <div className={style.menu}>
+                <Link className={style.link} to="#"><FontAwesomeIcon icon={faAnglesRight} /> 신고 관리</Link>
+            </div>
+            <div className={style.menu}>
                 <Link className={style.link} to="/admin/toButtons"> 버튼</Link>
+            </div>
+            <div className={style.menu}>
+                <Link className={style.link} to="/admin/toAdminMain"><FontAwesomeIcon icon={faAnglesRight} /> 예전 대시보드</Link>
             </div>
         </div>
     );
