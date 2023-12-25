@@ -44,19 +44,12 @@ const FavoriteBoardList = () => {
 
     // 즐겨찾기 제거
     const delFav = (parentSeq) => {
-        let str = "즐겨찾기"
-        alertDeleteConfirmation(str).then(result => {
-            if (result) {
-                axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
-                    setBoard(board.filter(e => e.seq !== parentSeq));
-                    alertDeleteSuccess(str);
-                }).catch(err => {
-                    alertDeleteFailure(str)
-                    console.log(err);
-                })
-            }
+        axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
+            setBoard(board.filter(e => e.seq !== parentSeq));
+        }).catch(err => {
+            alert("즐겨찾기 해제에 실패하였습니다");
+            console.log(err);
         })
-
     }
 
 

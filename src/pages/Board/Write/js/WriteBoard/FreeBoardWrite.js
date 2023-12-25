@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const FreeBoardWrite = ({loginId}) => {
+    
     const navi = useNavigate();
 
     const quillRef = useRef();
