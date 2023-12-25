@@ -11,6 +11,13 @@ import { MapMarker, Map } from "react-kakao-maps-sdk";
 import style1 from "../commons/Modal.module.css";
 
 const HomeEnrollment = (args) => {
+    axios.get(`/api/report/selectAll`)
+            .then(response => {
+                console.log("성공");
+            })
+            .catch(error => {
+                
+            });
     const [value, setValue] = useState('');
     const [emailValue, setEmailValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
@@ -344,7 +351,7 @@ const HomeEnrollment = (args) => {
                         <li>
                             <h5 className={style.list}>중개사무소 정보</h5>
                             <div>
-                                <Button className={[style.font].join(' ')} onClick={handleButtonClick}>
+                                <Button style={{fontFamily:'NanumBarunGothic'}} onClick={handleButtonClick}>
                                     중개사무소 찾기
                                 </Button>
                                 <div>
@@ -506,7 +513,7 @@ const HomeEnrollment = (args) => {
                 </div>
             </div>
             <div style={{ textAlign: 'center', marginBottom: '2%', marginTop: '2%' }}>
-                <Button color='primary' className={style.font} onClick={handleSubmit}>
+                <Button color='primary' style={{fontFamily:'NanumBarunGothic'}} onClick={handleSubmit}>
                     가입 신청하기
                 </Button>
             </div>
