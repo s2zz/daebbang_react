@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalBody } from 'reactstrap';
 import axios from "axios";
 import style from '../css/EstateInsert.module.css';
+import moduleStyle from "../../../commons/Modal.module.css";
 import { useNavigate } from "react-router-dom";
 import EstateInsert1 from './EstateInsert1';
 import EstateInsert2 from './EstateInsert2';
 import EstateInsert3 from './EstateInsert3';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function EstateInsert() {
   const navi = useNavigate();
@@ -47,40 +50,96 @@ function EstateInsert() {
     navi("/EstateManage");
   }
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [modalMessage, setModalMessage] = useState("필수 항목을 입력해주세요.");
+
+  const modalContent = (
+    <Modal isOpen={show} toggle={handleClose}>
+      <ModalBody className={moduleStyle.alertBody}>
+        {modalMessage}
+        <br></br>
+        <Button color="primary" className={moduleStyle.alertBtn} onClick={handleClose}>닫기</Button>
+      </ModalBody>
+    </Modal>
+  );
+
+  function setValidateMessage(fieldName) {
+    console.log(fieldName);
+
+
+    if (fieldName === 'roomCode') {
+      setModalMessage("방 종류를 선택해주세요.");
+    } else if (fieldName === 'structureCode') {
+      setModalMessage("방 구조를 선택해주세요.");
+    } else if (fieldName === 'buildingCode') {
+      setModalMessage("건물 유형를 선택해주세요.");
+    } else if (fieldName === 'heatingCode') {
+      setModalMessage("난방 종류를 선택해주세요.");
+    } else if (fieldName === 'area') {
+      setModalMessage("매물 크기를 입력해주세요.");
+    } else if (fieldName === 'transactionCode') {
+      setModalMessage("거래 종류를 선택해주세요.");
+    } else if (fieldName === 'price') {
+      setModalMessage("월세(전세) 가격을 입력해주세요.");
+    } else if (fieldName === 'roomFloors') {
+      setModalMessage("해당 층수를 입력해주세요.");
+    } else if (fieldName === 'buildingFloors') {
+      setModalMessage("건물 층수를 입력해주세요.");
+    } else if (fieldName === 'title') {
+      setModalMessage("제목을 입력해주세요.");
+    } else if (fieldName === 'contents') {
+      setModalMessage("내용을 입력해주세요.");
+    } else {
+      setModalMessage("주소를 입력해주세요.");
+    }
+
+  }
+
   function validateFields(realEstate, maintenanceOption, showFloorInput) {
     const requiredFields = [
       'roomCode', 'structureCode', 'buildingCode', 'heatingCode', 'area', 'zipcode', 'address1', 'address2', 'latitude', 'longitude',
-      'transactionCode', 'price', 'buildingFloors',
+      'transactionCode', 'price', 'roomFloors', 'buildingFloors',
       'title', 'contents'
     ];
 
     if (requiredFields.some(name => !realEstate[name])) {
-      alert("필수 항목을 입력해주세요");
+      const fieldName = requiredFields.find(name => !realEstate[name]);
+
+      setValidateMessage(fieldName);
+      handleShow();
       return false;
     }
 
     if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
-      alert("필수 항목을 입력해주세요");
+      setModalMessage("관리비를 입력해주세요.");
+      handleShow();
       return false;
     }
 
     if (isNaN(realEstate.area) || realEstate.area === '') {
-      alert("면적을 숫자로 입력해주세요");
+      setModalMessage("면적을 숫자로 입력해주세요");
+      handleShow();
       return false;
     }
 
     if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
-      alert("방 층수는 건물의 층수보다 클 수 없습니다.");
+      setModalMessage("방 층수는 건물의 층수보다 클 수 없습니다.");
+      handleShow();
       return false;
     }
 
     if (parseInt(realEstate.buildingFloors) < 1) {
-      alert("건물의 층수는 1층보다 낮을 수 없습니다.");
+      setModalMessage("건물의 층수는 1층보다 낮을 수 없습니다.");
+      handleShow();
       return false;
     }
 
     if (showFloorInput === 'f3' && (parseInt(realEstate.roomFloors) < 1 || realEstate.roomFloors === '')) {
-      alert("해당 층수는 1층보다 낮을 수 없습니다.");
+      setModalMessage("해당 층수는 1층보다 낮을 수 없습니다.");
+      handleShow();
       return false;
     }
 
@@ -97,7 +156,9 @@ function EstateInsert() {
     const imageLength = estateImages.length;
 
     if (imageLength < 3 || imageLength > 10) {
-      alert("사진을 3장 이상 10장 이하로 등록해주세요.");
+      setModalMessage("사진을 3장 이상 10장 이하로 등록해주세요.");
+      handleShow();
+
       return false;
     }
 
@@ -126,6 +187,7 @@ function EstateInsert() {
 
   return (
     <>
+      {modalContent}
       <h1 className={style.bigTitle}>방내놓기</h1>
       <div className={style.container}>
         <p className={style.explanation}>전/ 월세 매물만 등록할 수 있습니다.</p>

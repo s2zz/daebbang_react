@@ -136,7 +136,6 @@ function ReviewApproval() {
       <div className={style.naviFooter}>
         {pagenation()}
       </div>
-      <Link to={`/estateManage/`}><button>매물 관리</button></Link>
     </div>
   );
 }
