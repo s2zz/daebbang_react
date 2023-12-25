@@ -5,6 +5,9 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import Swal from 'sweetalert2'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 const RoomBoardContents = ({ loginId, admin }) => {
 
@@ -74,7 +77,18 @@ const RoomBoardContents = ({ loginId, admin }) => {
         setInsertReply(prev => ({ ...prev, contents: e.target.value }));
     }
 
+
     const insertReplyAdd = () => {
+        if (loginId === null) {
+            alert("로그인 후 이용가능한 서비스 입니다");
+            navi("/login");
+            return;
+        }
+
+        if (insertReply.contents === "") {
+            alert("내용을 입력해주세요");
+            return;
+        }
         axios.post("/api/reply", insertReply).then(resp => {
             Swal.fire("댓글 등록 성공");
             setInsertReply(prev => ({ ...prev, contents: "" }));
@@ -217,6 +231,8 @@ const RoomBoardContents = ({ loginId, admin }) => {
             <div className={style.fileBox}>
                 <div>첨부파일 목록</div>
                 {
+                    fileList.length===0 ?
+                    <div>첨부파일이 존재하지 않습니다.</div> :
                     fileList.map((e, i) => {
                         return (
                             <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>파일 {i + 1} | <span className={style.fileName}>{e.oriName}</span></div>
@@ -232,6 +248,12 @@ const RoomBoardContents = ({ loginId, admin }) => {
                     <Link to="/board/toEditRoomBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> :
                     ""
                 }
+            </div>
+            <hr />
+            <div>
+                <span><FontAwesomeIcon icon={faCircleExclamation} /> &nbsp;</span>
+                양도 게시판을 통해 이루어지는 모든 거래 및 법적 절차는 거래 당사자 간의 독립적인 책임
+                아래 진행되며, DAEBBANG은 이에 대한 법적 책임을 부담하지 않습니다.
             </div>
             <hr />
             <div>

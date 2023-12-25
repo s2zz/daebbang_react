@@ -26,7 +26,7 @@ const RoomBoardList = ({loginId}) => {
             alert("로그인해주세요");
             navi("/login")
         } else{
-            navi("/board/toFreeBoardWrite");
+            navi("/board/toRoomBoardWrite");
         }
     }
     useEffect(() => {

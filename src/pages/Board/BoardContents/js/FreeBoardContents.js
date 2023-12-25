@@ -77,11 +77,16 @@ const FreeBoardContents = ({ loginId, admin }) => {
 
     const insertReplyAdd = () => {
 
+        if(loginId===null){
+            alert("로그인 후 이용가능한 서비스 입니다");
+            navi("/login");
+            return;
+        }
+
         if (insertReply.contents === "") {
             Swal.fire("내용을 입력해주세요");
             return;
         }
-
         axios.post("/api/reply", insertReply).then(resp => {
             Swal.fire("댓글 등록 성공");
             setInsertReply(prev => ({ ...prev, contents: "" }));
@@ -119,6 +124,13 @@ const FreeBoardContents = ({ loginId, admin }) => {
     }
 
     const updateAdd = () => {
+
+        if(loginId===null){
+            alert("로그인 후 이용가능한 서비스입니다");
+            navi("/login");
+            return;
+        }
+
         if (updateReply.contents === "") {
             Swal.fire("내용을 입력해주세요");
             return;
@@ -226,6 +238,8 @@ const FreeBoardContents = ({ loginId, admin }) => {
                 <div className={style.fileBox}>
                     <div>첨부파일 목록</div>
                     {
+                        fileList.length===0?
+                        <div>첨부파일이 존재하지 않습니다.</div> :
                         fileList.map((e, i) => {
                             return (
 
