@@ -73,14 +73,14 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
               <div>
                 <div>보증금</div>
                 <div className={style.scaleDiv}>
-                  <input type="text" className={style.scaleInput} name="deposit" onChange={handleChange} value={realEstate.deposit} />
+                  <input type="text" className={style.scaleInput} name="deposit" onChange={handleChange} value={realEstate.deposit} maxLength={9}/>
                   <p className={style.scale}>만원</p>
                 </div>
               </div>}
             <div>
               <div>{realEstate.transactionCode === 't1' ? "월세" : "전세"}</div>
               <div className={style.scaleDiv}>
-                <input type="text" className={style.scaleInput} name="price" onChange={handleChange} value={realEstate.price} />
+                <input type="text" className={style.scaleInput} name="price" onChange={handleChange} value={realEstate.price} maxLength={9}/>
                 <p className={style.scale}>만원</p>
               </div>
             </div>
@@ -93,7 +93,7 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
             <div className={style.scaleDiv}>
               <input type="radio" id="m1" name="maintenanceOption" value="false" onChange={handleMaintenanceChange} checked={maintenanceOption === "false"} /><label htmlFor="m1" className={style.inputLabel}>없음</label>
               <input type="radio" id="m2" name="maintenanceOption" value="true" onChange={handleMaintenanceChange} checked={maintenanceOption === "true"} /><label htmlFor="m2" className={style.inputLabel}>있음</label>
-              <input type="text" className={style.scaleInput} name="maintenanceCost" readOnly={maintenanceOption === "false"} onChange={handleChange} value={realEstate.maintenanceCost} />
+              <input type="text" className={style.scaleInput} name="maintenanceCost" readOnly={maintenanceOption === "false"} onChange={handleChange} value={realEstate.maintenanceCost} maxLength={9}/>
               <p className={style.scale}>원</p>
             </div>
           </td>

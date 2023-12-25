@@ -1,7 +1,16 @@
-import DaumPostcode from "react-daum-postcode";
+import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import style from '../css/Post.module.css';
+import DaumPostcode from "react-daum-postcode";
 
-const Post = (props) => {
+function Post(props) {
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const complete = (data) => {
         let fullAddress = data.address;
@@ -27,16 +36,20 @@ const Post = (props) => {
             address1: fullAddress,
             address2: data.sigungu + data.bname1 + " " + data.bname2
         })
+
+        handleClose();
     }
 
     return (
-        <div>
-            <DaumPostcode
-                className={style.postmodal}
-                autoClose
-                onComplete={complete} />
-        </div>
-    );
-};
+        <>
+            <Button className={style.estateBtn} onClick={handleShow}>우편번호 찾기</Button>
 
+            <Modal show={show} onHide={handleClose}>
+                <div>
+                    <DaumPostcode autoClose onComplete={complete} />
+                </div>
+            </Modal>
+        </>
+    )
+}
 export default Post;
