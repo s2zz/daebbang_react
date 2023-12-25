@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import axios from "axios";
 import style from '../css/EstateUpdate.module.css';
 import { useNavigate, useParams } from "react-router-dom";
@@ -50,6 +50,58 @@ function EstateUpdate() {
     navi("/EstateManage");
   }
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [modalMessage, setModalMessage] = useState("필수 항목을 입력해주세요.");
+
+  const modalContent = (
+    <Modal isOpen={show} toggle={handleClose}>
+      <ModalBody>
+        {modalMessage}
+      </ModalBody>
+      <ModalFooter>
+        <Button color="secondary" onClick={handleClose}>
+          닫기
+        </Button>
+      </ModalFooter>
+    </Modal>
+  );
+
+  function setValidateMessage(fieldName) {
+    console.log(fieldName);
+
+
+    if (fieldName === 'roomCode') {
+      setModalMessage("방 종류를 선택해주세요.");
+    } else if (fieldName === 'structureCode') {
+      setModalMessage("방 구조를 선택해주세요.");
+    } else if (fieldName === 'buildingCode') {
+      setModalMessage("건물 유형를 선택해주세요.");
+    } else if (fieldName === 'heatingCode') {
+      setModalMessage("난방 종류를 선택해주세요.");
+    } else if (fieldName === 'area') {
+      setModalMessage("매물 크기를 입력해주세요.");
+    } else if (fieldName === 'transactionCode') {
+      setModalMessage("거래 종류를 선택해주세요.");
+    } else if (fieldName === 'price') {
+      setModalMessage("월세(전세) 가격을 입력해주세요.");
+    } else if (fieldName === 'roomFloors') {
+      setModalMessage("해당 층수를 입력해주세요.");
+    } else if (fieldName === 'buildingFloors') {
+      setModalMessage("건물 층수를 입력해주세요.");
+    } else if (fieldName === 'title') {
+      setModalMessage("제목을 입력해주세요.");
+    } else if (fieldName === 'contents') {
+      setModalMessage("내용을 입력해주세요.");
+    } else {
+      setModalMessage("주소를 입력해주세요.");
+    }
+
+  }
+
+
   function validateFields(realEstate, maintenanceOption, showFloorInput) {
     const requiredFields = [
       'roomCode', 'structureCode', 'buildingCode', 'heatingCode', 'area', 'zipcode', 'address1', 'address2', 'latitude', 'longitude',
@@ -58,32 +110,40 @@ function EstateUpdate() {
     ];
 
     if (requiredFields.some(name => !realEstate[name])) {
-      alert("필수 항목을 입력해주세요");
+      const fieldName = requiredFields.find(name => !realEstate[name]);
+
+      setValidateMessage(fieldName);
+      handleShow();
       return false;
     }
 
     if (maintenanceOption === 'true' && realEstate.maintenanceCost === '') {
-      alert("필수 항목을 입력해주세요");
+      setModalMessage("관리비를 입력해주세요.");
+      handleShow();
       return false;
     }
 
     if (isNaN(realEstate.area) || realEstate.area === '') {
-      alert("면적을 숫자로 입력해주세요");
+      setModalMessage("면적을 숫자로 입력해주세요");
+      handleShow();
       return false;
     }
 
     if (parseInt(realEstate.roomFloors) > parseInt(realEstate.buildingFloors)) {
-      alert("방 층수는 건물의 층수보다 클 수 없습니다.");
+      setModalMessage("해당 층수는 건물의 층수보다 클 수 없습니다.");
+      handleShow();
       return false;
     }
 
     if (parseInt(realEstate.buildingFloors) < 1) {
-      alert("건물의 층수는 1층보다 낮을 수 없습니다.");
+      setModalMessage("건물의 층수는 1층보다 낮을 수 없습니다.");
+      handleShow();
       return false;
     }
 
     if (showFloorInput === 'f3' && (parseInt(realEstate.roomFloors) < 1 || realEstate.roomFloors === '')) {
-      alert("해당 층수는 1층보다 낮을 수 없습니다.");
+      setModalMessage("해당 층수는 1층보다 낮을 수 없습니다.");
+      handleShow();
       return false;
     }
 
@@ -103,7 +163,8 @@ function EstateUpdate() {
     if (imageLength > 0) {
       // 3장 이상 10장 이하로 넣어야만 함
       if (imageLength < 3 || imageLength > 10) {
-        alert("사진을 3장 이상 10장 이하로 등록해주세요.");
+        setModalMessage("사진을 3장 이상 10장 이하로 등록해주세요.");
+        handleShow();
         return false;
       }
     }
@@ -184,6 +245,7 @@ function EstateUpdate() {
 
   return (
     <>
+    {modalContent}
       <h1 className={style.bigTitle}>매물 수정</h1>
       <div className={style.container}>
         <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
