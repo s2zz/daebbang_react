@@ -1,6 +1,8 @@
 import style from "./TopForm.module.css"
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import logo from "../Enrollment/assets/logo2.png";
@@ -45,6 +47,11 @@ const TopForm = ({ setLoginId }) => {
     const handleready = () =>{
         alert("준비중인 기능입니다.")
     }
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            {reviewCount}개의 확인하지 않은<br/> 문의가 있습니다!
+        </Tooltip>
+    );
     return (
         <div className={style.container}>
             <div className={style.top}>
@@ -89,10 +96,14 @@ const TopForm = ({ setLoginId }) => {
                                             : <a href="/myPage">마이페이지</a>}
                                         {isEstate ?
                                             <>
-                                                <a href="/estateManage">매물관리 {isEstate && reviewCount !== 0 && (<Button sx={{ml: 5}}>{reviewCount}</Button>)}</a> 
+                                                <a href="/estateManage">매물관리 {isEstate && reviewCount !== 0 && 
+                                                (<OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                                                    <Button sx={{ ml: 5 }}>{reviewCount}</Button>
+                                                </OverlayTrigger>)}</a>
                                             </>
                                             : ""}
                                         <a href="#" onClick={handleLogout}>로그아웃</a>
+
                                     </div>
                                 </li>
                             </ul>
@@ -101,7 +112,7 @@ const TopForm = ({ setLoginId }) => {
 
 
                     <div className={style.top_right_menu}>
-                        {isEstate ? <> </>: <Button><a href="/enrollment">중개사무소 가입</a></Button>}
+                        {isEstate ? <> </> : <Button><a href="/enrollment">중개사무소 가입</a></Button>}
 
                     </div>
 

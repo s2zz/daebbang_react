@@ -125,3 +125,7 @@
   .countButton {
     margin-left: 40px;
   }
+
+  .toolTip {
+    background-color: gray;
+  }

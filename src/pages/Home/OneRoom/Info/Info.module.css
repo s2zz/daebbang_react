@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+.info_main * {
+  font-family: "NanumBarunGothic";
+}
+
 /* 사이드 메뉴 스크롤 숨김처리 */
 .info_main::-webkit-scrollbar {
   display: none;
@@ -21,9 +25,7 @@
   height: 28px;
   top: 10px;
   cursor: pointer;
-  color: #000;
-  background-color: #000;
-  z-index: 5000;
+  z-index: 10;
 }
 
 .info_img_main {
@@ -42,20 +44,19 @@
   position: absolute;
   width: 399px;
   background-color: #fff;
-  z-index: 9998;
+  z-index: 10;
   display: none;
   top: 50px;
 }
 
 .address_box div {
-  border: 1px solid #000;
   position: absolute;
   left: 20px;
   width: 28px;
   height: 28px;
   line-height: 28px;
   cursor: pointer;
-  top: 11px;
+  top: 7px;
 }
 
 .info_title {
@@ -129,7 +130,7 @@
 
 .more_info {
   font-size: 14px;
-  color: rgb(255, 105, 5);
+  color: rgb(50, 108, 249);
   font-weight: 600;
   cursor: pointer;
   position: absolute;
@@ -142,7 +143,7 @@
   height: calc(100% - 50px);
   top: 50px;
   background-color: #fff;
-  z-index: 9999;
+  z-index: 11;
   display: none;
 }
 
@@ -257,7 +258,7 @@
 
 .option_more_info {
   font-size: 14px;
-  color: rgb(255, 105, 5);
+  color: rgb(50, 108, 249);
   font-weight: 600;
   cursor: pointer;
   margin-top: 20px;
@@ -296,14 +297,14 @@
   border-top: 1px solid #d9d9d9;
   font-size: 16px;
   display: flex;
-  z-index: 9998;
+  z-index: 10;
 }
 
 .bottom_btn {
   right: 20px;
   width: 190px;
   height: 45px;
-  background-color: rgb(255, 105, 5);
+  background-color: rgb(50, 108, 249);
   border-radius: 5px;
   margin-top: 12.5px;
   line-height: 45px;
@@ -313,4 +314,153 @@
   right: 20px;
   cursor: pointer;
   position: absolute;
+}
+
+.seller_box {
+  padding: 20px;
+  border-bottom: 1px solid #d9d9d9;
+  position: relative;
+}
+
+.safe_seller {
+  position: absolute;
+  box-shadow: rgba(26, 26, 26, 0.1) 0px 2px 2px;
+  padding: 0 4px;
+  border-radius: 25px;
+  font-size: 10px;
+  color: #ff6905;
+  line-height: 20px;
+  height: 20px;
+  font-weight: 600;
+  background-color: #fff;
+  top: 70px;
+  left: 25px;
+}
+
+.seller_img {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+
+.seller_info {
+  display: flex;
+  height: 60px;
+}
+
+.seller_title {
+  font-size: 16px;
+  margin-left: 10px;
+  margin-top: 6px;
+}
+
+.seller_title .grade {
+  font-size: 14px;
+  color: #808080;
+}
+
+.recommend {
+  font-size: 10px;
+  color: rgb(50, 108, 249);
+  padding: 2px;
+  border-radius: 5px;
+  margin-right: 4px;
+}
+
+.seller_box_1 {
+  height: 53px;
+  margin-top: 20px;
+  display: flex;
+}
+
+.seller_box_1 div:first-child {
+  width: 40px;
+  text-align: center;
+  height: 40px;
+}
+
+.seller_box_1 div {
+  width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  line-height: 1.4;
+  text-align: left;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  height: 70px;
+}
+
+.seller_box_2 {
+  margin-top: 20px;
+  display: flex;
+}
+
+.seller_box_2 div:first-child {
+  width: 40px;
+  text-align: center;
+  height: 40px;
+}
+
+.seller_box_2 div {
+  width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  line-height: 1.4;
+  text-align: left;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  max-height: 115px;
+}
+
+.seller_best {
+  width: calc(100% - 40px);
+  margin-left: 40px;
+  /* color: #808080;
+  font-weight: 600;*/
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  padding-left: 15px;
+}
+
+.seller_slide_box {
+  padding: 20px;
+  height: 360px;
+  /* border-bottom: 1px solid #d9d9d9; */
+  position: relative;
+}
+
+.slide_frame {
+  margin: 20px 0 0 0;
+  height: 260px;
+  padding: 12px 0 0 0;
+}
+
+.slide_frame .slide_item_box {
+  border: 1px solid #d9d9d9;
+  width: 210px;
+  border-radius: 5px;
+}
+
+.slide_item_box div:first-child {
+  border-bottom: 1px solid #000;
+  height: 155px;
+  padding: 0;
+}
+
+.slide_item_box div {
+  height: 80px;
+  padding: 12px 16px 12px;
+}
+
+.slide_item_box span {
+  display: block;
+  font-size: 14px;
 }

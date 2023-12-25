@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import { Button } from 'reactstrap';
 import axios from "axios";
 import style from '../css/EstateInfo.module.css';
-import { useNavigate, useParams  } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import EstateInfo1 from './EstateInfo1';
 import EstateInfo2 from './EstateInfo2';
 import EstateInfo3 from './EstateInfo3';
@@ -54,14 +55,14 @@ function EstateInsert() {
     <>
       <h1 className={style.bigTitle}>매물 정보</h1>
       {Loading ? (
-        <>
+        <div className={style.container}>
           <EstateInfo1 realEstate={realEstate} />
           <EstateInfo2 realEstate={realEstate} />
           <EstateInfo3 realEstate={realEstate} />
           <div className={style.buttonDiv}>
-            <button onClick={handleReturn}>이전으로</button>
+            <Button onClick={handleReturn}>이전으로</Button>
           </div>
-        </>
+        </div>
       ) : (
         <p>Loading...</p>
       )}

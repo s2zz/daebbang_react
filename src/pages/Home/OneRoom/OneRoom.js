@@ -18,7 +18,10 @@ import axios from "axios";
 //
 import List from "./List/List";
 import Info from "./Info/Info";
+
+// 이미지
 import exam_icon from "./assets/exam_icon.png";
+import search from "./assets/search.png";
 
 //
 import style from "./OneRoom.module.css";
@@ -28,9 +31,13 @@ import "./RangeSlider.css";
 function OneRoom() {
   const [mapRendered, setMapRendered] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(6);
+  const [zoomLevelRanded, setZoomLevelRanded] = useState(true);
 
   const [mapList, setMapList] = useState([{}]);
   const [filterMapList, setFilterMapList] = useState(mapList);
+  const [subwayList, setSubwayList] = useState([{}]);
+  const [schoolList, setSchoolList] = useState([{}]);
+
   const [listReady, setlistReady] = useState(false);
 
   const [randData, setRandData] = useState([{}]);
@@ -71,9 +78,7 @@ function OneRoom() {
         console.log("API 호출 오류:", err);
       });
   }, []);
-  {
-    /* 여기 */
-  }
+
   useEffect(() => {
     // setFilterMapList를 비동기로 처리
     const fetchData = async () => {
@@ -82,11 +87,9 @@ function OneRoom() {
       // handleDragEnd();
       console.log(mapList);
     };
-    {
-      /* 바로가기 */
-    }
+
     fetchData();
-  }, [mapRendered, mapList, mapCenterState, zoomLevel]);
+  }, [mapRendered, mapList, mapCenterState]);
 
   // 지도 객체의 줌 레벨 변경
   useEffect(() => {
@@ -106,13 +109,23 @@ function OneRoom() {
     fetchData();
   }, [filterMapList]);
 
+  // 줌 최대 크기 9까지 밖에 못 하게 설정
+  useEffect(() => {
+    if(zoomLevel <= 9) {
+      setZoomLevelRanded(true);
+    }
+    else {
+      setZoomLevelRanded(false);
+    }
+  }, [zoomLevel]);
+
   // 지도 업데이트 바로가기
   const handleMapCenter = (map) => {
-    console.log(map.getCenter());
+
   };
 
   const handleMapBounds = (map) => {
-    console.log(map.getCenter());
+
   };
 
   // 페이지 로딩 시 사용할 기본 경계 반환
@@ -212,6 +225,7 @@ function OneRoom() {
     setSearchValue("");
 
     setZoomLevel(4);
+    mapRef.current.setLevel(4);
 
     mapRef.current.setCenter(
       new kakao.maps.LatLng(moveData.latitude, moveData.longitude)
@@ -272,9 +286,15 @@ function OneRoom() {
           ) {
             // NULL 값일때 List에 넣을 CSS를 사용하기 위해 만드는 마크업
             const nullRegionSpan = document.createElement("span");
-            const nullRegionDiv = document.createElement("div");
+            nullRegionSpan.style.fontWeight = "normal";
+            nullRegionSpan.style.marginBottom = "0";
 
-            nullRegionSpan.textContent = `검색된 항목이 없습니다.`;
+            const nullRegionDiv = document.createElement("div");
+            nullRegionDiv.style.height = "32px";
+            nullRegionDiv.style.padding = "9px";
+            nullRegionDiv.style.pointerEvents = "none";
+
+            nullRegionSpan.textContent = `검색 결과가 없습니다.`;
             nullRegionDiv.appendChild(nullRegionSpan);
             searchListBox.appendChild(nullRegionDiv);
           }
@@ -461,252 +481,137 @@ function OneRoom() {
   // 드레그 바
   useEffect(() => {
     // 설정
-    // 0만원부터 ~ [0 ~ 50만원]까지
 
-    // 오른쪽 끝에 바가 왼쪽에 닿았을때임
-    if (range.left === 0 && range.right === 0) {
-      setAfterRange((prevValues) => ({
-        ...prevValues,
-        start: 0,
-        end: 50,
-      }));
-
-      // 0만원부터 ~ [50 ~ 500만원]까지 전부
-    } else if (range.left === 0 && range.right <= 99.9) {
+    // 0만원부터 ~ [50 ~ 500만원]까지 전부
+    if (range.left === 0 && range.right <= 99.9) {
       const returnNum = Math.floor(range.right / 3.3);
       // 0만원부터 ~ [50 ~ 100만원]까지
-      if (returnNum <= 2) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          end: returnNum * 50,
-        }));
-      }
-
-      // 0만원부터 ~ [100 ~ 300만원]까지
-      else if (2 < returnNum && returnNum <= 4) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          end: 100 + (returnNum - 2) * 100,
-        }));
-      }
-
-      // 0만원부터 ~ [300 ~ 500만원]까지
-      else if (returnNum === 5) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 500 }));
-      }
-
-      // 0만원부터 ~ [500 ~ 1000만원]까지
-      else if (returnNum === 6) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 1000 }));
-      }
-
-      // 0만원부터 ~ [1000 ~ 2000만원]까지
-      else if (returnNum === 7) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 2000 }));
-      }
-
-      // 0만원부터 ~ [2000 ~ 3000만원]까지
-      else if (returnNum === 8) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 3000 }));
-      }
-
-      // 0만원부터 ~ [3000 ~ 4000만원]까지
-      else if (returnNum === 9) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 4000 }));
-      }
-
-      // 0만원부터 ~ [4000 ~ 5000만원]까지
-      else if (returnNum === 10) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 5000 }));
-      }
-
-      // 0만원부터 ~ [5000 ~ 6000만원]까지
-      else if (returnNum === 11) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 5000 }));
-      }
-
-      // 0만원부터 ~ [6000 ~ 7000만원]까지
-      else if (returnNum === 12) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 7000 }));
-      }
-
-      // 0만원부터 ~ [7000 ~ 8000만원]까지
-      else if (returnNum === 13) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 8000 }));
-      }
-
-      // 0만원부터 ~ [8000 ~ 9000만원]까지
-      else if (returnNum === 14) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 9000 }));
-      }
-
-      // 0만원부터 ~ [9000 ~ 1억]까지
-      else if (returnNum === 15) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 10000 }));
-      }
-
-      // 0만원부터 ~ [1억 ~ 1억 2천]까지
-      else if (returnNum === 16) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 12000 }));
-      }
-
-      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
-      else if (returnNum === 17) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 15000 }));
-      }
-
-      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
-      else if (returnNum === 18) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 17000 }));
-      }
-
-      // 0만원부터 ~ [1억 7천 ~ 2억]까지
-      else if (returnNum === 19) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 20000 }));
-      }
-
-      // 0만원부터 ~ [2억 ~ 2억 5천]까지
-      else if (returnNum === 20) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 25000 }));
+      if (returnNum === 1) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 500000 }));
+      } else if (returnNum === 2) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1000000 }));
+      } else if (returnNum === 3) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 2000000 }));
+      } else if (returnNum === 4) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 3000000 }));
+      } else if (returnNum === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 5000000 }));
+      } else if (returnNum === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 10000000 }));
+      } else if (returnNum === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 20000000 }));
+      } else if (returnNum === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 30000000 }));
+      } else if (returnNum === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 40000000 }));
+      } else if (returnNum === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 50000000 }));
+      } else if (returnNum === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 60000000 }));
+      } else if (returnNum === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 70000000 }));
+      } else if (returnNum === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 80000000 }));
+      } else if (returnNum === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 90000000 }));
+      } else if (returnNum === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 100000000 }));
+      } else if (returnNum === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 200000000 }));
+      } else if (returnNum === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 150000000 }));
+      } else if (returnNum === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 170000000 }));
+      } else if (returnNum === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 200000000 }));
+      } else if (returnNum === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 250000000 }));
       } else if (returnNum === 21) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 30000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 300000000 }));
       } else if (returnNum === 22) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 35000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 350000000 }));
       } else if (returnNum === 23) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 40000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 400000000 }));
       } else if (returnNum === 24) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 50000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 500000000 }));
       } else if (returnNum === 25) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 70000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 700000000 }));
       } else if (returnNum === 26) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 100000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1000000000 }));
       } else if (returnNum === 27) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 120000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1200000000 }));
       } else if (returnNum === 28) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 150000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1500000000 }));
       } else if (returnNum === 29) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 200000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 2000000000 }));
       } else if (returnNum > 29) {
         setAfterRange((prevValues) => ({ ...prevValues, end: 0 }));
       }
 
       // [0 ~ 500만원]부터 ~ 0만원 까지
-    } else if (range.left >= 1 && range.right === 100) {
+    } else if (range.left >= 0.01 && range.right === 100) {
       const returnNum = Math.floor(range.left / 3.3);
 
       // 0만원부터 ~ [50 ~ 100만원]까지
-      if (returnNum <= 2) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          start: returnNum * 50,
-        }));
-      }
-
-      // 0만원부터 ~ [100 ~ 300만원]까지
-      else if (2 < returnNum && returnNum <= 4) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          start: 100 + (returnNum - 2) * 100,
-        }));
-      }
-
-      // 0만원부터 ~ [300 ~ 500만원]까지
-      else if (returnNum === 5) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 500 }));
-      }
-
-      // 0만원부터 ~ [500 ~ 1000만원]까지
-      else if (returnNum === 6) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 1000 }));
-      }
-
-      // 0만원부터 ~ [1000 ~ 2000만원]까지
-      else if (returnNum === 7) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 2000 }));
-      }
-
-      // 0만원부터 ~ [2000 ~ 3000만원]까지
-      else if (returnNum === 8) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 3000 }));
-      }
-
-      // 0만원부터 ~ [3000 ~ 4000만원]까지
-      else if (returnNum === 9) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 4000 }));
-      }
-
-      // 0만원부터 ~ [4000 ~ 5000만원]까지
-      else if (returnNum === 10) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 5000 }));
-      }
-
-      // 0만원부터 ~ [5000 ~ 6000만원]까지
-      else if (returnNum === 11) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 6000 }));
-      }
-
-      // 0만원부터 ~ [6000 ~ 7000만원]까지
-      else if (returnNum === 12) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 7000 }));
-      }
-
-      // 0만원부터 ~ [7000 ~ 8000만원]까지
-      else if (returnNum === 13) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 8000 }));
-      }
-
-      // 0만원부터 ~ [8000 ~ 9000만원]까지
-      else if (returnNum === 14) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 9000 }));
-      }
-
-      // 0만원부터 ~ [9000 ~ 1억]까지
-      else if (returnNum === 15) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 10000 }));
-      }
-
-      // 0만원부터 ~ [1억 ~ 1억 2천]까지
-      else if (returnNum === 16) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 20000 }));
-      }
-
-      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
-      else if (returnNum === 17) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 15000 }));
-      }
-
-      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
-      else if (returnNum === 18) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 17000 }));
-      }
-
-      // 0만원부터 ~ [1억 7천 ~ 2억]까지
-      else if (returnNum === 19) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 20000 }));
-      }
-
-      // 0만원부터 ~ [2억 ~ 2억 5천]까지
-      else if (returnNum === 20) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 25000 }));
+      if (returnNum === 1) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 500000 }));
+      } else if (returnNum === 2) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1000000 }));
+      } else if (returnNum === 3) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 2000000 }));
+      } else if (returnNum === 4) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 3000000 }));
+      } else if (returnNum === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 5000000 }));
+      } else if (returnNum === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 10000000 }));
+      } else if (returnNum === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 20000000 }));
+      } else if (returnNum === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 30000000 }));
+      } else if (returnNum === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 40000000 }));
+      } else if (returnNum === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 50000000 }));
+      } else if (returnNum === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 60000000 }));
+      } else if (returnNum === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 70000000 }));
+      } else if (returnNum === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 80000000 }));
+      } else if (returnNum === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 90000000 }));
+      } else if (returnNum === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 100000000 }));
+      } else if (returnNum === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 200000000 }));
+      } else if (returnNum === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 150000000 }));
+      } else if (returnNum === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 170000000 }));
+      } else if (returnNum === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 200000000 }));
+      } else if (returnNum === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 250000000 }));
       } else if (returnNum === 21) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 30000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 300000000 }));
       } else if (returnNum === 22) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 35000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 350000000 }));
       } else if (returnNum === 23) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 40000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 400000000 }));
       } else if (returnNum === 24) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 50000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 500000000 }));
       } else if (returnNum === 25) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 70000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 700000000 }));
       } else if (returnNum === 26) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 100000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1000000000 }));
       } else if (returnNum === 27) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 120000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1200000000 }));
       } else if (returnNum === 28) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 150000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1500000000 }));
       } else if (returnNum === 29) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 200000 }));
-      } else if (returnNum > 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 2000000000 }));
+      } else {
         setAfterRange((prevValues) => ({ ...prevValues, start: 0 }));
       }
 
@@ -718,239 +623,131 @@ function OneRoom() {
       // [0 ~ 20억]까지에 사용할 상수
       const returnNum2 = Math.floor(range.left / 3.3);
 
-      // 0만원부터 ~ [50 ~ 100만원]까지
-      if (returnNum <= 2) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          end: returnNum * 50,
-        }));
-      }
-
-      // 0만원부터 ~ [100 ~ 300만원]까지
-      else if (2 < returnNum && returnNum <= 4) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          end: 100 + (returnNum - 2) * 100,
-        }));
-      }
-
-      // 0만원부터 ~ [300 ~ 500만원]까지
-      else if (returnNum === 5) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 500 }));
-      }
-
-      // 0만원부터 ~ [500 ~ 1000만원]까지
-      else if (returnNum === 6) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 1000 }));
-      }
-
-      // 0만원부터 ~ [1000 ~ 2000만원]까지
-      else if (returnNum === 7) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 2000 }));
-      }
-
-      // 0만원부터 ~ [2000 ~ 3000만원]까지
-      else if (returnNum === 8) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 3000 }));
-      }
-
-      // 0만원부터 ~ [3000 ~ 4000만원]까지
-      else if (returnNum === 9) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 4000 }));
-      }
-
-      // 0만원부터 ~ [4000 ~ 5000만원]까지
-      else if (returnNum === 10) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 5000 }));
-      }
-
-      // 0만원부터 ~ [5000 ~ 6000만원]까지
-      else if (returnNum === 11) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 6000 }));
-      }
-
-      // 0만원부터 ~ [6000 ~ 7000만원]까지
-      else if (returnNum === 12) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 7000 }));
-      }
-
-      // 0만원부터 ~ [7000 ~ 8000만원]까지
-      else if (returnNum === 13) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 8000 }));
-      }
-
-      // 0만원부터 ~ [8000 ~ 9000만원]까지
-      else if (returnNum === 14) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 9000 }));
-      }
-
-      // 0만원부터 ~ [9000 ~ 1억]까지
-      else if (returnNum === 15) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 10000 }));
-      }
-
-      // 0만원부터 ~ [1억 ~ 1억 2천]까지
-      else if (returnNum === 16) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 12000 }));
-      }
-
-      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
-      else if (returnNum === 17) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 15000 }));
-      }
-
-      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
-      else if (returnNum === 18) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 17000 }));
-      }
-
-      // 0만원부터 ~ [1억 7천 ~ 2억]까지
-      else if (returnNum === 19) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 20000 }));
-      }
-
-      // 0만원부터 ~ [2억 ~ 2억 5천]까지
-      else if (returnNum === 20) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 25000 }));
+      if (returnNum === 1) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 500000 }));
+      } else if (returnNum === 2) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1000000 }));
+      } else if (returnNum === 3) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 2000000 }));
+      } else if (returnNum === 4) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 3000000 }));
+      } else if (returnNum === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 5000000 }));
+      } else if (returnNum === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 10000000 }));
+      } else if (returnNum === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 20000000 }));
+      } else if (returnNum === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 30000000 }));
+      } else if (returnNum === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 40000000 }));
+      } else if (returnNum === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 50000000 }));
+      } else if (returnNum === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 60000000 }));
+      } else if (returnNum === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 70000000 }));
+      } else if (returnNum === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 80000000 }));
+      } else if (returnNum === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 90000000 }));
+      } else if (returnNum === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 100000000 }));
+      } else if (returnNum === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 200000000 }));
+      } else if (returnNum === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 150000000 }));
+      } else if (returnNum === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 170000000 }));
+      } else if (returnNum === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 200000000 }));
+      } else if (returnNum === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, end: 250000000 }));
       } else if (returnNum === 21) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 30000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 300000000 }));
       } else if (returnNum === 22) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 35000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 350000000 }));
       } else if (returnNum === 23) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 40000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 400000000 }));
       } else if (returnNum === 24) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 50000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 500000000 }));
       } else if (returnNum === 25) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 70000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 700000000 }));
       } else if (returnNum === 26) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 100000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1000000000 }));
       } else if (returnNum === 27) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 120000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1200000000 }));
       } else if (returnNum === 28) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 150000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 1500000000 }));
       } else if (returnNum === 29) {
-        setAfterRange((prevValues) => ({ ...prevValues, end: 200000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, end: 2000000000 }));
       } else if (returnNum > 29) {
         setAfterRange((prevValues) => ({ ...prevValues, end: 0 }));
       }
 
       // 0만원부터 ~ [50 ~ 100만원]까지
-      if (returnNum2 <= 2) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          start: returnNum2 * 50,
-        }));
-      }
-
-      // 0만원부터 ~ [100 ~ 300만원]까지
-      else if (2 < returnNum2 && returnNum2 <= 4) {
-        setAfterRange((prevValues) => ({
-          ...prevValues,
-          start: 100 + (returnNum2 - 2) * 100,
-        }));
-      }
-
-      // 0만원부터 ~ [300 ~ 500만원]까지
-      else if (returnNum2 === 5) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 500 }));
-      }
-
-      // 0만원부터 ~ [500 ~ 1000만원]까지
-      else if (returnNum2 === 6) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 1000 }));
-      }
-
-      // 0만원부터 ~ [1000 ~ 2000만원]까지
-      else if (returnNum2 === 7) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 2000 }));
-      }
-
-      // 0만원부터 ~ [2000 ~ 3000만원]까지
-      else if (returnNum2 === 8) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 3000 }));
-      }
-
-      // 0만원부터 ~ [3000 ~ 4000만원]까지
-      else if (returnNum2 === 9) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 4000 }));
-      }
-
-      // 0만원부터 ~ [4000 ~ 5000만원]까지
-      else if (returnNum2 === 10) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 5000 }));
-      }
-
-      // 0만원부터 ~ [5000 ~ 6000만원]까지
-      else if (returnNum2 === 11) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 6000 }));
-      }
-
-      // 0만원부터 ~ [6000 ~ 7000만원]까지
-      else if (returnNum2 === 12) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 7000 }));
-      }
-
-      // 0만원부터 ~ [7000 ~ 8000만원]까지
-      else if (returnNum2 === 13) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 8000 }));
-      }
-
-      // 0만원부터 ~ [8000 ~ 9000만원]까지
-      else if (returnNum2 === 14) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 9000 }));
-      }
-
-      // 0만원부터 ~ [9000 ~ 1억]까지
-      else if (returnNum2 === 15) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 10000 }));
-      }
-
-      // 0만원부터 ~ [1억 ~ 1억 2천]까지
-      else if (returnNum2 === 16) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 12000 }));
-      }
-
-      // 0만원부터 ~ [1억 2천 ~ 1억 5천]까지
-      else if (returnNum2 === 17) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 15000 }));
-      }
-
-      // 0만원부터 ~ [1억 5천 ~ 1억 7천]까지
-      else if (returnNum2 === 18) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 17000 }));
-      }
-
-      // 0만원부터 ~ [1억 7천 ~ 2억]까지
-      else if (returnNum2 === 19) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 20000 }));
-      }
-
-      // 0만원부터 ~ [2억 ~ 2억 5천]까지
-      else if (returnNum2 === 20) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 25000 }));
+      if (returnNum2 === 1) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 500000 }));
+      } else if (returnNum2 === 2) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1000000 }));
+      } else if (returnNum2 === 3) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 2000000 }));
+      } else if (returnNum2 === 4) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 3000000 }));
+      } else if (returnNum2 === 5) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 5000000 }));
+      } else if (returnNum2 === 6) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 10000000 }));
+      } else if (returnNum2 === 7) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 20000000 }));
+      } else if (returnNum2 === 8) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 30000000 }));
+      } else if (returnNum2 === 9) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 40000000 }));
+      } else if (returnNum2 === 10) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 50000000 }));
+      } else if (returnNum2 === 11) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 60000000 }));
+      } else if (returnNum2 === 12) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 70000000 }));
+      } else if (returnNum2 === 13) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 80000000 }));
+      } else if (returnNum2 === 14) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 90000000 }));
+      } else if (returnNum2 === 15) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 100000000 }));
+      } else if (returnNum2 === 16) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 200000000 }));
+      } else if (returnNum2 === 17) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 150000000 }));
+      } else if (returnNum2 === 18) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 170000000 }));
+      } else if (returnNum2 === 19) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 200000000 }));
+      } else if (returnNum2 === 20) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 250000000 }));
       } else if (returnNum2 === 21) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 30000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 300000000 }));
       } else if (returnNum2 === 22) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 35000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 350000000 }));
       } else if (returnNum2 === 23) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 40000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 400000000 }));
       } else if (returnNum2 === 24) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 50000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 500000000 }));
       } else if (returnNum2 === 25) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 70000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 700000000 }));
       } else if (returnNum2 === 26) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 100000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1000000000 }));
       } else if (returnNum2 === 27) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 120000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1200000000 }));
       } else if (returnNum2 === 28) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 150000 }));
+        setAfterRange((prevValues) => ({ ...prevValues, start: 1500000000 }));
       } else if (returnNum2 === 29) {
-        setAfterRange((prevValues) => ({ ...prevValues, start: 200000 }));
-      } else if (returnNum2 > 29) {
+        setAfterRange((prevValues) => ({ ...prevValues, start: 2000000000 }));
+      } else if (returnNum2 === 0) {
         setAfterRange((prevValues) => ({ ...prevValues, start: 0 }));
       }
     }
-
     // 만약 양쪽 끝 값이 다 최대로 들어가 있다면 0만원부터 0만원까지
     // 즉 전체로 다시 설정
     else if (range.left === 0 && range.right === 100) {
@@ -969,10 +766,18 @@ function OneRoom() {
         // Limit position to be within 0% and 100%
         position = Math.min(1, Math.max(0, position));
 
+        const minGap = 3; // 최소 간격
+
         if (isDraggingLeft) {
-          setRange((prevRange) => ({ ...prevRange, left: position * 100 }));
+          setRange((prevRange) => ({
+            ...prevRange,
+            left: Math.min(position * 100, prevRange.right - minGap), // 최소 간격 유지
+          }));
         } else {
-          setRange((prevRange) => ({ ...prevRange, right: position * 100 }));
+          setRange((prevRange) => ({
+            ...prevRange,
+            right: Math.max(position * 100, prevRange.left + minGap), // 최소 간격 유지
+          }));
         }
       }
     };
@@ -1011,211 +816,441 @@ function OneRoom() {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const sliderRef_month = useRef(null);
 
-  // 드레그 바
+  // 드레그 바 값 설정
+  // useEffect(() => {
+  //   // 설정
+  //   // 0만원부터 ~ [0 ~ 5만원]까지
+  //   if (rangeValues.start === 0 && rangeValues.end === 0) {
+  //     setAfterRangeValues((prevValues) => ({
+  //       ...prevValues,
+  //       end: 50000,
+  //     }));
+
+  //     // 0만원부터 ~ [5 ~ 500만원]까지
+  //   } else if (rangeValues.start === 0 && rangeValues.end <= 99.9) {
+  //     const returnNum = Math.floor(rangeValues.end / 5) + 1;
+
+  //     // 0만원부터 ~ [5 ~ 40만원]까지
+  //     if (1 < returnNum && returnNum <= 9) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 100000,
+  //       }));
+  //     }
+
+  //     // 0만원부터 ~ [40 ~ 70만원]까지
+  //     else if (9 < returnNum && returnNum <= 12) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 40 + (returnNum - 9) * 10000,
+  //       }));
+  //     }
+
+  //     // 0만원부터 ~ [70 ~ 100만원]까지
+  //     else if (12 < returnNum && returnNum <= 13) {
+  //       setAfterRangeValues((prevValues) => ({ ...prevValues, end: 100 }));
+  //     }
+
+  //     // 0만원부터 ~ [150 ~ 300만원]까지
+  //     else if (12 < returnNum && returnNum <= 17) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 50 + (returnNum - 12) * 500000,
+  //       }));
+  //     }
+
+  //     // 0만원부터 ~ [300 ~ 500만원]까지
+  //     else if (17 < returnNum && returnNum <= 19) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 300 + (returnNum - 17) * 1000000,
+  //       }));
+  //     }
+
+  //     // [0 ~ 500만원]부터 ~ 0만원 까지
+  //   } else if (rangeValues.start >= 3 && rangeValues.end === 100) {
+  //     const returnNum = Math.floor((rangeValues.start + 3) / 5);
+
+  //     // [5만원]부터 ~ 0만원 까지
+  //     if (returnNum === 0) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 50000,
+  //       }));
+  //     }
+
+  //     // [10 ~ 40만원]부터 ~ 0만원 까지
+  //     else if (1 <= returnNum && returnNum <= 9) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: returnNum * 50000,
+  //       }));
+  //     }
+
+  //     // [40 ~ 70만원]부터 ~ 0만원 까지
+  //     else if (9 < returnNum && returnNum <= 12) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 40 + (returnNum - 9) * 100000,
+  //       }));
+  //     }
+
+  //     // [70 ~ 100만원]부터 ~ 0만원 까지
+  //     else if (12 < returnNum && returnNum <= 13) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 1000000,
+  //       }));
+  //     }
+
+  //     // [150 ~ 300만원]부터 ~ 0만원 까지
+  //     else if (13 < returnNum && returnNum <= 17) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 100 + (returnNum - 13) * 500000,
+  //       }));
+  //     }
+
+  //     // [300 ~ 500만원]부터 ~ 0만원 까지
+  //     else if (17 < returnNum && returnNum <= 19) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 300 + (returnNum - 17) * 1000000,
+  //       }));
+  //     }
+
+  //     // [0 ~ 500만원]부터 ~ [0 ~ 500만원]까지 // 설정
+  //   } else if (rangeValues.start >= 0.01 && rangeValues.end <= 99.9) {
+  //     // 0만원부터 ~ [0 ~ 500만원] 까지에 사용할 상수
+  //     const returnNum = Math.floor(rangeValues.end / 5) + 1;
+
+  //     // 0만원부터 ~ [5 ~ 40만원]까지
+  //     if (1 < returnNum && returnNum <= 9) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: (returnNum - 1) * 50000,
+  //       }));
+  //     }
+
+  //     // 0만원부터 ~ [40 ~ 70만원]까지
+  //     else if (9 < returnNum && returnNum <= 12) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 40 + (returnNum - 9) * 100000,
+  //       }));
+  //     }
+
+  //     // 0만원부터 ~ [300 ~ 500만원]까지
+  //     else if (12 < returnNum && returnNum <= 13) {
+  //       setAfterRangeValues((prevValues) => ({ ...prevValues, end: 100 }));
+  //     }
+
+  //     // [150 ~ 300만원]부터 ~ 0만원 까지
+  //     else if (12 < returnNum && returnNum <= 17) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 50 + (returnNum - 12) * 500000,
+  //       }));
+  //     }
+
+  //     // 0만원부터 ~ [300 ~ 500만원]까지
+  //     else if (17 < returnNum && returnNum <= 19) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 300 + (returnNum - 17) * 1000000,
+  //       }));
+  //     }
+
+  //     // 만약 끝에 값을 다시 끝으로 땅기면 0으로 되돌려서 초기값 설정
+  //     else {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         end: 0,
+  //       }));
+  //     }
+
+  //     // [0 ~ 500만원]부터 ~ 0만원까지에 사용할 상수
+  //     const returnNum2 = Math.floor((rangeValues.start + 3) / 5);
+
+  //     // 만약 끝에 값을 다시 끝으로 땅기면 0으로 되돌려서 초기값 설정
+  //     if (returnNum2 === 0) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 0,
+  //       }));
+  //     }
+
+  //     // [5 ~ 40만원]부터 0만원까지
+  //     else if (1 <= returnNum2 && returnNum2 <= 9) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: returnNum2 * 5,
+  //       }));
+  //     }
+
+  //     // [40 ~ 70만원]부터 0만원까지
+  //     else if (9 < returnNum2 && returnNum2 <= 12) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 40 + (returnNum2 - 9) * 10,
+  //       }));
+  //     }
+
+  //     // [70 ~ 100만원]부터 0만원까지
+  //     else if (12 < returnNum2 && returnNum2 <= 13) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 100,
+  //       }));
+  //     }
+
+  //     // [100 ~ 300만원]부터 0만원까지
+  //     else if (13 < returnNum2 && returnNum2 <= 17) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 100 + (returnNum2 - 13) * 50,
+  //       }));
+  //     }
+
+  //     // [300 ~ 500만원]부터 0만원까지
+  //     else if (17 < returnNum2 && returnNum2 <= 19) {
+  //       setAfterRangeValues((prevValues) => ({
+  //         ...prevValues,
+  //         start: 300 + (returnNum2 - 17) * 100,
+  //       }));
+  //     }
+  //   }
+
+  //   // 만약 양쪽 끝 값이 다 최대로 들어가 있다면 0만원부터 0만원까지
+  //   // 즉 전체로 다시 설정
+  //   else if (rangeValues.start === 0 && rangeValues.end === 100) {
+  //     setAfterRangeValues({ start: 0, end: 0 });
+  //   }
+  // }, [rangeValues]);
   useEffect(() => {
     // 설정
-    // 0만원부터 ~ [0 ~ 5만원]까지
-    if (rangeValues.start === 0 && rangeValues.end === 0) {
-      setAfterRangeValues((prevValues) => ({
-        ...prevValues,
-        end: 5,
-      }));
 
-      // 0만원부터 ~ [5 ~ 500만원]까지
-    } else if (rangeValues.start === 0 && rangeValues.end <= 99.9) {
-      const returnNum = Math.floor(rangeValues.end / 5) + 1;
-
-      // 0만원부터 ~ [5 ~ 40만원]까지
-      if (1 < returnNum && returnNum <= 9) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: (returnNum - 1) * 5,
-        }));
+    // 0만원부터 ~ [50 ~ 500만원]까지 전부
+    if (rangeValues.start === 0 && rangeValues.end <= 99.9) {
+      const returnNum = Math.floor(rangeValues.end / 5);
+      // 0만원부터 ~ [50 ~ 100만원]까지
+      if (returnNum === 1) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 50000 }));
+      } else if (returnNum === 2) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 100000 }));
+      } else if (returnNum === 3) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 150000 }));
+      } else if (returnNum === 4) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 200000 }));
+      } else if (returnNum === 5) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 250000 }));
+      } else if (returnNum === 6) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 300000 }));
+      } else if (returnNum === 7) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 350000 }));
+      } else if (returnNum === 8) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 400000 }));
+      } else if (returnNum === 9) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 500000 }));
+      } else if (returnNum === 10) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 600000 }));
+      } else if (returnNum === 11) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 700000 }));
+      } else if (returnNum === 12) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 1000000 }));
+      } else if (returnNum === 13) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 1500000 }));
+      } else if (returnNum === 14) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 2000000 }));
+      } else if (returnNum === 15) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 2500000 }));
+      } else if (returnNum === 16) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 3000000 }));
+      } else if (returnNum === 17) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 4000000 }));
+      } else if (returnNum === 18) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 5000000 }));
       }
-
-      // 0만원부터 ~ [40 ~ 70만원]까지
-      else if (9 < returnNum && returnNum <= 12) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: 40 + (returnNum - 9) * 10,
-        }));
-      }
-
-      // 0만원부터 ~ [70 ~ 100만원]까지
-      else if (12 < returnNum && returnNum <= 13) {
-        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 100 }));
-      }
-
-      // 0만원부터 ~ [150 ~ 300만원]까지
-      else if (12 < returnNum && returnNum <= 17) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: 50 + (returnNum - 12) * 50,
-        }));
-      }
-
-      // 0만원부터 ~ [300 ~ 500만원]까지
-      else if (17 < returnNum && returnNum <= 19) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: 300 + (returnNum - 17) * 100,
-        }));
-      }
-
       // [0 ~ 500만원]부터 ~ 0만원 까지
-    } else if (rangeValues.start >= 3 && rangeValues.end === 100) {
-      const returnNum = Math.floor((rangeValues.start + 3) / 5);
+    } else if (rangeValues.start >= 0.01 && rangeValues.end === 100) {
+      const returnNum = Math.floor(rangeValues.start / 5);
 
-      // [5만원]부터 ~ 0만원 까지
-      if (returnNum === 0) {
+      // 0만원부터 ~ [50 ~ 100만원]까지
+      if (returnNum === 1) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 50000 }));
+      } else if (returnNum === 2) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 100000 }));
+      } else if (returnNum === 3) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 150000 }));
+      } else if (returnNum === 4) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 200000 }));
+      } else if (returnNum === 5) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 250000 }));
+      } else if (returnNum === 6) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 300000 }));
+      } else if (returnNum === 7) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 350000 }));
+      } else if (returnNum === 8) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 400000 }));
+      } else if (returnNum === 9) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 500000 }));
+      } else if (returnNum === 10) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 600000 }));
+      } else if (returnNum === 11) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 700000 }));
+      } else if (returnNum === 12) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 5,
+          start: 1000000,
         }));
-      }
-
-      // [10 ~ 40만원]부터 ~ 0만원 까지
-      else if (1 <= returnNum && returnNum <= 9) {
+      } else if (returnNum === 13) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: returnNum * 5,
+          start: 1500000,
         }));
-      }
-
-      // [40 ~ 70만원]부터 ~ 0만원 까지
-      else if (9 < returnNum && returnNum <= 12) {
+      } else if (returnNum === 14) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 40 + (returnNum - 9) * 10,
+          start: 2000000,
         }));
-      }
-
-      // [70 ~ 100만원]부터 ~ 0만원 까지
-      else if (12 < returnNum && returnNum <= 13) {
+      } else if (returnNum === 15) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 100,
+          start: 2500000,
         }));
-      }
-
-      // [150 ~ 300만원]부터 ~ 0만원 까지
-      else if (13 < returnNum && returnNum <= 17) {
+      } else if (returnNum === 16) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 100 + (returnNum - 13) * 50,
+          start: 3000000,
         }));
-      }
-
-      // [300 ~ 500만원]부터 ~ 0만원 까지
-      else if (17 < returnNum && returnNum <= 19) {
+      } else if (returnNum === 17) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 300 + (returnNum - 17) * 100,
+          start: 4000000,
         }));
-      }
-
-      // [0 ~ 500만원]부터 ~ [0 ~ 500만원]까지 // 설정
-    } else if (rangeValues.start >= 0.01 && rangeValues.end <= 99.9) {
-      // 0만원부터 ~ [0 ~ 500만원] 까지에 사용할 상수
-      const returnNum = Math.floor(rangeValues.end / 5) + 1;
-
-      // 0만원부터 ~ [5 ~ 40만원]까지
-      if (1 < returnNum && returnNum <= 9) {
+      } else if (returnNum === 18) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          end: (returnNum - 1) * 5,
+          start: 5000000,
         }));
-      }
-
-      // 0만원부터 ~ [40 ~ 70만원]까지
-      else if (9 < returnNum && returnNum <= 12) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: 40 + (returnNum - 9) * 10,
-        }));
-      }
-
-      // 0만원부터 ~ [300 ~ 500만원]까지
-      else if (12 < returnNum && returnNum <= 13) {
-        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 100 }));
-      }
-
-      // [150 ~ 300만원]부터 ~ 0만원 까지
-      else if (12 < returnNum && returnNum <= 17) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: 50 + (returnNum - 12) * 50,
-        }));
-      }
-
-      // 0만원부터 ~ [300 ~ 500만원]까지
-      else if (17 < returnNum && returnNum <= 19) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: 300 + (returnNum - 17) * 100,
-        }));
-      }
-
-      // 만약 끝에 값을 다시 끝으로 땅기면 0으로 되돌려서 초기값 설정
-      else {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          end: 0,
-        }));
-      }
-
-      // [0 ~ 500만원]부터 ~ 0만원까지에 사용할 상수
-      const returnNum2 = Math.floor((rangeValues.start + 3) / 5);
-
-      // 만약 끝에 값을 다시 끝으로 땅기면 0으로 되돌려서 초기값 설정
-      if (returnNum2 === 0) {
+      } else if (returnNum <= 0) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
           start: 0,
         }));
       }
 
-      // [5 ~ 40만원]부터 0만원까지
-      else if (1 <= returnNum2 && returnNum2 <= 9) {
-        setAfterRangeValues((prevValues) => ({
-          ...prevValues,
-          start: returnNum2 * 5,
-        }));
+      // [0 ~ 20억]부터 ~ [0 ~ 20억]까지 // 설정
+    } else if (rangeValues.start >= 0.01 && rangeValues.end <= 99.9) {
+      // [0 ~ 20억]부터에 사용할 상수
+      const returnNum = Math.floor(rangeValues.end / 5);
+
+      // [0 ~ 20억]까지에 사용할 상수
+      const returnNum2 = Math.floor(rangeValues.start / 5);
+
+      if (returnNum === 1) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 50000 }));
+      } else if (returnNum === 2) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 100000 }));
+      } else if (returnNum === 3) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 150000 }));
+      } else if (returnNum === 4) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 200000 }));
+      } else if (returnNum === 5) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 250000 }));
+      } else if (returnNum === 6) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 300000 }));
+      } else if (returnNum === 7) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 350000 }));
+      } else if (returnNum === 8) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 400000 }));
+      } else if (returnNum === 9) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 500000 }));
+      } else if (returnNum === 10) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 600000 }));
+      } else if (returnNum === 11) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 700000 }));
+      } else if (returnNum === 12) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 1000000 }));
+      } else if (returnNum === 13) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 1500000 }));
+      } else if (returnNum === 14) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 2000000 }));
+      } else if (returnNum === 15) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 2500000 }));
+      } else if (returnNum === 16) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 3000000 }));
+      } else if (returnNum === 17) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 4000000 }));
+      } else if (returnNum === 18) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, end: 5000000 }));
       }
 
-      // [40 ~ 70만원]부터 0만원까지
-      else if (9 < returnNum2 && returnNum2 <= 12) {
+      // 0만원부터 ~ [50 ~ 100만원]까지
+      if (returnNum2 === 2) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 50000 }));
+      } else if (returnNum2 === 2) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 100000 }));
+      } else if (returnNum2 === 3) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 150000 }));
+      } else if (returnNum2 === 4) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 200000 }));
+      } else if (returnNum2 === 5) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 250000 }));
+      } else if (returnNum2 === 6) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 300000 }));
+      } else if (returnNum2 === 7) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 350000 }));
+      } else if (returnNum2 === 8) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 400000 }));
+      } else if (returnNum2 === 9) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 500000 }));
+      } else if (returnNum2 === 10) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 600000 }));
+      } else if (returnNum2 === 11) {
+        setAfterRangeValues((prevValues) => ({ ...prevValues, start: 700000 }));
+      } else if (returnNum2 === 12) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 40 + (returnNum2 - 9) * 10,
+          start: 1000000,
         }));
-      }
-
-      // [70 ~ 100만원]부터 0만원까지
-      else if (12 < returnNum2 && returnNum2 <= 13) {
+      } else if (returnNum2 === 13) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 100,
+          start: 1500000,
         }));
-      }
-
-      // [100 ~ 300만원]부터 0만원까지
-      else if (13 < returnNum2 && returnNum2 <= 17) {
+      } else if (returnNum2 === 14) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 100 + (returnNum2 - 13) * 50,
+          start: 2000000,
         }));
-      }
-
-      // [300 ~ 500만원]부터 0만원까지
-      else if (17 < returnNum2 && returnNum2 <= 19) {
+      } else if (returnNum2 === 15) {
         setAfterRangeValues((prevValues) => ({
           ...prevValues,
-          start: 300 + (returnNum2 - 17) * 100,
+          start: 2500000,
+        }));
+      } else if (returnNum2 === 16) {
+        setAfterRangeValues((prevValues) => ({
+          ...prevValues,
+          start: 3000000,
+        }));
+      } else if (returnNum2 === 17) {
+        setAfterRangeValues((prevValues) => ({
+          ...prevValues,
+          start: 4000000,
+        }));
+      } else if (returnNum2 === 18) {
+        setAfterRangeValues((prevValues) => ({
+          ...prevValues,
+          start: 5000000,
+        }));
+      } else if (returnNum2 <= 0) {
+        setAfterRangeValues((prevValues) => ({
+          ...prevValues,
+          start: 0,
         }));
       }
     }
-
     // 만약 양쪽 끝 값이 다 최대로 들어가 있다면 0만원부터 0만원까지
     // 즉 전체로 다시 설정
     else if (rangeValues.start === 0 && rangeValues.end === 100) {
@@ -1223,8 +1258,11 @@ function OneRoom() {
     }
   }, [rangeValues]);
 
+  // 여기냐
+
   // 드레그 바
   useEffect(() => {
+    const minGap = 3; // 핸들 간 최소 간격 설정 (예: 10%)
     const handleMouseMove = (e) => {
       if (isDraggingStart || isDraggingEnd) {
         const { left: sliderLeft, width: sliderWidth } =
@@ -1235,12 +1273,12 @@ function OneRoom() {
         if (isDraggingStart) {
           setRangeValues((prevValues) => ({
             ...prevValues,
-            start: position * 100,
+            start: Math.min(position * 100, prevValues.end - minGap),
           }));
         } else {
           setRangeValues((prevValues) => ({
             ...prevValues,
-            end: position * 100,
+            end: Math.max(position * 100, prevValues.start + minGap),
           }));
         }
       }
@@ -1319,6 +1357,35 @@ function OneRoom() {
     setIsRightHandleDragging(true);
   };
 
+  // 드레그 바 가격 포맷팅
+  function formatDragCost(number) {
+    // number 값이 유효한 숫자인지 검증
+    if (typeof number !== "number" || isNaN(number)) {
+      return ""; // 또는 적절한 기본값 설정
+    }
+
+    const billion = Math.floor(number / 100000000);
+    const millionRaw = (number % 100000000) / 10000;
+    const million = millionRaw.toLocaleString("ko-KR");
+
+    let result = "";
+    if (billion > 0) {
+      result += `${billion}억`;
+    }
+    if (millionRaw > 0) {
+      if (billion > 0) {
+        result += " ";
+      }
+      result += `${million}만원`;
+    } else if (billion > 0) {
+      result += "원";
+    } else {
+      result = `${number.toLocaleString("ko-KR")}원`;
+    }
+
+    return result;
+  }
+
   const [selectedOption, setSelectedOption] = useState(null);
 
   // 필터 옵션 박스 설정
@@ -1358,6 +1425,7 @@ function OneRoom() {
       setRangeValues({ start: 0, end: 100 }); // 월세 리셋
       setAfterRangeValues({ start: 0, end: 100 }); // 월세 드레그 바
       setShowDealTypeRange(true); // 전체인 경우에는 보증금, 월세 모두 보여줌
+      setChecked2(false); // 단기임대 설정
     } else if (dealType === "월세") {
       setRange({ left: 0, right: 100 });
       setAfterRange({ left: 0, right: 100 });
@@ -1368,6 +1436,7 @@ function OneRoom() {
       setRange({ left: 0, right: 100 }); // 보증금 리셋
       setAfterRange({ left: 0, right: 100 }); // 보증금 드레그 바 리셋
       setShowDealTypeRange(false); // 전세인 경우에는 보증금만 보여줌
+      setChecked2(false); // 단기임대 설정
     }
   };
 
@@ -1425,11 +1494,23 @@ function OneRoom() {
     range,
     isToggled,
     isChecked2,
+    isChecked,
   ]);
 
-  {
-    /* 바로가기 */
-  }
+  const setFilterReset = () => {
+    if (window.confirm("필터를 초기화하시겠습니까?")) {
+      setSelectedDealType("전체");
+      setSelectedStructure("전체");
+      setSelectedFloor("전체");
+      setSelectedArea("전체");
+      setSelectedOptions([]); // 빈 배열로 초기화
+      setRangeValues({ start: 0, end: 100 });
+      setRange({ left: 0, right: 100 });
+      setIsToggled(false);
+      setChecked2(false);
+      setChecked(false);
+    }
+  };
 
   // MapList에서 데이터를 필터링하여 filterMapList에 저장하는 함수
   const applyFilters = () => {
@@ -1453,7 +1534,10 @@ function OneRoom() {
     }
 
     // 전용 면적
-    if (selectedArea === "10평 이하") {
+    if (selectedArea === "전체") {
+      // "전체"가 선택되었을 때는 필터링 조건을 적용하지 않음
+      filtered = filtered; // 필요에 따라 이 줄은 생략할 수도 있습니다.
+    } else if (selectedArea === "10평 이하") {
       filtered = filtered.filter((item) => item.area <= 9);
     } else if (selectedArea === "10평대") {
       filtered = filtered.filter((item) => item.area >= 10 && item.area <= 19);
@@ -1517,13 +1601,104 @@ function OneRoom() {
         return hasShortTermOption;
       });
     }
+    // isChecked
+    // 전세 혹은 보증금 필터링
+    if (range.left !== 0 || range.right !== 100) {
+      // ~부터
+      if (range.left !== 0 && range.right === 100) {
+        filtered = filtered.filter((item) => {
+          if (
+            item.transaction.transactionType === "월세" &&
+            item.deposit !== 0
+          ) {
+            return item.deposit >= afterRange.start / 10000;
+          } else if (item.transaction.transactionType === "전세") {
+            return item.price >= afterRange.start / 10000;
+          }
+          return true;
+        });
+        // ~까지
+      } else if (range.left === 0 && range.right !== 100) {
+        filtered = filtered.filter((item) => {
+          if (
+            item.transaction.transactionType === "월세" &&
+            item.deposit !== 0
+          ) {
+            return item.deposit <= afterRange.end / 10000;
+          } else if (item.transaction.transactionType === "전세") {
+            return item.price <= afterRange.end / 10000;
+          }
+          return true;
+        });
+        // ~부터 ~까지
+      } else if (range.left !== 0 && range.right !== 100) {
+        filtered = filtered.filter((item) => {
+          if (
+            item.transaction.transactionType === "월세" &&
+            item.deposit !== 0
+          ) {
+            return (
+              item.deposit >= afterRange.start / 10000 &&
+              item.deposit <= afterRange.end / 10000
+            );
+          } else if (item.transaction.transactionType === "전세") {
+            return (
+              item.price >= afterRange.start / 10000 &&
+              item.price <= afterRange.end / 10000
+            );
+          }
+          return true;
+        });
+      }
+    }
+
+    // 월세 필터링
+    if (rangeValues.start !== 0 || rangeValues.end !== 100) {
+      // ~부터 ~까지
+      if (rangeValues.start !== 0 && rangeValues.end !== 100) {
+        filtered = filtered.filter((item) => {
+          if (item.transaction.transactionType === "월세") {
+            const totalCost = isChecked
+              ? item.price + item.maintenanceCost / 10000
+              : item.price;
+            return (
+              totalCost >= afterRangeValues.start / 10000 &&
+              totalCost <= afterRangeValues.end / 10000
+            );
+          }
+          return true;
+        });
+      } else if (rangeValues.start === 0 && rangeValues.end !== 100) {
+        // ~까지
+        filtered = filtered.filter((item) => {
+          if (item.transaction.transactionType === "월세") {
+            const totalCost = isChecked
+              ? item.price + item.maintenanceCost / 10000
+              : item.price;
+            return totalCost <= afterRangeValues.end / 10000;
+          }
+          return true;
+        });
+      } else if (rangeValues.start !== 0 && rangeValues.end === 100) {
+        // ~부터
+        filtered = filtered.filter((item) => {
+          if (item.transaction.transactionType === "월세") {
+            const totalCost = isChecked
+              ? item.price + item.maintenanceCost / 10000
+              : item.price;
+            return totalCost >= afterRangeValues.start / 10000;
+          }
+          return true;
+        });
+      }
+    }
 
     // 최종 필터링된 데이터를 상태에 업데이트
     setFilterMapList(filtered);
   };
 
   return (
-    <div>
+    <div className={style.all}>
       {/* {" "} */}
       {/* className="container"*/}
       <div className={style.home_top}>
@@ -1548,63 +1723,74 @@ function OneRoom() {
                 ref={mapRef}
                 maxLevel={13}
               >
-                <MarkerClusterer
-                  averageCenter={true}
-                  minLevel={1}
-                  calculator={[1, 2, 5]}
-                  styles={[
-                    {
-                      // calculator 각 사이 값 마다 적용될 스타일을 지정한다
-                      width: "30px",
-                      height: "30px",
-                      background: "rgba(51, 204, 255, .8)",
-                      borderRadius: "15px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "31px",
-                    },
-                    {
-                      width: "40px",
-                      height: "40px",
-                      background: "rgba(255, 153, 0, .8)",
-                      borderRadius: "20px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "41px",
-                    },
-                    {
-                      width: "50px",
-                      height: "50px",
-                      background: "rgba(255, 51, 204, .8)",
-                      borderRadius: "25px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "51px",
-                    },
-                    {
-                      width: "60px",
-                      height: "60px",
-                      background: "rgba(255, 80, 80, .8)",
-                      borderRadius: "30px",
-                      color: "#000",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      lineHeight: "61px",
-                    },
-                  ]}
-                >
-                  {filterMapList.map((marker, index) => (
-                    <MapMarker
-                      key={index}
-                      position={{ lat: marker.latitude, lng: marker.longitude }}
-                      options={{ title: marker.title }}
-                      onClick={() => handleMarkerClick(marker)}
-                    />
-                  ))}
-                </MarkerClusterer>
+                {zoomLevelRanded && (
+                    <MarkerClusterer
+                      averageCenter={true}
+                      minLevel={1}
+                      calculator={[5, 10, 15]}
+                      styles={[
+                        {
+                          // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+                          width: "42px",
+                          height: "42px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "21px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "16px",
+                        },
+                        {
+                          width: "48px",
+                          height: "48px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "24px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          lineHeight: "41px",
+                          fontSize: "17px",
+                        },
+                        {
+                          width: "68px",
+                          height: "68px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "34px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          lineHeight: "51px",
+                          fontSize: "19px",
+                        },
+                        {
+                          width: "84px",
+                          height: "84px",
+                          background: "rgba(50, 108, 249, .8)",
+                          borderRadius: "42px",
+                          color: "white",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          lineHeight: "51px",
+                          fontSize: "19px",
+                        },
+                      ]}
+                    >
+                      {filterMapList.map((marker, index) => (
+                        <MapMarker
+                          key={index}
+                          position={{
+                            lat: marker.latitude,
+                            lng: marker.longitude,
+                          }}
+                          options={{ title: marker.title }}
+                          onClick={() => handleMarkerClick(marker)}
+                        />
+                      ))}
+                    </MarkerClusterer>
+                  )}
               </Map>
             )}
           </div>
@@ -1623,7 +1809,13 @@ function OneRoom() {
               <button>X</button>
 
               {/* 아이콘 */}
-              <div className={style.search_icon}>ㅇ</div>
+              <div className={style.search_icon}>
+                <img
+                  style={{ maxHeight: "17px" }}
+                  src={search}
+                  alt="exam icon"
+                />
+              </div>
             </div>
 
             {/* 검색 옵션 선택 */}
@@ -1707,29 +1899,34 @@ function OneRoom() {
 
                 {/* 보증금 범위 슬라이더 */}
                 <div style={{ marginTop: "30px", display: "block" }}>
-                  <span>
-                    {selectedDealType === "전세" ? "전세금" : "보증금"}
-                  </span>
+                  <div className={style.silderTop}>
+                    <span>
+                      {selectedDealType === "전세" ? "전세금" : "보증금"}
+                    </span>
+                    <span className="value_box">
+                      {afterRange.start === 0 && afterRange.end === 0
+                        ? "전체"
+                        : afterRange.start === 0
+                        ? `${formatDragCost(afterRange.end)}까지`
+                        : afterRange.end === 0
+                        ? `${formatDragCost(afterRange.start)}부터`
+                        : `${formatDragCost(
+                            afterRange.start
+                          )}부터 ~ ${formatDragCost(afterRange.end)}까지`}
+                    </span>
+                  </div>
+
                   <div className={style.option_range}>
                     <div className="range-slider" ref={sliderRef}>
                       <div className="range-bar-base-line"></div>
+
                       <div
                         className="range-bar"
                         style={{
                           left: range.left + "%",
                           width: range.right - range.left + "%",
                         }}
-                      >
-                        <div className="value_box">
-                          {afterRange.start === 0 && afterRange.end === 0
-                            ? "전체"
-                            : afterRange.start === 0
-                            ? `${afterRange.end}까지`
-                            : afterRange.end === 0
-                            ? `${afterRange.start}부터`
-                            : `${afterRange.start} ~ ${afterRange.end}`}
-                        </div>
-                      </div>
+                      ></div>
                       <div
                         className="range-handle left"
                         style={{ left: range.left + "%" }}
@@ -1764,15 +1961,30 @@ function OneRoom() {
                 {/* 월세 범위 슬라이더 */}
                 <div
                   style={{
-                    marginTop: "30px",
+                    marginTop: "0px",
                     display: selectedDealType !== "전세" ? "block" : "none",
                   }}
                 >
-                  <span>월세</span>
+                  <div className={style.silderTop}>
+                    <span>월세</span>
+                    <span className="value_box">
+                      {afterRangeValues.start === 0 &&
+                      afterRangeValues.end === 0
+                        ? "전체"
+                        : afterRangeValues.start === 0
+                        ? `${formatDragCost(afterRangeValues.end)}까지`
+                        : afterRangeValues.end === 0
+                        ? `${formatDragCost(afterRangeValues.start)}부터`
+                        : `${formatDragCost(
+                            afterRangeValues.start
+                          )}부터 ~ ${formatDragCost(afterRangeValues.end)}까지`}
+                    </span>
+                  </div>
 
                   <div className={style.option_range}>
                     <div className="custom-range-slider" ref={sliderRef_month}>
                       <div className="range-bar-base-line"></div>
+
                       <div
                         className="range-bar"
                         style={{
@@ -1781,16 +1993,6 @@ function OneRoom() {
                         }}
                       >
                         {/* 바로가기 */}
-                        <div className="value_box">
-                          {afterRangeValues.start === 0 &&
-                          afterRangeValues.end === 0
-                            ? "전체"
-                            : afterRangeValues.start === 0
-                            ? `${afterRangeValues.end}까지`
-                            : afterRangeValues.end === 0
-                            ? `${afterRangeValues.start}부터~`
-                            : `${afterRangeValues.start} ~ ${afterRangeValues.end}`}
-                        </div>
                       </div>
                       <div
                         className="range-handle start"
@@ -1877,7 +2079,7 @@ function OneRoom() {
 
                 <div
                   style={{
-                    marginTop: "30px",
+                    marginTop: "10px",
                     position: "relative",
                     display:
                       selectedDealType === "전체" || selectedDealType === "월세"
@@ -1889,11 +2091,11 @@ function OneRoom() {
                   <div
                     style={{
                       opacity:
-                        rangeValues.start !== 0 || rangeValues.end !== 100
+                        afterRangeValues.start != 0 || afterRangeValues.end != 0
                           ? 1
                           : 0.2,
                       pointerEvents:
-                        rangeValues.start !== 0 || rangeValues.end !== 100
+                        afterRangeValues.start != 0 || afterRangeValues.end != 0
                           ? "auto"
                           : "none",
                     }}
@@ -2428,7 +2630,11 @@ function OneRoom() {
 
             {/* 초기화, 확인 버튼 부분*/}
             <div className={style.option_btn_box}>
-              <div className={style.option_reset}>초기화</div>
+              {mapRendered && (
+                <div className={style.option_reset} onClick={setFilterReset}>
+                  초기화
+                </div>
+              )}
               <div
                 className={style.option_check}
                 onClick={() => setSelectedOption(null)}

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 const SideBar = () => {
     return (
-        <>
+        <div style={{position:'fixed'}}>
             <div className={style.menu}>
                 <Link className={style.link} to="/admin"><FontAwesomeIcon icon={faAnglesRight} /> 메인 페이지</Link>
             </div>
@@ -17,7 +17,10 @@ const SideBar = () => {
             <div className={style.menu}>
                 <Link className={style.link} to="/admin/toNotificationManagement"><FontAwesomeIcon icon={faAnglesRight} /> 리뷰 관리</Link>
             </div>
-        </>
+            <div className={style.menu}>
+                <Link className={style.link} to="/admin/toButtons"> 버튼</Link>
+            </div>
+        </div>
     );
 }
 export default SideBar;
