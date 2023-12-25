@@ -6,10 +6,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import EstateInfo1 from './EstateInfo1';
 import EstateInfo2 from './EstateInfo2';
 import EstateInfo3 from './EstateInfo3';
+import Loading from '../../../commons/Loading';
 
 function EstateInsert() {
   const navi = useNavigate();
   const { estateId } = useParams();
+  const [loading, setLoading] = useState(true);
 
   const [realEstate, setRealEstate] = useState({
     roomCode: "",
@@ -40,21 +42,18 @@ function EstateInsert() {
   useEffect(() => {
     axios.get(`/api/estateManage/estateInfo/${estateId}`)
       .then(resp => {
-        console.log("Fetched data:", resp.data);
-
         setRealEstate(resp.data);
+        setLoading(false);
       })
       .catch(error => {
         console.error("Error fetching data:", error);
       });
   }, [estateId]);
 
-  const Loading = realEstate.title !== "";;
-
   return (
     <>
       <h1 className={style.bigTitle}>매물 정보</h1>
-      {Loading ? (
+      {loading ? <Loading></Loading> : (
         <div className={style.container}>
           <EstateInfo1 realEstate={realEstate} />
           <EstateInfo2 realEstate={realEstate} />
@@ -63,8 +62,6 @@ function EstateInsert() {
             <Button onClick={handleReturn}>이전으로</Button>
           </div>
         </div>
-      ) : (
-        <p>Loading...</p>
       )}
     </>
   );

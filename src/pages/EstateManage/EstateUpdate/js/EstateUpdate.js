@@ -7,10 +7,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import EstateUpdate1 from './EstateUpdate1';
 import EstateUpdate2 from './EstateUpdate2';
 import EstateUpdate3 from './EstateUpdate3';
+import Loading from '../../../commons/Loading';
 
 function EstateUpdate() {
   const navi = useNavigate();
   const { estateId } = useParams();
+  const [loading, setLoading] = useState(true);
 
   // 옵션 리스트
   const [optionList, setOptionList] = useState([]);
@@ -235,6 +237,8 @@ function EstateUpdate() {
 
         // 이미지 태그를 상태에 설정
         setTempImages(resp.data.images);
+
+        setLoading(false);
       })
       .catch(error => {
         console.error("Error fetching data:", error);
@@ -243,18 +247,20 @@ function EstateUpdate() {
 
   return (
     <>
-    {modalContent}
+      {modalContent}
       <h1 className={style.bigTitle}>매물 수정</h1>
-      <div className={style.container}>
-        <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
-        <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList}
-          maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
-        <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
-        <div className={style.buttonDiv}>
-          <Button className={style.estateBtn} onClick={handleReturn}>이전으로</Button>
-          <Button className={style.estateBtn} onClick={handleSubmit}>다음으로</Button>
+      {loading ? <Loading></Loading> : (
+        <div className={style.container}>
+          <EstateUpdate1 realEstate={realEstate} setRealEstate={setRealEstate} />
+          <EstateUpdate2 realEstate={realEstate} setRealEstate={setRealEstate} optionList={optionList} setOptionList={setOptionList}
+            maintenanceOption={maintenanceOption} setMaintenanceOption={setMaintenanceOption} showFloorInput={showFloorInput} setShowFloorInput={setShowFloorInput} />
+          <EstateUpdate3 realEstate={realEstate} setRealEstate={setRealEstate} tempImages={tempImages} setEstateImages={setEstateImages} />
+          <div className={style.buttonDiv}>
+            <Button className={style.estateBtn} onClick={handleReturn}>이전으로</Button>
+            <Button className={style.estateBtn} onClick={handleSubmit}>다음으로</Button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

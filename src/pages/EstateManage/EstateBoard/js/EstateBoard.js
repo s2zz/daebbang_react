@@ -4,9 +4,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import style from '../css/EstateBoard.module.css';
 import Pagination from "@mui/material/Pagination";
+import Loading from '../../../commons/Loading';
 
 function EstateBoard() {
   const [realEstate, setRealEstate] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get("/api/estateManage/estateBoard", {
@@ -17,6 +19,8 @@ function EstateBoard() {
       .then((resp) => {
         console.log(resp.data);
         setRealEstate(resp.data);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -61,9 +65,9 @@ function EstateBoard() {
     return (
       <tr key={i}>
         <td>
-          {estate.images && estate.images.length > 0 ? 
-          (<img src={`../../uploads/estateImages/${estate.images[0].sysName}`} alt="Estate Image"/>) : 
-          (<>No Image</>)}
+          {estate.images && estate.images.length > 0 ?
+            (<img src={`../../uploads/estateImages/${estate.images[0].sysName}`} alt="Estate Image" />) :
+            (<>No Image</>)}
         </td>
         <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>
         <td><Link to={`/estateManage/estateInfo/${estate.estateId}`} className={style.infoLink}>{estate.title}</Link></td>
@@ -80,24 +84,27 @@ function EstateBoard() {
   return (
     <>
       <h1 className={style.bigTitle}>매물 관리</h1>
-      <table className={style.estateTable}>
-        <thead>
-          <tr>
-            <th>대표 이미지</th>
-            <th>보증금/월세(전세)</th>
-            <th>제목</th>
-            <th>위치</th>
-            <th>메모</th>
-          </tr>
-        </thead>
-        <tbody>
-          {contentslist()}
-        </tbody>
-      </table>
+      {loading ? <Loading></Loading> : (
+        <>
+          <table className={style.estateTable}>
+            <thead>
+              <tr>
+                <th>대표 이미지</th>
+                <th>보증금/월세(전세)</th>
+                <th>제목</th>
+                <th>위치</th>
+                <th>메모</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contentslist()}
+            </tbody>
+          </table>
 
-      <div className={style.naviFooter}>
-        {pagenation()}
-      </div>
+          <div className={style.naviFooter}>
+            {pagenation()}
+          </div>
+        </>)}
     </>
   );
 }
