@@ -42,6 +42,23 @@ function EstateBoard() {
     }
   }
 
+  const handleSales = (estateId) => {
+    axios.put(`/api/estateManage/updateStatus/${estateId}`).then(() => {
+      const updatedRealEstate = realEstate.map((estate) => {
+        if (estate.estateId === estateId) {
+          return {
+            ...estate,
+            soldStatus: !estate.soldStatus // 상태 반전
+          };
+        }
+        return estate;
+      });
+      setRealEstate(updatedRealEstate);
+    }).catch((error) => {
+      console.error("Error updating status:", error);
+    });
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const countPerPage = 10;
   const sliceContentsList = (list) => {
@@ -75,6 +92,8 @@ function EstateBoard() {
         <td>{estate.memo}</td>
         <td>
           <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><Button className={style.updateBtn}>수정</Button></Link>
+          {estate.soldStatus ? <Button color="danger" className={style.updateBtn} onClick={() => handleSales(estate.estateId)}>판매완료</Button> :
+            <Button color="primary" className={style.updateBtn} onClick={() => handleSales(estate.estateId)}>판매중</Button>}
           <Button color="danger" onClick={() => handleDelete(estate.estateId)}>삭제</Button>
         </td>
       </tr>
