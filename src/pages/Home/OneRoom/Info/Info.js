@@ -1,6 +1,6 @@
 //
 import { useState, useEffect, useRef } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
 import ItemsCarousel from "react-items-carousel";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
@@ -17,11 +17,23 @@ import textFile from "../assets/textFile.png";
 import proExam from "../assets/proExam.PNG";
 
 //
-function Info(args) {
+function Info(args, estate) {
   const info_scroll = useRef(null);
 
   const location = useLocation();
-  const markerInfo = location.state;
+  const [markerInfo, setMarkerInfo] = useState(location.state); // markerInfo를 useState로 관리
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // markerInfo가 변경될 때 실행될 콜백 함수
+    // 이곳에서 markerInfo에 따른 원하는 동작을 수행할 수 있음
+    console.log("markerInfo가 변경됨:", markerInfo);
+  }, [markerInfo]);
+
+  const handleCarouselItemClick = (estate) => {
+    setMarkerInfo(estate); // markerInfo를 업데이트하는데 useState를 사용
+  };
 
   const { kakao } = window;
 
@@ -29,10 +41,23 @@ function Info(args) {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const chevronWidth = 40;
 
+  // 공인중개사의 게시물 10개 가져오기
+  const [estateListLimit, setEstateListLimit] = useState([{}]);
+
   // markerInfo.images 배열에서 이미지 URL을 생성
   const imageUrls = markerInfo.images.map(
     (image) => `/uploads/estateImages/${image.sysName}`
   );
+
+  useEffect(() => {
+    // markerInfo.images 배열에서 이미지 URL을 생성
+    const imageUrls = markerInfo.images.map(
+      (image) => `/uploads/estateImages/${image.sysName}`
+    );
+  }, [markerInfo]);
+
+  // 공인중개사의 다른 게시물 10개 이미지 usl
+  const [imageUrlsEstateLimit, setImageUrlsEstateLimit] = useState([]);
 
   // 지도 밖에서 생성
   useEffect(() => {
@@ -56,7 +81,7 @@ function Info(args) {
 
     // 마커가 지도 위에 표시되도록 설정합니다
     marker.setMap(map);
-  }, []);
+  }, [markerInfo]);
 
   // 돌아가기 버튼 이벤트
   const back = function () {
@@ -64,7 +89,6 @@ function Info(args) {
   };
 
   // 스크롤 감지 이벤트
-
   const handleScroll = () => {
     // info_scroll의 속성 중 scrollTop(탑)을 나타냄
     const scrollTop = info_scroll.current.scrollTop;
@@ -80,7 +104,6 @@ function Info(args) {
   };
 
   // 드래그 display 이벤트
-
   const [isVisible_drag, setIsVisible_drag] = useState(true);
 
   const toggleVisibility_drag = (state) => {
@@ -94,6 +117,17 @@ function Info(args) {
       }
     }
   };
+
+  useEffect(() => {
+    // markerInfo가 변경될 때 실행될 콜백 함수
+    // 이곳에서 markerInfo에 따른 원하는 동작을 수행할 수 있음
+    console.log("markerInfo가 변경됨:", markerInfo);
+
+    // 스크롤 엘리먼트가 존재하고 markerInfo가 변경될 때 스크롤을 최상단으로 이동
+    if (info_scroll.current) {
+      info_scroll.current.scrollTop = 0;
+    }
+  }, [markerInfo]);
 
   // box_2 더보기 창 이벤트
   const [isVisible, setIsVisible] = useState(true);
@@ -109,6 +143,39 @@ function Info(args) {
     setIsVisible_more(!isVisible_more);
   };
 
+  // 공인 중개사의 최신 10개 게시물 가져오기
+  useEffect(() => {
+    const email = markerInfo.realEstateAgent.email;
+    axios
+      .get(`/api/map/getAgentContentLimit`, {
+        params: {
+          email: email, // 쿼리 매개변수로 이메일을 전달
+        },
+      })
+      .then((resp) => {
+        console.log(resp);
+        const fetchedData = resp.data;
+        setEstateListLimit(fetchedData);
+
+        const imageUrls = resp.data.map((item) => {
+          // images 배열이 존재하고 첫 번째 요소가 있는 경우 해당 이미지의 URL을 생성
+          if (item.images && item.images.length > 0) {
+            return `/uploads/estateImages/${item.images[0].sysName}`;
+          }
+          // images 배열이 비어있는 경우 기본 이미지 URL을 사용
+          return "기본이미지URL";
+        });
+
+        setImageUrlsEstateLimit(imageUrls);
+      })
+      .catch((err) => {
+        console.log("API 호출 오류:", err);
+      });
+  }, [markerInfo]);
+
+  //  LoginId
+  const loginId = sessionStorage.getItem("loginId");
+
   // 문의하기 모달
   const [modal, setModal] = useState(false);
 
@@ -117,7 +184,6 @@ function Info(args) {
   // 문의하기 버튼 클릭 이벤트
   const buttonEvent = () => {
     const estateId = markerInfo.estateId;
-    const loginId = sessionStorage.getItem("loginId");
 
     // 로그인 확인
     if (loginId == null) {
@@ -247,7 +313,7 @@ function Info(args) {
 
   // 주소 뒷자리 포맷팅
   function filterAddress(address) {
-    const indexOfParenthesis = address.indexOf("(");
+    const indexOfParenthesis = address.indexOf("");
     if (indexOfParenthesis !== -1) {
       return address.substring(0, indexOfParenthesis).trim();
     }
@@ -260,272 +326,286 @@ function Info(args) {
       className={style.info_main}
       onScroll={() => handleScroll(info_scroll.current)}
     >
-      {/* 정보 표기 구역*/}
-      <div>
-        {/* 드래그 이벤트에 의한 최상단 박스 (구현 못함 현재 display:none 상태임)*/}
-        {isVisible_drag ? null : (
-          <div className={style.address_box} style={{ display: "block" }}>
-            <div onClick={() => back()}>
-              <img
-                src={backImg_2}
-                style={{ width: "32px", height: "32px" }}
-              ></img>
-            </div>
-            {/*주소*/}
-            {markerInfo.address2}
-          </div>
-        )}
-
-        {/* 드래그 이벤트에 의한 최상단 박스 끝*/}
-
-        {/* 슬라이드 쇼*/}
-        <div className={style.info_img}>
-          <div className={style.info_img_top} onClick={() => back()}>
-            <img src={backImg}></img>
-          </div>
+      {markerInfo && (
+        <div>
+          {/* 정보 표기 구역*/}
 
           <div>
-            {" "}
-            <ItemsCarousel
-              requestToChangeActive={setActiveItemIndex}
-              activeItemIndex={activeItemIndex}
-              numberOfCards={1}
-              gutter={10}
-              leftChevron={
-                <button
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "white",
-                    fontSize: "25px",
-                    border: "none",
-                    fontWeight: "bold",
-                    textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
-                    transform: "scaleX(1.1)",
-                    marginRight: "7px",
-                  }}
-                >
-                  {"<"}
-                </button>
-              }
-              rightChevron={
-                <button
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "white",
-                    border: "none",
-                    fontSize: "25px",
-                    fontWeight: "bold",
-                    textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
-                    transform: "scaleX(1.1)",
-                    marginLeft: "7px",
-                  }}
-                >
-                  {">"}
-                </button>
-              }
-              outsideChevron={false}
-              chevronWidth={chevronWidth}
-            >
-              {imageUrls.map((url, index) => (
-                <div
-                  key={index}
-                  style={{ height: "300px", background: "#EEE" }}
-                >
-                  <img
-                    src={url}
-                    alt={`Item ${index}`}
-                    style={{ width: "100%", height: "100%" }}
-                  />
+            {/* 드래그 이벤트에 의한 최상단 박스 (구현 못함 현재 display:none 상태임)*/}
+            {isVisible_drag ? null : (
+              <div className={style.address_box} style={{ display: "block" }}>
+                <div onClick={() => back()}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    class="h-5 w-5 text-gray-400"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
                 </div>
-              ))}
-            </ItemsCarousel>
-          </div>
-        </div>
-
-        {/* box_1 */}
-        <div className={style.info_title}>
-          <div className={style.info_title_top}>
-            <div className={style.info_idx}>
-              등록번호 {/*등록번호 넣기*/}
-              {markerInfo.estateId}
-            </div>
-            <div className={style.info_day}>
-              {/*몇일 전 넣기*/}
-              {formatWriteDate(markerInfo.writeDate)}
-            </div>
-          </div>
-
-          <div className={style.info_address}>
-            {/*주소*/}
-            {markerInfo.address2}
-          </div>
-          {/* 월세*/}
-          <div className={style.info_cost}>
-            {markerInfo.transaction.transactionType}{" "}
-            {markerInfo.deposit === 0
-              ? `${formatPrice(markerInfo.price)}`
-              : `${formatPrice(markerInfo.deposit)} / ${formatPrice(
-                  markerInfo.price
-                )}`}
-          </div>
-          <div className={style.info_maintenance_cost}>
-            {/*관리비*/}{" "}
-            {markerInfo.maintenanceCost === 0
-              ? "관리비 없음"
-              : `관리비 ${formatMaintenanceCost(markerInfo.maintenanceCost)}`}
-          </div>
-        </div>
-
-        {/* box_2 */}
-        <div className={style.info_subbox}>
-          <div style={{ margin: "10px 0 0 0" }}>{markerInfo.title}</div>
-          {/* 몇 평인지*/}
-          <div className={style.subbox_bold}>
-            <span>icon</span>전용 {markerInfo.area}평
-          </div>
-          {/* 집 타입*/}
-          <div className={style.subbox_bold}>
-            <span>icon</span>
-            {markerInfo.structure.structureType}
-          </div>
-          {/* 집 주차 여부*/}
-          <div>
-            <span>icon</span>
-            {markerInfo.optionList &&
-            markerInfo.optionList.length > 0 &&
-            markerInfo.optionList.some(
-              (option) => option.optionTitle.optionName === "주차장"
-            )
-              ? "주차 가능"
-              : "주차 불가능"}
-          </div>
-          {/* 층수 정보 */}
-          <div>
-            <span>icon</span>
-            {markerInfo.roomFloors === -1
-              ? "반지하"
-              : markerInfo.roomFloors === 0
-              ? "옥탑방"
-              : `${markerInfo.roomFloors}층 / ${markerInfo.buildingFloors}층`}
-          </div>
-          {/* 단기 가능 정보 */}
-          <div>
-            <span>icon</span>{" "}
-            {markerInfo.optionList &&
-            markerInfo.optionList.length > 0 &&
-            markerInfo.optionList.some(
-              (option) => option.optionTitle.optionName === "단기가능"
-            )
-              ? "단기 임대 가능"
-              : "단기 임대 불가능"}
-          </div>
-          <div onClick={toggleVisibility} className={style.more_info}>
-            더보기
-          </div>{" "}
-          {/* 여기서 더보기 옆에서 > 뺌*/}
-        </div>
-
-        {/* box_2 더보기 창 */}
-
-        {/* 조건에 따라 display: none을 적용하려면 삼항 연산자를 사용합니다. */}
-        {isVisible ? null : (
-          <div className={style.more_info_box} style={{ display: "block" }}>
-            <div className={style.more_info_box_top}>
-              <div onClick={toggleVisibility}>
-                {" "}
-                {/* 뒤로가기 아이콘 넣을것 */}X{" "}
+                {/*주소*/}
+                {markerInfo.address2}
               </div>
-              매물 정보
+            )}
+
+            {/* 드래그 이벤트에 의한 최상단 박스 끝*/}
+
+            {/* 슬라이드 쇼*/}
+            <div className={style.info_img}>
+              <div className={style.info_img_top} onClick={() => back()}>
+                <img src={backImg}></img>
+              </div>
+
+              <div>
+                {" "}
+                <ItemsCarousel
+                  requestToChangeActive={setActiveItemIndex}
+                  activeItemIndex={activeItemIndex}
+                  numberOfCards={1}
+                  gutter={10}
+                  leftChevron={
+                    <button
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "white",
+                        fontSize: "25px",
+                        border: "none",
+                        fontWeight: "bold",
+                        textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
+                        transform: "scaleX(1.1)",
+                        marginRight: "7px",
+                      }}
+                    >
+                      {"<"}
+                    </button>
+                  }
+                  rightChevron={
+                    <button
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "white",
+                        border: "none",
+                        fontSize: "25px",
+                        fontWeight: "bold",
+                        textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
+                        transform: "scaleX(1.1)",
+                        marginLeft: "7px",
+                      }}
+                    >
+                      {">"}
+                    </button>
+                  }
+                  outsideChevron={false}
+                  chevronWidth={chevronWidth}
+                >
+                  {imageUrls.map((url, index) => (
+                    <div
+                      key={index}
+                      style={{ height: "300px", background: "#EEE" }}
+                    >
+                      <img
+                        src={url}
+                        alt={`Item ${index}`}
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </div>
+                  ))}
+                </ItemsCarousel>
+              </div>
             </div>
 
-            {/* 평수 */}
-            <div className={style.more_div_bold}>
-              <span>icon</span>전용 {markerInfo.area}평
+            {/* box_1 */}
+            <div className={style.info_title}>
+              <div className={style.info_title_top}>
+                <div className={style.info_idx}>
+                  등록번호 {/*등록번호 넣기*/}
+                  {markerInfo.estateId}
+                </div>
+                <div className={style.info_day}>
+                  {/*몇일 전 넣기*/}
+                  {formatWriteDate(markerInfo.writeDate)}
+                </div>
+              </div>
+
+              <div className={style.info_address}>
+                {/*주소*/}
+                {markerInfo.address2}
+              </div>
+              {/* 월세*/}
+              <div className={style.info_cost}>
+                {markerInfo.transaction.transactionType}{" "}
+                {markerInfo.deposit === 0
+                  ? `${formatPrice(markerInfo.price)}`
+                  : `${formatPrice(markerInfo.deposit)} / ${formatPrice(
+                      markerInfo.price
+                    )}`}
+              </div>
+              <div className={style.info_maintenance_cost}>
+                {/*관리비*/}{" "}
+                {markerInfo.maintenanceCost === 0
+                  ? "관리비 없음"
+                  : `관리비 ${formatMaintenanceCost(
+                      markerInfo.maintenanceCost
+                    )}`}
+              </div>
             </div>
 
-            {/* 건물 구조 */}
-            <div className={style.more_div_bold}>
-              <span>icon</span>
-              {markerInfo.structure.structureType}
+            {/* box_2 */}
+            <div className={style.info_subbox}>
+              <div style={{ margin: "10px 0 0 0" }}>{markerInfo.title}</div>
+              {/* 몇 평인지*/}
+              <div className={style.subbox_bold}>
+                <span>icon</span>전용 {markerInfo.area}평
+              </div>
+              {/* 집 타입*/}
+              <div className={style.subbox_bold}>
+                <span>icon</span>
+                {markerInfo.structure.structureType}
+              </div>
+              {/* 집 주차 여부*/}
+              <div>
+                <span>icon</span>
+                {markerInfo.optionList &&
+                markerInfo.optionList.length > 0 &&
+                markerInfo.optionList.some(
+                  (option) => option.optionTitle.optionName === "주차장"
+                )
+                  ? "주차 가능"
+                  : "주차 불가능"}
+              </div>
+              {/* 층수 정보 */}
+              <div>
+                <span>icon</span>
+                {markerInfo.roomFloors === -1
+                  ? "반지하"
+                  : markerInfo.roomFloors === 0
+                  ? "옥탑방"
+                  : `${markerInfo.roomFloors}층 / ${markerInfo.buildingFloors}층`}
+              </div>
+              {/* 단기 가능 정보 */}
+              <div>
+                <span>icon</span>
+                {markerInfo.optionList &&
+                markerInfo.optionList.length > 0 &&
+                markerInfo.optionList.some(
+                  (option) => option.optionTitle.optionName === "단기가능"
+                )
+                  ? "단기 임대 가능"
+                  : "단기 임대 불가능"}
+              </div>
+              <div onClick={toggleVisibility} className={style.more_info}>
+                더보기
+              </div>{" "}
+              {/* 여기서 더보기 옆에서 > 뺌*/}
             </div>
 
-            {/* 주차 가능 여부 */}
-            <div className={style.more_div}>
-              <span>icon</span>
-              {markerInfo.optionList &&
-              markerInfo.optionList.length > 0 &&
-              markerInfo.optionList.some(
-                (option) => option.optionTitle.optionName === "주차장"
-              )
-                ? "주차 가능"
-                : "주차 불가능"}
-            </div>
+            {/* box_2 더보기 창 */}
 
-            {/* 층수 여부 */}
-            <div className={style.more_div}>
-              <span>icon</span>
-              {markerInfo.roomFloors === -1
-                ? "반지하"
-                : markerInfo.roomFloors === 0
-                ? "옥탑방"
-                : `${markerInfo.roomFloors}층 / ${markerInfo.buildingFloors}층`}
-            </div>
+            {/* 조건에 따라 display: none을 적용하려면 삼항 연산자를 사용합니다. */}
+            {isVisible ? null : (
+              <div className={style.more_info_box} style={{ display: "block" }}>
+                <div className={style.more_info_box_top}>
+                  <div onClick={toggleVisibility}>
+                    {" "}
+                    {/* 뒤로가기 아이콘 넣을것 */}X{" "}
+                  </div>
+                  매물 정보
+                </div>
 
-            {/* 단기 임대 여부 */}
-            <div className={style.more_div}>
-              <span>icon</span>
-              {markerInfo.optionList &&
-              markerInfo.optionList.length > 0 &&
-              markerInfo.optionList.some(
-                (option) => option.optionTitle.optionName === "단기가능"
-              )
-                ? "단기 임대 가능"
-                : "단기 임대 불가능"}
-            </div>
+                {/* 평수 */}
+                <div className={style.more_div_bold}>
+                  <span>icon</span>전용 {markerInfo.area}평
+                </div>
 
-            {/* 단기 임대 여부 */}
-            <div className={style.more_div}>
-              <span>icon</span>
-              {markerInfo.optionList &&
-              markerInfo.optionList.length > 0 &&
-              markerInfo.optionList.some(
-                (option) => option.optionTitle.optionName === "엘리베이터"
-              )
-                ? "엘리베이터 있음"
-                : "엘리베이터 없음"}
-            </div>
+                {/* 건물 구조 */}
+                <div className={style.more_div_bold}>
+                  <span>icon</span>
+                  {markerInfo.structure.structureType}
+                </div>
 
-            {/* 건물 구조 */}
-            <div className={style.more_div}>
-              <span>icon</span>
-              {markerInfo.building.buildingType}
-            </div>
+                {/* 주차 가능 여부 */}
+                <div className={style.more_div}>
+                  <span>icon</span>
+                  {markerInfo.optionList &&
+                  markerInfo.optionList.length > 0 &&
+                  markerInfo.optionList.some(
+                    (option) => option.optionTitle.optionName === "주차장"
+                  )
+                    ? "주차 가능"
+                    : "주차 불가능"}
+                </div>
 
-            {/* 난방 구조 */}
-            <div className={style.more_div}>
-              <span>icon</span>
-              {markerInfo.heatingSystem.heatingType}
-            </div>
+                {/* 층수 여부 */}
+                <div className={style.more_div}>
+                  <span>icon</span>
+                  {markerInfo.roomFloors === -1
+                    ? "반지하"
+                    : markerInfo.roomFloors === 0
+                    ? "옥탑방"
+                    : `${markerInfo.roomFloors}층 / ${markerInfo.buildingFloors}층`}
+                </div>
 
-            {/* 주소 */}
-            <div className={style.more_div}>
-              <span>icon</span>
-              {filterAddress(markerInfo.address1)}
-            </div>
+                {/* 단기 임대 여부 */}
+                <div className={style.more_div}>
+                  <span>icon</span>
+                  {markerInfo.optionList &&
+                  markerInfo.optionList.length > 0 &&
+                  markerInfo.optionList.some(
+                    (option) => option.optionTitle.optionName === "단기가능"
+                  )
+                    ? "단기 임대 가능"
+                    : "단기 임대 불가능"}
+                </div>
 
-            {/* 등록번호 */}
-            <div className={style.more_div}>
-              <span>icon</span>등록번호 {markerInfo.estateId}
-            </div>
+                {/* 단기 임대 여부 */}
+                <div className={style.more_div}>
+                  <span>icon</span>
+                  {markerInfo.optionList &&
+                  markerInfo.optionList.length > 0 &&
+                  markerInfo.optionList.some(
+                    (option) => option.optionTitle.optionName === "엘리베이터"
+                  )
+                    ? "엘리베이터 있음"
+                    : "엘리베이터 없음"}
+                </div>
 
-            <div onClick={toggleVisibility} className={style.close_btn}>
-              확인
-            </div>
-          </div>
-        )}
+                {/* 건물 구조 */}
+                <div className={style.more_div}>
+                  <span>icon</span>
+                  {markerInfo.building.buildingType}
+                </div>
 
-        {/* box_3*/}
-        {/*  
+                {/* 난방 구조 */}
+                <div className={style.more_div}>
+                  <span>icon</span>
+                  {markerInfo.heatingSystem.heatingType}
+                </div>
+
+                {/* 주소 */}
+                <div className={style.more_div}>
+                  <span>icon</span>
+                  {filterAddress(markerInfo.address1)}
+                </div>
+
+                {/* 등록번호 */}
+                <div className={style.more_div}>
+                  <span>icon</span>등록번호 {markerInfo.estateId}
+                </div>
+
+                <div onClick={toggleVisibility} className={style.close_btn}>
+                  확인
+                </div>
+              </div>
+            )}
+
+            {/* box_3*/}
+            {/*  
         <div className={style.info_maintenancebox}>
           <div style={{ margin: "10px 0 0 0" }} className={style.bold_text}>
             관리비 9만원
@@ -535,298 +615,378 @@ function Info(args) {
         </div>
         */}
 
-        {/* box_4 */}
-        <div className={style.info_optionbox}>
-          <div style={{ margin: "10px 0 0 0" }} className={style.bold_text}>
-            옵션 정보
-          </div>
-          <div className={style.info_optiontable_parent}>
-            <div className={style.info_optiontable}>
-              {markerInfo.optionList &&
-              markerInfo.optionList.filter(
-                (option) =>
-                  option.optionTitle.optionName !== "주차장" &&
-                  option.optionTitle.optionName !== "엘리베이터"
-              ).length > 0 ? (
-                markerInfo.optionList
-                  .filter(
-                    (option) =>
-                      option.optionTitle.optionName !== "주차장" &&
-                      option.optionTitle.optionName !== "엘리베이터"
-                  )
-                  .slice(0, 4)
-                  .map((option, index) => (
-                    <div key={index} className={style.option_box}>
-                      <div>
-                        {option.optionTitle.optionName === "에어컨" && (
-                          <img src="에어컨이미지경로" alt="에어컨" />
-                        )}
-                        {option.optionTitle.optionName === "세탁기" && (
-                          <img src="세탁기이미지경로" alt="세탁기" />
-                        )}
-                        {option.optionTitle.optionName === "침대" && (
-                          <img src="침대이미지경로" alt="침대" />
-                        )}
-                        {option.optionTitle.optionName === "책상" && (
-                          <img src="책상이미지경로" alt="책상" />
-                        )}
-                        {option.optionTitle.optionName === "옷장" && (
-                          <img src="옷장이미지경로" alt="옷장" />
-                        )}
-                        {option.optionTitle.optionName === "TV" && (
-                          <img src="TV이미지경로" alt="TV" />
-                        )}
-                      </div>
-                      <div>{option.optionTitle.optionName}</div>
-                    </div>
-                  ))
-              ) : (
-                <div>옵션 정보가 없습니다.</div>
-              )}
-            </div>
-          </div>
-
-          <div className={style.option_more_info_parent}>
-            {markerInfo.optionList.filter(
-              (option) =>
-                option.optionTitle.optionName !== "주차장" &&
-                option.optionTitle.optionName !== "엘리베이터"
-            ).length > 4 && (
-              <div
-                className={style.option_more_info}
-                onClick={toggleVisibility_more}
-              >
-                {`${
+            {/* box_4 */}
+            <div className={style.info_optionbox}>
+              <div style={{ margin: "10px 0 0 0" }} className={style.bold_text}>
+                옵션 정보
+              </div>
+              <div className={style.info_optiontable_parent}>
+                <div className={style.info_optiontable}>
+                  {markerInfo.optionList &&
                   markerInfo.optionList.filter(
                     (option) =>
                       option.optionTitle.optionName !== "주차장" &&
                       option.optionTitle.optionName !== "엘리베이터"
-                  ).length
-                }개 모두 보기`}
+                  ).length > 0 ? (
+                    markerInfo.optionList
+                      .filter(
+                        (option) =>
+                          option.optionTitle.optionName !== "주차장" &&
+                          option.optionTitle.optionName !== "엘리베이터"
+                      )
+                      .slice(0, 4)
+                      .map((option, index) => (
+                        <div key={index} className={style.option_box}>
+                          <div>
+                            {option.optionTitle.optionName === "에어컨" && (
+                              <img src="에어컨이미지경로" alt="에어컨" />
+                            )}
+                            {option.optionTitle.optionName === "세탁기" && (
+                              <img src="세탁기이미지경로" alt="세탁기" />
+                            )}
+                            {option.optionTitle.optionName === "침대" && (
+                              <img src="침대이미지경로" alt="침대" />
+                            )}
+                            {option.optionTitle.optionName === "책상" && (
+                              <img src="책상이미지경로" alt="책상" />
+                            )}
+                            {option.optionTitle.optionName === "옷장" && (
+                              <img src="옷장이미지경로" alt="옷장" />
+                            )}
+                            {option.optionTitle.optionName === "TV" && (
+                              <img src="TV이미지경로" alt="TV" />
+                            )}
+                          </div>
+                          <div>{option.optionTitle.optionName}</div>
+                        </div>
+                      ))
+                  ) : (
+                    <div>옵션 정보가 없습니다.</div>
+                  )}
+                </div>
+              </div>
+
+              <div className={style.option_more_info_parent}>
+                {markerInfo.optionList.filter(
+                  (option) =>
+                    option.optionTitle.optionName !== "주차장" &&
+                    option.optionTitle.optionName !== "엘리베이터"
+                ).length > 4 && (
+                  <div
+                    className={style.option_more_info}
+                    onClick={toggleVisibility_more}
+                  >
+                    {`${
+                      markerInfo.optionList.filter(
+                        (option) =>
+                          option.optionTitle.optionName !== "주차장" &&
+                          option.optionTitle.optionName !== "엘리베이터"
+                      ).length
+                    }개 모두 보기`}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* box_4 모두보기 창 */}
+
+            {/* 조건에 따라 display: none을 적용하려면 삼항 연산자를 사용합니다. */}
+            {isVisible_more ? null : (
+              <div className={style.more_info_box} style={{ display: "block" }}>
+                <div className={style.more_info_box_top}>
+                  <div onClick={toggleVisibility_more}>
+                    {" "}
+                    {/* 뒤로가기 아이콘 넣을겅 */}X{" "}
+                  </div>
+                  옵션 정보
+                </div>
+
+                <div className={style.more_div}>
+                  <span>icon</span>싱크대
+                </div>
+                <div className={style.more_div}>
+                  <span>icon</span>싱크대
+                </div>
+                <div className={style.more_div}>
+                  <span>icon</span>싱크대
+                </div>
+                <div className={style.more_div}>
+                  <span>icon</span>싱크대
+                </div>
+
+                <div
+                  onClick={toggleVisibility_more}
+                  className={style.close_btn}
+                >
+                  확인
+                </div>
               </div>
             )}
-          </div>
-        </div>
 
-        {/* box_4 모두보기 창 */}
-
-        {/* 조건에 따라 display: none을 적용하려면 삼항 연산자를 사용합니다. */}
-        {isVisible_more ? null : (
-          <div className={style.more_info_box} style={{ display: "block" }}>
-            <div className={style.more_info_box_top}>
-              <div onClick={toggleVisibility_more}>
-                {" "}
-                {/* 뒤로가기 아이콘 넣을겅 */}X{" "}
+            {/* box_5 */}
+            <div className={style.info_detail}>
+              <div style={{ margin: "10px 0 0 0" }} className={style.bold_text}>
+                상세 설명
               </div>
-              옵션 정보
-            </div>
 
-            <div className={style.more_div}>
-              <span>icon</span>싱크대
-            </div>
-            <div className={style.more_div}>
-              <span>icon</span>싱크대
-            </div>
-            <div className={style.more_div}>
-              <span>icon</span>싱크대
-            </div>
-            <div className={style.more_div}>
-              <span>icon</span>싱크대
-            </div>
-
-            <div onClick={toggleVisibility_more} className={style.close_btn}>
-              확인
-            </div>
-          </div>
-        )}
-
-        {/* box_5 */}
-        <div className={style.info_detail}>
-          <div style={{ margin: "10px 0 0 0" }} className={style.bold_text}>
-            상세 설명
-          </div>
-
-          <div style={{ margin: "15px 0 15px 0" }}>{markerInfo.contents}</div>
-        </div>
-
-        {/* box_6 */}
-        <div className={style.info_location}>
-          <div style={{ margin: "10px 0 0 0" }} className={style.bold_text}>
-            위치
-          </div>
-
-          <div style={{ margin: "20px 0 0 0" }}>
-            {/*주소*/}
-            {markerInfo.address2}
-          </div>
-          <div className={style.info_map} id="map"></div>
-        </div>
-
-        {/* box_7 */}
-        <div className={style.seller_box}>
-          <div className={style.seller_info}>
-            <div className={style.seller_img}>
-              <img
-                src={proExam}
-                style={{ width: "100%", borderRadius: "50%" }}
-              ></img>
-            </div>
-            <div className={style.seller_title}>
-              <div>
-                {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
-                  <span className={style.recommend}>
-                    <b>추천</b>
-                  </span>
-                ) : (
-                  ""
-                )}
-
-                <span className={style.grade}>
-                  {markerInfo.realEstateAgent.manners_temperature}도
-                </span>
-              </div>
-              <b>{markerInfo.realEstateAgent.estateName}</b>
-            </div>
-          </div>
-          {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
-            <div className={style.safe_seller}>추천중개사</div>
-          ) : (
-            ""
-          )}
-          {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
-            <div className={style.seller_box_1}>
-              <div>
-                <img src={medal} style={{ height: "100%" }}></img>
-              </div>
-              <div style={{ paddingLeft: "15px" }}>
-                {markerInfo.realEstateAgent.estateName}는 매너 온도가 높은 추천
-                중개사입니다.
+              <div style={{ margin: "15px 0 15px 0" }}>
+                {markerInfo.contents}
               </div>
             </div>
-          ) : (
-            ""
-          )}
-          {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
-            <div className={style.seller_best}>추천중개사란?</div>
-          ) : (
-            ""
-          )}
-          
-          <div className={style.seller_box_2}>
-            <div>
-              <img src={textFile} style={{ height: "100%" }}></img>
-            </div>
-            <div style={{ paddingLeft: "15px" }}>안녕 나 김은총이다.</div>
-          </div>
-          <div className={style.more_info}>더보기</div>{" "}
-          {/* 여기서 더보기 옆에서 > 뺌*/}
-        </div>
 
-        {/* box_8 */}
-        <div className={style.seller_slide_box}>
-          <div
-            style={{ margin: "10px 0 0 0" }}
-            className={style.bold_text_small}
-          >
-            중개사무소의 다른 집
-          </div>
-          <div className={style.slide_frame}>
-            <div className={style.slide_item_box}>
+            {/* box_6 */}
+            <div className={style.info_location}>
+              <div style={{ margin: "10px 0 0 0" }} className={style.bold_text}>
+                위치
+              </div>
+
+              <div style={{ margin: "20px 0 0 0" }}>
+                {/*주소*/}
+                {markerInfo.address2}
+              </div>
+              <div className={style.info_map} id="map"></div>
+            </div>
+
+            {/* box_7 */}
+            <div className={style.seller_box}>
+              <div className={style.seller_info}>
+                <div className={style.seller_img}>
+                  <img
+                    src={proExam}
+                    style={{ width: "100%", borderRadius: "50%" }}
+                  ></img>
+                </div>
+                <div className={style.seller_title}>
+                  <div>
+                    {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+                      <span className={style.recommend}>
+                        <b>추천</b>
+                      </span>
+                    ) : (
+                      ""
+                    )}
+
+                    <span className={style.grade}>
+                      {markerInfo.realEstateAgent.manners_temperature}도
+                    </span>
+                  </div>
+                  <b>{markerInfo.realEstateAgent.estateName}</b>
+                </div>
+              </div>
+              {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+                <div className={style.safe_seller}>추천중개사</div>
+              ) : (
+                ""
+              )}
+              {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+                <div className={style.seller_box_1}>
+                  <div>
+                    <img src={medal} style={{ height: "100%" }}></img>
+                  </div>
+                  <div style={{ paddingLeft: "15px" }}>
+                    {markerInfo.realEstateAgent.estateName}는 매너 온도가 높은
+                    추천 중개사입니다.
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+              {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+                <div className={style.seller_best}>추천중개사란?</div>
+              ) : (
+                ""
+              )}
+              <div className={style.seller_box_2}>
+                <div>
+                  <img src={textFile} style={{ height: "100%" }}></img>
+                </div>
+                <div style={{ paddingLeft: "15px" }}>안녕 나 김은총이다.</div>
+              </div>
+              <div className={style.more_info}>더보기</div>{" "}
+              {/* 여기서 더보기 옆에서 > 뺌*/}
+            </div>
+
+            {/* box_8 */}
+            <div className={style.seller_slide_box}>
+              <div
+                style={{ margin: "10px 0 0 0" }}
+                className={style.bold_text_small}
+              >
+                <b>중개사무소의 다른 집</b>
+              </div>
+              <div className={style.slide_frame}>
+                {/* <div className={style.slide_item_box}>
               <div>사진</div>
               <div>
                 <span className={style.bold_text_small}>월세 300/28</span>
                 <span>천안시 서북구 쌍용동</span>
                 <span style={{ color: "#808080" }}>원룸-분리형원룸</span>
               </div>
+            </div> */}
+
+                <ItemsCarousel
+                  requestToChangeActive={setActiveItemIndex}
+                  activeItemIndex={activeItemIndex}
+                  numberOfCards={2}
+                  gutter={130}
+                  infiniteLoop={true}
+                  leftChevron={
+                    <button
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "white",
+                        fontSize: "25px",
+                        border: "none",
+                        fontWeight: "bold",
+                        textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
+                        transform: "scaleX(1.1)",
+                        marginRight: "7px",
+                      }}
+                    >
+                      {"<"}
+                    </button>
+                  }
+                  rightChevron={
+                    <button
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "white",
+                        border: "none",
+                        fontSize: "25px",
+                        fontWeight: "bold",
+                        textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
+                        transform: "scaleX(1.1)",
+                        marginLeft: "7px",
+                      }}
+                    >
+                      {">"}
+                    </button>
+                  }
+                  outsideChevron={false}
+                  chevronWidth={chevronWidth}
+                >
+                  {estateListLimit.map((estate, index) => (
+                    <div
+                      key={estate.id}
+                      className={style.slide_item_box}
+                      onClick={() => handleCarouselItemClick(estate)}
+                    >
+                      <div>
+                        <img
+                          src={imageUrlsEstateLimit[index]}
+                          alt={`Property ${index}`}
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      </div>
+                      <div>
+                        <span className={style.bold_text_small}>
+                          {estate.transaction &&
+                            `${estate.transaction.transactionType} ${
+                              estate.deposit === 0
+                                ? estate.price
+                                : `${formatPrice(
+                                    estate.deposit
+                                  )} / ${formatPrice(estate.price)}`
+                            }`}
+                        </span>
+                        <span>{estate.address2}</span>
+                        <span>
+                          {estate.room &&
+                            `${estate.room.roomType} · ${estate.structure.structureType}`}
+                        </span>
+                        <span style={{ color: "#808080" }}>
+                          {/* 부동산 유형 */}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </ItemsCarousel>
+              </div>
+              <div className={style.more_info}>더보기</div>{" "}
+              {/* 여기서 더보기 옆에서 > 뺌*/}
+            </div>
+
+            {/*리뷰*/}
+            <div>
+              {review.map((e, i) => (
+                <div style={{ border: "1px solid black" }} key={i}>
+                  <div>{e.id}</div>
+                  <div>
+                    <div>교통</div>
+                    <div>{e.traffic}</div>
+                    <div>주변 환경</div>
+                    <div>{e.surroundings}</div>
+                    <div>시설</div>
+                    <div>{e.facility}</div>
+                  </div>
+                  <div>
+                    <div>사진</div>
+                    {e.files.map((e, i) => (
+                      <div>
+                        <img
+                          alt="..."
+                          style={{ width: "30px" }}
+                          src={`/uploads/review/${e.sysName}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => {
+                        delReview(e.seq);
+                      }}
+                    >
+                      삭제
+                    </button>
+                    <Link to="/review/editReview" state={{ seq: e.seq }}>
+                      <button>수정</button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 맨 하단 문의하기 구역만큼 밀어서 공간확보 */}
+            <div style={{ height: "70px" }}></div>
+          </div>
+
+          {/* 문의하기 구역*/}
+          <div className={style.bottom_box}>
+            {/*월세*/}
+            {markerInfo.transaction.transactionType}{" "}
+            {markerInfo.deposit === 0
+              ? `${formatPrice(markerInfo.price)}`
+              : `${formatPrice(markerInfo.deposit)} / ${formatPrice(
+                  markerInfo.price
+                )}`}
+            <div className={style.bottom_btn} onClick={toggle}>
+              문의하기
+            </div>
+            <div>
+              <Modal isOpen={modal} toggle={toggle} {...args}>
+                <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+                <ModalBody>
+                  {loginId === null ? "로그인 후 이용해 주세요." : "안녕하세요"}
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" onClick={toggle}>
+                    Do Something
+                  </Button>{" "}
+                  <Button color="secondary" onClick={toggle}>
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </Modal>
             </div>
           </div>
-          <div className={style.more_info}>더보기</div>{" "}
-          {/* 여기서 더보기 옆에서 > 뺌*/}
-        </div>
-
-        {/*리뷰*/}
-        <div>
-          {review.map((e, i) => (
-            <div style={{ border: "1px solid black" }} key={i}>
-              <div>{e.id}</div>
-              <div>
-                <div>교통</div>
-                <div>{e.traffic}</div>
-                <div>주변 환경</div>
-                <div>{e.surroundings}</div>
-                <div>시설</div>
-                <div>{e.facility}</div>
-              </div>
-              <div>
-                <div>사진</div>
-                {e.files.map((e, i) => (
-                  <div>
-                    <img
-                      alt="..."
-                      style={{ width: "30px" }}
-                      src={`/uploads/review/${e.sysName}`}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div>
-                <button
-                  onClick={() => {
-                    delReview(e.seq);
-                  }}
-                >
-                  삭제
-                </button>
-                <Link to="/review/editReview" state={{ seq: e.seq }}>
-                  <button>수정</button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 맨 하단 문의하기 구역만큼 밀어서 공간확보 */}
-        <div style={{ height: "70px" }}></div>
-      </div>
-
-      {/* 문의하기 구역*/}
-      <div className={style.bottom_box}>
-        {/*월세*/}
-        {markerInfo.transaction.transactionType}{" "}
-        {markerInfo.deposit === 0
-          ? `${formatPrice(markerInfo.price)}`
-          : `${formatPrice(markerInfo.deposit)} / ${formatPrice(
-              markerInfo.price
-            )}`}
-        <div className={style.bottom_btn} onClick={toggle}>
-          문의하기
-        </div>
-        <div>
-          <Modal isOpen={modal} toggle={toggle} {...args}>
-            <ModalHeader toggle={toggle}>Modal title</ModalHeader>
-            <ModalBody>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={toggle}>
-                Do Something
-              </Button>{" "}
-              <Button color="secondary" onClick={toggle}>
-                Cancel
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
-      </div>
-      {/* <h2>{markerInfo.title}</h2>
+          {/* <h2>{markerInfo.title}</h2>
       <p>위도: {markerInfo.lat}</p>
       <p>경도: {markerInfo.lng}</p> */}
+
+          <div></div>
+        </div>
+      )}
     </div>
   );
 }
