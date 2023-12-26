@@ -328,7 +328,7 @@
   padding: 0 4px;
   border-radius: 25px;
   font-size: 10px;
-  color: #ff6905;
+  color: rgb(50, 108, 249);
   line-height: 20px;
   height: 20px;
   font-weight: 600;
@@ -450,7 +450,6 @@
 }
 
 .slide_item_box div:first-child {
-  border-bottom: 1px solid #000;
   height: 155px;
   padding: 0;
 }
