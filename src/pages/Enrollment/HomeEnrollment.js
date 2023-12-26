@@ -11,13 +11,7 @@ import { MapMarker, Map } from "react-kakao-maps-sdk";
 import style1 from "../commons/Modal.module.css";
 
 const HomeEnrollment = (args) => {
-    axios.get(`/api/report/selectAll`)
-            .then(response => {
-                console.log("성공");
-            })
-            .catch(error => {
-                
-            });
+    
     const [value, setValue] = useState('');
     const [emailValue, setEmailValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
