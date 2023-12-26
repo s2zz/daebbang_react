@@ -168,20 +168,15 @@ const FreeBoardWrite = ({loginId}) => {
         "link",
         "image",
     ];
-
-    const [inputList, setInputList] = useState([]);
-    const [inputCount, setInputCount] = useState(0);
+    const [inputList,setInputList] = useState(["files0","files1","files2","files3","files4"]);
     const fileAdd = () => {
         if(inputList.length>4){
             alert("파일은 최대 5개까지 첨부 가능합니다");
             return;
         }
-
-        setInputList(prev=>[...prev,'files'+inputList.length]);
     }
 
     const fileDel = (name) => {
-        setInputList(inputList.filter(e=>e!==name));
     }
 
     return (
