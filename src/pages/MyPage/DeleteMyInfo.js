@@ -39,8 +39,6 @@ const DeleteMyInfo = () => {
             });
         }).catch(resp => {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "비밀번호를 다시 확인해주세요"
             });
         });
@@ -68,8 +66,6 @@ const DeleteMyInfo = () => {
             });
         }).catch(resp => {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "비밀번호를 다시 확인해주세요"
             });
         });

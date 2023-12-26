@@ -59,8 +59,6 @@ const LoginBox = ({ setLoginId }) => {
       window.location.reload();
     }).catch(resp => {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "아이디 또는 비밀번호를 다시 확인해주세요"
       });
       setUser({ id: "", pw: "" });
@@ -80,8 +78,6 @@ const LoginBox = ({ setLoginId }) => {
       window.location.reload();
     }).catch(resp => {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "아이디 또는 비밀번호를 다시 확인해주세요"
       });
       setEstate({ id: "", pw: "" });
@@ -101,8 +97,6 @@ const LoginBox = ({ setLoginId }) => {
       window.location.reload();
     }).catch(resp => {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "아이디 또는 비밀번호를 다시 확인해주세요"
       });
       setAdmin({ id: "", pw: "" });

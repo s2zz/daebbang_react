@@ -1,6 +1,6 @@
 .updContainer {
     margin:auto;
-    border:1px solid black;
+    border: 1px solid  rgb(231, 231, 231);
     width:800px;
     margin-top:30px;
 }
@@ -48,6 +48,16 @@
     margin-bottom:50px;
 }
 
+.zipcodeBtn {
+    border-radius: 5px;
+    background-color: #8faadc;
+    border:none;
+    color:white;
+    font-family: "NanumBarunGothicLight";
+    width:120px;
+    height:40px;
+}
+
 .inputZipcode {
     margin-right:10px;
 }
@@ -65,10 +75,11 @@
     color:black;
     font-family: "NanumBarunGothic";
     border-radius: 5px;
+    border: 1px solid  rgb(231, 231, 231);
 }
 
 .changeBtn:hover {
     cursor: pointer;
-    background-color: black;
+    background-color: #326CF9;
     color:white;
 }
