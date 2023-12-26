@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useMemo, useRef,useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const FreeBoardWrite = ({loginId}) => {
     
@@ -169,6 +169,21 @@ const FreeBoardWrite = ({loginId}) => {
         "image",
     ];
 
+    const [inputList, setInputList] = useState([]);
+    const [inputCount, setInputCount] = useState(0);
+    const fileAdd = () => {
+        if(inputList.length>4){
+            alert("파일은 최대 5개까지 첨부 가능합니다");
+            return;
+        }
+
+        setInputList(prev=>[...prev,'files'+inputList.length]);
+    }
+
+    const fileDel = (name) => {
+        setInputList(inputList.filter(e=>e!==name));
+    }
+
     return (
         <>
             <div className={style.boardTitle}>자유게시판 글 작성</div>
@@ -180,28 +195,16 @@ const FreeBoardWrite = ({loginId}) => {
                 </div>
             </div>
             <div className={style.fileBox}>
-                <div>파일첨부</div>
+                <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd}/></div>
                 <div className={style.fileInputDiv}>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files0" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files1" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files2" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files3" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files4" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
+                    {
+                        inputList.map((e,i)=>(
+                            <div key={i}>
+                                <input type="file" onChange={handleFileChange} name={e}/>
+                                <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={()=>fileDel(e)}/></span>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
             <div>
