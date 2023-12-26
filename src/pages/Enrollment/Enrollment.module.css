@@ -56,7 +56,7 @@
 
 .input_style:focus, .select_style:hover:focus {
     border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
-    box-shadow: 0 0 0 3px #dae3f3; /* 이 색은 blue[200]에 해당합니다 */
+    box-shadow: 0 0 0 3px #DAECFF; /* 이 색은 blue[200]에 해당합니다 */
     outline: 0; /* Firefox 등에서 추가적인 포커스 효과를 없애는 것 */
 }
 ul {

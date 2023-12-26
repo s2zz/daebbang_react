@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
+import { Button } from 'reactstrap';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import style from '../css/EstateBoard.module.css';
 import Pagination from "@mui/material/Pagination";
+import Loading from '../../../commons/Loading';
 
 function EstateBoard() {
   const [realEstate, setRealEstate] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get("/api/estateManage/estateBoard", {
@@ -16,6 +19,8 @@ function EstateBoard() {
       .then((resp) => {
         console.log(resp.data);
         setRealEstate(resp.data);
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -36,6 +41,23 @@ function EstateBoard() {
       return false;
     }
   }
+
+  const handleSales = (estateId) => {
+    axios.put(`/api/estateManage/updateStatus/${estateId}`).then(() => {
+      const updatedRealEstate = realEstate.map((estate) => {
+        if (estate.estateId === estateId) {
+          return {
+            ...estate,
+            soldStatus: !estate.soldStatus // 상태 반전
+          };
+        }
+        return estate;
+      });
+      setRealEstate(updatedRealEstate);
+    }).catch((error) => {
+      console.error("Error updating status:", error);
+    });
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const countPerPage = 10;
@@ -60,17 +82,19 @@ function EstateBoard() {
     return (
       <tr key={i}>
         <td>
-          {estate.images && estate.images.length > 0 ? 
-          (<img src={`../../uploads/estateImages/${estate.images[0].sysName}`} alt="Estate Image"/>) : 
-          (<>No Image</>)}
+          {estate.images && estate.images.length > 0 ?
+            (<img src={`../../uploads/estateImages/${estate.images[0].sysName}`} alt="Estate Image" />) :
+            (<>No Image</>)}
         </td>
         <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>
         <td><Link to={`/estateManage/estateInfo/${estate.estateId}`} className={style.infoLink}>{estate.title}</Link></td>
         <td>{estate.address1}</td>
         <td>{estate.memo}</td>
         <td>
-          <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><button>수정</button></Link>
-          <button onClick={() => handleDelete(estate.estateId)}>삭제</button>
+          <Link to={`/estateManage/estateUpdate/${estate.estateId}`}><Button className={style.updateBtn}>수정</Button></Link>
+          {estate.soldStatus ? <Button color="danger" className={style.updateBtn} onClick={() => handleSales(estate.estateId)}>판매완료</Button> :
+            <Button color="primary" className={style.updateBtn} onClick={() => handleSales(estate.estateId)}>판매중</Button>}
+          <Button color="danger" onClick={() => handleDelete(estate.estateId)}>삭제</Button>
         </td>
       </tr>
     );
@@ -79,28 +103,27 @@ function EstateBoard() {
   return (
     <>
       <h1 className={style.bigTitle}>매물 관리</h1>
-      <table className={style.estateTable}>
-        <thead>
-          <tr>
-            <th>대표 이미지</th>
-            <th>보증금/월세(전세)</th>
-            <th>제목</th>
-            <th>위치</th>
-            <th>메모</th>
-          </tr>
-        </thead>
-        <tbody>
-          {contentslist()}
-        </tbody>
-      </table>
+      {loading ? <Loading></Loading> : (
+        <>
+          <table className={style.estateTable}>
+            <thead>
+              <tr>
+                <th>대표 이미지</th>
+                <th>보증금/월세(전세)</th>
+                <th>제목</th>
+                <th>위치</th>
+                <th>메모</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contentslist()}
+            </tbody>
+          </table>
 
-      <div className={style.naviFooter}>
-        {pagenation()}
-      </div>
-      <div className={style.buttonDiv} >
-        <Link to={`/estateManage/estateInsert`}><button>방 내놓기</button></Link>
-        <Link to={`/estateManage/reviewApproval`}><button>리뷰 관리</button></Link>
-      </div>
+          <div className={style.naviFooter}>
+            {pagenation()}
+          </div>
+        </>)}
     </>
   );
 }

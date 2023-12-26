@@ -3,13 +3,21 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
 import ItemsCarousel from "react-items-carousel";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 //
 import style from "./Info.module.css";
 import axios from "axios";
+import Swal from "sweetalert2";
+import backImg from "../assets/back.png";
+import backImg_2 from "../assets/back_2.png";
+import medal from "../assets/medal.png";
+import textFile from "../assets/textFile.png";
+
+import proExam from "../assets/proExam.PNG";
 
 //
-function Info() {
+function Info(args) {
   const info_scroll = useRef(null);
 
   const location = useLocation();
@@ -101,25 +109,55 @@ function Info() {
     setIsVisible_more(!isVisible_more);
   };
 
+  // 문의하기 모달
+  const [modal, setModal] = useState(false);
+
+  const toggle = () => setModal(!modal);
+
   // 문의하기 버튼 클릭 이벤트
   const buttonEvent = () => {
     const estateId = markerInfo.estateId;
     const loginId = sessionStorage.getItem("loginId");
 
-    console.log(estateId);
-    console.log(loginId);
-
-    axios
-      .post("/api/reviewApproval/", {
-        estateCode: estateId,
-        userId: loginId,
-      })
-      .then((resp) => {
-        console.log(resp);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    // 로그인 확인
+    if (loginId == null) {
+      Swal.fire({
+        icon: "error",
+        title: "로그인한 사용자만 이용할 수 있는 기능입니다.",
+        text: "로그인 해주세요.",
       });
+      return; // 로그인하지 않은 경우 여기서 함수 종료
+    }
+
+    // 사용자에게 확인 요청
+    Swal.fire({
+      title: "문의를 진행하시겠습니까?",
+      text: "공인중개사에게 문의를 보냅니다.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "다시 한번 생각해볼께요",
+      confirmButtonText: "네, 진행합니다!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 사용자가 '네'를 선택했을 때
+        axios
+          .post("/api/reviewApproval/", {
+            estateCode: estateId,
+            userId: loginId,
+          })
+          .then((resp) => {
+            console.log(resp);
+            Swal.fire("성공!", "문의가 정상적으로 등록되었습니다.", "success");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire("오류!", "문의 등록 중 문제가 발생했습니다.", "error");
+          });
+      }
+    });
   };
 
   // 리뷰 목록 가져오기
@@ -223,14 +261,15 @@ function Info() {
       onScroll={() => handleScroll(info_scroll.current)}
     >
       {/* 정보 표기 구역*/}
-
       <div>
         {/* 드래그 이벤트에 의한 최상단 박스 (구현 못함 현재 display:none 상태임)*/}
         {isVisible_drag ? null : (
           <div className={style.address_box} style={{ display: "block" }}>
             <div onClick={() => back()}>
-              {" "}
-              {/* 뒤로가기 아이콘 넣을것 */}icon{" "}
+              <img
+                src={backImg_2}
+                style={{ width: "32px", height: "32px" }}
+              ></img>
             </div>
             {/*주소*/}
             {markerInfo.address2}
@@ -241,7 +280,9 @@ function Info() {
 
         {/* 슬라이드 쇼*/}
         <div className={style.info_img}>
-          <div className={style.info_img_top} onClick={() => back()}> {/* 뒤로가기 아이콘 넣을것 */} </div>
+          <div className={style.info_img_top} onClick={() => back()}>
+            <img src={backImg}></img>
+          </div>
 
           <div>
             {" "}
@@ -249,14 +290,47 @@ function Info() {
               requestToChangeActive={setActiveItemIndex}
               activeItemIndex={activeItemIndex}
               numberOfCards={1}
-              gutter={20}
-              leftChevron={<button>{"<"}</button>}
-              rightChevron={<button>{">"}</button>}
-              outsideChevron
+              gutter={10}
+              leftChevron={
+                <button
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "white",
+                    fontSize: "25px",
+                    border: "none",
+                    fontWeight: "bold",
+                    textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
+                    transform: "scaleX(1.1)",
+                    marginRight: "7px",
+                  }}
+                >
+                  {"<"}
+                </button>
+              }
+              rightChevron={
+                <button
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "white",
+                    border: "none",
+                    fontSize: "25px",
+                    fontWeight: "bold",
+                    textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
+                    transform: "scaleX(1.1)",
+                    marginLeft: "7px",
+                  }}
+                >
+                  {">"}
+                </button>
+              }
+              outsideChevron={false}
               chevronWidth={chevronWidth}
             >
               {imageUrls.map((url, index) => (
-                <div key={index} style={{ height: "300px", background: "#EEE" }}>
+                <div
+                  key={index}
+                  style={{ height: "300px", background: "#EEE" }}
+                >
                   <img
                     src={url}
                     alt={`Item ${index}`}
@@ -287,11 +361,12 @@ function Info() {
           </div>
           {/* 월세*/}
           <div className={style.info_cost}>
-            {markerInfo.deposit
-              ? `${formatPrice(markerInfo.deposit)} / ${formatPrice(
+            {markerInfo.transaction.transactionType}{" "}
+            {markerInfo.deposit === 0
+              ? `${formatPrice(markerInfo.price)}`
+              : `${formatPrice(markerInfo.deposit)} / ${formatPrice(
                   markerInfo.price
-                )}`
-              : formatPrice(markerInfo.price)}
+                )}`}
           </div>
           <div className={style.info_maintenance_cost}>
             {/*관리비*/}{" "}
@@ -506,7 +581,7 @@ function Info() {
                     </div>
                   ))
               ) : (
-                <div>옵션 정보가 하나도 없습니다.</div>
+                <div>옵션 정보가 없습니다.</div>
               )}
             </div>
           </div>
@@ -586,6 +661,89 @@ function Info() {
           </div>
           <div className={style.info_map} id="map"></div>
         </div>
+
+        {/* box_7 */}
+        <div className={style.seller_box}>
+          <div className={style.seller_info}>
+            <div className={style.seller_img}>
+              <img
+                src={proExam}
+                style={{ width: "100%", borderRadius: "50%" }}
+              ></img>
+            </div>
+            <div className={style.seller_title}>
+              <div>
+                {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+                  <span className={style.recommend}>
+                    <b>추천</b>
+                  </span>
+                ) : (
+                  ""
+                )}
+
+                <span className={style.grade}>
+                  {markerInfo.realEstateAgent.manners_temperature}도
+                </span>
+              </div>
+              <b>{markerInfo.realEstateAgent.estateName}</b>
+            </div>
+          </div>
+          {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+            <div className={style.safe_seller}>추천중개사</div>
+          ) : (
+            ""
+          )}
+          {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+            <div className={style.seller_box_1}>
+              <div>
+                <img src={medal} style={{ height: "100%" }}></img>
+              </div>
+              <div style={{ paddingLeft: "15px" }}>
+                {markerInfo.realEstateAgent.estateName}는 매너 온도가 높은 추천
+                중개사입니다.
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {markerInfo.realEstateAgent.manners_temperature >= 45 ? (
+            <div className={style.seller_best}>추천중개사란?</div>
+          ) : (
+            ""
+          )}
+          
+          <div className={style.seller_box_2}>
+            <div>
+              <img src={textFile} style={{ height: "100%" }}></img>
+            </div>
+            <div style={{ paddingLeft: "15px" }}>안녕 나 김은총이다.</div>
+          </div>
+          <div className={style.more_info}>더보기</div>{" "}
+          {/* 여기서 더보기 옆에서 > 뺌*/}
+        </div>
+
+        {/* box_8 */}
+        <div className={style.seller_slide_box}>
+          <div
+            style={{ margin: "10px 0 0 0" }}
+            className={style.bold_text_small}
+          >
+            중개사무소의 다른 집
+          </div>
+          <div className={style.slide_frame}>
+            <div className={style.slide_item_box}>
+              <div>사진</div>
+              <div>
+                <span className={style.bold_text_small}>월세 300/28</span>
+                <span>천안시 서북구 쌍용동</span>
+                <span style={{ color: "#808080" }}>원룸-분리형원룸</span>
+              </div>
+            </div>
+          </div>
+          <div className={style.more_info}>더보기</div>{" "}
+          {/* 여기서 더보기 옆에서 > 뺌*/}
+        </div>
+
         {/*리뷰*/}
         <div>
           {review.map((e, i) => (
@@ -634,9 +792,36 @@ function Info() {
       {/* 문의하기 구역*/}
       <div className={style.bottom_box}>
         {/*월세*/}
-        {markerInfo.b}
-        <div className={style.bottom_btn} onClick={buttonEvent}>
+        {markerInfo.transaction.transactionType}{" "}
+        {markerInfo.deposit === 0
+          ? `${formatPrice(markerInfo.price)}`
+          : `${formatPrice(markerInfo.deposit)} / ${formatPrice(
+              markerInfo.price
+            )}`}
+        <div className={style.bottom_btn} onClick={toggle}>
           문의하기
+        </div>
+        <div>
+          <Modal isOpen={modal} toggle={toggle} {...args}>
+            <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+            <ModalBody>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={toggle}>
+                Do Something
+              </Button>{" "}
+              <Button color="secondary" onClick={toggle}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Modal>
         </div>
       </div>
       {/* <h2>{markerInfo.title}</h2>

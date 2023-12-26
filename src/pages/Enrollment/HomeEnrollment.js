@@ -7,9 +7,17 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../commons/Footer";
 import DaumPostcode from "react-daum-postcode";
-import { MapMarker,  Map } from "react-kakao-maps-sdk"
+import { MapMarker, Map } from "react-kakao-maps-sdk";
+import style1 from "../commons/Modal.module.css";
 
 const HomeEnrollment = (args) => {
+    axios.get(`/api/report/selectAll`)
+            .then(response => {
+                console.log("성공");
+            })
+            .catch(error => {
+                
+            });
     const [value, setValue] = useState('');
     const [emailValue, setEmailValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
@@ -41,6 +49,17 @@ const HomeEnrollment = (args) => {
     const [zipcode, setZipcode] = useState({ zipcode: "" });
     const [address1, setAddress1] = useState({ address1: "" });
     const [address2, setAddress2] = useState({ address2: "" });
+    //alert창
+    const [modal3, setModal3] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+
+    const toggle3 = () => setModal3(!modal3);
+
+    const handleAlert = (message) => {
+        setAlertMessage(message);
+        toggle3();
+    };
+
 
     const { kakao } = window;
 
@@ -54,12 +73,12 @@ const HomeEnrollment = (args) => {
             var dataLength = Object.keys(data).length;
 
             if (!dataLength) {
-                alert("주소를 수동으로 입력해주세요.");
+                handleAlert("주소를 수동으로 입력해주세요.");
                 setShowAddressInputs(true);
                 setShowAddress(false);
                 setShowAddressInfo(false);
             } else if (dataLength) {
-                
+
                 setShowAddressInputs(false);
                 setShowAddressInfo(true);
                 if (status === kakao.maps.services.Status.OK) {
@@ -93,7 +112,7 @@ const HomeEnrollment = (args) => {
                 setSearchResult(response.data.EDOffices.field);
             })
             .catch(error => {
-                alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
+                handleAlert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
             });
     }
     const handleKeyDown = (event) => {
@@ -119,7 +138,7 @@ const HomeEnrollment = (args) => {
             .then(response => {
                 if (response.data) {
                     setSelectedItem('');
-                    alert("이미 가입된 공인중개사무소 입니다.")
+                    handleAlert("이미 가입된 공인중개사무소 입니다.")
                 } else {
                     setSelectedItem(item);
                     searchPlaces(item.ldCodeNm + " " + item.bsnmCmpnm);
@@ -154,16 +173,22 @@ const HomeEnrollment = (args) => {
     };
     const handleSubmit = () => {
         if (!selectedItem) {
-            alert('중개사무소를 선택해주세요.');
+            // alert('중개사무소를 선택해주세요.');
+            handleAlert('중개사무소를 선택해주세요.');
         } else if (!value) {
-            alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
+            // alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
+            handleAlert('대표공인중개사 휴대폰 번호를 입력해주세요.');
         } else if (!nameValue) {
-            alert('대표이름을 입력해주세요.');
+            // alert('대표이름을 입력해주세요.');
+            handleAlert('대표이름을 입력해주세요.');
         } else if (!emailValue || !selectedValue) {
-            alert('대표공인중개사 이메일을 입력해주세요.');
+            // alert('대표공인중개사 이메일을 입력해주세요.');
+            handleAlert('대표공인중개사 이메일을 입력해주세요.');
         } else if (!address && (!address1.address1 || !address2.address2)) {
-            alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
+            // alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
+            handleAlert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
         } else {
+           
             const formData = new FormData();
             let addressValue = '';
 
@@ -172,7 +197,7 @@ const HomeEnrollment = (args) => {
             } else if (address1.address1) {
                 addressValue = address1.address1 + " " + address2.address2 + "";
             } else {
-                alert('중개사무소 찾기를 눌러주세요.');
+                handleAlert('중개사무소 찾기를 눌러주세요.');
                 return;
             }
 
@@ -193,8 +218,8 @@ const HomeEnrollment = (args) => {
             axios
                 .post('/api/enrollment/agent/signup', formData)
                 .then(response => {
-                    increaseNewEstateCount();
                     alert('임시 비밀번호는 전화번호 입니다. 승인완료가 되면 빠른시간내에 비밀번호 변경 해주세요.');
+                    increaseNewEstateCount();
                     navigate('/enrollment/entry');
                 })
                 .catch(error => {
@@ -252,7 +277,10 @@ const HomeEnrollment = (args) => {
 
         setFill(e.target.value !== '');
     }
-    const [showModal, setShowModal] = useState(false);
+    //우편 api 모달창
+    const [modal1, setModal1] = useState(false);
+
+    const toggle1 = () => setModal1(!modal1);
 
     const handleComplete = (data) => {
         var addr = ''; // 주소 변수
@@ -292,16 +320,23 @@ const HomeEnrollment = (args) => {
         // 커서를 상세주소 필드로 이동한다.
         document.getElementById("sample6_detailAddress").focus();
 
-        setShowModal(false);
+        toggle1(false);
     }
 
-    const handleOpenModal = () => {
-        // 우편번호 찾기 모달 열기
-        setShowModal(true);
-    };
 
     return (
         <div className={style.container}>
+             {modal3 &&<div>
+                <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
+                    <ModalBody className={style1.alertBody}>
+                        <p className={style1.alertContents}>{alertMessage}</p>
+                        <br></br>
+                        <Button color="primary" style={{fontSize:'small'}} className={style1.alertBtn} onClick={toggle3} >
+                            확인
+                        </Button>{' '}
+                    </ModalBody>
+                </Modal>
+            </div>}
             <div className={style.imgbag}>
                 <img className={style.img} src={enrollImage} alt="이미지 설명" />
             </div>
@@ -316,13 +351,7 @@ const HomeEnrollment = (args) => {
                         <li>
                             <h5 className={style.list}>중개사무소 정보</h5>
                             <div>
-                                <Button style={{
-                                    borderColor: '#8faadc',
-                                    backgroundColor: '#8faadc',
-                                    '&:hover': {
-                                        backgroundColor: 'black'
-                                    }
-                                }} className={[style.font, style.serachBtn].join(' ')} onClick={handleButtonClick}>
+                                <Button style={{fontFamily:'NanumBarunGothic'}} onClick={handleButtonClick}>
                                     중개사무소 찾기
                                 </Button>
                                 <div>
@@ -339,7 +368,7 @@ const HomeEnrollment = (args) => {
                                     {showAddressInputs && (
                                         <div>
                                             <input type="text" style={{ marginBottom: '1%', marginRight: '1%' }} name="zipcode" id="sample6_postcode" placeholder="우편번호" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={[style.inputInfo, style.inputZip, style.input_style].join(' ')} />
-                                            <Button type="button" onClick={handleOpenModal}>
+                                            <Button type="button" onClick={toggle1}>
                                                 우편번호 찾기
                                             </Button>
                                             <br></br>
@@ -351,65 +380,48 @@ const HomeEnrollment = (args) => {
                                     )}
 
                                     {/* 모달 */}
-                                    <Modal
-                                        isOpen={showModal}
-                                        onRequestClose={() => setShowModal(false)}
-                                        appElement={document.getElementById('root')}
-                                        style={{
-                                            overlay: {
-                                                backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                                            },
-                                            content: {
-                                                position: 'absolute',
-                                                top: '50%',
-                                                left: '50%',
-                                                transform: 'translate(-50%, -50%)',
-                                                width: '430px',
-                                                height: '400px',
-                                                padding: '0px',
-                                                overflow: 'none'
-                                            }
-                                        }}
-                                    >
-                                        <DaumPostcode onComplete={handleComplete} />
+                                    <Modal isOpen={modal1} toggle={toggle1}>
+                                        <ModalBody>
+                                            <DaumPostcode onComplete={handleComplete} />
+                                        </ModalBody>
                                     </Modal>
                                 </div>
-                                <div style={{marginTop:'2%'}}>
+                                <div style={{ marginTop: '2%' }}>
                                     {showAddress && (
-                                    <Map // 지도를 표시할 Container
-                                        center={{
-                                            // 지도의 중심좌표
-                                            lat: yValue ,
-                                            lng: xValue ,
-                                        }}
-                                        style={{
-                                            // 지도의 크기
-                                            width: "100%",
-                                            height: "450px",
-                                        }}
-                                        level={4} // 지도의 확대 레벨
-                                    >
-                                        <MapMarker // 마커를 생성합니다
-                                            position={{
-                                                // 마커가 표시될 위치입니다
-                                                lat: yValue ,
-                                                lng: xValue ,
+                                        <Map // 지도를 표시할 Container
+                                            center={{
+                                                // 지도의 중심좌표
+                                                lat: yValue,
+                                                lng: xValue,
                                             }}
-                                            image={{
-                                                src: marker, // 마커이미지의 주소입니다
-                                                size: {
-                                                    width: 54,
-                                                    height: 59,
-                                                }, // 마커이미지의 크기입니다
-                                                options: {
-                                                    offset: {
-                                                        x: 27,
-                                                        y: 69,
-                                                    }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                                                },
+                                            style={{
+                                                // 지도의 크기
+                                                width: "100%",
+                                                height: "450px",
                                             }}
-                                        />
-                                    </Map>
+                                            level={4} // 지도의 확대 레벨
+                                        >
+                                            <MapMarker // 마커를 생성합니다
+                                                position={{
+                                                    // 마커가 표시될 위치입니다
+                                                    lat: yValue,
+                                                    lng: xValue,
+                                                }}
+                                                image={{
+                                                    src: marker, // 마커이미지의 주소입니다
+                                                    size: {
+                                                        width: 54,
+                                                        height: 59,
+                                                    }, // 마커이미지의 크기입니다
+                                                    options: {
+                                                        offset: {
+                                                            x: 27,
+                                                            y: 69,
+                                                        }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                                                    },
+                                                }}
+                                            />
+                                        </Map>
                                     )}
                                 </div>
                                 <Modal isOpen={modal} toggle={toggle} className="style.custom-modal" {...args}>
@@ -500,8 +512,8 @@ const HomeEnrollment = (args) => {
                     </ul>
                 </div>
             </div>
-            <div style={{ textAlign: 'center', marginBottom: '2%',marginTop:'2%' }}>
-                <Button style={{ backgroundColor: '#456caa' }} className={style.font} onClick={handleSubmit}>
+            <div style={{ textAlign: 'center', marginBottom: '2%', marginTop: '2%' }}>
+                <Button color='primary' style={{fontFamily:'NanumBarunGothic'}} onClick={handleSubmit}>
                     가입 신청하기
                 </Button>
             </div>

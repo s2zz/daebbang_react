@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Button } from 'reactstrap';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import style from '../css/ReviewApproval.module.css';
@@ -107,8 +108,8 @@ function ReviewApproval() {
         <td><Link to={`/estateManage/estateInfo/${item.estateCode}`} className={style.infoLink} >{item.estateCode}</Link></td>
         <td>{getApprovalStatus()}</td>
         <td>
-          <button onClick={handleApproval}>권한 부여</button>
-          <button onClick={handleCancel}>취소</button>
+          <Button className={style.approvalBtn} onClick={handleApproval}>권한 부여</Button>
+          <Button color="danger" onClick={handleCancel}>취소</Button>
         </td>
       </tr>
     );
@@ -135,7 +136,6 @@ function ReviewApproval() {
       <div className={style.naviFooter}>
         {pagenation()}
       </div>
-      <Link to={`/estateManage/`}><button>매물 관리</button></Link>
     </div>
   );
 }

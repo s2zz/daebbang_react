@@ -13,14 +13,6 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
     address2: ''
   });
 
-  // 주소 검색 팝업
-  const [popup, setPopup] = useState(false);
-
-  // 주소 검색 팝업창 열기/닫기
-  const handleComplete = (data) => {
-    setPopup(!popup);
-  }
-
   useEffect(() => {
     setRealEstate(prev => ({
       ...prev,
@@ -118,12 +110,11 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
               <td>
                 <div>
                   <div>
-                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} readOnly /><button onClick={handleComplete}>우편번호 찾기</button>
+                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} readOnly /><Post company={enroll_company} setcompany={setEnroll_company}></Post>
                   </div>
                   <div>
                     <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={realEstate.address1} readOnly />
                   </div>
-                  {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
                 </div>
               </td>
             </tr>
