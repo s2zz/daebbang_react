@@ -2,10 +2,12 @@
 import { Routes, Route, useNavigate } from "react-router-dom"; // Link
 import { useState, useEffect, useRef, forwardRef } from "react";
 import {
+  CustomOverlayMap,
   Map,
   MapMarker,
   MarkerClusterer,
   ZoomControl,
+  MarkerWithCustomOverlayStyle,
 } from "react-kakao-maps-sdk"; // ZoomControl
 
 //
@@ -22,6 +24,8 @@ import Info from "./Info/Info";
 // 이미지
 import exam_icon from "./assets/exam_icon.png";
 import search from "./assets/search.png";
+import subway from "./assets/subway.png"
+import school from "./assets/school.png"
 
 //
 import style from "./OneRoom.module.css";
@@ -35,8 +39,12 @@ function OneRoom() {
 
   const [mapList, setMapList] = useState([{}]);
   const [filterMapList, setFilterMapList] = useState(mapList);
+
   const [subwayList, setSubwayList] = useState([{}]);
+  const [subwayDefaultList, setSubwayDefaultList] = useState([{}]);
+
   const [schoolList, setSchoolList] = useState([{}]);
+  const [schoolDefaultList, setSchoolDefaultList] = useState([{}]);
 
   const [listReady, setlistReady] = useState(false);
 
@@ -64,7 +72,7 @@ function OneRoom() {
   // 로컬에 저장되어 있기 때문에 불러옴
   const { kakao } = window;
 
-  // 1. 로딩 될때 지도 데이터 받음
+  // 1. 로딩 될때 매물 데이터 받음
   // 2. 전부 받고 맵 리스트에 저장하면 랜더링 완료 처리
   useEffect(() => {
     axios
@@ -73,6 +81,19 @@ function OneRoom() {
         setMapList(resp.data);
         setMapRendered(true);
         console.log(mapList);
+      })
+      .catch((err) => {
+        console.log("API 호출 오류:", err);
+      });
+  }, []);
+
+  // 로딩 될때 학교랑 지하철 데이터 받음
+  useEffect(() => {
+    axios
+      .get(`/api/map/getAllDefaultMaker`)
+      .then((resp) => {
+        setSubwayDefaultList(resp.data.subwayList);
+        setSchoolDefaultList(resp.data.schoolList);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
@@ -111,22 +132,17 @@ function OneRoom() {
 
   // 줌 최대 크기 9까지 밖에 못 하게 설정
   useEffect(() => {
-    if(zoomLevel <= 9) {
+    if (zoomLevel <= 9) {
       setZoomLevelRanded(true);
-    }
-    else {
+    } else {
       setZoomLevelRanded(false);
     }
   }, [zoomLevel]);
 
   // 지도 업데이트 바로가기
-  const handleMapCenter = (map) => {
+  const handleMapCenter = (map) => {};
 
-  };
-
-  const handleMapBounds = (map) => {
-
-  };
+  const handleMapBounds = (map) => {};
 
   // 페이지 로딩 시 사용할 기본 경계 반환
   const getDefaultBounds = () => {
@@ -252,6 +268,40 @@ function OneRoom() {
     // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
     navigate(`/home/oneroom/list`, { state: { markersInBounds } });
   };
+
+    // 부드러운 지도 이동
+    const moveToMarker = (marker, map) => {
+      
+      setSearchValue("");
+  
+      setZoomLevel(4);
+      mapRef.current.setLevel(4);
+  
+      mapRef.current.setCenter(
+        new kakao.maps.LatLng(marker.latitude, marker.longitude)
+      );
+  
+      if (!map) {
+        map = {
+          getBounds: () => getNewDefaultBounds(),
+        };
+      }
+  
+      // 현재 지도의 경계를 맵 인자에서 가져옴
+      const bounds = map.getBounds();
+  
+      // 경계(현재 화면)에 포함된 마커들 찾기
+      const markersInBounds = filterMapList.filter((marker) => {
+        const markerPosition = new kakao.maps.LatLng(
+          marker.latitude,
+          marker.longitude
+        );
+        return bounds.contain(markerPosition);
+      });
+  
+      // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
+      navigate(`/home/oneroom/list`, { state: { markersInBounds } });
+    };
 
   // 검색창 사용
   const handleInputChange = (event) => {
@@ -1724,73 +1774,156 @@ function OneRoom() {
                 maxLevel={13}
               >
                 {zoomLevelRanded && (
-                    <MarkerClusterer
-                      averageCenter={true}
-                      minLevel={1}
-                      calculator={[5, 10, 15]}
-                      styles={[
-                        {
-                          // calculator 각 사이 값 마다 적용될 스타일을 지정한다
-                          width: "42px",
-                          height: "42px",
-                          background: "rgba(50, 108, 249, .8)",
-                          borderRadius: "21px",
-                          color: "white",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "16px",
-                        },
-                        {
-                          width: "48px",
-                          height: "48px",
-                          background: "rgba(50, 108, 249, .8)",
-                          borderRadius: "24px",
-                          color: "white",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          lineHeight: "41px",
-                          fontSize: "17px",
-                        },
-                        {
-                          width: "68px",
-                          height: "68px",
-                          background: "rgba(50, 108, 249, .8)",
-                          borderRadius: "34px",
-                          color: "white",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          lineHeight: "51px",
-                          fontSize: "19px",
-                        },
-                        {
-                          width: "84px",
-                          height: "84px",
-                          background: "rgba(50, 108, 249, .8)",
-                          borderRadius: "42px",
-                          color: "white",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          lineHeight: "51px",
-                          fontSize: "19px",
-                        },
-                      ]}
-                    >
-                      {filterMapList.map((marker, index) => (
-                        <MapMarker
-                          key={index}
-                          position={{
-                            lat: marker.latitude,
-                            lng: marker.longitude,
+                  <MarkerClusterer
+                    averageCenter={true}
+                    minLevel={1}
+                    calculator={[5, 10, 15]}
+                    styles={[
+                      {
+                        // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+                        width: "42px",
+                        height: "42px",
+                        background: "rgba(50, 108, 249, .8)",
+                        borderRadius: "21px",
+                        color: "white",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "16px",
+                      },
+                      {
+                        width: "48px",
+                        height: "48px",
+                        background: "rgba(50, 108, 249, .8)",
+                        borderRadius: "24px",
+                        color: "white",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        lineHeight: "41px",
+                        fontSize: "17px",
+                      },
+                      {
+                        width: "68px",
+                        height: "68px",
+                        background: "rgba(50, 108, 249, .8)",
+                        borderRadius: "34px",
+                        color: "white",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        lineHeight: "51px",
+                        fontSize: "19px",
+                      },
+                      {
+                        width: "84px",
+                        height: "84px",
+                        background: "rgba(50, 108, 249, .8)",
+                        borderRadius: "42px",
+                        color: "white",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        lineHeight: "51px",
+                        fontSize: "19px",
+                      },
+                    ]}
+                  >
+                    {filterMapList.map((marker, index) => (
+                      <MapMarker
+                        key={index}
+                        position={{
+                          lat: marker.latitude,
+                          lng: marker.longitude,
+                        }}
+                        options={{ title: marker.title }}
+                        onClick={() => handleMarkerClick(marker)}
+                      />
+                    ))}
+                  </MarkerClusterer>
+                )}
+                {zoomLevel <= 6 &&
+                  subwayDefaultList.map((marker) => (
+                    <>
+                      <MapMarker
+                        position={{
+                          lat: marker.latitude,
+                          lng: marker.longitude,
+                        }}
+                        image={{
+                          src: subway,
+                          size: {
+                            width: 40,
+                            height: 40,
+                          },
+                        }}
+                        onClick={() => moveToMarker(marker)}
+                      />
+                      <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                        // 커스텀 오버레이가 표시될 위치입니다
+                        position={{
+                          lat: marker.latitude,
+                          lng: marker.longitude,
+                        }}
+
+                      >
+                        {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                        <div
+                          className="label"
+                          style={{
+                            color: "white",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            padding: "2px 6px 1px 6px",
+                            fontSize: "11px",
                           }}
-                          options={{ title: marker.title }}
-                          onClick={() => handleMarkerClick(marker)}
-                        />
-                      ))}
-                    </MarkerClusterer>
-                  )}
+                        >
+                          <span className="left"></span>
+                          <span className="center">{marker.name}</span>
+                          <span className="right"></span>
+                        </div>
+                      </CustomOverlayMap>
+                    </>
+                  ))}
+                {zoomLevel <= 6 &&
+                  schoolDefaultList.map((marker) => (
+                    <>
+                      <MapMarker
+                        position={{
+                          lat: marker.latitude,
+                          lng: marker.longitude,
+                        }}
+                        image={{
+                          src: school,
+                          size: {
+                            width: 40,
+                            height: 40,
+                          },
+                        }}
+                        onClick={() => moveToMarker(marker)}
+                      />
+                      <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                        // 커스텀 오버레이가 표시될 위치입니다
+                        position={{
+                          lat: marker.latitude,
+                          lng: marker.longitude,
+                        }}
+                      >
+                        {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                        <div
+                          className="label"
+                          style={{
+                            color: "white",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            padding: "2px 6px 1px 6px",
+                            fontSize: "11px",
+                          }}
+                        >
+                          <span className="left"></span>
+                          <span className="center">{marker.name}</span>
+                          <span className="right"></span>
+                        </div>
+                      </CustomOverlayMap>
+                    </>
+                  ))}
               </Map>
             )}
           </div>
