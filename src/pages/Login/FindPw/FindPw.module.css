@@ -55,15 +55,13 @@
 .findPwBtn {
     width:200px;
     height:80px;
-    background-color: black;
+    background-color: #326CF9;
     color:white;
     font-size:12pt;
 }
 
 .findPwBtn:hover {
     cursor:pointer;
-    background-color:rgb(48, 48, 48);
-    color:white;
 }
 
 .findBox {
@@ -79,6 +77,7 @@
     text-decoration: none;
     color:black;
     margin:10px;
+    font-family: "NanumBarunGothicLight";
 }
 .good{
     margin-top: 10px;
@@ -95,10 +94,11 @@
     width:200px;
     height:80px;
     border-radius: 5px;
-    background-color: black;
+    background-color: #326CF9;
     color:white;
     font-family: "NanumBarunGothicBold";
     font-size:12pt;
+    border:none;
 }
 .loginFont {
     font-family: "NanumBarunGothic";

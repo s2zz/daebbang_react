@@ -131,32 +131,24 @@ const UpdateMyInfo = () => {
     const handleUpdate = async () => {
         if (!fill) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "모든 항목을 입력해주세요",
             });
             return;
         }
         if (!nameRegex) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "이름은 2~5글자의 한글이어야합니다.",
             });
             return;
         }
         if (!emailRegex) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "이메일 형식을 올바르게 입력해주세요.",
             });
             return;
         }
         if (!phoneRegex) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "휴대폰 번호는 숫자 11자리만 입력해주세요.",
             });
             return;
@@ -190,24 +182,18 @@ const UpdateMyInfo = () => {
     const handleEstateUpdate = async () => {
         if (!efill) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "모든 항목을 입력해주세요",
             });
             return;
         }
         if (!nameRegex) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "이름은 2~5글자의 한글이어야합니다.",
             });
             return;
         }
         if (!phoneRegex) {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "휴대폰 번호는 숫자 11자리만 입력해주세요.",
             });
             return;
@@ -328,7 +314,7 @@ const UpdateMyInfo = () => {
                             <input type="text" name="email" onChange={handleChangeEmail} value={email.email} placeholder='이메일 입력'></input><br /><br />
                             우편번호<br></br>
                             <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode} placeholder='우편번호'></input>
-                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
+                            <button onClick={handleOpenModal} className={style.zipcodeBtn}>우편번호 찾기</button><br />
                             주소<br></br>
                             <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1} placeholder='주소'></input><br></br>
                             <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력'></input>
@@ -372,7 +358,7 @@ const UpdateMyInfo = () => {
                             <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='전화번호 입력'></input><br /><br />
                             우편번호<br></br>
                             <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode} placeholder='우편번호'></input>
-                            <input type="button" value="우편번호 찾기" onClick={handleOpenModal}></input><br />
+                            <button onClick={handleOpenModal} className={style.zipcodeBtn}>우편번호 찾기</button><br />
                             주소<br></br>
                             <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1} placeholder='주소'></input><br></br>
                             <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력'></input>

@@ -88,6 +88,41 @@ const Review = () => {
     );
 }
 
+const Report = () => {
+    const storedLoginId = sessionStorage.getItem('loginId');
+    const [loading, setLoading] = useState(true);
+    const [myReport, setMyReport] = useState([{}]);
+
+    useEffect(() => {
+        axios.get("/api/report/myReport/" + storedLoginId).then(resp => {
+            setMyReport(resp.data);
+            setLoading(false);
+        });
+    }, []);
+
+    return (
+        <div>
+            {loading ? <Loading></Loading> :
+                <div className={style.ReportContainer}>
+                    {myReport.length > 0 ?
+                        <div>
+                            {myReport.map((e, i) => {
+                                return (
+                                    <div key={i} className={style.SawEstate}>
+                                        <div>{e.estateName}</div>
+                                        <div>{e.content}</div>
+                                        <div>{e.content2}</div>
+                                        <div>{e.status}</div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        : <div className={style.notSawYet}>신고 내역이 없습니다</div>}
+                </div>
+            }
+        </div>
+    );
+}
 
 const EstateInfo = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -149,6 +184,8 @@ function MyPage() {
             return 'review';
         } else if (path.includes('estateInfo')) {
             return 'estateInfo';
+        } else if (path.includes('report')) {
+            return 'report';
         }
         // Default to 'info' if no match is found
         return 'info';
@@ -176,12 +213,16 @@ function MyPage() {
                     <Link to="/mypage/review">
                         <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내가 본 방</button>
                     </Link>
+                    <Link to="/mypage/report">
+                        <button className={selectedMenu === "report" ? style.menuReportSelected : style.menuReport} onClick={() => handleMenuClick("report")}>신고 내역</button>
+                    </Link>
                 </div>
             }
             <Routes>
                 {!isEstate && <Route path="/" element={<Info />} />}
                 <Route path="info" element={<Info />} />
                 <Route path="review" element={<Review />} />
+                <Route path="report" element={<Report />} />
                 <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
                 <Route path="updateMyInfo" element={<UpdateMyInfo />} />
                 <Route path="changePw" element={<ChangePw />} />

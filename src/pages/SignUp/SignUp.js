@@ -151,22 +151,16 @@ function SignUp() {
     axios.post("/api/member/idDuplCheck", value).then(resp => {
       if (resp.data === false) {
         Swal.fire({
-          icon: "error",
-          title: "Oops...",
           text: "이미 존재하는 아이디 입니다"
         });
         setDuplId(false);
         setId({ id: "" });
       } else if (id.id === '') {
         Swal.fire({
-          icon: "error",
-          title: "Oops...",
           text: "아이디를 먼저 입력해주세요"
         });
       } else if (!idRegex) {
         Swal.fire({
-          icon: "error",
-          title: "Oops...",
           text: "아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다"
         });
         setId({ id: "" });
@@ -227,64 +221,48 @@ function SignUp() {
 
     if (!fill) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "모든 항목을 입력해주세요",
       });
       return;
     }
     if (!duplId) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "아이디 중복확인이 필요합니다",
       });
       return;
     }
     if (!idRegex) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "아이디는 5글자 이상의 영어 소문자와 숫자로 이루어져야합니다",
       });
       return;
     }
     if (!pwRegex) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다",
       });
       return;
     }
     if (!nameRegex) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "이름은 2~5글자의 한글이어야합니다",
     });
       return;
     }
     if (!emailRegex) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "이메일 형식을 올바르게 입력해주세요",
     });
       return;
     }
     if (!phoneRegex) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "휴대폰 번호는 숫자 11자리만 입력해주세요",
     });
       return;
     }
     if (!samePw) {
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
         text: "비밀번호를 다시 확인해주세요",
     });
       return;
