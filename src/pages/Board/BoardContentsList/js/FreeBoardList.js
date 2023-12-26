@@ -8,7 +8,7 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { alertDeleteSuccess, alertDeleteFailure, alertDeleteConfirmation, alertAddSuccess, alertAddFailure, alertAddConfirmation } from '../../commons_js/alert.js';
+
 
 const FreeBoardList = ({ loginId }) => {
     const navi = useNavigate();
@@ -130,7 +130,7 @@ const FreeBoardList = ({ loginId }) => {
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." />}</div>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." className={style.fav}/> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." className={style.notFav}/>}</div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>

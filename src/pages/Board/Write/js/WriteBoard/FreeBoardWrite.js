@@ -26,16 +26,17 @@ const FreeBoardWrite = ({loginId}) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     }
     const [sysNameList, setSysNameList] = useState([]);
-
+    
     const imageHandler = (file) => {
         // 이미지 선택 창 나타나게 하기
+        const editor = quillRef.current.getEditor();
         const input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("multiple", "true");
         input.setAttribute("accept", "image/*");
         input.click();
 
-        const editor = quillRef.current.getEditor();
+        
         // 이미지 선택 시 동작
         input.addEventListener("change", async () => {
             const files = input.files;
@@ -168,6 +169,15 @@ const FreeBoardWrite = ({loginId}) => {
         "image",
     ];
 
+    const handleKeyDown = (e) => {
+        const currentContent = quillRef.current?.getEditor()?.root.innerHTML;
+        
+        if(currentContent.length>5000){
+            alert("최대 5000자까지 입력할 수 있습니다");
+            e.preventDefault();
+        }
+    }
+
     return (
         <>
             <div className={style.boardTitle}>자유게시판 글 작성</div>
@@ -207,14 +217,16 @@ const FreeBoardWrite = ({loginId}) => {
                 <div className={style.contents}>내용<span>*</span></div>
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents}
+                        value={formData.contents.slice(0,5000)}
+                        onKeyDown={handleKeyDown}
                         onChange={(value) => {
                             if (value.length > 5000) {
                                 alert("최대 5000자까지 작성 가능합니다");
                             } else {
                                 setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
                             }
-                        }} />
+                        }} 
+                        />
                 </div>
             </div>
 
