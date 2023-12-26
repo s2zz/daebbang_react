@@ -6,10 +6,12 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import mStyle from "../../../../commons/Modal.module.css";
 
-const RoomBoardWrite = ({loginId}) => {
+const RoomBoardWrite = ({ loginId }) => {
     const navi = useNavigate();
-   
+
     const quillRef = useRef();
 
     const [formData, setFormData] = useState({
@@ -52,11 +54,13 @@ const RoomBoardWrite = ({loginId}) => {
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
+                console.log(imgUrl.data[0].split("/uploads/board/")[1]);
                 const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
                     setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
+                    console.log(range.index);
                     editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
                 }
 
@@ -90,15 +94,22 @@ const RoomBoardWrite = ({loginId}) => {
         }
         return delImgList;
     }
+    const [modal1, setModal1] = useState(false);
+    const toggle1 = () => {
+        setModal1(!modal1);
+    }
 
-    const handleAdd = () => {
-        if(loginId===null){
+    const [modal2, setModal2] = useState(false);
+    const toggle2 = () => {
+        setModal2(!modal2);
+    }
+
+    const regex = () => {
+        if (loginId === null) {
             alert("로그인해주세요");
             navi("/login");
             return;
         }
-        let existImgList = existImgSearch(formData.contents);
-        let delImgList = submitImgSearch(existImgList, sysNameList);
 
         if (formData.title === "") {
             alert("제목을 입력해주세요");
@@ -125,6 +136,19 @@ const RoomBoardWrite = ({loginId}) => {
             return;
         }
 
+        if (formData.header === "양도합니다") {
+            toggle1();
+        } else if (formData.header === "양도 구합니다") {
+            toggle2();
+        }
+
+    }
+
+    const handleAdd = () => {
+
+        let existImgList = existImgSearch(formData.contents);
+        let delImgList = submitImgSearch(existImgList, sysNameList);
+
         const submitFormData = new FormData();
         submitFormData.append("boardTitle", "양도게시판");
         submitFormData.append("title", formData.title);
@@ -140,6 +164,7 @@ const RoomBoardWrite = ({loginId}) => {
             }
         });
 
+
         axios.post("/api/board", submitFormData).then(resp => {
             alert("게시글 등록에 성공하였습니다");
             navi("/board/toRoomBoardList");
@@ -147,6 +172,7 @@ const RoomBoardWrite = ({loginId}) => {
             alert("게시글 등록에 실패하였습니다");
             console.log(err);
         })
+
     }
 
     const modules = useMemo(() => ({
@@ -180,8 +206,75 @@ const RoomBoardWrite = ({loginId}) => {
         "image",
     ];
 
+    const returnModal1 = () => {
+        return (
+            <div>
+                <Modal isOpen={modal1} toggle={toggle1} >
+                    <ModalHeader toggle={toggle1}>양도게시판 약관 동의</ModalHeader>
+                    <ModalBody>
+                        양도합니다 글 작성자는 집 주인의 동의를 받아 합법적이고 적절한 절차를 통해 진행되어야 하며,
+                        집 주인의 동의를 받지 않는 등의 모든 문제는 당사자에게 책임이 있습니다.<br />
+                        DAEBBANG은 양도 과정 및 양도된 집과 사용자 간의 거래에서 발생하는 법적 문제에 대한
+                        어떠한 책임도 지지않습니다.<br />
+                        따라서 양도 게시판을 통해 이루어지는 모든 거래 및 법적 절차는 거래 당사자 간의 독립적인 책임
+                        아래 진행되며, 서비스 제공자는 이에 대한 법적 책임을 부담하지 않습니다.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={handleAdd}>
+                            약관에 동의합니다
+                        </Button>{' '}
+                        <Button color="secondary" onClick={toggle1}>
+                            취소
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+            </div>
+        );
+    }
+    const returnModal2 = () => {
+        return (
+            <div>
+                <Modal isOpen={modal2} toggle={toggle2} >
+                    <ModalHeader toggle={toggle2}>양도게시판 약관 동의</ModalHeader>
+                    <ModalBody>
+                        양도구합니다 글 작성자는 반드시 거래하려는 사용자가 집주인의 동의를 구했는지,
+                        법적으로 문제는 없는지 살펴보아야 합니다.<br />
+                        DAEBBANG은 양도 과정 및 양도된 집과 사용자 간의 거래에서 발생하는 법적 문제에 대한
+                        어떠한 책임도 지지않습니다.<br />
+                        따라서 양도 게시판을 통해 이루어지는 모든 거래 및 법적 절차는 거래 당사자 간의 독립적인 책임
+                        아래 진행되며, 서비스 제공자는 이에 대한 법적 책임을 부담하지 않습니다.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={handleAdd}>
+                            약관에 동의합니다
+                        </Button>{' '}
+                        <Button color="secondary" onClick={toggle2}>
+                            취소
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+            </div>
+        );
+    }
+   
+    useEffect(() => {
+        const quill = quillRef.current?.getEditor();
+        if(quill){quill.setSelection(quill.getLength(),quill.getLength());} 
+    }, [formData.contents,quillRef.current?.getEditor()])
+    const textChange = (value) => {
+        console.log(value.length)
+        if (value.length> 5000) {
+            alert("최대 5000자까지 작성 가능합니다");
+            setFormData(prev => ({ ...prev}));
+        } else {
+            setFormData(prev => ({ ...prev, contents: value }));
+        }
+    }
+
     return (
         <>
+            {toggle1 ? returnModal1(toggle1) : ""}
+            {toggle2 ? returnModal2(toggle2) : ""}
             <div className={style.boardTitle}>양도게시판 글 작성</div>
             <hr></hr>
             <div className={style.titleBox}>
@@ -230,11 +323,9 @@ const RoomBoardWrite = ({loginId}) => {
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents}
-                        onChange={(value) => {
-                            if (value.length > 5000) {
-                                alert("최대 5000자까지 작성 가능합니다");
-                            } else {
-                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                        onChange={(value, delta, source) => {
+                            if (source === "user") {
+                                textChange(value)
                             }
                         }}
                     />
@@ -243,7 +334,7 @@ const RoomBoardWrite = ({loginId}) => {
 
             <div className={style.btns}>
                 <Link to="/board/toRoomBoardList"><button>작성 취소</button></Link>
-                <button onClick={handleAdd}>작성 완료</button>
+                <button onClick={regex}>작성 완료</button>
             </div>
         </>
     );

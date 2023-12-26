@@ -8,9 +8,9 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { alertDeleteSuccess, alertDeleteFailure, alertDeleteConfirmation,alertAddSuccess, alertAddFailure, alertAddConfirmation } from '../../commons_js/alert.js';
 
-const FreeBoardList = ({loginId}) => {
+
+const FreeBoardList = ({ loginId }) => {
     const navi = useNavigate();
     const location = useLocation();
     const [board, setBoard] = useState([]); // 검색어 없을 때
@@ -49,52 +49,51 @@ const FreeBoardList = ({loginId}) => {
     }
 
     const moveWrite = (loginId) => {
-        if(loginId===null){
+        if (loginId === null) {
             alert("로그인해주세요");
             navi("/login")
-        } else{
+        } else {
             navi("/board/toFreeBoardWrite");
         }
     }
 
     // 즐겨찾기 추가
     const addFav = (parentSeq) => {
-        let str = "즐겨찾기";
-        alertAddConfirmation(str).then(result => {
-            if (result) {
-                let fav = { boardTitle: "자유게시판", parentSeq: parentSeq };
-                axios.post("/api/favoriteBoard", fav).then(resp => {
-                    setBoard(board.map((e, i) => {
-                        if (e.seq === parentSeq) { e.favorite = 'true' }
-                        return e;
-                    }))
-                    alertAddSuccess("즐겨찾기 등록에 성공하였습니다");
-                }).catch(err => {
-                    alertAddSuccess("즐겨찾기 등록에 실패하였습니다");
-                    console.log(err);
-                })
 
-            }
+        if (loginId === null) {
+            alert("로그인 후 이용가능한 서비스입니다");
+            return;
+        }
+
+        let fav = { boardTitle: "자유게시판", parentSeq: parentSeq };
+        axios.post("/api/favoriteBoard", fav).then(resp => {
+            setBoard(board.map((e, i) => {
+                if (e.seq === parentSeq) { e.favorite = 'true' }
+                return e;
+            }))
+        }).catch(err => {
+            console.log(err);
         })
     }
 
     // 즐겨찾기 제거
     const delFav = (parentSeq) => {
-        let str="즐겨찾기"
-        alertDeleteConfirmation(str).then(result=>{
-            if(result){
-                axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
-                    setBoard(board.map((e, i) => {
-                        if (e.seq === parentSeq) { e.favorite = 'false' }
-                        return e;
-                    }))
-                    alertDeleteSuccess(str);
-                }).catch(err => {
-                    alertDeleteFailure(str)
-                    console.log(err);
-                })
-            }
+
+        if(loginId===null){
+            alert("로그인 후 이용가능한 서비스입니다");
+            return;
+        }
+
+        axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
+            setBoard(board.map((e, i) => {
+                if (e.seq === parentSeq) { e.favorite = 'false' }
+                return e;
+            }))
+        }).catch(err => {
+            alert("즐겨찾기 해제에 실패하였습니다.");
+            console.log(err);
         })
+
     }
 
     // 검색 기능
@@ -131,7 +130,7 @@ const FreeBoardList = ({loginId}) => {
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." />}</div>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." className={style.fav}/> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." className={style.notFav}/>}</div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
@@ -182,7 +181,7 @@ const FreeBoardList = ({loginId}) => {
                 </div>
             </div>
             <div className={style.writeBtnDiv}>
-                <button onClick={()=>{moveWrite(loginId)}}>글 작성</button>
+                <button onClick={() => { moveWrite(loginId) }}>글 작성</button>
             </div>
             <div className={style.naviFooter}>
                 {

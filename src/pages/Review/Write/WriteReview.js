@@ -14,7 +14,7 @@ const WriteReview = () => {
     const estateId = location.state !== null && location.state.estateCode !== null ? location.state.estateCode : 0;
     const approvalCode = location.state !== null && location.state.approvalCode !== null ? location.state.approvalCode : "";
 
-    const [formData, setFormData] = useState({ estateId: estateId, approvalCode: approvalCode, traffic: "", surroundings: "", facility: "", files: {} });
+    const [formData, setFormData] = useState({ estateId: estateId, approvalCode: approvalCode, traffic: "", surroundings: "", facility: "", anonymouse:"true", files: {} });
     const storedLoginId = sessionStorage.getItem('loginId');
 
     const handleChange = (e) => {
@@ -88,6 +88,7 @@ const WriteReview = () => {
         console.log(formData.files);
         const submitFormData = new FormData();
         submitFormData.append("estateId", formData.estateId);
+        submitFormData.append("anonymous",formData.anonymouse);
         submitFormData.append("approvalCode", formData.approvalCode);
         submitFormData.append("traffic", formData.traffic);
         submitFormData.append("surroundings", formData.surroundings);
@@ -104,11 +105,11 @@ const WriteReview = () => {
         })
 
         const writeComplete = new FormData();
-        writeComplete.append("userId",storedLoginId);
-        writeComplete.append("estateId",formData.estateId);
-        writeComplete.append("approvalCode",'a5');
+        writeComplete.append("userId", storedLoginId);
+        writeComplete.append("estateId", formData.estateId);
+        writeComplete.append("approvalCode", 'a5');
 
-        axios.put("/api/reviewApproval/writeComplete",writeComplete);
+        axios.put("/api/reviewApproval/writeComplete", writeComplete);
 
         axios.post("/api/review", submitFormData).then(resp => {
             alert("리뷰 등록에 성공하였습니다");
@@ -133,12 +134,15 @@ const WriteReview = () => {
 
     return (
         <div>
-            {estateId === 0 || approvalCode===""? refuseWrite()
+            {estateId === 0 || approvalCode === "" ? refuseWrite()
                 :
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>
                     <hr></hr>
-
+                    <div>
+                        <div>아이디 표시<span>*</span> &nbsp;| </div>
+                        <div><input type="radio" name="anonymous" value="true" onChange={handleChange}/>익명<input type="radio"name="anonymous" value="false" onChange={handleChange}/>실명</div>
+                    </div>
                     <div className={style.scoreInfo}>
                         <div>별점<span>*</span> &nbsp;| </div>
                         <div className={style.scoreBox}>
@@ -182,7 +186,7 @@ const WriteReview = () => {
                                         <input type="file" name="files0" style={{ display: 'none' }} id="fileInput0" onChange={handleFileChange} accept="image/*" />
                                         {url[`files${i}`] ?
                                             <>
-                                                <img src={`url.files${i}`} alt="..." />
+                                                <img src={url[`files${i}`]} alt="..." />
                                                 <label onClick={() => imgDel(`files${i}`)}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
                                             </> :
                                             <label htmlFor={`fileInput${i}`}><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
