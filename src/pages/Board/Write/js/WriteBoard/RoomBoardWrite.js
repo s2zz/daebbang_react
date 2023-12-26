@@ -54,11 +54,13 @@ const RoomBoardWrite = ({ loginId }) => {
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
+                console.log(imgUrl.data[0].split("/uploads/board/")[1]);
                 const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
                     setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
+                    console.log(range.index);
                     editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
                 }
 
@@ -136,7 +138,7 @@ const RoomBoardWrite = ({ loginId }) => {
 
         if (formData.header === "양도합니다") {
             toggle1();
-        } else if(formData.header==="양도 구합니다"){
+        } else if (formData.header === "양도 구합니다") {
             toggle2();
         }
 
@@ -254,11 +256,25 @@ const RoomBoardWrite = ({ loginId }) => {
             </div>
         );
     }
+   
+    useEffect(() => {
+        const quill = quillRef.current?.getEditor();
+        if(quill){quill.setSelection(quill.getLength(),quill.getLength());} 
+    }, [formData.contents,quillRef.current?.getEditor()])
+    const textChange = (value) => {
+        console.log(value.length)
+        if (value.length> 5000) {
+            alert("최대 5000자까지 작성 가능합니다");
+            setFormData(prev => ({ ...prev}));
+        } else {
+            setFormData(prev => ({ ...prev, contents: value }));
+        }
+    }
 
     return (
         <>
             {toggle1 ? returnModal1(toggle1) : ""}
-            {toggle2 ? returnModal2(toggle2):""}
+            {toggle2 ? returnModal2(toggle2) : ""}
             <div className={style.boardTitle}>양도게시판 글 작성</div>
             <hr></hr>
             <div className={style.titleBox}>
@@ -307,11 +323,9 @@ const RoomBoardWrite = ({ loginId }) => {
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents}
-                        onChange={(value) => {
-                            if (value.length > 5000) {
-                                alert("최대 5000자까지 작성 가능합니다");
-                            } else {
-                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                        onChange={(value, delta, source) => {
+                            if (source === "user") {
+                                textChange(value)
                             }
                         }}
                     />
