@@ -70,13 +70,17 @@
 }
 
 .testBtn {
-    background-color: white;
-    color:black;
+    border-radius: 5px;
+    background-color: #8faadc;
+    border:none;
+    color:white;
+    font-family: "NanumBarunGothicLight";
+    width:120px;
+    height:40px;
 }
 
 .testBtn:hover {
-    background-color: black;
-    color:white;
+    cursor: pointer;
 }
 
 .btnBox {
@@ -89,13 +93,13 @@
 .signUpBtn {
     width:200px;
     height:80px;
-    background-color: black;
+    background-color: #326CF9;
     color:white;
     font-size:12pt;
+    border-radius: 5px;
+    border: none;
 }
 
 .signUpBtn:hover {
     cursor:pointer;
-    background-color:rgb(48, 48, 48);
-    color:white;
 }

@@ -59,22 +59,16 @@ const ChangePw = () => {
                     });
                 } else {
                     Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
                         text: "변경할 비밀번호를 다시 한 번 확인해주세요",
                     });
                 }
             } else {
                 Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
                     text: "비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.",
                 });
             }
         }).catch(resp => {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "비밀번호를 다시 확인해주세요.",
             });
         });
@@ -102,23 +96,17 @@ const ChangePw = () => {
                     });
                 } else {
                     Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
                         text: "변경할 비밀번호를 다시 한 번 확인해주세요",
                     });
                 }
             } else {
                 Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
                     text: "비밀번호는 8글자 이상의 영문, 숫자, 특수문자로 이루어져야합니다.",
                 });
             }
 
         }).catch(resp => {
             Swal.fire({
-                icon: "error",
-                title: "Oops...",
                 text: "비밀번호를 다시 확인해주세요.",
             });
         });

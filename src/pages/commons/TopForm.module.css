@@ -16,7 +16,6 @@
     width: 226px;
     height: 79px;
     text-align: center;
-    line-height: 130px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,7 +75,7 @@
     box-sizing: border-box;
 }
 .depth2_bx > a {
-    z-index: 9999;
+    z-index: 999;
     line-height: 16px;
     font-size: 13px;
     color: rgb(0, 0, 0);

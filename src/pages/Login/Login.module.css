@@ -13,7 +13,7 @@
 }
 
 .loginBox{
-    border:1px solid black;
+    border:1px solid rgb(231, 231, 231);
     width:50%;
     height:100%;
 }
@@ -53,15 +53,16 @@
     width:200px;
     height:80px;
     border-radius: 5px;
-    background-color: black;
+    background-color: #326CF9;
     color:white;
+    border:none;
     font-family: "NanumBarunGothicBold";
     font-size:12pt;
 }
 
 .loginBtn:hover {
     cursor:pointer;
-    background-color:rgb(48, 48, 48);
+    background-color:#6994ff;
     color:white;
 }
 
@@ -89,7 +90,7 @@
 .estateLoginBox {
     width:50%;
     height:100%;
-    border: 1px solid black;
+    border: 1px solid rgb(231, 231, 231);
 }
 
 
@@ -100,6 +101,7 @@
     justify-content: center;
     align-items: center;
     height:100%;
+    padding:30px;
 }
 
 .adminTitle {
@@ -123,12 +125,14 @@
 
 .adminBtn {
     font-family: "NanumBarunGothicLight";
-    background-color: black;
+    background-color: #326CF9;
+    border:none;
+    border-radius: 5px;
     color:white;
 }
 
 .adminBtn:hover {
-    background-color: white;
-    color:black;
+    background-color: #6994ff;
+    color:white;
     cursor: pointer;
 }
