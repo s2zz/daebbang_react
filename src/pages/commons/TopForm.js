@@ -7,6 +7,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import logo from "../Enrollment/assets/logo2.png";
 import axios from 'axios';
+import style1 from "../commons/Modal.module.css";
+import {Modal, ModalBody, } from 'reactstrap';
 
 const TopForm = ({ setLoginId }) => {
 
@@ -16,6 +18,10 @@ const TopForm = ({ setLoginId }) => {
     const storedLoginId = sessionStorage.getItem('loginId');
     const isAdmin = sessionStorage.getItem('isAdmin');
     const isEstate = sessionStorage.getItem('isEstate');
+
+    const [modal3, setModal3] = useState(false);
+
+    const toggle3 = () => setModal3(!modal3);
     const handleLogout = () => {
         axios.get("/api/member/logout").then(resp => {
             console.log("로그아웃 완료");
@@ -44,12 +50,10 @@ const TopForm = ({ setLoginId }) => {
         }
     }, [isEstate, storedLoginId, location.pathname]);
 
-    const handleready = () =>{
-        alert("준비중인 기능입니다.")
-    }
+    
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            {reviewCount}개의 확인하지 않은<br/> 문의가 있습니다!
+            {reviewCount}개의 확인하지 않은<br /> 문의가 있습니다!
         </Tooltip>
     );
     return (
@@ -68,10 +72,32 @@ const TopForm = ({ setLoginId }) => {
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                            <a href="#" onClick={handleready}><Button><span>투룸</span></Button> </a>
+                            <a href="#"><Button onClick={toggle3}><span>투룸</span></Button> </a>
+                            <div>
+                                <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
+                                    <ModalBody className={style1.alertBody}>
+                                        <p className={style1.alertContents}>준비중인 기능입니다.</p>
+                                        <br></br>
+                                        <Button color="primary" className={style1.alertBtn} onClick={toggle3}>
+                                            확인
+                                        </Button>{' '}
+                                    </ModalBody>
+                                </Modal>
+                            </div>
                         </li>
                         <li className={style.has_d2}>
-                            <a href="#" onClick={handleready}><Button><span>오피스텔</span></Button> </a>
+                            <a href="#"><Button onClick={toggle3}><span>오피스텔</span></Button> </a>
+                            <div>
+                                <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
+                                    <ModalBody className={style1.alertBody}>
+                                        <p className={style1.alertContents}>준비중인 기능입니다.</p>
+                                        <br></br>
+                                        <Button color="primary" className={style1.alertBtn} onClick={toggle3}>
+                                            확인
+                                        </Button>{' '}
+                                    </ModalBody>
+                                </Modal>
+                            </div>
                         </li>
                         <li className={style.has_d2}>
                             <a href="/board"><Button><span>게시판</span></Button> </a>
@@ -96,10 +122,10 @@ const TopForm = ({ setLoginId }) => {
                                             : <a href="/myPage">마이페이지</a>}
                                         {isEstate ?
                                             <>
-                                                <a href="/estateManage">매물관리 {isEstate && reviewCount !== 0 && 
-                                                (<OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
-                                                    <Button sx={{ ml: 5 }}>{reviewCount}</Button>
-                                                </OverlayTrigger>)}</a>
+                                                <a href="/estateManage">매물관리 {isEstate && reviewCount !== 0 &&
+                                                    (<OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                                                        <Button sx={{ ml: 5 }}>{reviewCount}</Button>
+                                                    </OverlayTrigger>)}</a>
                                             </>
                                             : ""}
                                         <a href="#" onClick={handleLogout}>로그아웃</a>

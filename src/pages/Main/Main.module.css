@@ -108,7 +108,7 @@
 
 .overlay_text {
     position: absolute;
-    top: 10%;
+    top: 18%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
@@ -124,38 +124,116 @@
 }
 .home_body_map_search {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 360px;
-    height: 100px;
-    border: 1px solid #d9d9d9;
+    top: 30%;
+    left: 50%;
+    width: 550px;
+    height: 70px;
     box-sizing: border-box;
-    max-height: calc(100% - 40px);
     z-index: 100;
-    background-color: rgb(255, 255, 255);
+    transform: translate(-50%, -50%);
+}
+.search_list_box {
+    position: absolute;
+    max-height: 400px;
+    width: 493px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    top: 34%;
+    left: 36.2%;
+    background-color: #fff;
+    z-index: 101;
+    display: none;
+    overflow-y: auto;
 }
 .search_box {
     margin: 10px;
-    width: 340px;
-    height: 30px;
-    border: 1px solid rgb(250, 136, 11);
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgb(50, 108, 249);
     border-radius: 4px;
     overflow: hidden;
     position: relative;
+    font-size: 18px;
 }
+.search_box input {
+    padding-left: 30px;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: none;
+}
+.search_box button {
+    border: 1px solid #000;
+    position: absolute;
+    right: 11%;
+    background-color: #fff;
+    border: none;
+    height: 100%;
+    line-height: 70px;
+    cursor: pointer;
+    font-size: 16px;
+    display: none;
+}
+
 .search_icon {
-    border: 1px solid rgb(250, 136, 11);
+    border: 1px solid rgb(50, 108, 249);
     border-left: none;
     width: 10%;
-    height: 29px;
-    line-height: 29px;
+    height: 100%;
+    line-height: 70px;
     text-align: center;
     border: none;
-    background-color: rgb(250, 136, 11);
-    ;
+    background-color: rgb(50, 108, 249);
     position: absolute;
     top: 0;
     right: 0;
     color: #fff;
     cursor: pointer;
+}
+.recent{
+    position: absolute;
+    top: 516px;
+    right: 20px;
+    bottom: 0px;
+    z-index: 1;
+    margin-top: 174px;
+}
+.recentbox{
+    position: sticky;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 80px;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgb(51, 51, 51);
+    letter-spacing: -0.3px;
+}
+.saw_estate{
+    margin-top: 8px;
+    border: 1px solid rgb(221, 221, 221);
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    font-weight: 500;
+}
+
+
+.search_list_box div {
+    border-bottom: 1px solid #d9d9d9;
+    height: 63px;
+    padding: 13px 10px 0;
+    font-size: 10px;
+    color: #444;
+    cursor: pointer;
+}
+
+.search_list_box div:hover {
+    background-color: #d9d9d9;
+}
+
+.search_list_box div span {
+    font-size: 12px;
+    color: #444;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
 }
