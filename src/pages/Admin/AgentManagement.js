@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import axios from 'axios';
 import Loading from '../commons/Loading';
@@ -131,6 +131,9 @@ const AgentManagement = () => {
             rowsPerPageOptions={[contacts.length]} // 페이지 옵션도 데이터 길이로 설정
             // rowsPerPageOptions={[10, 20, 50]}
             getRowId={(row) => row.email}
+            slots={{
+              toolbar: GridToolbar,
+            }}
           />
         </div>
       )}
