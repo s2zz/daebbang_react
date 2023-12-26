@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import axios from 'axios';
 import style from "./MemberManagement.module.css";
@@ -115,6 +115,9 @@ const MemberManagement = () => {
             pageSize={contacts.length}
             rowsPerPageOptions={[contacts.length]}
             getRowId={(row) => row.id}
+            slots={{
+              toolbar: GridToolbar,
+            }}
           />
         </div>
       )}
