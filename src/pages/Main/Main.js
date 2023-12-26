@@ -1,12 +1,11 @@
 import style from "./Main.module.css"
+import search from "../Home/OneRoom/assets/search.png"
 import homeimg from "../Enrollment/assets/homeimg.jpg";
 import React, { useEffect, useState, useRef } from 'react';
-import { Routes, Route,Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Footer from "../commons/Footer";
 import ItemsCarousel from 'react-items-carousel';
-import Info from "../Home/OneRoom/Info/Info";
-import List from "../Home/OneRoom/List/List";
 
 const Main = () => {
   const [freeboard, setfreeBoard] = useState([]);
@@ -15,6 +14,7 @@ const Main = () => {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const chevronWidth = 40;
   const [watch, setwatch] = useState([]);
+  const [imageList,setImageList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [zoomLevel, setZoomLevel] = useState(6);
   const searchListBoxRef = useRef(null);
@@ -42,6 +42,7 @@ const Main = () => {
     }
   }, [zoomLevel]);
   const { kakao } = window;
+
   useEffect(() => {
     axios.get(`/api/map/getLimitAll`).then((resp) => {
       setMapList(resp.data);
@@ -59,6 +60,22 @@ const Main = () => {
     else {
       axios.get(`/api/map/getWatchAll/${recent}`).then(resp => {
         setwatch(resp.data);
+        console.log(resp.data);
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+  }, []);
+  useEffect(() => {
+    const storedData = localStorage.getItem('watch');
+    const recent = JSON.parse(storedData);
+    if (recent == null) {
+      return
+    }
+    else {
+      axios.get(`/api/map/getImageAll/${recent}`).then(resp => {
+        setImageList(resp.data);
+        console.log(resp.data);
       }).catch(err => {
         console.log(err);
       })
@@ -98,7 +115,7 @@ const Main = () => {
     return freeboard.slice(start, end);
   }
   const handleInputChange = (event) => {
-    // 받은 데이터의 길이 (2글자 이상인지 체크하기 위한거임)
+    // 받은 데이터의 길이 (2글자 이상인지 체크)
     const inputValue = event.target.value;
     setSearchValue(inputValue);
 
@@ -283,21 +300,57 @@ const Main = () => {
 
   return (
     <div className={style.container}>
-      <div className={style.recent}>
+      {watch.length > 0 ? <div className={style.recent}>
         <div className={style.recentbox}>
           <div className={style.saw_estate}>
-            <div>
+            <div className={style.sawdiv}>
               최근 본 매물
+              <hr />
             </div>
-            <div>
-              △
-            </div>
-            <div>
-              ▽
-            </div>
+            <ItemsCarousel
+              requestToChangeActive={setActiveItemIndex}
+              activeItemIndex={activeItemIndex}
+              numberOfCards={1}
+              gutter={10}
+              leftChevron={<button
+                style={{
+                  backgroundColor: "transparent",
+                  color: "black",
+                  fontSize: "15px",
+                  border: "none",
+                  transform: "scaleX(1.1)",
+                  marginRight: "5px",
+                }}
+              >{'<'}</button>}
+              rightChevron={<button
+                style={{
+                  backgroundColor: "transparent",
+                  color: "black",
+                  fontSize: "15px",
+                  border: "none",
+                  transform: "scaleX(1.1)",
+                  marginLeft:"5px"
+                }}
+              >{'>'}</button>}
+              outsideChevron={false}
+              chevronWidth={chevronWidth}
+            >
+              {imageList.map((e, i) => {
+                  return (
+                      <div className={style.imagediv} >
+                      <img
+                      src={`/uploads/estateImages/${e}`}
+                      alt="Estate"
+                    />
+                      </div>
+                  );
+                })}
+
+            </ItemsCarousel>
           </div>
         </div>
-      </div>
+      </div> : <></>}
+
 
       <div className={style.imgbox}>
         <img className={style.homeimg} src={homeimg} alt="..." />
@@ -316,7 +369,14 @@ const Main = () => {
             <button>X</button>
 
             {/* 아이콘 */}
-            <div className={style.search_icon}>ㅇ</div>
+            <div className={style.search_icon}>
+                <img
+                  style={{ maxHeight: "25px" }}
+                  src={search}
+                  alt="exam icon"
+                />
+              </div>
+
           </div>
         </div>
 
@@ -335,13 +395,13 @@ const Main = () => {
               {
                 mapList.map((e, i) => {
                   return (
-                    <Link key={i} to={`#`} style={{ textDecoration: "none", color: "black" }} >
+                    <Link key={i} to={`/home/oneroom/info`} style={{ textDecoration: "none", color: "black" }} >
                       <div className={style.cbgdiv} >
                         <span className={style.fontcss}>
-                          [{e.address2.length > 7 ? e.address2.substring(0, 7) : e.address2}]
+                          [{e.address2.length > 7 ? e.address2.substring(0, 7)  : e.address2 }]
                         </span>
                         <span className={style.fontcss}>
-                          {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
+                          {e.title.length > 7 ?  e.title.substring(0, 7) + "..." :  e.title}
                         </span>
                         <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.substring(0, 10)}</span>
                       </div>
