@@ -12,7 +12,8 @@
 .alertContents{
     margin: 0px;
     font-family: "NanumBarunGothic";
-
+    max-width: 420px;
+    word-wrap: break-word;
 }
 .alertBtn{
     font-size: small;

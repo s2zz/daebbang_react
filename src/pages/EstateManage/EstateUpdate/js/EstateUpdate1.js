@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button } from 'reactstrap';
 import Post from '../../js/Post';
 import style from '../css/EstateUpdate.module.css';
 
@@ -13,14 +12,6 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
     address1: '',
     address2: ''
   });
-
-  // 주소 검색 팝업
-  const [popup, setPopup] = useState(false);
-
-  // 주소 검색 팝업창 열기/닫기
-  const handleComplete = (data) => {
-    setPopup(!popup);
-  }
 
   useEffect(() => {
     setRealEstate(prev => ({
@@ -119,12 +110,11 @@ function EstateUpdate1({ realEstate, setRealEstate }) {
               <td>
                 <div>
                   <div>
-                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} readOnly /><Button className={style.estateBtn} onClick={handleComplete}>우편번호 찾기</Button>
+                    <input type="text" placeholder="우편번호" name="zipcode" onChange={handleChange} value={realEstate.zipcode} readOnly /><Post company={enroll_company} setcompany={setEnroll_company}></Post>
                   </div>
                   <div>
                     <input type="text" placeholder="주소" name="address1" onChange={handleChange} value={realEstate.address1} readOnly />
                   </div>
-                  {popup && <Post company={enroll_company} setcompany={setEnroll_company}></Post>}
                 </div>
               </td>
             </tr>
