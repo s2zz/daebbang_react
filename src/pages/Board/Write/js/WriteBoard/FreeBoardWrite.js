@@ -46,12 +46,12 @@ const FreeBoardWrite = ({loginId}) => {
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
-                console.log(imgUrl)
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
-                    editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
+                    let sysName = imgUrl.data[i].split("/uploads/board/")[1];
+                    setSysNameList(prev => [...prev, sysName]);
+                    editor.insertEmbed(range.index, 'image', "/uploads/board/"+encodeURIComponent(sysName));
                 }
 
             } catch (error) {
@@ -169,15 +169,6 @@ const FreeBoardWrite = ({loginId}) => {
         "image",
     ];
 
-    const handleKeyDown = (e) => {
-        const currentContent = quillRef.current?.getEditor()?.root.innerHTML;
-        
-        if(currentContent.length>5000){
-            alert("최대 5000자까지 입력할 수 있습니다");
-            e.preventDefault();
-        }
-    }
-
     return (
         <>
             <div className={style.boardTitle}>자유게시판 글 작성</div>
@@ -218,10 +209,10 @@ const FreeBoardWrite = ({loginId}) => {
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents.slice(0,5000)}
-                        onKeyDown={handleKeyDown}
                         onChange={(value) => {
                             if (value.length > 5000) {
-                                alert("최대 5000자까지 작성 가능합니다");
+                                alert("작성 가능한 글자 수 범위를 초과하였습니다.");
+                                setFormData(prev=>({...prev}));
                             } else {
                                 setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
                             }

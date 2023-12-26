@@ -59,9 +59,9 @@ const RoomBoardWrite = ({ loginId }) => {
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
-                    console.log(range.index);
-                    editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
+                    let sysName = imgUrl.data[i].split("/uploads/board/")[1];
+                    setSysNameList(prev => [...prev, sysName]);
+                    editor.insertEmbed(range.index, 'image', "/uploads/board/"+encodeURIComponent(sysName));
                 }
 
             } catch (error) {
@@ -256,20 +256,6 @@ const RoomBoardWrite = ({ loginId }) => {
             </div>
         );
     }
-   
-    useEffect(() => {
-        const quill = quillRef.current?.getEditor();
-        if(quill){quill.setSelection(quill.getLength(),quill.getLength());} 
-    }, [formData.contents,quillRef.current?.getEditor()])
-    const textChange = (value) => {
-        console.log(value.length)
-        if (value.length> 5000) {
-            alert("최대 5000자까지 작성 가능합니다");
-            setFormData(prev => ({ ...prev}));
-        } else {
-            setFormData(prev => ({ ...prev, contents: value }));
-        }
-    }
 
     return (
         <>
@@ -323,11 +309,15 @@ const RoomBoardWrite = ({ loginId }) => {
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents}
-                        onChange={(value, delta, source) => {
-                            if (source === "user") {
-                                textChange(value)
+                        onChange={(value) => {
+                            console.log(value.length);
+                            if (value.length > 5000) {
+                                alert("작성 가능한 글자 수 범위를 초과하였습니다.");
+                                setFormData(prev=>({...prev}));
+                            } else {
+                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
                             }
-                        }}
+                        }} 
                     />
                 </div>
             </div>
