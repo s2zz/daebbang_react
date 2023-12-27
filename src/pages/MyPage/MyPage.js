@@ -64,6 +64,12 @@ const Review = () => {
         <div>
             {loading ? <Loading></Loading> :
                 <div className={style.ReviewContainer}>
+                    <div className={style.reviewTopics}>
+                        <div className={style.reviewImage}>매물 이미지</div>
+                        <div className={style.reviewAddress}>매물 주소</div>
+                        <div className={style.reviewInfo}>매물 정보</div>
+                        <div className={style.reviewApproval}>승인 여부</div>
+                    </div>
                     {sawEstate.length > 0 ?
                         <div>
                             {sawEstate.map((e, i) => {
@@ -105,6 +111,12 @@ const Report = () => {
         <div>
             {loading ? <Loading></Loading> :
                 <div className={style.ReportContainer}>
+                    <div className={style.reviewTopics}>
+                        <div className={style.reportEstate}>공인중개사</div>
+                        <div className={style.reportSubject}>신고 주제</div>
+                        <div className={style.reportInfo}>신고 정보</div>
+                        <div className={style.reportApproval}>승인 여부</div>
+                    </div>
                     {myReport.length > 0 ?
                         <div>
                             {myReport.map((e, i) => {
