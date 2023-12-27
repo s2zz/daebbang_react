@@ -6,14 +6,14 @@ import ReviewBoard from './Board/ReviewBoard/ReviewBoard';
 import ReviewBoardContents from './Board/ReviewBoardContents/ReviewBoardContents';
 
 
-const Review = () => {
+const Review = ({loginId, admin}) => {
     return (
         <div className={style.container}>
             <Routes>
                 <Route path="/writeReview" element={<WriteReview/>}></Route>
                 <Route path="/editReview" element={<EditReview/>}></Route>
                 <Route path="/boardReview" element={<ReviewBoard/>}></Route>
-                <Route path="/boardContentsReview" element={<ReviewBoardContents/>}></Route>
+                <Route path="/boardContentsReview" element={<ReviewBoardContents  loginId={loginId} Admin={admin}/>}></Route>
             </Routes>
         </div>
     );

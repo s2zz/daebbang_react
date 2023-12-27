@@ -4,7 +4,7 @@ import notFavorite from '../../assets/notFavorite.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-const ReviewBoardContents = () => {
+const ReviewBoardContents = ({loginId, admin}) => {
     const maxScore = 5;
     const location = useLocation();
     const navi = useNavigate();
@@ -43,7 +43,7 @@ const ReviewBoardContents = () => {
                     리뷰 작성자 : {review.anonymous ? "익명" : review.id}  | 중개사무소 : {review.estate ? review.estate.realEstateAgent.estateName : ""} | 날짜 {review.writeDate ? review.writeDate.split("T")[0] : ""}
                 </div>
                 <div>
-                    <button onClick={() => { delReview() }}>삭제</button>
+                    {loginId===review.id || admin ? <button onClick={() => { delReview() }}>삭제</button> : ""}
                 </div>
             </div>
             <div className={style.boardContentsDiv}>
@@ -80,7 +80,7 @@ const ReviewBoardContents = () => {
             </div>
             <div className={style.btns}>
                 <Link to="/review/boardReview"><button className={style.backBtn}>뒤로가기</button></Link>
-                <Link to="/review/editReview" state={{seq:seq}}><button className={style.editBtn}>수정</button></Link>
+                {loginId===review.id || admin ? <Link to="/review/editReview" state={{seq:seq}}><button className={style.editBtn}>수정</button></Link> : ""}
             </div>
 
         </>
