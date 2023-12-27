@@ -48,8 +48,17 @@
 }
 
 .inputInfo {
-    width:200px;
-    height:30px;
+    width: 200px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #000000; /* 이 색은 grey[500]에 해당합니다 */
+    background: #fff;
+    border: 1px solid #B0B8C4; /* 이 색은 grey[400]에 해당합니다 */
+    box-shadow: 0px 2px 2px #E5EAF2;
     margin-left:10px;
 }
 

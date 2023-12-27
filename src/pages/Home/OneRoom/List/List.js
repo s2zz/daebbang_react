@@ -6,6 +6,8 @@ import axios from "axios";
 //
 import Info from "../Info/Info";
 import turn from "../assets/turn.PNG";
+import plzZoom from "../assets/plzZoom.png";
+import emptyBox from "../assets/emptyBox.png"
 
 //
 import style from "./List.module.css";
@@ -15,7 +17,7 @@ function List({ onDragEnd, listReady }) {
   const location = useLocation();
 
   // 전달된 데이터 추출
-  const { markersInBounds } = location.state || {};
+  const { markersInBounds, zoomLevel } = location.state || {};
 
   // 작성자(공인중개사) 매너온도 가져오기
   const [markerSize, setMarkerSize] = useState("");
@@ -112,71 +114,111 @@ function List({ onDragEnd, listReady }) {
   return (
     <div className={style.list_main}>
       <div className={style.list_cnt}>
-        지역 목록 {markerSize ? `${markerSize}개` : ""}
+        {zoomLevel <= 9 ? (
+          <div>지역 목록 {markerSize ? `${markerSize}개` : ""}</div>
+        ) : (
+          <div>지도를 확대해주세요.</div>
+        )}
         <span className={style.unit_change}>
           <div>{/* <img src={turn} /> */}</div>
         </span>
       </div>
 
-      {listReady &&
-        (markersInBounds && markersInBounds.length > 0 ? (
-          markersInBounds.map((marker, index) => (
-            <div
-              key={index}
-              className={style.list_box}
-              onClick={() => handleMarkerClick(marker)}
-            >
-              <div className={style.list_box_img}>
-                {marker.images &&
-                  marker.images.length > 0 &&
-                  marker.images[0].sysName && (
-                    <img
-                      src={`/uploads/estateImages/${marker.images[0].sysName}`}
-                      alt="Estate"
-                    />
-                  )}
-              </div>
+      {zoomLevel <= 9 ? (
+        <div className={style.list_default_size}>
+          {listReady &&
+            (markersInBounds && markersInBounds.length > 0 ? (
+              markersInBounds.map((marker, index) => (
+                <div
+                  key={index}
+                  className={style.list_box}
+                  onClick={() => handleMarkerClick(marker)}
+                >
+                  <div className={style.list_box_img}>
+                    {marker.images &&
+                      marker.images.length > 0 &&
+                      marker.images[0].sysName && (
+                        <img
+                          src={`/uploads/estateImages/${marker.images[0].sysName}`}
+                          alt="Estate"
+                        />
+                      )}
+                  </div>
 
-              <div className={style.list_box_text}>
-                <div className={style.list_box_top}>
-                  {mannersTemperatureList[index] &&
-                    mannersTemperatureList[index].mannersTemperature >= 45 && (
-                      <span
-                        style={{ fontWeight: "bold" }}
-                        className={style.recommend}
-                      >
-                        추천
-                      </span>
-                    )}
-                  {marker.structure.structureType}
-                  {marker.structureType}
+                  <div className={style.list_box_text}>
+                    <div className={style.list_box_top}>
+                      {mannersTemperatureList[index] &&
+                        mannersTemperatureList[index].mannersTemperature >=
+                          40 && (
+                          <span
+                            style={{ fontWeight: "bold" }}
+                            className={style.recommend}
+                          >
+                            추천
+                          </span>
+                        )}
+                      {marker.structure.structureType}
+                      {marker.structureType}
+                    </div>
+                    <div className={style.list_title}>
+                      {marker.transaction.transactionType}{" "}
+                      {marker.deposit === 0
+                        ? `${formatPrice(marker.price)}`
+                        : `${formatPrice(marker.deposit)} / ${formatPrice(
+                            marker.price
+                          )}`}
+                    </div>
+                    <div className={style.list_subtitle}>
+                      {marker.area}평{" "}
+                      {marker.roomFloors === -1
+                        ? "반지하"
+                        : marker.roomFloors === 0
+                        ? "옥탑"
+                        : `${marker.roomFloors}층`}
+                    </div>
+                    <div className={style.list_subtitle}>{marker.address2}</div>
+                    <div className={style.list_simple}>{marker.title}</div>
+                  </div>
                 </div>
-                <div className={style.list_title}>
-                  {marker.transaction.transactionType}{" "}
-                  {marker.deposit === 0
-                    ? `${formatPrice(marker.price)}`
-                    : `${formatPrice(marker.deposit)} / ${formatPrice(
-                        marker.price
-                      )}`}
+              ))
+            ) : (
+              <div className={style.noData}>
+                <div className={style.noData_content}>
+                  <div>
+                    <img
+                      src={emptyBox}
+                      style={{
+                        height: "40px",
+                        width: "40px",
+                        marginBottom: "7px",
+                      }}
+                    ></img>
+                  </div>
+                  <div className={style.message_content_text} style={{fontSize:"18px", fontWeight:"bold", marginBottom:"2px"}}>
+                    검색조건에 맞는 방이 없습니다.
+                  </div>
+                  <div className={style.message_content_text}>
+                    지도를 움직이거나, 필터를 재설정 해보세요.
+                  </div>
                 </div>
-                <div className={style.list_subtitle}>
-                  {marker.area}평{" "}
-                  {marker.roomFloors === -1
-                    ? "반지하"
-                    : marker.roomFloors === 0
-                    ? "옥탑"
-                    : `${marker.roomFloors}층`}
-                </div>
-                <div className={style.list_subtitle}>{marker.address2}</div>
-                <div className={style.list_simple}>{marker.title}</div>
               </div>
+            ))}
+        </div>
+      ) : (
+        <div className={style.message}>
+          <div className={style.message_content}>
+            <div>
+              <img
+                src={plzZoom}
+                style={{ height: "40px", width: "40px", marginBottom: "7px" }}
+              ></img>
             </div>
-          ))
-        ) : (
-          <div className={style.noData}>
-            검색된 데이터가 없습니다. 곧 꾸밀거긩 ㅋ
+            <div className={style.message_content_text}>
+              원룸 매물을 보려면 지도를 더 확대해주세요.
+            </div>
           </div>
-        ))}
+        </div>
+      )}
 
       <Routes>
         <Route path="info" element={<Info />} />

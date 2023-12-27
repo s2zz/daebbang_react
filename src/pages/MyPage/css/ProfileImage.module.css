@@ -1,4 +1,4 @@
-.delContainer {
+.chaContainer {
     margin:auto;
     border: 1px solid  rgb(231, 231, 231);
     width:800px;
@@ -40,45 +40,51 @@
 }
 
 .inputBox {
+    margin-top:50px;
+    margin-bottom:50px;
+    width:100%;
+    display: flex;
+    justify-content: center;
     font-family: "NanumBarunGothic";
-    display: flex;
-    justify-content: center;
-    margin-top:50px;
 }
 
-.inputInfo {
-    width: 200px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.5;
-    padding: 8px 12px;
-    border-radius: 8px;
-    color: #000000; /* 이 색은 grey[500]에 해당합니다 */
-    background: #fff;
-    border: 1px solid #B0B8C4; /* 이 색은 grey[400]에 해당합니다 */
-    box-shadow: 0px 2px 2px #E5EAF2;
-}
-
-.delBtns {
-    display: flex;
-    justify-content: center;
-    margin-top:50px;
+.changeBtns {
+    font-family: "NanumBarunGothic";
     margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
 }
 
-.delBtn {
+.changeBtn {
     width:150px;
     height:50px;
     background-color: white;
     color:black;
-    font-family: "NanumBarunGothic";
     border-radius: 5px;
     border: 1px solid  rgb(231, 231, 231);
 }
 
-.delBtn:hover {
+.changeBtn:hover {
     cursor: pointer;
     background-color: #326CF9;
     color:white;
+}
+
+.imagePreviews {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 350px;
+}
+
+.imagePreviews img {
+    width: 60%;
+    height: 100%;
+}
+
+.inputDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -196,7 +196,6 @@ function EstateUpdate() {
   useEffect(() => {
     axios.get(`/api/estateManage/estateInfo/${estateId}`)
       .then(resp => {
-        console.log("Fetched data:", resp.data);
 
         setRealEstate({
           roomCode: resp.data.room.roomId,
