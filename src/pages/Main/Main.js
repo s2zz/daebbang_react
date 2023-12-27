@@ -353,7 +353,7 @@ const Main = () => {
                   <div key={i} onClick={() => handleImageClick(i)} className={style.imagediv}  >
                     <img
                       className={style.sawImage}
-                      src={`/uploads/estateImages/${e}}`}
+                      src={`/uploads/estateImages/${e}`}
                       alt="Estate"
                     />
                   </div>
