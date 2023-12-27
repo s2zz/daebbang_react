@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import style from './FindPw.module.css';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 function FindPw() {
   const [findPw, setfindPw] = useState({ id: "", email: "" });
@@ -21,16 +22,21 @@ function FindPw() {
           formData.append("email", findPw.email);
           axios.post("/api/mail/findPw", formData).then(resp => {
             if (resp.data == 0) {
-              alert("일치하는 정보가 없습니다.");
+              Swal.fire({
+                text: "일치하는 정보가 없습니다"
+              });
             } else {
-              alert("입력하신 이메일로 임시번호를 발송했습니다.");
+              Swal.fire({
+                text: "입력하신 이메일로 임시 비밀번호가 전송되었습니다"
+              });
             }
             setfindPw({ id: "", email: "" });
-            console.log(resp);
           })
        
       } else {
-        alert('빈칸을 입력해주세요');
+        Swal.fire({
+          text: "모든 항목을 입력해주세요"
+        });
       }
     }
   };
@@ -41,16 +47,21 @@ function FindPw() {
         formData.append("email", findPw.email);
         axios.post("/api/mail/findPw", formData).then(resp => {
           if (resp.data == 0) {
-            alert("일치하는 정보가 없습니다.");
+            Swal.fire({
+              text: "일치하는 정보가 없습니다"
+            });
           } else {
-            alert("입력하신 이메일로 임시번호를 발송했습니다.");
+            Swal.fire({
+              text: "입력하신 이메일로 임시 비밀번호가 전송되었습니다"
+            });
           }
           setfindPw({ id: "", email: "" });
-          console.log(resp);
         })
       
     } else {
-      alert('빈칸을 입력해주세요');
+      Swal.fire({
+        text: "모든 항목을 입력해주세요"
+      });
     }
   }
 
