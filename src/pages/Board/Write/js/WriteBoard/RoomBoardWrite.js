@@ -7,7 +7,6 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import mStyle from "../../../../commons/Modal.module.css";
 
 const RoomBoardWrite = ({ loginId }) => {
     const navi = useNavigate();

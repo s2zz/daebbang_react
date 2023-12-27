@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Swal from 'sweetalert2'
 
 const EditReview = () => {
 
@@ -153,13 +152,9 @@ const EditReview = () => {
 
     /*리뷰 쓰기 권한 없을 시*/
     const refuseWrite = () => {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "리뷰 작성 권한이 없습니다",
-        }).then(() => {
-            navi("/");
-        });
+        alert("리뷰 작성 권한이 없습니다");
+        navi("/");
+        return;
     }
 
 
