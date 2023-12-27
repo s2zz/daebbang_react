@@ -23,7 +23,7 @@ const ReviewBoard = () => {
         axios.get(`/api/review/reviewByAgent/${realEstateNumber}`).then(resp => {
             setBoard(resp.data.sort(compareBySeq));
             console.log(resp.data);
-        }).catch(err=>{
+        }).catch(err => {
             console.log(err);
         })
     }, [realEstateNumber]);
@@ -34,13 +34,17 @@ const ReviewBoard = () => {
             <div key={i}>
                 <div>{e.estateId}</div>
                 <div>{e.anonymous ? "익명" : e.id}</div>
+
                 <div>
-                    {
-                        e.estate 
-                        ? e.estate.title.length>20 ? e.estate.title.substring(0,20) + "..." : e.estate.title
-                        : ""
-                    }
+                    <Link to="/review/boardContentsReview" state={{seq:e.seq}}>
+                        {
+                            e.estate
+                                ? e.estate.title.length > 20 ? e.estate.title.substring(0, 20) + "..." : e.estate.title
+                                : ""
+                        }
+                    </Link>
                 </div>
+
                 <div>{e.estate ? e.estate.address2 : ""}</div>
                 <div>{e.writeDate.split("T")[0]}</div>
             </div>
@@ -84,9 +88,9 @@ const ReviewBoard = () => {
                     <div>지역</div>
                     <div>날짜</div>
                 </div>
-                { <div className={style.boardListContents}>
+                {<div className={style.boardListContents}>
                     {board.map(boardItem)}
-                </div> }
+                </div>}
             </div>
             <div className={style.naviFooter}>
                 <Pagination count={Math.ceil(board.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />

@@ -139,9 +139,9 @@ const WriteReview = () => {
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>
                     <hr></hr>
-                    <div>
+                    <div className={style.anonymousInfo}>
                         <div>아이디 표시<span>*</span> &nbsp;| </div>
-                        <div><input type="radio" name="anonymous" value="true" onChange={handleChange}/>익명<input type="radio"name="anonymous" value="false" onChange={handleChange}/>실명</div>
+                        <div><input type="radio" name="anonymous" value="true" onChange={handleChange}/><span>익명</span><input type="radio"name="anonymous" value="false" onChange={handleChange}/><span>실명</span></div>
                     </div>
                     <div className={style.scoreInfo}>
                         <div>별점<span>*</span> &nbsp;| </div>

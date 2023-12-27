@@ -110,7 +110,7 @@ const EditReview = () => {
         console.log(formData.files);
         const submitFormData = new FormData();
         submitFormData.append("traffic", formData.traffic);
-        submitFormData.append("anonymous",formData.anonymous);
+        submitFormData.append("anonymous", formData.anonymous);
         submitFormData.append("surroundings", formData.surroundings);
         submitFormData.append("facility", formData.facility);
         submitFormData.append("score", totalScore);
@@ -170,14 +170,13 @@ const EditReview = () => {
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
                     <hr></hr>
-                    <div>
+                    <div className={style.anonymousInfo}>
                         <div>아이디 표시<span>*</span> &nbsp;| </div>
                         <div>
                             {formData.anonymous
-                                ? <><input type="radio" name="anonymous" value="true" onChange={handleChange} checked/>익명<input type="radio" name="anonymous" value="false" onChange={handleChange} />실명</>
-                                : <><input type="radio" name="anonymous" value="true" onChange={handleChange}/>익명<input type="radio" name="anonymous" value="false" onChange={handleChange} checked/>실명</>}
-
-
+                                ? <><input type="radio" name="anonymous" value="true" onChange={handleChange} checked /><span>익명</span><input type="radio" name="anonymous" value="false" onChange={handleChange} /><span>실명</span></>
+                                : <><input type="radio" name="anonymous" value="true" onChange={handleChange} /><span>익명</span><input type="radio" name="anonymous" value="false" onChange={handleChange} checked /><span>실명</span></>
+                            }
                         </div>
                     </div>
                     <div className={style.scoreInfo}>
