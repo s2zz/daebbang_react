@@ -22,6 +22,7 @@ import ScrollToTop from './pages/commons/ScrollToTop';
 
 function App() {
   const storedLoginId = sessionStorage.getItem('loginId');
+  const isEstate = sessionStorage.getItem('isEstate');
   const isAdmin = sessionStorage.getItem('isAdmin');
   //방문자수
   useEffect(() => {
@@ -49,7 +50,7 @@ function App() {
             <Route path="/admin/*" element={isAdmin ? <Admin /> : <Navigate to="/" replace />} />
             <Route path="/enrollment/*" element={<Enrollment />} />
             <Route path="/review/*" element={<Review />} />
-            <Route path="/estateManage/*" element={<EstateManage />} />
+            <Route path="/estateManage/*" element={isEstate ? <EstateManage /> : <Navigate to="/" replace />} />
           </Routes>
         </div>
       </div>
