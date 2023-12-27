@@ -34,6 +34,7 @@ import "./RangeSlider.css";
 
 function OneRoom() {
   const [mapRendered, setMapRendered] = useState(false);
+  const [defaultDataRendered, setDefaultDataRendered] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(6);
   const [zoomLevelRanded, setZoomLevelRanded] = useState(true);
 
@@ -94,6 +95,7 @@ function OneRoom() {
       .then((resp) => {
         setSubwayDefaultList(resp.data.subwayList);
         setSchoolDefaultList(resp.data.schoolList);
+        setDefaultDataRendered(true);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
@@ -220,8 +222,7 @@ function OneRoom() {
 
     // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
     navigate(`/home/oneroom/list?zoom=${map.getLevel()}`, {
-      state: { markersInBounds, zoomLevel: map.getLevel()
-      },
+      state: { markersInBounds, zoomLevel: map.getLevel() },
     });
   };
 
@@ -1839,88 +1840,98 @@ function OneRoom() {
                     ))}
                   </MarkerClusterer>
                 )}
-                {zoomLevel <= 6 &&
-                  subwayDefaultList.map((marker) => (
-                    <>
-                      <MapMarker
-                        position={{
-                          lat: marker.latitude,
-                          lng: marker.longitude,
-                        }}
-                        image={{
-                          src: subway,
-                          size: {
-                            width: 40,
-                            height: 40,
-                          },
-                        }}
-                        onClick={() => moveToMarker(marker)}
-                      />
-                      <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                        // 커스텀 오버레이가 표시될 위치입니다
-                        position={{
-                          lat: marker.latitude,
-                          lng: marker.longitude,
-                        }}
-                      >
-                        {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                        <div
-                          className="label"
-                          style={{
-                            color: "white",
-                            backgroundColor: "rgba(0, 0, 0, 0.6)",
-                            padding: "2px 6px 1px 6px",
-                            fontSize: "11px",
-                          }}
-                        >
-                          <span className="left"></span>
-                          <span className="center">{marker.name}</span>
-                          <span className="right"></span>
-                        </div>
-                      </CustomOverlayMap>
-                    </>
-                  ))}
-                {zoomLevel <= 6 &&
-                  schoolDefaultList.map((marker) => (
-                    <>
-                      <MapMarker
-                        position={{
-                          lat: marker.latitude,
-                          lng: marker.longitude,
-                        }}
-                        image={{
-                          src: school,
-                          size: {
-                            width: 40,
-                            height: 40,
-                          },
-                        }}
-                        onClick={() => moveToMarker(marker)}
-                      />
-                      <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                        // 커스텀 오버레이가 표시될 위치입니다
-                        position={{
-                          lat: marker.latitude,
-                          lng: marker.longitude,
-                        }}
-                      >
-                        {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                        <div
-                          className="label"
-                          style={{
-                            color: "white",
-                            backgroundColor: "rgba(0, 0, 0, 0.6)",
-                            padding: "2px 6px 1px 6px",
-                            fontSize: "11px",
-                          }}
-                        >
-                          <span className="left"></span>
-                          <span className="center">{marker.name}</span>
-                          <span className="right"></span>
-                        </div>
-                      </CustomOverlayMap>
-                    </>
-                  ))}
+                {defaultDataRendered &&
+                  zoomLevel <= 6 &&
+                  subwayDefaultList.map(
+                    (marker) =>
+                      marker.latitude &&
+                      marker.longitude && (
+                        <>
+                          <MapMarker
+                            position={{
+                              lat: marker.latitude,
+                              lng: marker.longitude,
+                            }}
+                            image={{
+                              src: subway,
+                              size: {
+                                width: 40,
+                                height: 40,
+                              },
+                            }}
+                            onClick={() => moveToMarker(marker)}
+                          />
+                          <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                            // 커스텀 오버레이가 표시될 위치입니다
+                            position={{
+                              lat: marker.latitude,
+                              lng: marker.longitude,
+                            }}
+                          >
+                            {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                            <div
+                              className="label"
+                              style={{
+                                color: "white",
+                                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                padding: "2px 6px 1px 6px",
+                                fontSize: "11px",
+                              }}
+                            >
+                              <span className="left"></span>
+                              <span className="center">{marker.name}</span>
+                              <span className="right"></span>
+                            </div>
+                          </CustomOverlayMap>
+                        </>
+                      )
+                  )}
+                {defaultDataRendered &&
+                  zoomLevel <= 6 &&
+                  schoolDefaultList.map(
+                    (marker) =>
+                      marker.latitude &&
+                      marker.longitude && (
+                        <>
+                          <MapMarker
+                            position={{
+                              lat: marker.latitude,
+                              lng: marker.longitude,
+                            }}
+                            image={{
+                              src: school,
+                              size: {
+                                width: 40,
+                                height: 40,
+                              },
+                            }}
+                            onClick={() => moveToMarker(marker)}
+                          />
+                          <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                            // 커스텀 오버레이가 표시될 위치입니다
+                            position={{
+                              lat: marker.latitude,
+                              lng: marker.longitude,
+                            }}
+                          >
+                            {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                            <div
+                              className="label"
+                              style={{
+                                color: "white",
+                                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                padding: "2px 6px 1px 6px",
+                                fontSize: "11px",
+                              }}
+                            >
+                              <span className="left"></span>
+                              <span className="center">{marker.name}</span>
+                              <span className="right"></span>
+                            </div>
+                          </CustomOverlayMap>
+                        </>
+                      )
+                  )}
               </Map>
             )}
           </div>
