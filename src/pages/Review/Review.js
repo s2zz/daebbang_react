@@ -3,7 +3,8 @@ import WriteReview from './Write/WriteReview';
 import EditReview from './Edit/EditReview';
 import style from './Review.module.css';
 import ReviewBoard from './Board/ReviewBoard';
-import ReviewBoardTest from './Board/ReviewBoardTest';
+import ReviewBoardTest from './Board/ReviewBoard/ReviewBoardTest';
+
 const Review = () => {
     return (
         <div className={style.container}>
