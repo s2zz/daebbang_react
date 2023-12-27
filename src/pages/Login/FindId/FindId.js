@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useState} from 'react';
+import { useState } from 'react';
 import style from './FindId.module.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
 
 function FindId() {
 
@@ -16,14 +16,12 @@ function FindId() {
   }
   const handlekeyup = (e) => {
     if (e.code === 'Enter') {
-      if(findId.email===""){
-        Swal.fire({
-          text: "항목을 입력해주세요"
-        });
-    }
-    else{
+      if (findId.email === "") {
+        alert("항목을 입력해주세요");
+      }
+      else {
         fetchData();
-    }
+      }
     }
   };
 
@@ -33,26 +31,21 @@ function FindId() {
     try {
       const email = findId.email;
       const response = await axios.get(`/api/member/findId/${email}`);
-      if(response.data.length===0){
-        Swal.fire({
-          text: "일치하는 정보가 없습니다"
-        });
+      if (response.data.length === 0) {
+        alert("일치하는 정보가 없습니다");
       }
       setSize(response.data.length);
       setfindId({ ...findId, id: response.data, email: "" });
-
     } catch (error) {
     }
   };
-  const handlesubmit = () =>{
-    if(findId.email===""){
-      Swal.fire({
-        text: "항목을 입력해주세요"
-      });
-  }
-  else{
+  const handlesubmit = () => {
+    if (findId.email === "") {
+      alert("항목을 입력해주세요");
+    }
+    else {
       fetchData();
-  }
+    }
   }
   return (
     <div className="container">
@@ -67,7 +60,7 @@ function FindId() {
             </div>
           </div>
           <div className={style.btnBox}>
-            
+
             {size === -1 ? <></> : <div>
               <span>확인된 아이디가 {size}개 있습니다</span><br></br>
               {findId.id.map((id, index) => (
@@ -76,10 +69,10 @@ function FindId() {
             </div>}
           </div>
           <div className={style.btnBox}>
-          <button className={style.loginBtn} onClick={handlesubmit}>작성완료</button>
+            <button className={style.loginBtn} onClick={handlesubmit}>작성완료</button>
           </div>
           <div className={style.findBox}>
-          <Link to="/login" className={style.findId}>로그인</Link>
+            <Link to="/login" className={style.findId}>로그인</Link>
             <Link to="/signUp" className={style.findId}>회원가입</Link>
             <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
           </div>

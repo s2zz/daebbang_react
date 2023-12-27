@@ -103,7 +103,23 @@
     border: 1px solid  rgb(231, 231, 231);
 }
 
+.changeEstateBtn {
+    width:200px;
+    height:50px;
+    background-color: white;
+    color:black;
+    font-family: "NanumBarunGothic";
+    border-radius: 5px;
+    border: 1px solid  rgb(231, 231, 231);
+}
+
 .changeBtn:hover {
+    cursor: pointer;
+    background-color: #326CF9;
+    color:white;
+}
+
+.changeEstateBtn:hover {
     cursor: pointer;
     background-color: #326CF9;
     color:white;

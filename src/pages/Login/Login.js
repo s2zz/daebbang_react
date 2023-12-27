@@ -1,7 +1,7 @@
 import style from "./Login.module.css"
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
 import axios from 'axios';
 import Modal from 'react-modal';
 import TopForm from "../commons/TopForm";
@@ -59,9 +59,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      Swal.fire({
-        text: "아이디 또는 비밀번호를 다시 확인해주세요"
-      });
+      alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setUser({ id: "", pw: "" });
     });
   }
@@ -78,9 +76,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      Swal.fire({
-        text: "아이디 또는 비밀번호를 다시 확인해주세요"
-      });
+      alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setEstate({ id: "", pw: "" });
     });
   }
@@ -97,9 +93,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      Swal.fire({
-        text: "아이디 또는 비밀번호를 다시 확인해주세요"
-      });
+      alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setAdmin({ id: "", pw: "" });
     });
   }

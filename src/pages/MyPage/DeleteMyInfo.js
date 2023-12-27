@@ -4,7 +4,7 @@ import axios from 'axios';
 import style from "./css/DeleteMyInfo.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 
 const DeleteMyInfo = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -23,24 +23,16 @@ const DeleteMyInfo = () => {
         formData.append("id", storedLoginId);
         formData.append("pw", pw.pw);
         axios.post("/api/member/login", formData).then(resp => {
-            Swal.fire({
-                title: "회원 탈퇴 하시겠습니까?",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: "탈퇴"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire("탈퇴가 완료되었습니다", "", "success");
-                    axios.delete("/api/member/delete/" + storedLoginId);
-                    sessionStorage.removeItem('loginId');
-                    navi("/");
-                    window.location.reload();
-                }
-            });
+            const isConfirmed = window.confirm("회원 탈퇴 하시겠습니까?");
+            if (isConfirmed) {
+                alert("탈퇴가 완료되었습니다");
+                axios.delete("/api/member/delete/" + storedLoginId);
+                sessionStorage.removeItem('loginId');
+                navi("/");
+                window.location.reload();
+            }
         }).catch(resp => {
-            Swal.fire({
-                text: "비밀번호를 다시 확인해주세요"
-            });
+            alert("비밀번호를 다시 확인해주세요");
         });
     }
 
@@ -49,25 +41,17 @@ const DeleteMyInfo = () => {
         formData.append("id", storedLoginId);
         formData.append("pw", pw.pw);
         axios.post("/api/estate/login", formData).then(resp => {
-            Swal.fire({
-                title: "회원 탈퇴 하시겠습니까?",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: "탈퇴"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire("탈퇴가 완료되었습니다", "", "success");
-                    axios.delete("/api/estate/delete/" + storedLoginId);
-                    sessionStorage.removeItem('loginId');
-                    sessionStorage.removeItem('isEstate');
-                    navi("/");
-                    window.location.reload();
-                }
-            });
+            const isConfirmed = window.confirm("회원 탈퇴 하시겠습니까?");
+            if (isConfirmed) {
+                alert("탈퇴가 완료되었습니다");
+                axios.delete("/api/estate/delete/" + storedLoginId);
+                sessionStorage.removeItem('loginId');
+                sessionStorage.removeItem('isEstate');
+                navi("/");
+                window.location.reload();
+            }
         }).catch(resp => {
-            Swal.fire({
-                text: "비밀번호를 다시 확인해주세요"
-            });
+            alert("비밀번호를 다시 확인해주세요");
         });
     }
 
