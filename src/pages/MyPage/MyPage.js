@@ -156,10 +156,10 @@ const EstateInfo = () => {
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <button className={style.changeBtn}><Link to="/mypage/changePw">비밀번호 변경하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/profileImage">대표 이미지</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo">회원정보 수정하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo">회원 탈퇴하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/changePw" className={style.link}>비밀번호 변경하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/profileImage" className={style.link}>대표 이미지</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo" className={style.link}>공인중개사 정보 수정하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo" className={style.link}>회원 탈퇴하기</Link></button>
                     </div>
                 </div>
             }
