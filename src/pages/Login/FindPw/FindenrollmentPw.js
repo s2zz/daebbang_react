@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import style from './FindPw.module.css';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 function FindEnrollmentPw() {
   const [findPw, setfindPw] = useState({ name: "", phone: "",email:""});
@@ -20,15 +21,21 @@ function FindEnrollmentPw() {
       formData.append("email", findPw.email);
       axios.post("/api/mail/findenrollmentPw", formData).then(resp => {
         if(resp.data==0){
-          alert("일치하는 정보가 없습니다.");
+          Swal.fire({
+            text: "일치하는 정보가 없습니다"
+          });
         }else{
-          alert("입력하신 이메일로 임시번호를 발송했습니다.");
+          Swal.fire({
+            text: "입력하신 이메일로 임시 비밀번호를 발급했습니다"
+          });
         }
         setfindPw({ name: "",phone:"", email: "" });
         console.log(resp);
       })
     } else {
-      alert('빈칸을 입력해주세요');
+      Swal.fire({
+        text: "빈 칸을 입력해주세요"
+      });
     }
     }
   };
@@ -40,15 +47,20 @@ function FindEnrollmentPw() {
     formData.append("email", findPw.email);
     axios.post("/api/mail/findenrollmentPw", formData).then(resp => {
       if(resp.data==0){
-        alert("일치하는 정보가 없습니다.");
+        Swal.fire({
+          text: "일치하는 정보가 없습니다"
+        });
       }else{
-        alert("입력하신 이메일로 임시번호를 발송했습니다.");
+        Swal.fire({
+          text: "입력하신 이메일로 임시 비밀번호를 발급했습니다"
+        });
       }
       setfindPw({ name: "",phone:"", email: "" });
-      console.log(resp);
     })
   } else {
-    alert('빈칸을 입력해주세요');
+    Swal.fire({
+      text: "빈 칸을 입력해주세요"
+    });
   }
   }
 
@@ -65,7 +77,7 @@ function FindEnrollmentPw() {
               <input type="text" name="name" placeholder="이름을 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findPw.name} className={style.inputInfo}></input>
               <div className={style.blank}></div>
               <div className={style.loginFont}>전화번호</div>
-              <input type="text" name="phone" placeholder="번호를 -빼고 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findPw.phone} className={style.inputInfo}></input>
+              <input type="text" name="phone" placeholder="번호를 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findPw.phone} className={style.inputInfo}></input>
               <div className={style.blank}></div>
               <div className={style.loginFont}>이메일</div>
               <input type="text" name="email" placeholder="이메일을 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findPw.email} className={style.inputInfo}></input>
