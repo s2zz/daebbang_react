@@ -1,8 +1,10 @@
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import style from "./AdminDashboard.module.css"
 import RoomStatics from './statics/RoomStatics';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Pagination from "@mui/material/Pagination";
 import { faRightToBracket, faUserPlus, faHome, faFileAlt } from "@fortawesome/free-solid-svg-icons";
 const AdminDashboard = () => {
     //오늘
@@ -19,25 +21,68 @@ const AdminDashboard = () => {
     //신고
     const [reportList, setReportList] = useState([]);
     const [reportCount, setReportCount] = useState(0);
-    // 신고
+    // 신고 페이지네이션
+    const [currentReportPage, setCurrentReportPage] = useState(1);
+    const [reportCountPerPage] = useState(5);
+    
+    const slicedReportList = reportList.slice(
+        (currentReportPage - 1) * reportCountPerPage,
+        currentReportPage * reportCountPerPage
+    );
+    const processedReportList = slicedReportList.map(report => ({
+        ...report,
+        formattedDate: new Date(report.writeDate).toLocaleDateString(), // 원하는 날짜 형식으로 변환
+      }));
+    const reportPageChangeHandler = (event, page) => {
+        setCurrentReportPage(page);
+    }
+    //매물 목록
+    const [estateList, setEstateList] = useState([]);
+
+    
+    
+    //매물 top5
     useEffect(() => {
+        axios.get(`/api/admin/topFive`)
+            .then(response => {
+                console.log(response.data);
+                setEstateList(response.data);
+            })
+            .catch(error => {
+
+            });
+    }, []);
+    // 신고
+    const fetchReportList = () => {
         axios.get(`/api/admin/selectAllByReportStatus`)
             .then(response => {
                 console.log(response.data);
                 setReportList(response.data);
             })
             .catch(error => {
-
+                // 에러 처리
             });
+
         axios.get(`/api/admin/countByReportStatus`)
             .then(response => {
                 console.log(response.data);
                 setReportCount(response.data);
             })
             .catch(error => {
-
+                // 에러 처리
             });
+    };
+
+    // reportList가 변경되지 않았을 때 한 번만 실행됨
+    useEffect(() => {
+        fetchReportList();
     }, []);
+
+    // 페이지 변화에 따라 실행
+    useEffect(() => {
+        fetchReportList();
+    }, [currentReportPage]);
+
     useEffect(() => {
         axios.get('/api/admin/dailyVisitors')
             .then(response => {
@@ -168,9 +213,31 @@ const AdminDashboard = () => {
                 <div className={[style.left_bottom_content, style.option].join(' ')}>
                     <div className={style.best}>
                         <div className={style.bord}> 인기 매물 TOP5</div>
-                        <a href="#"><button className={style.morebtn}>더보기</button></a>
+                        <Link to="/admin/toEstateManagement"><button className={style.morebtn}>더보기</button></Link>
                     </div>
                     <hr style={{ marginTop: '2.5%' }}></hr>
+                    <table style={{ width: '100%' }}>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>주소</th>
+                                <th>제목</th>
+                                <th>정보</th>
+                            </tr>
+                        </thead>
+                        <tbody style={{ fontSize: '15px' }}>
+                            {estateList.map(item => (
+                                <tr key={item.viewId}>
+                                    <td style={{ textAlign: 'center' }}>{item.estate.estateId}</td>
+                                    <td>{item.estate.address2}</td>
+                                    <td>{item.estate.title}</td>
+                                    <td>{item.estate.room.roomType}</td>
+                                </tr>
+                            ))}
+
+
+                        </tbody>
+                    </table>
                 </div>
                 <div className={[style.right_bottom_content, style.option].join(' ')}>
                     <div className={style.best}>
@@ -185,7 +252,7 @@ const AdminDashboard = () => {
 
                         <a href="#"><button className={style.morebtn}>더보기</button></a>
                     </div>
-                    <hr style={{ marginTop: '1%' }}></hr>
+                    <hr style={{ marginTop: '1.3%' }}></hr>
 
                     <table style={{ width: '100%' }}>
                         <thead>
@@ -197,21 +264,27 @@ const AdminDashboard = () => {
                                 <th>날짜</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {reportList.map(report => (
+                        <tbody style={{ fontSize: '15px' }}>
+                            {processedReportList.map(report => (
                                 <tr key={report.seq}>
-                                    <td>{report.estate_id}</td>
+                                    <td tyle={{ textAlign: 'center' }}>{report.estate_id}</td>
                                     <td>{report.writer}</td>
                                     <td>{report.taker}</td>
                                     <td>{report.contents_code}</td>
-                                    <td>{report.writeDate}</td>
+                                    <td>{report.formattedDate}</td>
                                 </tr>
                             ))}
 
 
                         </tbody>
                     </table>
-
+                    <div className={style.naviFooter}>
+                        <Pagination
+                            count={Math.ceil(reportList.length / reportCountPerPage)}
+                            page={currentReportPage}
+                            onChange={reportPageChangeHandler} // Update currentReportPage on change
+                        />
+                    </div>
                 </div>
             </div>
         </div>

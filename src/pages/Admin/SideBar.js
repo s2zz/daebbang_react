@@ -15,13 +15,13 @@ const SideBar = () => {
                 <Link className={style.link} to="/admin/toAgentManagement"><FontAwesomeIcon className={style.fontawe} icon={faHouse} /> 공인중개사 관리</Link>
             </div>
             <div className={style.menu}>
-                <Link className={style.link} to="#"><FontAwesomeIcon className={style.fontawe} icon={faFileAlt} /> 매물 관리</Link>
+                <Link className={style.link} to="/admin/toEstateManagement"><FontAwesomeIcon className={style.fontawe} icon={faFileAlt} /> 매물 관리</Link>
             </div>
             <div className={style.menu}>
                 <Link className={style.link} to="/admin/toNotificationManagement"><FontAwesomeIcon className={style.fontawe} icon={faQuestion} /> 문의 관리</Link>
             </div>
             <div className={style.menu}>
-                <Link className={style.link} to="#"><FontAwesomeIcon className={style.fontawe} icon={faCircleExclamation} /> 신고 관리</Link>
+                <Link className={style.link} to="/admin/toReportManagement"><FontAwesomeIcon className={style.fontawe} icon={faCircleExclamation} /> 신고 관리</Link>
             </div>
             <div className={style.menu}>
                 <Link className={style.link} to="/admin/toButtons"> 버튼</Link>
