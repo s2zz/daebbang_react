@@ -34,7 +34,7 @@ const ReviewBoardTest = () => {
             <div key={i}>
                 <div>{e.estateId}</div>
                 <div>{e.anonymous ? "익명" : e.id}</div>
-                <div>{e.estate.title.length > 30 ? e.estate.title.substring(0,30) + "..." : e.estate.title}</div>
+                <div>{e.estate ? e.estate.title : ""}</div>
                 <div>{e.writeDate.split("T")[0]}</div>
             </div>
         );
@@ -42,7 +42,7 @@ const ReviewBoardTest = () => {
 
     return (
         <>
-            <div className={style.boardTitle}>{board[0].estate.realEstateAgent.estateName}의 매물 리뷰</div>
+            <div className={style.boardTitle}>{board[0] ? board[0].estate.realEstateAgent.estateName : ""}의 매물 리뷰</div>
             <hr></hr>
             <div className={style.searchDiv}>
                 <div className={style.searchBox}>
@@ -61,7 +61,7 @@ const ReviewBoardTest = () => {
                 <div className={style.boardInfo}>
                     <div>매물번호</div>
                     <div>작성자</div>
-                    <div>매물 설명</div>
+                    <div>매물</div>
                     <div>날짜</div>
                 </div>
                 { <div className={style.boardListContents}>
