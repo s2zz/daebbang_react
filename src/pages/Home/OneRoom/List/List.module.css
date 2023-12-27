@@ -51,6 +51,10 @@
   width: 100%;
 }
 
+.list_default_size {
+  height: calc(100% - 50px);
+}
+
 .list_box {
   border-top: 1px solid #d9d9d9;
   height: 145px;
@@ -115,4 +119,38 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.noData {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.noData_content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 50px);
+}
+
+.message_content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.message_content_text {
+  text-align: center;
+  font-size: 14px;
+  
 }

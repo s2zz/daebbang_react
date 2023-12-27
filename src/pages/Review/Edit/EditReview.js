@@ -110,6 +110,7 @@ const EditReview = () => {
         console.log(formData.files);
         const submitFormData = new FormData();
         submitFormData.append("traffic", formData.traffic);
+        submitFormData.append("anonymous",formData.anonymous);
         submitFormData.append("surroundings", formData.surroundings);
         submitFormData.append("facility", formData.facility);
         submitFormData.append("score", totalScore);
@@ -165,113 +166,123 @@ const EditReview = () => {
     return (
         <div>
             {seq === 0 ? refuseWrite()
-            :
-            <div className={style.borderBox}>
-            <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
-            <hr></hr>
-            <div className={style.scoreInfo}>
-                <div>별점<span>*</span> &nbsp;| </div>
-                <div className={style.scoreBox}>
-                    {
-                        [0, 1, 2, 3, 4].map((e, i) => (
-                            <div key={i}>
-                                {score[e] ? <img src={fav} alt="..." onClick={() => delScore(e)} /> : <img src={notFav} alt="..." onClick={() => addScore(e)} />}
+                :
+                <div className={style.borderBox}>
+                    <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
+                    <hr></hr>
+                    <div>
+                        <div>아이디 표시<span>*</span> &nbsp;| </div>
+                        <div>
+                            {formData.anonymous
+                                ? <><input type="radio" name="anonymous" value="true" onChange={handleChange} checked/>익명<input type="radio" name="anonymous" value="false" onChange={handleChange} />실명</>
+                                : <><input type="radio" name="anonymous" value="true" onChange={handleChange}/>익명<input type="radio" name="anonymous" value="false" onChange={handleChange} checked/>실명</>}
+
+
+                        </div>
+                    </div>
+                    <div className={style.scoreInfo}>
+                        <div>별점<span>*</span> &nbsp;| </div>
+                        <div className={style.scoreBox}>
+                            {
+                                [0, 1, 2, 3, 4].map((e, i) => (
+                                    <div key={i}>
+                                        {score[e] ? <img src={fav} alt="..." onClick={() => delScore(e)} /> : <img src={notFav} alt="..." onClick={() => addScore(e)} />}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                    <div className={style.reviewInsert}>
+                        <div>교통<span>*</span></div>
+                        <div>
+                            <textarea placeholder="교통 리뷰 입력" onChange={handleChange} name="traffic" value={formData.traffic}></textarea>
+                        </div>
+                    </div>
+                    <div className={style.reviewInsert}>
+                        <div>주변 환경<span>*</span></div>
+                        <div>
+                            <textarea placeholder="주변 환경 리뷰 입력" onChange={handleChange} name="surroundings" value={formData.surroundings}></textarea>
+                        </div>
+                    </div>
+                    <div className={style.reviewInsert}>
+                        <div>시설<span>*</span></div>
+                        <div>
+                            <textarea placeholder="시설 리뷰 입력" onChange={handleChange} name="facility" value={formData.facility}></textarea>
+                        </div>
+                    </div>
+                    <hr />
+                    <div>
+                        <div className={style.imgInfo}>
+                            <div>사진 첨부 |&nbsp;</div>
+                            <div>10MB 이하 파일만 등록 가능</div>
+                        </div>
+                        <div className={style.imgBox}>
+                            <input type="file" name="files0" style={{ display: 'none' }} id="fileInput0" onChange={handleFileChange} accept="image/*" />
+                            <input type="file" name="files1" style={{ display: 'none' }} id="fileInput1" onChange={handleFileChange} accept="image/*" />
+                            <input type="file" name="files2" style={{ display: 'none' }} id="fileInput2" onChange={handleFileChange} accept="image/*" />
+                            <input type="file" name="files3" style={{ display: 'none' }} id="fileInput3" onChange={handleFileChange} accept="image/*" />
+                            <input type="file" name="files4" style={{ display: 'none' }} id="fileInput4" onChange={handleFileChange} accept="image/*" />
+                            <div>
+                                {url.files0 ?
+                                    <>
+                                        <img src={url.files0} alt="..." />
+                                        <label onClick={() => imgDel("files0")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
+                                    </> :
+                                    <label htmlFor="fileInput0"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
+                                }
+
                             </div>
-                        ))
-                    }
-                </div>
-            </div>
-            <div className={style.reviewInsert}>
-                <div>교통<span>*</span></div>
-                <div>
-                    <textarea placeholder="교통 리뷰 입력" onChange={handleChange} name="traffic" value={formData.traffic}></textarea>
-                </div>
-            </div>
-            <div className={style.reviewInsert}>
-                <div>주변 환경<span>*</span></div>
-                <div>
-                    <textarea placeholder="주변 환경 리뷰 입력" onChange={handleChange} name="surroundings" value={formData.surroundings}></textarea>
-                </div>
-            </div>
-            <div className={style.reviewInsert}>
-                <div>시설<span>*</span></div>
-                <div>
-                    <textarea placeholder="시설 리뷰 입력" onChange={handleChange} name="facility" value={formData.facility}></textarea>
-                </div>
-            </div>
-            <hr />
-            <div>
-                <div className={style.imgInfo}>
-                    <div>사진 첨부 |&nbsp;</div>
-                    <div>10MB 이하 파일만 등록 가능</div>
-                </div>
-                <div className={style.imgBox}>
-                    <input type="file" name="files0" style={{ display: 'none' }} id="fileInput0" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files1" style={{ display: 'none' }} id="fileInput1" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files2" style={{ display: 'none' }} id="fileInput2" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files3" style={{ display: 'none' }} id="fileInput3" onChange={handleFileChange} accept="image/*" />
-                    <input type="file" name="files4" style={{ display: 'none' }} id="fileInput4" onChange={handleFileChange} accept="image/*" />
-                    <div>
-                        {url.files0 ?
-                            <>
-                                <img src={url.files0} alt="..." />
-                                <label onClick={() => imgDel("files0")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput0"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-                        }
+                            <div>
+                                {url.files1 ?
+                                    <>
+                                        <img src={url.files1} alt="..." />
+                                        <label onClick={() => imgDel("files1")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
+                                    </> :
+                                    <label htmlFor="fileInput1"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
 
+                                }
+                            </div>
+                            <div>
+                                {url.files2 ?
+                                    <>
+                                        <img src={url.files2} alt="..." />
+                                        <label onClick={() => imgDel("files2")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
+                                    </> :
+                                    <label htmlFor="fileInput2"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
+
+                                }
+                            </div>
+                            <div>
+                                {url.files3 ?
+                                    <>
+                                        <img src={url.files3} alt="..." />
+                                        <label onClick={() => imgDel("files3")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
+                                    </> :
+                                    <label htmlFor="fileInput3"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
+
+                                }
+                            </div>
+                            <div>
+                                {url.files4 ?
+                                    <>
+                                        <img src={url.files4} alt="..." />
+                                        <label onClick={() => imgDel("files4")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
+                                    </> :
+                                    <label htmlFor="fileInput4"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
+
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {url.files1 ?
-                            <>
-                                <img src={url.files1} alt="..." />
-                                <label onClick={() => imgDel("files1")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput1"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
-                    </div>
-                    <div>
-                        {url.files2 ?
-                            <>
-                                <img src={url.files2} alt="..." />
-                                <label onClick={() => imgDel("files2")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput2"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
-                    </div>
-                    <div>
-                        {url.files3 ?
-                            <>
-                                <img src={url.files3} alt="..." />
-                                <label onClick={() => imgDel("files3")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput3"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
-                    </div>
-                    <div>
-                        {url.files4 ?
-                            <>
-                                <img src={url.files4} alt="..." />
-                                <label onClick={() => imgDel("files4")}><FontAwesomeIcon icon={faXmark} size="2xs" /></label>
-                            </> :
-                            <label htmlFor="fileInput4"><FontAwesomeIcon icon={faPlus} size="2xs" /></label>
-
-                        }
+                    <hr />
+                    <div className={style.btns}>
+                        <button onClick={() => { navi(-1) }}>작성 취소</button>
+                        <button onClick={handleAdd}>리뷰 수정</button>
                     </div>
                 </div>
-            </div>
-            <hr />
-            <div className={style.btns}>
-                <button onClick={()=>{navi(-1)}}>작성 취소</button>
-                <button onClick={handleAdd}>리뷰 수정</button>
-            </div>
-        </div>
             }
         </div>
-        
+
     );
 }
 

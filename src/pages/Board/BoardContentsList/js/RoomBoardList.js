@@ -26,7 +26,7 @@ const RoomBoardList = ({loginId}) => {
             alert("로그인해주세요");
             navi("/login")
         } else{
-            navi("/board/toFreeBoardWrite");
+            navi("/board/toRoomBoardWrite");
         }
     }
     useEffect(() => {
@@ -155,7 +155,7 @@ const RoomBoardList = ({loginId}) => {
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." />}</div>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." className={style.fav}/> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." className={style.notFav}/>}</div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>

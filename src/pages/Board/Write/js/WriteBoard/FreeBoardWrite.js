@@ -2,12 +2,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import style from "../../css/WriteBoard/WriteBoard.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useMemo, useRef,useEffect } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-const FreeBoardWrite = ({loginId}) => {
+const FreeBoardWrite = ({ loginId }) => {
+
     const navi = useNavigate();
 
     const quillRef = useRef();
@@ -28,17 +29,17 @@ const FreeBoardWrite = ({loginId}) => {
 
     const imageHandler = (file) => {
         // 이미지 선택 창 나타나게 하기
+        const editor = quillRef.current.getEditor();
         const input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("multiple", "true");
         input.setAttribute("accept", "image/*");
         input.click();
 
-        const editor = quillRef.current.getEditor();
+
         // 이미지 선택 시 동작
         input.addEventListener("change", async () => {
             const files = input.files;
-
             const formImg = new FormData();
             for (let i = 0; i < files.length; i++) {
                 formImg.append("files", files[i]);
@@ -48,8 +49,9 @@ const FreeBoardWrite = ({loginId}) => {
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
-                    editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
+                    let sysName = imgUrl.data[i].split("/uploads/board/")[1];
+                    setSysNameList(prev => [...prev, sysName]);
+                    editor.insertEmbed(range.index, 'image', "/uploads/board/" + encodeURIComponent(sysName));
                 }
 
             } catch (error) {
@@ -85,7 +87,7 @@ const FreeBoardWrite = ({loginId}) => {
 
 
     const handleAdd = () => {
-        if(loginId===null){
+        if (loginId === null) {
             alert("로그인해주세요");
             navi("/login");
             return;
@@ -166,6 +168,36 @@ const FreeBoardWrite = ({loginId}) => {
         "link",
         "image",
     ];
+    const [inputList, setInputList] = useState([{ name: "files0", show: false }, { name: "files1", show: false }, { name: "files2", show: false }, { name: "files3", show: false }, { name: "files4", show: false }]);
+    const fileAdd = () => {
+        if (inputList.filter(e=>e.show).length > 4) {
+            alert("파일은 최대 5개까지 첨부 가능합니다");
+            return;
+        }
+
+        let check = false;
+        let array = inputList.map((e, i) => {
+            if (!check && e.show === false) {
+                e.show = true;
+                check = true;
+            }
+            return e;
+        })
+        setInputList([...array]);
+    }
+
+    const fileDel = (name) => {
+
+        let array = inputList.map((e, i) => {
+            if (e.name === name) {
+                e.show = false;
+            }
+            return e;
+        })
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [name]: null } }));
+        setInputList([...array]);
+
+    }
 
     return (
         <>
@@ -174,46 +206,39 @@ const FreeBoardWrite = ({loginId}) => {
             <div className={style.titleBox}>
                 <div>제목<span>*</span></div>
                 <div>
-                    <input placeholder="&nbsp;제목을 입력해주세요" name="title" onChange={handleChange} maxLength="50"/>
+                    <input placeholder="&nbsp;제목을 입력해주세요" name="title" onChange={handleChange} maxLength="50" />
                 </div>
             </div>
             <div className={style.fileBox}>
-                <div>파일첨부</div>
+                <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
                 <div className={style.fileInputDiv}>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files0" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files1" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files2" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files3" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files4" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
+                    {
+                        inputList.map((e, i) => (
+                            e.show ? (
+                                <div key={i}>
+                                    <input type="file" onChange={handleFileChange} name={e.name} />
+                                    <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                </div>
+                            ) : null
+                        ))
+                    }
+
                 </div>
             </div>
             <div>
                 <div className={style.contents}>내용<span>*</span></div>
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents}
+                        value={formData.contents.slice(0, 5000)}
                         onChange={(value) => {
                             if (value.length > 5000) {
-                                alert("최대 5000자까지 작성 가능합니다");
+                                alert("작성 가능한 글자 수 범위를 초과하였습니다.");
+                                setFormData(prev => ({ ...prev }));
                             } else {
                                 setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
                             }
-                        }} />
+                        }}
+                    />
                 </div>
             </div>
 

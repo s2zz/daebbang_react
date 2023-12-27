@@ -125,11 +125,11 @@ const ChangePw = () => {
                     <div className={style.inputBox}>
                         <div>
                             현재 비밀번호<br></br>
-                            <input type="password" name="pw" onChange={handleChangePw} value={pw.pw} placeholder='현재 비밀번호 입력'></input><br /><br />
+                            <input type="password" name="pw" onChange={handleChangePw} value={pw.pw} placeholder='현재 비밀번호 입력' className={style.inputInfo}></input><br /><br />
                             변경 비밀번호<br></br>
-                            <input type="password" name="cpw1" onChange={handleChangeCpw1} value={cpw1.cpw1} placeholder='새로운 비밀번호 입력'></input><br /><br />
+                            <input type="password" name="cpw1" onChange={handleChangeCpw1} value={cpw1.cpw1} placeholder='새로운 비밀번호 입력' className={style.inputInfo}></input><br /><br />
                             변경 비밀번호 확인<br></br>
-                            <input type="password" name="cpw2" onChange={handleChangeCpw2} value={cpw2.cpw2} placeholder='새로운 비밀번호 재입력'></input>
+                            <input type="password" name="cpw2" onChange={handleChangeCpw2} value={cpw2.cpw2} placeholder='새로운 비밀번호 재입력' className={style.inputInfo}></input>
                         </div>
                     </div>
                     <div className={style.changeBtns}>
@@ -142,11 +142,11 @@ const ChangePw = () => {
                     <div className={style.inputBox}>
                         <div>
                             현재 비밀번호<br></br>
-                            <input type="password" name="pw" onChange={handleChangePw} value={pw.pw} placeholder='현재 비밀번호 입력'></input><br /><br />
+                            <input type="password" name="pw" onChange={handleChangePw} value={pw.pw} placeholder='현재 비밀번호 입력' className={style.inputInfo}></input><br /><br />
                             변경 비밀번호<br></br>
-                            <input type="password" name="cpw1" onChange={handleChangeCpw1} value={cpw1.cpw1} placeholder='새로운 비밀번호 입력'></input><br /><br />
+                            <input type="password" name="cpw1" onChange={handleChangeCpw1} value={cpw1.cpw1} placeholder='새로운 비밀번호 입력' className={style.inputInfo}></input><br /><br />
                             변경 비밀번호 확인<br></br>
-                            <input type="password" name="cpw2" onChange={handleChangeCpw2} value={cpw2.cpw2} placeholder='새로운 비밀번호 재입력'></input>
+                            <input type="password" name="cpw2" onChange={handleChangeCpw2} value={cpw2.cpw2} placeholder='새로운 비밀번호 재입력' className={style.inputInfo}></input>
                         </div>
                     </div>
                     <div className={style.changeBtns}>

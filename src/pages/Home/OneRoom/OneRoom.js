@@ -24,8 +24,8 @@ import Info from "./Info/Info";
 // 이미지
 import exam_icon from "./assets/exam_icon.png";
 import search from "./assets/search.png";
-import subway from "./assets/subway.png"
-import school from "./assets/school.png"
+import subway from "./assets/subway.png";
+import school from "./assets/school.png";
 
 //
 import style from "./OneRoom.module.css";
@@ -194,7 +194,7 @@ function OneRoom() {
     });
 
     // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
-    navigate(`/home/oneroom/list`, { state: { markersInBounds } });
+    navigate(`/home/oneroom/list`, { state: { markersInBounds, zoomLevel } });
   };
 
   // 지도에서 휠을 활용한 줌 이벤트 발생시 마커 새로 불러오기
@@ -222,12 +222,14 @@ function OneRoom() {
 
     // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
     navigate(`/home/oneroom/list?zoom=${map.getLevel()}`, {
-      state: { markersInBounds },
+      state: { markersInBounds, zoomLevel: map.getLevel()
+      },
     });
   };
 
   // 마커를 클릭할때 해당 정보를 들고 info(정보)로 이동
   const handleMarkerClick = (marker) => {
+    console.log("누름")
     navigate("/home/oneroom/info", { state: marker });
   };
 
@@ -266,42 +268,41 @@ function OneRoom() {
     });
 
     // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
-    navigate(`/home/oneroom/list`, { state: { markersInBounds } });
+    navigate(`/home/oneroom/list`, { state: { markersInBounds, zoomLevel } });
   };
 
-    // 부드러운 지도 이동
-    const moveToMarker = (marker, map) => {
-      
-      setSearchValue("");
-  
-      setZoomLevel(4);
-      mapRef.current.setLevel(4);
-  
-      mapRef.current.setCenter(
-        new kakao.maps.LatLng(marker.latitude, marker.longitude)
+  // 부드러운 지도 이동
+  const moveToMarker = (marker, map) => {
+    setSearchValue("");
+
+    setZoomLevel(4);
+    mapRef.current.setLevel(4);
+
+    mapRef.current.setCenter(
+      new kakao.maps.LatLng(marker.latitude, marker.longitude)
+    );
+
+    if (!map) {
+      map = {
+        getBounds: () => getNewDefaultBounds(),
+      };
+    }
+
+    // 현재 지도의 경계를 맵 인자에서 가져옴
+    const bounds = map.getBounds();
+
+    // 경계(현재 화면)에 포함된 마커들 찾기
+    const markersInBounds = filterMapList.filter((marker) => {
+      const markerPosition = new kakao.maps.LatLng(
+        marker.latitude,
+        marker.longitude
       );
-  
-      if (!map) {
-        map = {
-          getBounds: () => getNewDefaultBounds(),
-        };
-      }
-  
-      // 현재 지도의 경계를 맵 인자에서 가져옴
-      const bounds = map.getBounds();
-  
-      // 경계(현재 화면)에 포함된 마커들 찾기
-      const markersInBounds = filterMapList.filter((marker) => {
-        const markerPosition = new kakao.maps.LatLng(
-          marker.latitude,
-          marker.longitude
-        );
-        return bounds.contain(markerPosition);
-      });
-  
-      // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
-      navigate(`/home/oneroom/list`, { state: { markersInBounds } });
-    };
+      return bounds.contain(markerPosition);
+    });
+
+    // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
+    navigate(`/home/oneroom/list`, { state: { markersInBounds, zoomLevel } });
+  };
 
   // 검색창 사용
   const handleInputChange = (event) => {
@@ -1864,7 +1865,6 @@ function OneRoom() {
                           lat: marker.latitude,
                           lng: marker.longitude,
                         }}
-
                       >
                         {/* 커스텀 오버레이에 표시할 내용입니다 */}
                         <div

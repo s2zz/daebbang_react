@@ -5,8 +5,12 @@ import eStyle from "../css/EditBoard.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import mStyle from "../../../commons/Modal.module.css";
 
-const EditRoomBoardContents = ({loginId}) => {
+const EditRoomBoardContents = ({ loginId }) => {
     const location = useLocation();
     const navi = useNavigate();
     useEffect(() => {
@@ -120,10 +124,17 @@ const EditRoomBoardContents = ({loginId}) => {
         }
     }
 
-    const handleAdd = () => {
-        let existImgList = existImgSearch(formData.contents);
-        let delImgList = submitImgSearch(existImgList, sysNameList);
+    const [modal1, setModal1] = useState(false);
+    const toggle1 = () => {
+        setModal1(!modal1);
+    }
 
+    const [modal2, setModal2] = useState(false);
+    const toggle2 = () => {
+        setModal2(!modal2);
+    }
+
+    const regex = () => {
         if (formData.title === "") {
             alert("제목을 입력해주세요");
             return;
@@ -148,6 +159,68 @@ const EditRoomBoardContents = ({loginId}) => {
             alert("내용은 최대 5000글자 입니다");
             return;
         }
+
+        if (formData.header === "양도합니다") {
+            toggle1();
+        } else if(formData.header==="양도 구합니다"){
+            toggle2();
+        }
+    }
+
+    const returnModal1 = () => {
+        return (
+            <div>
+                <Modal isOpen={modal1} toggle={toggle1} >
+                    <ModalHeader toggle={toggle1}>양도게시판 약관 동의</ModalHeader>
+                    <ModalBody>
+                        양도합니다 글 작성자는 집 주인의 동의를 받아 합법적이고 적절한 절차를 통해 진행되어야 하며,
+                        집 주인의 동의를 받지 않는 등의 모든 문제는 당사자에게 책임이 있습니다.<br />
+                        DAEBBANG은 양도 과정 및 양도된 집과 사용자 간의 거래에서 발생하는 법적 문제에 대한
+                        어떠한 책임도 지지않습니다.<br />
+                        따라서 양도 게시판을 통해 이루어지는 모든 거래 및 법적 절차는 거래 당사자 간의 독립적인 책임
+                        아래 진행되며, 서비스 제공자는 이에 대한 법적 책임을 부담하지 않습니다.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={handleAdd}>
+                            약관에 동의합니다
+                        </Button>{' '}
+                        <Button color="secondary" onClick={toggle1}>
+                            취소
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+            </div>
+        );
+    }
+    const returnModal2 = () => {
+        return (
+            <div>
+                <Modal isOpen={modal2} toggle={toggle2} >
+                    <ModalHeader toggle={toggle2}>양도게시판 약관 동의</ModalHeader>
+                    <ModalBody>
+                        양도구합니다 글 작성자는 반드시 거래하려는 사용자가 집주인의 동의를 구했는지,
+                        법적으로 문제는 없는지 살펴보아야 합니다.<br />
+                        DAEBBANG은 양도 과정 및 양도된 집과 사용자 간의 거래에서 발생하는 법적 문제에 대한
+                        어떠한 책임도 지지않습니다.<br />
+                        따라서 양도 게시판을 통해 이루어지는 모든 거래 및 법적 절차는 거래 당사자 간의 독립적인 책임
+                        아래 진행되며, 서비스 제공자는 이에 대한 법적 책임을 부담하지 않습니다.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={handleAdd}>
+                            약관에 동의합니다
+                        </Button>{' '}
+                        <Button color="secondary" onClick={toggle2}>
+                            취소
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+            </div>
+        );
+    }
+
+    const handleAdd = () => {
+        let existImgList = existImgSearch(formData.contents);
+        let delImgList = submitImgSearch(existImgList, sysNameList);
 
         const submitFormData = new FormData();
         submitFormData.append("boardTitle", "양도게시판");
@@ -176,15 +249,37 @@ const EditRoomBoardContents = ({loginId}) => {
     }
 
     const numberOfInputs = 5 - fileList.length;
-    const fileListDiv = () => (
-        <div className={style.fileInputDiv}>
-            {[...Array(numberOfInputs)].map((_, index) => (
-                <div key={index}>
-                    <input type="file" onChange={handleFileChange} name={`files${index}`} />
-                </div>
-            ))}
-        </div>
-    )
+
+    const [inputList, setInputList] = useState([{ name: "files0", show: false }, { name: "files1", show: false }, { name: "files2", show: false }, { name: "files3", show: false }, { name: "files4", show: false }]);
+    const fileAdd = () => {
+        if (inputList.filter(e => e.show).length > numberOfInputs-1) {
+            alert("파일은 최대 5개까지 첨부 가능합니다");
+            return;
+        }
+
+        let check = false;
+        let array = inputList.map((e, i) => {
+            if (!check && e.show === false) {
+                e.show = true;
+                check = true;
+            }
+            return e;
+        })
+        setInputList([...array]);
+    }
+
+    const fileDel = (name) => {
+
+        let array = inputList.map((e, i) => {
+            if (e.name === name) {
+                e.show = false;
+            }
+            return e;
+        })
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [name]: null } }));
+        setInputList([...array]);
+
+    }
 
     const modules = useMemo(() => ({
         toolbar: {
@@ -219,6 +314,8 @@ const EditRoomBoardContents = ({loginId}) => {
 
     return (
         <>
+            {toggle1 ? returnModal1(toggle1) : ""}
+            {toggle2 ? returnModal2(toggle2):""}
             <div className={style.boardTitle}>양도게시판 글 수정</div>
             <hr></hr>
             <div className={style.titleBox}>
@@ -243,14 +340,28 @@ const EditRoomBoardContents = ({loginId}) => {
                 {
                     fileList.map((e, i) => {
                         return (
-                            <div key={i}>{e.oriName}<span onClick={() => { handleRemoveFileChange(e.sysName) }}>x</span></div>
+                            <div key={i}>
+                                {e.oriName}
+                                <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
+                            </div>
                         );
                     })
                 }
             </div>
             <div className={style.fileBox}>
-                <div>파일첨부</div>
-                {fileListDiv()}
+                <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
+                <div className={style.fileInputDiv}>
+                    {
+                        inputList.map((e, i) => (
+                            e.show ? (
+                                <div key={i}>
+                                    <input type="file" onChange={handleFileChange} name={e.name} />
+                                    <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                </div>
+                            ) : null
+                        ))
+                    }
+                </div>
             </div>
             <div>
                 <div className={style.contents}>내용<span>*</span></div>
@@ -259,8 +370,9 @@ const EditRoomBoardContents = ({loginId}) => {
                         value={formData.contents} onChange={(value) => {
                             if (value.length > 5000) {
                                 alert("최대 5000자까지 작성 가능합니다");
+                                setFormData(prev => ({ ...prev }));
                             } else {
-                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                                setFormData(prev => ({ ...prev, contents: value }));
                             }
                         }} />
                 </div>
@@ -268,7 +380,7 @@ const EditRoomBoardContents = ({loginId}) => {
 
             <div className={style.btns}>
                 <Link to="/board/toRoomBoardContents" state={{ sysSeq: location.state.sysSeq }}><button>작성 취소</button></Link>
-                <button onClick={handleAdd}>수정 완료</button>
+                <button onClick={regex}>수정 완료</button>
             </div>
         </>
     );

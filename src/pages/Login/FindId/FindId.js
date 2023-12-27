@@ -3,6 +3,7 @@ import { useState} from 'react';
 import style from './FindId.module.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 function FindId() {
 
@@ -16,7 +17,9 @@ function FindId() {
   const handlekeyup = (e) => {
     if (e.code === 'Enter') {
       if(findId.email==""){
-        alert("항목을 입력해주세요.")
+        Swal.fire({
+          text: "항목을 입력해주세요"
+        });
     }
     else{
         fetchData();
@@ -31,7 +34,9 @@ function FindId() {
       const email = findId.email;
       const response = await axios.get(`/api/member/findId/${email}`);
       if(response.data.length==0){
-        alert("일치하는 정보가 없습니다.")
+        Swal.fire({
+          text: "일치하는 정보가 없습니다"
+        });
       }
       setSize(response.data.length);
       setfindId({ ...findId, id: response.data, email: "" });
@@ -41,7 +46,9 @@ function FindId() {
   };
   const handlesubmit = () =>{
     if(findId.email==""){
-      alert("항목을 입력해주세요.")
+      Swal.fire({
+        text: "항목을 입력해주세요"
+      });
   }
   else{
       fetchData();
