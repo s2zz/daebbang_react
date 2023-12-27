@@ -16,7 +16,7 @@ function FindEnrollmentId() {
   }
   const handlekeyup = (e) => {
     if (e.code === 'Enter') {
-        if(findId.name==""||findId.phone==""){
+        if(findId.name===""||findId.phone===""){
           Swal.fire({
             text: "모든 항목을 입력해주세요"
           });
@@ -31,7 +31,7 @@ function FindEnrollmentId() {
       const name = findId.name;
       const phone = findId.phone;
       const response = await axios.get(`/api/estate/findId/${name}/${phone}`);
-      if(response.data.length==0){
+      if(response.data.length===0){
         Swal.fire({
           text: "일치하는 정보가 없습니다"
         });
@@ -45,7 +45,7 @@ function FindEnrollmentId() {
         }
   };
   const handlesubmit = () => {
-    if(findId.name==""||findId.phone==""){
+    if(findId.name===""||findId.phone===""){
       Swal.fire({
         text: "모든 항목을 입력해주세요"
       });
@@ -71,7 +71,7 @@ function FindEnrollmentId() {
           </div>
           <div className={style.btnBox}>
             
-            {size == -1 ? <></> : <div>
+            {size === -1 ? <></> : <div>
               <span>확인된 아이디가 {size}개 있습니다</span><br></br>
               {findId.id.map((id, index) => (
                 <div key={index}>  ***{id.slice(3)}</div>

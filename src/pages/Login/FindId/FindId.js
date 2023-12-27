@@ -16,7 +16,7 @@ function FindId() {
   }
   const handlekeyup = (e) => {
     if (e.code === 'Enter') {
-      if(findId.email==""){
+      if(findId.email===""){
         Swal.fire({
           text: "항목을 입력해주세요"
         });
@@ -33,7 +33,7 @@ function FindId() {
     try {
       const email = findId.email;
       const response = await axios.get(`/api/member/findId/${email}`);
-      if(response.data.length==0){
+      if(response.data.length===0){
         Swal.fire({
           text: "일치하는 정보가 없습니다"
         });
@@ -45,7 +45,7 @@ function FindId() {
     }
   };
   const handlesubmit = () =>{
-    if(findId.email==""){
+    if(findId.email===""){
       Swal.fire({
         text: "항목을 입력해주세요"
       });
@@ -68,7 +68,7 @@ function FindId() {
           </div>
           <div className={style.btnBox}>
             
-            {size == -1 ? <></> : <div>
+            {size === -1 ? <></> : <div>
               <span>확인된 아이디가 {size}개 있습니다</span><br></br>
               {findId.id.map((id, index) => (
                 <div key={index}>  ***{id.slice(3)}</div>

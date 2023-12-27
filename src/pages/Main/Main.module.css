@@ -249,3 +249,9 @@
     margin-top: 5px;
     margin-bottom: 15px;
 }
+.imagediv:hover{
+    cursor: pointer;
+}
+.sawImage{
+    width: 100%;
+}
