@@ -14,13 +14,13 @@ function FindEnrollmentPw() {
   }
   const handlekeyup = (e) => {
     if (e.code === 'Enter') {
-      if (findPw.name!="" && findPw.phone!="" && findPw.email!="") {
+      if (findPw.name!=="" && findPw.phone!=="" && findPw.email!=="") {
         const formData = new FormData();
       formData.append("name", findPw.name);
       formData.append("phone", findPw.phone);
       formData.append("email", findPw.email);
       axios.post("/api/mail/findenrollmentPw", formData).then(resp => {
-        if(resp.data==0){
+        if(resp.data===0){
           Swal.fire({
             text: "일치하는 정보가 없습니다"
           });
@@ -40,13 +40,13 @@ function FindEnrollmentPw() {
     }
   };
   const handlesubmit = () => {
-    if (findPw.name!="" && findPw.phone!="" && findPw.email!="") {
+    if (findPw.name!=="" && findPw.phone!=="" && findPw.email!=="") {
       const formData = new FormData();
     formData.append("name", findPw.name);
     formData.append("phone", findPw.phone);
     formData.append("email", findPw.email);
     axios.post("/api/mail/findenrollmentPw", formData).then(resp => {
-      if(resp.data==0){
+      if(resp.data===0){
         Swal.fire({
           text: "일치하는 정보가 없습니다"
         });
