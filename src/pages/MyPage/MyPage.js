@@ -5,6 +5,7 @@ import style from "./css/MyPage.module.css"
 import DeleteMyInfo from './DeleteMyInfo';
 import UpdateMyInfo from './UpdateMyInfo';
 import ChangePw from './ChangePw';
+import ProfileImage from './ProfileImage';
 import Loading from '../commons/Loading';
 
 const Info = () => {
@@ -156,6 +157,7 @@ const EstateInfo = () => {
                     </div>
                     <div className={style.cBtnBox}>
                         <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
+                        <Link to="/mypage/profileImage"><button className={style.changeBtn}>대표 이미지</button></Link>
                         <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
                         <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
                     </div>
@@ -226,6 +228,7 @@ function MyPage() {
                 <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
                 <Route path="updateMyInfo" element={<UpdateMyInfo />} />
                 <Route path="changePw" element={<ChangePw />} />
+                <Route path="profileImage" element={<ProfileImage />} />
 
                 {isEstate && <Route path="/" element={<EstateInfo />} />}
                 <Route path="estateInfo" element={<EstateInfo />} />
