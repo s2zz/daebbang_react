@@ -167,7 +167,7 @@ const FavoriteBoardList = () => {
             </div>
             <div className={style.boardContentsBox}>
                 <div className={fstyle.boardInfo}>
-                    <div><img src={favorite} alt="..." /></div>
+                    <div><img src={favorite} alt="..." className={style.fav}/></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
