@@ -6,6 +6,7 @@ import DeleteMyInfo from './DeleteMyInfo';
 import UpdateMyInfo from './UpdateMyInfo';
 import ChangePw from './ChangePw';
 import Loading from '../commons/Loading';
+import Footer from "../commons/Footer";
 
 const Info = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -109,10 +110,10 @@ const Report = () => {
                             {myReport.map((e, i) => {
                                 return (
                                     <div key={i} className={style.SawEstate}>
-                                        <div>{e.estateName}</div>
-                                        <div>{e.content}</div>
-                                        <div>{e.content2}</div>
-                                        <div>{e.status}</div>
+                                        <div className={style.estateName}>{e.estateName}</div>
+                                        <div className={style.content}>{e.content}</div>
+                                        <div className={style.content2}>{e.content2}</div>
+                                        <div className={style.status}>{e.status}</div>
                                     </div>
                                 )
                             })}
@@ -196,42 +197,44 @@ function MyPage() {
     };
 
     return (
-        <div className={style.container}>
-            <div className={style.myLogo}>MY DAEBBANG</div>
-            {isEstate ?
-                <div className={style.menuDiv}>
-                    <div className={style.menu}>
-                        <Link to="/mypage/estateInfo">
+        <div>
+            <div className={style.container}>
+                <div className={style.myLogo}>MY DAEBBANG</div>
+                {isEstate ?
+                    <div className={style.menuDiv}>
+                        <div className={style.menu}>
+                            <Link to="/mypage/estateInfo">
+                                <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
+                            </Link>
+                        </div>
+                    </div>
+                    : <div className={style.menu}>
+                        <Link to="/mypage/info">
                             <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
                         </Link>
+                        <Link to="/mypage/review">
+                            <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내가 본 방</button>
+                        </Link>
+                        <Link to="/mypage/report">
+                            <button className={selectedMenu === "report" ? style.menuReportSelected : style.menuReport} onClick={() => handleMenuClick("report")}>신고 내역</button>
+                        </Link>
                     </div>
-                </div>
-                : <div className={style.menu}>
-                    <Link to="/mypage/info">
-                        <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
-                    </Link>
-                    <Link to="/mypage/review">
-                        <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내가 본 방</button>
-                    </Link>
-                    <Link to="/mypage/report">
-                        <button className={selectedMenu === "report" ? style.menuReportSelected : style.menuReport} onClick={() => handleMenuClick("report")}>신고 내역</button>
-                    </Link>
-                </div>
-            }
-            <Routes>
-                {!isEstate && <Route path="/" element={<Info />} />}
-                <Route path="info" element={<Info />} />
-                <Route path="review" element={<Review />} />
-                <Route path="report" element={<Report />} />
-                <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
-                <Route path="updateMyInfo" element={<UpdateMyInfo />} />
-                <Route path="changePw" element={<ChangePw />} />
+                }
+                <Routes>
+                    {!isEstate && <Route path="/" element={<Info />} />}
+                    <Route path="info" element={<Info />} />
+                    <Route path="review" element={<Review />} />
+                    <Route path="report" element={<Report />} />
+                    <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
+                    <Route path="updateMyInfo" element={<UpdateMyInfo />} />
+                    <Route path="changePw" element={<ChangePw />} />
 
-                {isEstate && <Route path="/" element={<EstateInfo />} />}
-                <Route path="estateInfo" element={<EstateInfo />} />
-            </Routes>
+                    {isEstate && <Route path="/" element={<EstateInfo />} />}
+                    <Route path="estateInfo" element={<EstateInfo />} />
+                </Routes>
+            </div>
+            <Footer></Footer>
         </div>
-
     );
 }
 

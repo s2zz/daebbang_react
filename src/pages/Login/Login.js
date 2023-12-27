@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import axios from 'axios';
 import Modal from 'react-modal';
 import TopForm from "../commons/TopForm";
+import Footer from "../commons/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHammer, faLock } from "@fortawesome/free-solid-svg-icons";
 
@@ -126,86 +127,87 @@ const LoginBox = ({ setLoginId }) => {
   }
 
   return (
-    <div className={style.container}>
-      <div className={style.loginBox}>
-        <div className={style.logo}>일반 로그인</div>
-        <div className={style.inputLoginBox}>
-          <div className={style.inputLogin}>
-            <div className={style.loginFont}>아이디</div>
-            <input type="text" name="id" placeholder="아이디를 입력해주세요" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.id} className={style.inputInfo}></input>
-            <div className={style.blank}></div>
-            <div className={style.loginFont}>비밀번호</div>
-            <input type="password" name="pw" placeholder="비밀번호를 입력해주세요" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.pw} className={style.inputInfo}></input>
+    <div>
+      <div className={style.container}>
+        <div className={style.loginBox}>
+          <div className={style.logo}>일반 로그인</div>
+          <div className={style.inputLoginBox}>
+            <div className={style.inputLogin}>
+              <div className={style.loginFont}>아이디</div>
+              <input type="text" name="id" placeholder="아이디를 입력해주세요" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.id} className={style.inputInfo}></input>
+              <div className={style.blank}></div>
+              <div className={style.loginFont}>비밀번호</div>
+              <input type="password" name="pw" placeholder="비밀번호를 입력해주세요" onChange={handleChange} onKeyUp={handleMemberKeyup} value={user.pw} className={style.inputInfo}></input>
+            </div>
+          </div>
+          <div className={style.btnBox}>
+            <button className={style.loginBtn} ref={memberLogin} onClick={handleLogin}>로그인</button>
+          </div>
+          <div className={style.findBox}>
+            <Link to="/signUp" className={style.findId}>회원가입</Link>
+            <a className={style.findId} href="/login/findId">아이디 찾기</a>
+            <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
           </div>
         </div>
-        <div className={style.btnBox}>
-          <button className={style.loginBtn} ref={memberLogin} onClick={handleLogin}>로그인</button>
-        </div>
-        <div className={style.findBox}>
-          <Link to="/signUp" className={style.findId}>회원가입</Link>
-          <a className={style.findId} href="/login/findId">아이디 찾기</a>
-          <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
-        </div>
-      </div>
-      <div className={style.estateLoginBox}>
-        <div className={style.logo}>공인중개사 로그인</div>
-        <div className={style.inputLoginBox}>
-          <div className={style.inputLogin}>
-            <div className={style.loginFont}>아이디</div>
-            <input type="text" name="id" placeholder="아이디를 입력해주세요" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.id} className={style.inputInfo}></input>
-            <div className={style.blank}></div>
-            <div className={style.loginFont}>비밀번호</div>
-            <input type="password" name="pw" placeholder="비밀번호를 입력해주세요" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.pw} className={style.inputInfo}></input>
+        <div className={style.estateLoginBox}>
+          <div className={style.logo}>공인중개사 로그인</div>
+          <div className={style.inputLoginBox}>
+            <div className={style.inputLogin}>
+              <div className={style.loginFont}>아이디</div>
+              <input type="text" name="id" placeholder="아이디를 입력해주세요" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.id} className={style.inputInfo}></input>
+              <div className={style.blank}></div>
+              <div className={style.loginFont}>비밀번호</div>
+              <input type="password" name="pw" placeholder="비밀번호를 입력해주세요" onChange={handleEstateChange} onKeyUp={handleEstateKeyup} value={estate.pw} className={style.inputInfo}></input>
+            </div>
+          </div>
+          <div className={style.btnBox}>
+            <button className={style.loginBtn} ref={estateLogin} onClick={handleEstateLogin}>로그인</button>
+          </div>
+          <div className={style.findBox}>
+            <Link to="/enrollment" className={style.findId}>회원가입</Link>
+            <a className={style.findId} href="/login/findId/findenrollmentId">아이디 찾기</a>
+            <a className={style.findPw} href="/login/findPw/findenrollmentPw">비밀번호 찾기</a>
           </div>
         </div>
-        <div className={style.btnBox}>
-          <button className={style.loginBtn} ref={estateLogin} onClick={handleEstateLogin}>로그인</button>
-        </div>
-        <div className={style.findBox}>
-          <Link to="/enrollment" className={style.findId}>회원가입</Link>
-          <a className={style.findId} href="/login/findId/findenrollmentId">아이디 찾기</a>
-          <a className={style.findPw} href="/login/findPw/findenrollmentPw">비밀번호 찾기</a>
-        </div>
-      </div>
-      <Modal
-        isOpen={showModal}
-        onRequestClose={() => setShowModal(false)}
-        appElement={document.getElementById('root')}
-        style={{
-          overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)'
-          },
-          content: {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '430px',
-            height: '400px',
-            padding: '0px',
-            overflow: 'none'
-          }
-        }}
-      >
+        <Modal
+          isOpen={showModal}
+          onRequestClose={() => setShowModal(false)}
+          appElement={document.getElementById('root')}
+          style={{
+            overlay: {
+              backgroundColor: 'rgba(0, 0, 0, 0.5)'
+            },
+            content: {
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '430px',
+              height: '400px',
+              padding: '0px',
+              overflow: 'none'
+            }
+          }}
+        >
 
-        <div className={style.adminModal}>
-          <div>
-            <div className={style.adminTitle}>관리자 로그인</div>
+          <div className={style.adminModal}>
             <div>
-              <FontAwesomeIcon icon={faHammer} className={style.icon} />
-              <input type="text" placeholder="관리자 아이디" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="id" value={admin.id}></input><br></br><br></br>
-              <FontAwesomeIcon icon={faLock} className={style.icon} />
-              <input type="password" placeholder="관리자 비밀번호" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="pw" value={admin.pw}></input><br></br>
-            </div>
-            <div className={style.adminBtnDiv}>
-              <button className={style.adminBtn} ref={adminLogin} onClick={handleAdminLogin}>로그인</button>
+              <div className={style.adminTitle}>관리자 로그인</div>
+              <div>
+                <FontAwesomeIcon icon={faHammer} className={style.icon} />
+                <input type="text" placeholder="관리자 아이디" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="id" value={admin.id}></input><br></br><br></br>
+                <FontAwesomeIcon icon={faLock} className={style.icon} />
+                <input type="password" placeholder="관리자 비밀번호" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="pw" value={admin.pw}></input><br></br>
+              </div>
+              <div className={style.adminBtnDiv}>
+                <button className={style.adminBtn} ref={adminLogin} onClick={handleAdminLogin}>로그인</button>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </div>
+      <Footer />
     </div>
-
-
   );
 }
 
