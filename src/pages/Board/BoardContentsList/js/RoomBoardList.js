@@ -204,7 +204,7 @@ const RoomBoardList = ({loginId}) => {
 
             <div className={style.boardContentsBox}>
                 <div className={style.boardInfo}>
-                    <div><img src={notFavorite} alt="..." /></div>
+                    <div><img src={favorite} alt="..." className={style.fav}/></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>

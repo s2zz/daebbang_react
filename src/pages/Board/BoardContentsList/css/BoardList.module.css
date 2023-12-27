@@ -5,8 +5,8 @@
 }
 .boardTitle+hr{
     height:4px;
-    color:black;
     background-color: black;
+    border:black;
     margin-bottom:30px;
 }
 .selectBoard{
@@ -27,7 +27,7 @@
 }
 .selectBoard div:hover:not(.selectBoard>div){
     cursor: pointer;
-    background-color: rgb(240, 240, 240);
+    background-color: rgba(240,240,240,0.3);
 }
 .selectBoard>div{
     background-color: #326CF9;
@@ -60,11 +60,11 @@
 }
 .searchBox>div:nth-child(1){
     width:80%;
-    border:1px solid #13295f;
+    border:1px solid #535353;
     border-radius: 5px;
 }
 .searchBox>div:nth-child(1):focus-within{
-    border:3px solid #326af988;
+    border:1px solid #326CF9;
 }
 
 .searchInput{overflow: hidden;}
@@ -97,13 +97,15 @@
 .searchBox button{
     height:100%;
     width:80%;
-    border:1px solid gainsboro;
+    min-width:63px;
+    border:1px solid #535353;
+    background-color: white;
     border-radius: 5px;
 }
 .searchBox button:hover{
     cursor: pointer;
-    background-color: #A0A0A0;
-    border:1px solid #939393;
+    background-color: #326CF9;
+    border:1px solid #326CF9;
     color:white;
 }
 
@@ -117,14 +119,15 @@
 .boardContentsBox{
     padding:10px;
     padding-bottom:4px;
-    border:1px solid #0f2150;
+    border:1px solid #A0A0A0;
+    border-radius: 3px;
     margin-bottom:20px;
 }
 
 .boardInfo{ 
     overflow:hidden;
     padding-bottom:8px;
-    border-bottom:1px solid #12275d;
+    border-bottom:1px solid gainsboro;
     height:40px;
 }
 .boardInfo>div{
@@ -153,7 +156,7 @@
 .noBoardContents{
     text-align: center;
 }
-.fav,.notFav{min-width:14.59px;}
+.fav,.notFav{min-width:17px;}
 .fav,.notFav:hover{cursor: pointer;}
 .boardListContents a{color:black;}
 .boardListContents>div{
@@ -189,13 +192,15 @@
     height:100%;
     width:80px;
     height:35px;
-    border:1px solid gainsboro;
+    border:1px solid #326CF9;
+    background-color: #326CF9;
+    color:white;
     border-radius: 5px;
 }
 .writeBtnDiv button:hover{
     cursor: pointer;
-    background-color: #A0A0A0;
-    border:1px solid #939393;
+    background-color: #0D65D9;
+    border:1px solid #0D65D9;
     color:white;
 }
 .naviFooter{

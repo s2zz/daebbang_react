@@ -14,41 +14,24 @@ const Main = () => {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const chevronWidth = 40;
   const [watch, setwatch] = useState([]);
-  const [imageList,setImageList] = useState([]);
+  const [imageList, setImageList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [zoomLevel, setZoomLevel] = useState(6);
   const searchListBoxRef = useRef(null);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [filterMapList, setFilterMapList] = useState(mapList);
 
   const navigate = useNavigate();
-  const [listReady, setlistReady] = useState(false);
 
 
 
 
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setLevel(zoomLevel);
-    }
-  }, [zoomLevel]);
+  
 
 
-  const mapRef = useRef(null);
-
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setLevel(zoomLevel);
-    }
-  }, [zoomLevel]);
-  const { kakao } = window;
 
   useEffect(() => {
     axios.get(`/api/map/getLimitAll`).then((resp) => {
       setMapList(resp.data);
     })
       .catch((err) => {
-        console.log(err);
       })
   }, []);
   useEffect(() => {
@@ -60,9 +43,7 @@ const Main = () => {
     else {
       axios.get(`/api/map/getWatchAll/${recent}`).then(resp => {
         setwatch(resp.data);
-        console.log(resp.data);
       }).catch(err => {
-        console.log(err);
       })
     }
   }, []);
@@ -75,18 +56,13 @@ const Main = () => {
     else {
       axios.get(`/api/map/getImageAll/${recent}`).then(resp => {
         setImageList(resp.data);
-        console.log(resp.data);
       }).catch(err => {
-        console.log(err);
       })
     }
   }, []);
   // 내림차순 정렬
   function compareBySeq(a, b) {
     return b.seq - a.seq;
-  }
-  function compareByestate_id(a, b) {
-    return b.estateId - a.estateId;
   }
 
   // 게시글 목록 불러오기
@@ -102,7 +78,7 @@ const Main = () => {
   }, [])
 
   // 페이지네이션
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = 1;
   const countPerPage = 10;
   const sliceRoomContentsList = () => {
     const start = (currentPage - 1) * countPerPage;
@@ -240,7 +216,10 @@ const Main = () => {
               searchListBox.appendChild(regionDiv);
             }
 
-
+            // 클릭 이벤트 리스너 추가
+            /* regionDiv.addEventListener("click", () => {
+              moveToLocation(region);
+            });*/
           });
 
           // 지하철역에 대한 검색
@@ -291,7 +270,41 @@ const Main = () => {
       searchListBox.style.display = "none";
     }
   };
+  const handleImageClick = (i) => {
+    navigate("/home/oneroom", { state: watch[i] });
+    // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+    const storedData = localStorage.getItem("watch");
+    const watchedProperties = storedData ? JSON.parse(storedData) : [];
 
+    // 새로운 마커의 estateId를 감시 중인 속성에 추가
+    const updatedWatchedProperties = [
+      ...new Set([watch[i].estateId, ...watchedProperties]),
+    ];
+    // 감시 중인 속성을 최대 10개로 제한
+    if (updatedWatchedProperties.length > 10) {
+      updatedWatchedProperties.splice(10);
+    }
+    // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+    localStorage.setItem("watch", JSON.stringify(updatedWatchedProperties));
+  };
+  const handleEstateClick = (i) => {
+    navigate("/home/oneroom", { state: mapList[i] });
+
+    // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+    const storedData = localStorage.getItem("watch");
+    const watchedProperties = storedData ? JSON.parse(storedData) : [];
+
+    // 새로운 마커의 estateId를 감시 중인 속성에 추가
+    const updatedWatchedProperties = [
+      ...new Set([mapList[i].estateId, ...watchedProperties]),
+    ];
+    // 감시 중인 속성을 최대 10개로 제한
+    if (updatedWatchedProperties.length > 10) {
+      updatedWatchedProperties.splice(10);
+    }
+    // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+    localStorage.setItem("watch", JSON.stringify(updatedWatchedProperties));
+  };
 
 
 
@@ -336,15 +349,16 @@ const Main = () => {
               chevronWidth={chevronWidth}
             >
               {imageList.map((e, i) => {
-                  return (
-                      <div className={style.imagediv} >
-                      <img
-                      src={`/uploads/estateImages/${e}`}
+                return (
+                  <div key={i} onClick={() => handleImageClick(i)} className={style.imagediv}  >
+                    <img
+                      className={style.sawImage}
+                      src={`/uploads/estateImages/${e}}`}
                       alt="Estate"
                     />
-                      </div>
-                  );
-                })}
+                  </div>
+                );
+              })}
 
             </ItemsCarousel>
           </div>
@@ -370,12 +384,12 @@ const Main = () => {
 
             {/* 아이콘 */}
             <div className={style.search_icon}>
-                <img
-                  style={{ maxHeight: "25px" }}
-                  src={search}
-                  alt="exam icon"
-                />
-              </div>
+              <img
+                style={{ maxHeight: "25px" }}
+                src={search}
+                alt="exam icon"
+              />
+            </div>
 
           </div>
         </div>
@@ -388,24 +402,22 @@ const Main = () => {
           <div className={style.recent_estate}>
             <div className={style.titlebox}>
               <span className={style.title}> 최근 등록된 매물</span>
-              <a href="/home/oneroom/list"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
+              <a href="/home/oneroom"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
             </div>
             <hr></hr>
             <div className={style.contents}>
               {
                 mapList.map((e, i) => {
                   return (
-                    <Link key={i} to={`/home/oneroom/info`} style={{ textDecoration: "none", color: "black" }} >
-                      <div className={style.cbgdiv} >
-                        <span className={style.fontcss}>
-                          [{e.address2.length > 7 ? e.address2.substring(0, 7)  : e.address2 }]
-                        </span>
-                        <span className={style.fontcss}>
-                          {e.title.length > 7 ?  e.title.substring(0, 7) + "..." :  e.title}
-                        </span>
-                        <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.substring(0, 10)}</span>
-                      </div>
-                    </Link>
+                    <div className={style.cbgdiv} key={i} onClick={() => handleEstateClick(i)} >
+                      <span className={style.fontcss}>
+                        [{e.address2.length > 7 ? e.address2.substring(0, 7) : e.address2}]
+                      </span>
+                      <span className={style.fontcss}>
+                        {e.title.length > 7 ? e.title.substring(0, 7) + "..." : e.title}
+                      </span>
+                      <span style={{ float: "right" }} className={style.datefontcss}>{e.writeDate.substring(0, 10)}</span>
+                    </div>
                   );
                 })
               }
@@ -463,7 +475,7 @@ const Main = () => {
             </div>
           </div>
         </div>
-        <div middle_up>
+        <div middle_up="true">
           <Footer></Footer>
         </div>
       </div>
