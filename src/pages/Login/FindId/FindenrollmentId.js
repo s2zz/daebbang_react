@@ -3,6 +3,7 @@ import { useState} from 'react';
 import style from './FindId.module.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 function FindEnrollmentId() {
 
@@ -16,7 +17,9 @@ function FindEnrollmentId() {
   const handlekeyup = (e) => {
     if (e.code === 'Enter') {
         if(findId.name==""||findId.phone==""){
-            alert("모든 항목을 입력해주세요.")
+          Swal.fire({
+            text: "모든 항목을 입력해주세요"
+          });
         }
         else{
             fetchData();
@@ -29,17 +32,23 @@ function FindEnrollmentId() {
       const phone = findId.phone;
       const response = await axios.get(`/api/estate/findId/${name}/${phone}`);
       if(response.data.length==0){
-        alert("일치하는 정보가 없습니다.")
+        Swal.fire({
+          text: "일치하는 정보가 없습니다"
+        });
       }
       setSize(response.data.length);
       setfindId({ ...findId, id: response.data, name: "" ,phone:""});
     } catch (error) {
-      alert("일치하는 정보가 없습니다");
+      Swal.fire({
+        text: "일치하는 정보가 없습니다"
+      });
         }
   };
   const handlesubmit = () => {
     if(findId.name==""||findId.phone==""){
-      alert("모든 항목을 입력해주세요.")
+      Swal.fire({
+        text: "모든 항목을 입력해주세요"
+      });
   }
   else{
       fetchData();
@@ -57,7 +66,7 @@ function FindEnrollmentId() {
               <input type="text" name="name" placeholder="이름을 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.name} className={style.inputInfo}></input><br></br>
               <div className={style.blank}></div>
               <div className={style.loginFont}>전화번호</div>
-              <input type="text" name="phone" placeholder="-빼고 번호를 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.phone} className={style.inputInfo}></input><br></br>
+              <input type="text" name="phone" placeholder="번호를 입력해주세요" onChange={handleChange} onKeyUp={handlekeyup} value={findId.phone} className={style.inputInfo}></input><br></br>
             </div>
           </div>
           <div className={style.btnBox}>
