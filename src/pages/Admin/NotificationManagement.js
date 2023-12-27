@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import Loading from '../commons/Loading';
 import axios from 'axios';
@@ -205,6 +205,9 @@ const Notification = () => {
                         rows={generateData(page)}
                         pageSizeOptions={[10, 50, 100]}
                         getRowId={(row) => row.seq}
+                        slots={{
+                            toolbar: GridToolbar,
+                        }}
                     />
                 )}
             </Box>

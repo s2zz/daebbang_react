@@ -250,7 +250,7 @@ const AdminDashboard = () => {
                             )}
                         </div>
 
-                        <a href="#"><button className={style.morebtn}>더보기</button></a>
+                        <Link to="/admin/toReportManagement"><button className={style.morebtn}>더보기</button></Link>
                     </div>
                     <hr style={{ marginTop: '1.3%' }}></hr>
 
