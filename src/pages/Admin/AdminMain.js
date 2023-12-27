@@ -5,38 +5,38 @@ import VisitorLine from './statics/VisitorLine';
 import NewEstateLine from './statics/NewEstateLine';
 import NewMemberLine from './statics/NewMemberLine';
 const AdminMain = () => {
-    const [visitorCount, setVisitorCount] = useState(0);
-    const [visitorCountData, setVisitorCountData] = useState([]);
+    const [visitorCount1, setvisitorCount1] = useState(0);
+    const [visitorCount1Data, setvisitorCount1Data] = useState([]);
     const [visitorDateData, setVisitorDateData] = useState([]);
-    const [sumVisitorCount, setSumVisitorCount] = useState([]);
+    const [sumvisitorCount1, setSumvisitorCount1] = useState([]);
 
-    const [newMemberCount, setNewMemberCount] = useState(0);
-    const [newMemberCountData, setNewMemberCountData] = useState([]);
+    const [newMemberCount1, setnewMemberCount1] = useState(0);
+    const [newMemberCount1Data, setnewMemberCount1Data] = useState([]);
     const [newMemberDateData, setNewMemberDateData] = useState([]);
-    const [sumNewMemberCount, setSumNewMemberCount] = useState([]);
+    const [sumnewMemberCount1, setSumnewMemberCount1] = useState([]);
 
-    const [newEstateCount, setNewEstateCount] = useState(0);
-    const [newEstateCountData, setNewEstateCountData] = useState([]);
+    const [newEstateCount1, setnewEstateCount1] = useState(0);
+    const [newEstateCount1Data, setnewEstateCount1Data] = useState([]);
     const [newEstateDateData, setNewEstateDateData] = useState([]);
-    const [sumNewEstateCount, setSumNewEstateCount] = useState([]);
+    const [sumnewEstateCount1, setSumnewEstateCount1] = useState([]);
 
 
     useEffect(() => {
         const fetchVisitorData = async () => {
             try {
                 const dailyVisitors = await axios.get("/api/admin/dailyVisitors");
-                setVisitorCount(dailyVisitors.data.visitorCount || 0);
+                setvisitorCount1(dailyVisitors.data.visitorCount1 || 0);
 
                 const allVisitors = await axios.get("/api/admin/visitors/getAll");
                 const visitorData = allVisitors.data.map(entry => ({
                     x: entry.visitorDate,
-                    y: entry.visitorCount
+                    y: entry.visitorCount1
                 }));
-                setVisitorCountData(visitorData);
+                setvisitorCount1Data(visitorData);
                 setVisitorDateData(allVisitors.data.map(entry => entry.date));
 
                 const sumVisitors = await axios.get("/api/admin/visitors/sum");
-                setSumVisitorCount(sumVisitors.data);
+                setSumvisitorCount1(sumVisitors.data);
             } catch (error) {
                 console.error('Error fetching visitor data:', error);
             }
@@ -45,18 +45,18 @@ const AdminMain = () => {
         const fetchNewMemberData = async () => {
             try {
                 const dailyMember = await axios.get("/api/admin/dailyMember");
-                setNewMemberCount(dailyMember.data.newMemberCount || 0);
+                setnewMemberCount1(dailyMember.data.newMemberCount1 || 0);
 
                 const newMembers = await axios.get("/api/admin/newMember/getAll");
                 const newMemberData = newMembers.data.map(entry => ({
                     x: entry.newMemberDate,
-                    y: entry.newMemberCount
+                    y: entry.newMemberCount1
                 }));
-                setNewMemberCountData(newMemberData);
+                setnewMemberCount1Data(newMemberData);
                 setNewMemberDateData(newMembers.data.map(entry => entry.date));
 
                 const sumNewMembers = await axios.get("/api/admin/newMember/sum");
-                setSumNewMemberCount(sumNewMembers.data);
+                setSumnewMemberCount1(sumNewMembers.data);
             } catch (error) {
                 console.error('Error fetching new member data:', error);
             }
@@ -65,18 +65,18 @@ const AdminMain = () => {
         const fetchNewEstateData = async () => {
             try {
                 const dailyEstate = await axios.get("/api/admin/dailyEstate");
-                setNewEstateCount(dailyEstate.data.estateCount || 0);
+                setnewEstateCount1(dailyEstate.data.estateCount || 0);
 
                 const newEstates = await axios.get("/api/admin/agent/newEstate/getAll");
                 const newEstateData = newEstates.data.map(entry => ({
                     x: entry.estateDate,
                     y: entry.estateCount
                 }));
-                setNewEstateCountData(newEstateData);
+                setnewEstateCount1Data(newEstateData);
                 setNewEstateDateData(newEstates.data.map(entry => entry.date));
 
                 const sumNewEstates = await axios.get("/api/admin/agent/sum");
-                setSumNewEstateCount(sumNewEstates.data);
+                setSumnewEstateCount1(sumNewEstates.data);
             } catch (error) {
                 console.error('Error fetching new estate data:', error);
             }
@@ -101,15 +101,15 @@ const AdminMain = () => {
     return (
         <div style={{ paddingTop: '3%', paddingLeft: '2%' }}>
             <div style={{ fontSize: '2.5rem', marginLeft: '2%' }}>관리자 메인 페이지</div>
-            {visitorCount !== null ? (
+            {visitorCount1 !== null ? (
                 <div style={{ border: '1px solid #eeeeee', width: "90%", margin: 'auto', marginTop: '2%', display: 'flex', padding: '2%' }}>
                     <div>
                         <div>오늘 방문자 수</div>
-                        <div style={{ fontSize: '1.5rem' }}>{visitorCount}</div>
+                        <div style={{ fontSize: '1.5rem' }}>{visitorCount1}</div>
                     </div>
                     <div style={{ marginLeft: '5%' }}>
                         <div>누적 방문자 수</div>
-                        <div style={{ fontSize: '1.5rem' }}>{sumVisitorCount}</div>
+                        <div style={{ fontSize: '1.5rem' }}>{sumvisitorCount1}</div>
                     </div>
                 </div>
 
@@ -117,34 +117,34 @@ const AdminMain = () => {
                 <p>Loading...</p>
             )}
             <div style={{ border: '1px solid #eeeeee', width: '90%', height: '400px', margin: 'auto', marginTop: '1%'}}>
-                <VisitorLine data={visitorCountData} />
+                <VisitorLine data={visitorCount1Data} />
             </div>
 
             <div style={{ border: '1px solid #eeeeee', width: "90%", margin: 'auto', marginTop: '2%', display: 'flex', padding: '2%' }}>
                 <div>
                     <div>오늘 신규 회원 수</div>
-                    <div style={{ fontSize: '1.5rem' }}>{newMemberCount}</div>
+                    <div style={{ fontSize: '1.5rem' }}>{newMemberCount1}</div>
                 </div>
                 <div style={{ marginLeft: '5%' }}>
                     <div>누적 회원 수</div>
-                    <div style={{ fontSize: '1.5rem' }}>{sumNewMemberCount}</div>
+                    <div style={{ fontSize: '1.5rem' }}>{sumnewMemberCount1}</div>
                 </div>
             </div>
             <div style={{ border: '1px solid #eeeeee', width: "90%", height: '400px', margin: 'auto', marginTop: '1%' }}>
-                <NewMemberLine data={newMemberCountData} />
+                <NewMemberLine data={newMemberCount1Data} />
             </div>
             <div style={{ border: '1px solid #eeeeee', width: "90%", margin: 'auto', marginTop: '2%', display: 'flex', padding: '2%' }}>
                 <div>
                     <div>오늘 신규 공인중개사 수</div>
-                    <div style={{ fontSize: '1.5rem' }}>{newEstateCount}</div>
+                    <div style={{ fontSize: '1.5rem' }}>{newEstateCount1}</div>
                 </div>
                 <div style={{ marginLeft: '5%' }}>
                     <div>누적 공인중개사 수</div>
-                    <div style={{ fontSize: '1.5rem' }}>{sumNewEstateCount}</div>
+                    <div style={{ fontSize: '1.5rem' }}>{sumnewEstateCount1}</div>
                 </div>
             </div>
             <div style={{ border: '1px solid #eeeeee', width: "90%", height: '400px', margin: 'auto', marginTop: '1%', marginBottom: '2%' }}>
-                <NewEstateLine data={newEstateCountData} />
+                <NewEstateLine data={newEstateCount1Data} />
             </div>
         </div>
 

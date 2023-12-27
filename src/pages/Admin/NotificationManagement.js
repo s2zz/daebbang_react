@@ -19,6 +19,7 @@ const Notification = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('/api/reviewApproval/admin/selectByAdmin');
+            console.log(response.data);
             setContacts(response.data);
             setTotalRows(response.data.length);
             setLoading(false);
@@ -171,9 +172,23 @@ const Notification = () => {
 
     const columns = [
         { field: 'seq', headerName: 'Seq', width: 90, headerAlign: "center", align: "center" },
-        { field: 'estateName', headerName: 'EstateName', width: 250, headerAlign: "center", align: "center" },
+        {
+            field: 'estateName',
+            headerName: 'EstateName',
+            width: 250,
+            headerAlign: 'center',
+            align: 'center',
+            valueGetter: (params) => params.row.estate.realEstateAgent?.estateName || '',
+        },
         { field: 'userId', headerName: 'UserId', width: 120, headerAlign: "center", align: "center" },
-        { field: 'estateCode', headerName: 'EstateCode', width: 120, headerAlign: "center", align: "center" },
+        {
+            field: 'estateCode',
+            headerName: 'EstateCode',
+            width: 120,
+            headerAlign: 'center',
+            align: 'center',
+            valueGetter: (params) => params.row.estate?.estateId|| '',
+        },
         { field: 'approvalCode', headerName: 'ApprovalCode', width: 120, headerAlign: "center", align: "center" },
         {
             field: 'approval',

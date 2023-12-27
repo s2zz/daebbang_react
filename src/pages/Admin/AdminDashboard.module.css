@@ -128,7 +128,6 @@
     flex: 0 0 calc(70% - 20px);
     /* 20px 간격 고려한 왼쪽 div의 너비 */
     background-color: #ffffff;
-    padding: 1%;
 }
 
 .right_content {
