@@ -1,7 +1,7 @@
 import style from "./Login.module.css"
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
 import axios from 'axios';
 import Modal from 'react-modal';
 import TopForm from "../commons/TopForm";
@@ -59,9 +59,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      Swal.fire({
-        text: "아이디 또는 비밀번호를 다시 확인해주세요"
-      });
+      alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setUser({ id: "", pw: "" });
     });
   }
@@ -78,9 +76,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      Swal.fire({
-        text: "아이디 또는 비밀번호를 다시 확인해주세요"
-      });
+      alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setEstate({ id: "", pw: "" });
     });
   }
@@ -97,9 +93,7 @@ const LoginBox = ({ setLoginId }) => {
       navi("/");
       window.location.reload();
     }).catch(resp => {
-      Swal.fire({
-        text: "아이디 또는 비밀번호를 다시 확인해주세요"
-      });
+      alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setAdmin({ id: "", pw: "" });
     });
   }
@@ -195,9 +189,9 @@ const LoginBox = ({ setLoginId }) => {
               <div className={style.adminTitle}>관리자 로그인</div>
               <div>
                 <FontAwesomeIcon icon={faHammer} className={style.icon} />
-                <input type="text" placeholder="관리자 아이디" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="id" value={admin.id}></input><br></br><br></br>
+                <input type="text" placeholder="관리자 아이디" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="id" value={admin.id} className={style.inputInfo}></input><br></br><br></br>
                 <FontAwesomeIcon icon={faLock} className={style.icon} />
-                <input type="password" placeholder="관리자 비밀번호" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="pw" value={admin.pw}></input><br></br>
+                <input type="password" placeholder="관리자 비밀번호" onChange={handleAdminChange} onKeyUp={handleAdminKeyup} name="pw" value={admin.pw} className={style.inputInfo}></input><br></br>
               </div>
               <div className={style.adminBtnDiv}>
                 <button className={style.adminBtn} ref={adminLogin} onClick={handleAdminLogin}>로그인</button>

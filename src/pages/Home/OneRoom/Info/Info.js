@@ -175,7 +175,6 @@ function Info(args, estate) {
         },
       })
       .then((resp) => {
-        console.log(resp);
         const fetchedData = resp.data;
         setEstateListLimit(fetchedData);
 
@@ -265,7 +264,6 @@ function Info(args, estate) {
 
   // 문의하기 버튼 클릭 이벤트
   const buttonEvent = () => {
-    console.log("오긶ㅁ");
     const estateId = markerInfo.estateId;
     axios
       .post("/api/reviewApproval/", {
@@ -288,7 +286,6 @@ function Info(args, estate) {
       .get(`/api/review/${markerInfo.estateId}`)
       .then((resp) => {
         setReview(resp.data);
-        console.log(resp.data);
       })
       .catch((err) => {
         console.log(err);
@@ -413,7 +410,6 @@ function Info(args, estate) {
       })
       .then((response) => {
         // 서버로부터의 응답 처리
-        console.log("잘 받음");
         setContent(""); // 내용 초기화
         setSelectedOption(""); // 선택된 옵션 초기화
         setReportConfirmationModal(true); // "신고가 완료 되었습니다" 모달 열기
@@ -423,12 +419,18 @@ function Info(args, estate) {
       });
   };
 
+  // 리뷰 게시판으로 데이터 넘기기
+  const handleReviewMoreInfoClick = () => {
+    const reviewInfo = { ...markerInfo };
+    navigate("/review/boardReview", { state: reviewInfo });
+  };
+
   // 이찬양 작업 공간
   // useEffect(() => {
   //   // markerInfo가 변경될 때 실행될 콜백 함수
   //   // 이곳에서 markerInfo에 따른 원하는 동작을 수행할 수 있음
   //   console.log("markerInfo가 변경됨:", markerInfo);
-    
+
   //   var estateId = markerInfo.estateId;
   //   console.log("markerInfo estateId:", estateId);
   //   axios.post(`/api/visit/increaseViewCount/${estateId}`)
@@ -1335,7 +1337,12 @@ function Info(args, estate) {
               )}
               {/* 여기서 매물 게시판으로 날라가면 됨 */}
               <div className={style.more_info}>
-                <div className={style.more_info_text}>더보기</div>
+                <div
+                  className={style.more_info_text}
+                  onClick={handleReviewMoreInfoClick}
+                >
+                  더보기
+                </div>
               </div>
             </div>
 
@@ -1449,18 +1456,34 @@ function Info(args, estate) {
                   )}
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="primary" onClick={handleReportSubmit}>
-                    확인
-                  </Button>
-                  <Button
-                    color="secondary"
-                    onClick={() => {
-                      toggleFirstModal();
-                      setContent("");
-                    }}
-                  >
-                    닫기
-                  </Button>
+                  {loginId === null ? (
+                    <>
+                      <Button
+                        color="primary"
+                        onClick={() => navigate("/login")}
+                      >
+                        로그인
+                      </Button>
+                      <Button color="secondary" onClick={toggleFirstModal}>
+                        닫기
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button color="primary" onClick={handleReportSubmit}>
+                        신고
+                      </Button>
+                      <Button
+                        color="secondary"
+                        onClick={() => {
+                          toggleFirstModal();
+                          setContent("");
+                        }}
+                      >
+                        닫기
+                      </Button>
+                    </>
+                  )}
                 </ModalFooter>
                 <Modal
                   isOpen={reportConfirmationModal}
