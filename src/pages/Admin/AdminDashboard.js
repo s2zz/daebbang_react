@@ -5,8 +5,105 @@ import style from "./AdminDashboard.module.css"
 import RoomStatics from './statics/RoomStatics';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Pagination from "@mui/material/Pagination";
+import VisitorLine from './statics/VisitorLine';
+import NewEstateLine from './statics/NewEstateLine';
+import NewMemberLine from './statics/NewMemberLine';
 import { faRightToBracket, faUserPlus, faHome, faFileAlt } from "@fortawesome/free-solid-svg-icons";
 const AdminDashboard = () => {
+    //통계
+    const [visitorCount1, setvisitorCount1] = useState(0);
+    const [visitorCount1Data, setvisitorCount1Data] = useState([]);
+    const [visitorDateData, setVisitorDateData] = useState([]);
+    const [sumvisitorCount1, setSumvisitorCount1] = useState([]);
+
+    const [newMemberCount1, setnewMemberCount1] = useState(0);
+    const [newMemberCount1Data, setnewMemberCount1Data] = useState([]);
+    const [newMemberDateData, setNewMemberDateData] = useState([]);
+    const [sumnewMemberCount1, setSumnewMemberCount1] = useState([]);
+
+    const [newEstateCount1, setnewEstateCount1] = useState(0);
+    const [newEstateCount1Data, setnewEstateCount1Data] = useState([]);
+    const [newEstateDateData, setNewEstateDateData] = useState([]);
+    const [sumnewEstateCount1, setSumnewEstateCount1] = useState([]);
+
+    const [selectedChart, setSelectedChart] = useState('visitor');
+    useEffect(() => {
+        const fetchVisitorData = async () => {
+            try {
+                const dailyVisitors = await axios.get("/api/admin/dailyVisitors");
+                setvisitorCount1(dailyVisitors.data.visitorCount || 0);
+
+                const allVisitors = await axios.get("/api/admin/visitors/getAll");
+                const visitorData = allVisitors.data.map(entry => ({
+                    x: entry.visitorDate,
+                    y: entry.visitorCount
+                }));
+                setvisitorCount1Data(visitorData);
+                setVisitorDateData(allVisitors.data.map(entry => entry.date));
+
+                const sumVisitors = await axios.get("/api/admin/visitors/sum");
+                setSumvisitorCount1(sumVisitors.data);
+            } catch (error) {
+                console.error('Error fetching visitor data:', error);
+            }
+        };
+
+        const fetchNewMemberData = async () => {
+            try {
+                const dailyMember = await axios.get("/api/admin/dailyMember");
+                setnewMemberCount1(dailyMember.data.newMemberCount || 0);
+
+                const newMembers = await axios.get("/api/admin/newMember/getAll");
+                const newMemberData = newMembers.data.map(entry => ({
+                    x: entry.newMemberDate,
+                    y: entry.newMemberCount
+                }));
+                setnewMemberCount1Data(newMemberData);
+                setNewMemberDateData(newMembers.data.map(entry => entry.date));
+
+                const sumNewMembers = await axios.get("/api/admin/newMember/sum");
+                setSumnewMemberCount1(sumNewMembers.data);
+            } catch (error) {
+                console.error('Error fetching new member data:', error);
+            }
+        };
+
+        const fetchNewEstateData = async () => {
+            try {
+                const dailyEstate = await axios.get("/api/admin/dailyEstate");
+                setnewEstateCount1(dailyEstate.data.estateCount || 0);
+
+                const newEstates = await axios.get("/api/admin/agent/newEstate/getAll");
+                const newEstateData = newEstates.data.map(entry => ({
+                    x: entry.estateDate,
+                    y: entry.estateCount
+                }));
+                setnewEstateCount1Data(newEstateData);
+                setNewEstateDateData(newEstates.data.map(entry => entry.date));
+
+                const sumNewEstates = await axios.get("/api/admin/agent/sum");
+                setSumnewEstateCount1(sumNewEstates.data);
+            } catch (error) {
+                console.error('Error fetching new estate data:', error);
+            }
+        };
+
+
+        fetchVisitorData();
+        fetchNewMemberData();
+        fetchNewEstateData();
+
+        const visitorInterval = setInterval(fetchVisitorData, 5000);
+        const newMemberInterval = setInterval(fetchNewMemberData, 5000);
+        const newEstateInterval = setInterval(fetchNewEstateData, 5000);
+
+        return () => {
+            clearInterval(visitorInterval);
+            clearInterval(newMemberInterval);
+            clearInterval(newEstateInterval);
+        };
+    }, []);
+
     //오늘
     const [visitorCount, setVisitorCount] = useState(0);
     const [newMemberCount, setNewMemberCount] = useState(0);
@@ -24,7 +121,7 @@ const AdminDashboard = () => {
     // 신고 페이지네이션
     const [currentReportPage, setCurrentReportPage] = useState(1);
     const [reportCountPerPage] = useState(5);
-    
+
     const slicedReportList = reportList.slice(
         (currentReportPage - 1) * reportCountPerPage,
         currentReportPage * reportCountPerPage
@@ -32,20 +129,19 @@ const AdminDashboard = () => {
     const processedReportList = slicedReportList.map(report => ({
         ...report,
         formattedDate: new Date(report.writeDate).toLocaleDateString(), // 원하는 날짜 형식으로 변환
-      }));
+    }));
     const reportPageChangeHandler = (event, page) => {
         setCurrentReportPage(page);
     }
     //매물 목록
     const [estateList, setEstateList] = useState([]);
 
-    
-    
+
+
     //매물 top5
     useEffect(() => {
         axios.get(`/api/admin/topFive`)
             .then(response => {
-                console.log(response.data);
                 setEstateList(response.data);
             })
             .catch(error => {
@@ -56,7 +152,6 @@ const AdminDashboard = () => {
     const fetchReportList = () => {
         axios.get(`/api/admin/selectAllByReportStatus`)
             .then(response => {
-                console.log(response.data);
                 setReportList(response.data);
             })
             .catch(error => {
@@ -65,7 +160,6 @@ const AdminDashboard = () => {
 
         axios.get(`/api/admin/countByReportStatus`)
             .then(response => {
-                console.log(response.data);
                 setReportCount(response.data);
             })
             .catch(error => {
@@ -153,7 +247,7 @@ const AdminDashboard = () => {
         <div className={style.container}>
             <div className={style.title}>대시보드</div>
             <div className={style.box_container}>
-                <div className={[style.box, style.option].join(' ')}>
+                <div className={[style.box, style.option, style.hover].join(' ')} onClick={() => setSelectedChart('visitor')}>
                     <div className={style.topContents}>
                         <div>오늘 방문자 수</div>
                         <div className={style.contents}>
@@ -166,7 +260,7 @@ const AdminDashboard = () => {
 
                     <div className={style.blueBox}></div>
                 </div>
-                <div className={[style.box, style.option].join(' ')}>
+                <div className={[style.box, style.option, style.hover].join(' ')} onClick={() => setSelectedChart('newMember')}>
                     <div className={style.topContents}>
                         <div>오늘 신규 회원 수</div>
                         <div className={style.contents}>
@@ -177,7 +271,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className={style.redBox}></div>
                 </div>
-                <div className={[style.box, style.option, style.greenBottomBorder].join(' ')}>
+                <div className={[style.box, style.option, style.hover, style.greenBottomBorder].join(' ')} onClick={() => setSelectedChart('newEstate')}>
                     <div className={style.topContents}>
                         <div>오늘 신규 중개사 수</div>
                         <div className={style.contents}>
@@ -202,7 +296,19 @@ const AdminDashboard = () => {
             </div>
             <div className={style.center_box_container}>
                 <div className={[style.left_content, style.option].join(' ')}>
-                    <div className={style.bord}>??</div>
+                    <div className={style.bord}>
+                        <div style={{ border: '1px solid #eeeeee', width: '100%', height: '300px', margin: 'auto' }}>
+                            {selectedChart === 'newMember' && (
+                                <NewMemberLine data={newMemberCount1Data} />
+                            )}
+                            {selectedChart === 'visitor' && (
+                                <VisitorLine data={visitorCount1Data} />
+                            )}
+                            {selectedChart === 'newEstate' && (
+                                <NewEstateLine data={newEstateCount1Data} />
+                            )}
+                        </div>
+                    </div>
                 </div>
                 <div className={[style.right_content, style.option].join(' ')}>
                     <div className={style.bord}>원룸/투룸</div>

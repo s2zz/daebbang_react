@@ -8,7 +8,6 @@ import MemberManagement from './MemberManagement';
 import NotificationManagement from './NotificationManagement';
 import ReportManagement from './ReportManagement';
 import EstateManagement from './EstateManagement';
-import Buttons from './Buttons';
 
 const Admin = () => {
     return (
@@ -25,7 +24,6 @@ const Admin = () => {
                     <Route path="/toNotificationManagement" element={<NotificationManagement />}></Route>
                     <Route path="/toReportManagement" element={<ReportManagement />}></Route>
                     <Route path="/toEstateManagement" element={<EstateManagement />}></Route>
-                    <Route path="/toButtons" element={<Buttons />}></Route>
                 </Routes>
             </div>
         </div >

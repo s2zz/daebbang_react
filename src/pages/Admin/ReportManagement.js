@@ -161,7 +161,7 @@ const ReportManagement = () => {
             headerName: 'Rejection',
             headerAlign: 'center',
             align: 'center',
-            width: 140,
+            width: 100,
             renderCell: (params) => returnButton(params.row.seq, params.row.reportStatus?.id),
         },
         {
@@ -169,7 +169,7 @@ const ReportManagement = () => {
             headerName: 'Delete',
             headerAlign: 'center',
             align: 'center',
-            width: 120,
+            width: 100,
             renderCell: (params) => deleteButton(params.row.seq),
         },
     ];
