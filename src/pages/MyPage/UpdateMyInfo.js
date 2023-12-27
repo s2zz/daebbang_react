@@ -7,7 +7,7 @@ import DaumPostcode from "react-daum-postcode";
 import style from "./css/UpdateMyInfo.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
 
 const UpdateMyInfo = () => {
     const storedLoginId = sessionStorage.getItem('loginId');
@@ -130,27 +130,19 @@ const UpdateMyInfo = () => {
 
     const handleUpdate = async () => {
         if (!fill) {
-            Swal.fire({
-                text: "모든 항목을 입력해주세요",
-            });
+            alert("모든 항목을 입력해주세요");
             return;
         }
         if (!nameRegex) {
-            Swal.fire({
-                text: "이름은 2~5글자의 한글이어야합니다.",
-            });
+            alert("이름은 2~5글자의 한글이어야합니다.");
             return;
         }
         if (!emailRegex) {
-            Swal.fire({
-                text: "이메일 형식을 올바르게 입력해주세요.",
-            });
+            alert("이메일 형식을 올바르게 입력해주세요.");
             return;
         }
         if (!phoneRegex) {
-            Swal.fire({
-                text: "휴대폰 번호는 숫자 11자리만 입력해주세요.",
-            });
+            alert("휴대폰 번호는 숫자 11자리만 입력해주세요.");
             return;
         }
         if (fill && nameRegex && emailRegex && phoneRegex) {
@@ -165,12 +157,7 @@ const UpdateMyInfo = () => {
                     address2: address2.address2
                 };
                 await axios.post("/api/member/updateMyInfo", userData);
-                Swal.fire({
-                    icon: "success",
-                    title: "회원정보 수정이 완료되었습니다",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                alert("회원정보 수정이 완료되었습니다");
                 navi("/mypage");
                 window.location.reload();
             } catch (error) {
@@ -181,21 +168,15 @@ const UpdateMyInfo = () => {
 
     const handleEstateUpdate = async () => {
         if (!efill) {
-            Swal.fire({
-                text: "모든 항목을 입력해주세요",
-            });
+            alert("모든 항목을 입력해주세요");
             return;
         }
         if (!nameRegex) {
-            Swal.fire({
-                text: "이름은 2~5글자의 한글이어야합니다.",
-            });
+            alert("이름은 2~5글자의 한글이어야합니다.");
             return;
         }
         if (!phoneRegex) {
-            Swal.fire({
-                text: "휴대폰 번호는 숫자 11자리만 입력해주세요.",
-            });
+            alert("휴대폰 번호는 숫자 11자리만 입력해주세요.");
             return;
         }
         if (efill && nameRegex && phoneRegex) {
@@ -209,12 +190,7 @@ const UpdateMyInfo = () => {
                     longitude: estateGeo.longitude
                 };
                 await axios.post("/api/estate/updateMyInfo", userData);
-                Swal.fire({
-                    icon: "success",
-                    title: "회원정보 수정이 완료되었습니다",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                alert("회원정보 수정이 완료되었습니다");
                 navi("/mypage");
                 window.location.reload();
             } catch (error) {
@@ -388,7 +364,7 @@ const UpdateMyInfo = () => {
                     </div>
                     <div className={style.changeBtns}>
                         <div>
-                            <button onClick={handleEstateUpdate} className={style.changeBtn}>회원정보 수정하기</button>
+                            <button onClick={handleEstateUpdate} className={style.changeEstateBtn}>공인중개사 정보 수정하기</button>
                         </div>
                     </div>
                 </div>

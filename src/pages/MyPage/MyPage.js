@@ -66,6 +66,12 @@ const Review = () => {
                 <div className={style.ReviewContainer}>
                     {sawEstate.length > 0 ?
                         <div>
+                            <div className={style.reviewTopics}>
+                                <div className={style.reviewImage}>매물 이미지</div>
+                                <div className={style.reviewAddress}>매물 주소</div>
+                                <div className={style.reviewInfo}>매물 정보</div>
+                                <div className={style.reviewApproval}>승인 여부</div>
+                            </div>
                             {sawEstate.map((e, i) => {
                                 const address = e.address || '';
                                 const title = e.title || '';
@@ -107,6 +113,12 @@ const Report = () => {
                 <div className={style.ReportContainer}>
                     {myReport.length > 0 ?
                         <div>
+                            <div className={style.reviewTopics}>
+                                <div className={style.reportEstate}>공인중개사</div>
+                                <div className={style.reportSubject}>신고 주제</div>
+                                <div className={style.reportInfo}>신고 정보</div>
+                                <div className={style.reportApproval}>승인 여부</div>
+                            </div>
                             {myReport.map((e, i) => {
                                 return (
                                     <div key={i} className={style.SawEstate}>
@@ -156,10 +168,10 @@ const EstateInfo = () => {
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <button className={style.changeBtn}><Link to="/mypage/changePw">비밀번호 변경하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/profileImage">대표 이미지</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo">회원정보 수정하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo">회원 탈퇴하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/changePw" className={style.link}>비밀번호 변경하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/profileImage" className={style.link}>대표 이미지</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo" className={style.link}>공인중개사 정보 수정하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo" className={style.link}>회원 탈퇴하기</Link></button>
                     </div>
                 </div>
             }

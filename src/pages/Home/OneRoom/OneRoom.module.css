@@ -56,7 +56,7 @@
     border: 1px solid #d9d9d9;
     box-sizing: border-box;
     max-height: calc(100% - 40px);
-    z-index: 100;
+    z-index: 10;
     background-color: rgb(255, 255, 255);
 }
 
@@ -101,7 +101,7 @@
     top: 120px;
     left: 20px;
     background-color: #fff;
-    z-index: 9999;
+    z-index: 10;
     font-size: 14px;
     display: block;
 }

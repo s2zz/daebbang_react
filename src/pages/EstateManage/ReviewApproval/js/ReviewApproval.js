@@ -103,8 +103,8 @@ function ReviewApproval() {
 
     return (
       <tr key={i}>
-        <td>{item.seq}</td>
         <td>{item.userId}</td>
+        <td>{item.phone}</td>
         <td><Link to={`/estateManage/estateInfo/${item.estateCode}`} className={style.infoLink} >{item.estateCode}</Link></td>
         <td>{getApprovalStatus()}</td>
         <td>
@@ -121,8 +121,8 @@ function ReviewApproval() {
       <table className={style.estateTable}>
         <thead>
           <tr>
-            <th>번호</th>
             <th>신청인</th>
+            <th>전화번호</th>
             <th>매물번호</th>
             <th>권한</th>
             <th></th>
