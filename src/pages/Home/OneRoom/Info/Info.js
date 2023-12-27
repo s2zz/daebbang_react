@@ -421,8 +421,7 @@ function Info(args, estate) {
 
   // 리뷰 게시판으로 데이터 넘기기
   const handleReviewMoreInfoClick = () => {
-    const reviewInfo = { ...markerInfo };
-    navigate("/review/boardReview", { state: reviewInfo });
+    navigate("/review/boardReview", {state:{ realEstateNumber: review[0].realEstateNumber }});
   };
 
   // 이찬양 작업 공간

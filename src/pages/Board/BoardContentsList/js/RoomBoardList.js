@@ -8,9 +8,9 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { alertAddConfirmation, alertAddFailure, alertAddSuccess, alertDeleteConfirmation, alertDeleteFailure, alertDeleteSuccess } from "../../commons_js/alert";
 
-const RoomBoardList = ({loginId}) => {
+
+const RoomBoardList = ({ loginId }) => {
     const navi = useNavigate();
     const location = useLocation();
     const [board, setBoard] = useState([]);
@@ -22,12 +22,13 @@ const RoomBoardList = ({loginId}) => {
         return b.seq - a.seq;
     }
     const moveWrite = (loginId) => {
-        if(loginId===null){
-            alert("로그인해주세요");
+        if (loginId === null) {
+            alert("로그인 후 이용가능한 서비스입니다");
             navi("/login")
-        } else{
+        } else {
             navi("/board/toRoomBoardWrite");
         }
+        return;
     }
     useEffect(() => {
         axios.get(`/api/board/roomBoardList`).then(resp => {
@@ -52,42 +53,30 @@ const RoomBoardList = ({loginId}) => {
     // 즐겨찾기 추가
     const addFav = (parentSeq) => {
         let fav = { boardTitle: "양도게시판", parentSeq: parentSeq };
-        let str = "즐겨찾기";
-        alertAddConfirmation(str).then(result => {
-            if (result) {
-                axios.post("/api/favoriteBoard", fav).then(resp => {
-                    setBoard(board.map((e, i) => {
-                        if (e.seq === parentSeq) { e.favorite = 'true' }
-                        return e;
-                    }))
-                    alertAddSuccess("즐겨찾기 등록에 성공하였습니다")
-                }).catch(err => {
-                    alertAddFailure("즐겨찾기 등록에 실패하였습니다")
-                    console.log(err);
-                })
-            }
+        axios.post("/api/favoriteBoard", fav).then(resp => {
+            setBoard(board.map((e, i) => {
+                if (e.seq === parentSeq) { e.favorite = 'true' }
+                return e;
+            }))
+        }).catch(err => {
+            alert("즐겨찾기 등록에 실패하였습니다")
+            console.log(err);
         })
-
-
     }
 
     // 즐겨찾기 제거
     const delFav = (parentSeq) => {
-        let str="즐겨찾기";
-        alertDeleteConfirmation(str).then(result=>{
-            if(result){
-                axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
-                    setBoard(board.map((e, i) => {
-                        if (e.seq === parentSeq) { e.favorite = 'false' }
-                        return e;
-                    }))
-                    alertDeleteSuccess("즐겨찾기 삭제에 성공하였습니다")
-                }).catch(err => {
-                    alertDeleteFailure("즐겨찾기 삭제에 실패하였습니다")
-                    console.log(err);
-                })
-            }
+
+        axios.delete(`/api/favoriteBoard/${parentSeq}`).then(resp => {
+            setBoard(board.map((e, i) => {
+                if (e.seq === parentSeq) { e.favorite = 'false' }
+                return e;
+            }))
+        }).catch(err => {
+            alert("즐겨찾기 삭제에 실패하였습니다")
+            console.log(err);
         })
+
     }
 
     const [completeSearchText, setCompleteSearchText] = useState("");
@@ -155,7 +144,7 @@ const RoomBoardList = ({loginId}) => {
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." className={style.fav}/> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." className={style.notFav}/>}</div>
+                <div>{e.favorite === 'true' ? <img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." className={style.fav} /> : <img src={notFavorite} onClick={() => { addFav(e.seq) }} alt="..." className={style.notFav} />}</div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
@@ -204,7 +193,7 @@ const RoomBoardList = ({loginId}) => {
 
             <div className={style.boardContentsBox}>
                 <div className={style.boardInfo}>
-                    <div><img src={favorite} alt="..." className={style.fav}/></div>
+                    <div><img src={favorite} alt="..." className={style.fav} /></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>
@@ -216,7 +205,7 @@ const RoomBoardList = ({loginId}) => {
                 </div>
             </div>
             <div className={style.writeBtnDiv}>
-                <button onClick={()=>{moveWrite(loginId)}}>글 작성</button>
+                <button onClick={() => { moveWrite(loginId) }}>글 작성</button>
             </div>
             <div className={style.naviFooter}>
                 {pagenation()}

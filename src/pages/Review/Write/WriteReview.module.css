@@ -20,6 +20,29 @@
     background-color: black;
     margin-bottom:20px;
 }
+.anonymousInfo{
+    font-size:large;
+    overflow: hidden;
+    height:40px;
+    margin-bottom:15px;
+}
+.anonymousInfo>div{
+    float:left;
+    height:100%;
+    display: flex;
+    align-items: center;
+}
+.anonymousInfo>div:nth-child(2){
+    padding-left:10px;
+}
+.anonymousInfo>div:nth-child(2)>input{
+    margin-right:5px;
+}
+.anonymousInfo span{color:red;}
+.anonymousInfo>div:nth-child(2)>span{
+    color:black;
+    padding-right:20px;
+}
 .scoreInfo{
     font-size:large;
     overflow: hidden;
