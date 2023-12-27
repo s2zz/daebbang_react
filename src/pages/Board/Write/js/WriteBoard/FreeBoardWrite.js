@@ -50,7 +50,7 @@ const FreeBoardWrite = ({ loginId }) => {
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
                     let sysName = imgUrl.data[i].split("/uploads/board/")[1];
-                    setSysNameList(prev => [...prev, sysName]);
+                    setSysNameList(prev => [...prev, encodeURIComponent(sysName)]);
                     editor.insertEmbed(range.index, 'image', "/uploads/board/" + encodeURIComponent(sysName));
                 }
 
@@ -94,6 +94,8 @@ const FreeBoardWrite = ({ loginId }) => {
         }
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
+        console.log(existImgList);
+        console.log(sysNameList);
         console.log(delImgList);
 
         if (formData.title === "") {

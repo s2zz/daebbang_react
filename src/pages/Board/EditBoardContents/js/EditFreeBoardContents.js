@@ -67,10 +67,10 @@ const EditFreeBoardContents = ({ loginId }) => {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
                 const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
-
+                console.log(imgUrl.data);
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
-                    editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
+                    setSysNameList(prev => [...prev, encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1])]);
+                    editor.insertEmbed(range.index, 'image', "/uploads/board/"+encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1]));
                 }
 
             } catch (error) {
@@ -146,7 +146,7 @@ const EditFreeBoardContents = ({ loginId }) => {
         submitFormData.append("contents", formData.contents);
         submitFormData.append("delImgList", delImgList);
         submitFormData.append("delFileList", delFileList);
-
+        console.log(delImgList);
         let fileList = Object.values(formData.files);
 
         fileList.forEach((e) => {

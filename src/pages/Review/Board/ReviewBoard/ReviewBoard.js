@@ -12,7 +12,7 @@ const ReviewBoard = () => {
     const [board, setBoard] = useState([]); // 검색어 없을 때
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
     const [searchText, setSearchText] = useState(location.state !== null && location.state.searchText !== null ? location.state.searchText : "");
-    const realEstateNumber = location.state !== null && location.state.realEstateNumber ? location.state.realEstateNumber : 0
+    const realEstateNumber = location.state !== null && location.state.realEstateNumber ? location.state.realEstateNumber : "";
     // 내림차순 정렬
     function compareBySeq(a, b) {
         return b.seq - a.seq;
@@ -20,12 +20,14 @@ const ReviewBoard = () => {
 
     // 리뷰 목록 불러오기
     useEffect(() => {
-        axios.get(`/api/review/reviewByAgent/${realEstateNumber}`).then(resp => {
-            setBoard(resp.data.sort(compareBySeq));
-            console.log(resp.data);
-        }).catch(err => {
-            console.log(err);
-        })
+        if (realEstateNumber !== "") {
+            axios.get(`/api/review/reviewByAgent/${realEstateNumber}`).then(resp => {
+                setBoard(resp.data.sort(compareBySeq));
+                console.log(resp.data);
+            }).catch(err => {
+                console.log(err);
+            })
+        }
     }, [realEstateNumber]);
 
     // 게시글 내용 리턴
@@ -36,7 +38,7 @@ const ReviewBoard = () => {
                 <div>{e.anonymous ? "익명" : e.id}</div>
 
                 <div>
-                    <Link to="/review/boardContentsReview" state={{seq:e.seq}}>
+                    <Link to="/review/boardContentsReview" state={{ seq: e.seq }}>
                         {
                             e.estate
                                 ? e.estate.title.length > 20 ? e.estate.title.substring(0, 20) + "..." : e.estate.title
