@@ -3,6 +3,7 @@ import WriteReview from './Write/WriteReview';
 import EditReview from './Edit/EditReview';
 import style from './Review.module.css';
 import ReviewBoard from './Board/ReviewBoard';
+import ReviewBoardTest from './Board/ReviewBoardTest';
 const Review = () => {
     return (
         <div className={style.container}>
@@ -10,6 +11,7 @@ const Review = () => {
                 <Route path="/writeReview" element={<WriteReview/>}></Route>
                 <Route path="/editReview" element={<EditReview/>}></Route>
                 <Route path="/boardReview" element={<ReviewBoard/>}></Route>
+                <Route path="/boardReviewTest" element={<ReviewBoardTest/>}></Route>
             </Routes>
         </div>
     );
