@@ -1,6 +1,8 @@
 .container{
-    overflow: auto;
+    padding:20px 20px;
     width:80%;
+    min-width:1150px;
+    overflow: hidden;
     margin:auto;
-    padding:12px;
+    word-break:break-all;
 }

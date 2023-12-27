@@ -49,7 +49,7 @@ function App() {
             <Route path="/myPage/*" element={storedLoginId ? <MyPage /> : <Navigate to="/" replace />} />
             <Route path="/admin/*" element={isAdmin ? <Admin /> : <Navigate to="/" replace />} />
             <Route path="/enrollment/*" element={<Enrollment />} />
-            <Route path="/review/*" element={<Review />} />
+            <Route path="/review/*" element={<Review loginId={storedLoginId} admin={isAdmin}/>} />
             <Route path="/estateManage/*" element={isEstate ? <EstateManage /> : <Navigate to="/" replace />} />
           </Routes>
         </div>

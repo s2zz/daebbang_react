@@ -50,11 +50,12 @@ const FreeBoardList = ({ loginId }) => {
 
     const moveWrite = (loginId) => {
         if (loginId === null) {
-            alert("로그인해주세요");
-            navi("/login")
+            alert("로그인 후 이용가능한 서비스입니다.");
+            navi("/login");
         } else {
             navi("/board/toFreeBoardWrite");
         }
+        return;
     }
 
     // 즐겨찾기 추가
@@ -72,6 +73,7 @@ const FreeBoardList = ({ loginId }) => {
                 return e;
             }))
         }).catch(err => {
+            alert("즐겨찾기 추가에 실패하였습니다.");
             console.log(err);
         })
     }

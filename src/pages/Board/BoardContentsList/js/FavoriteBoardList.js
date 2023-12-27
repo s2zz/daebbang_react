@@ -7,7 +7,7 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { alertDeleteSuccess, alertDeleteFailure, alertDeleteConfirmation } from '../../commons_js/alert.js';
+
 
 const FavoriteBoardList = () => {
     const [board, setBoard] = useState([]);

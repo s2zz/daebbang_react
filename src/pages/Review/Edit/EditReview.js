@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Swal from 'sweetalert2'
 
 const EditReview = () => {
 
@@ -110,7 +109,7 @@ const EditReview = () => {
         console.log(formData.files);
         const submitFormData = new FormData();
         submitFormData.append("traffic", formData.traffic);
-        submitFormData.append("anonymous",formData.anonymous);
+        submitFormData.append("anonymous", formData.anonymous);
         submitFormData.append("surroundings", formData.surroundings);
         submitFormData.append("facility", formData.facility);
         submitFormData.append("score", totalScore);
@@ -153,13 +152,9 @@ const EditReview = () => {
 
     /*리뷰 쓰기 권한 없을 시*/
     const refuseWrite = () => {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "리뷰 작성 권한이 없습니다",
-        }).then(() => {
-            navi("/");
-        });
+        alert("리뷰 작성 권한이 없습니다");
+        navi("/");
+        return;
     }
 
 
@@ -170,14 +165,13 @@ const EditReview = () => {
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
                     <hr></hr>
-                    <div>
+                    <div className={style.anonymousInfo}>
                         <div>아이디 표시<span>*</span> &nbsp;| </div>
                         <div>
                             {formData.anonymous
-                                ? <><input type="radio" name="anonymous" value="true" onChange={handleChange} checked/>익명<input type="radio" name="anonymous" value="false" onChange={handleChange} />실명</>
-                                : <><input type="radio" name="anonymous" value="true" onChange={handleChange}/>익명<input type="radio" name="anonymous" value="false" onChange={handleChange} checked/>실명</>}
-
-
+                                ? <><input type="radio" name="anonymous" value="true" onChange={handleChange} checked /><span>익명</span><input type="radio" name="anonymous" value="false" onChange={handleChange} /><span>실명</span></>
+                                : <><input type="radio" name="anonymous" value="true" onChange={handleChange} /><span>익명</span><input type="radio" name="anonymous" value="false" onChange={handleChange} checked /><span>실명</span></>
+                            }
                         </div>
                     </div>
                     <div className={style.scoreInfo}>

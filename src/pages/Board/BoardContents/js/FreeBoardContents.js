@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
-import Swal from 'sweetalert2'
 
 
 const FreeBoardContents = ({ loginId, admin }) => {
@@ -13,41 +12,6 @@ const FreeBoardContents = ({ loginId, admin }) => {
     const [boardContents, setBoardContents] = useState({ contents: "" });
     const [replyList, setReplyList] = useState([{}]);
     const [fileList, setFileList] = useState([{}]);
-    const alertDeleteSuccess = (str) => {
-        Swal.fire({
-            title: `${str} 삭제에 성공하였습니다`,
-            text: "",
-            icon: "success"
-        });
-    };
-
-    const alertDeleteFailure = (str) => {
-        Swal.fire({
-            title: `${str} 삭제에 실패하였습니다`,
-            text: "",
-            icon: "error"
-        });
-    };
-
-    const alertDeleteConfirmation = (str) => {
-        return new Promise((resolve) => {
-            Swal.fire({
-                title: `${str}을 정말 삭제하시겠습니까?`,
-                text: "",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Delete"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            });
-        });
-    };
 
     const seq = location.state !== null && location.state.sysSeq !== null ? location.state.sysSeq : 0;
 
@@ -84,15 +48,15 @@ const FreeBoardContents = ({ loginId, admin }) => {
         }
 
         if (insertReply.contents === "") {
-            Swal.fire("내용을 입력해주세요");
+            alert("내용을 입력해주세요");
             return;
         }
         axios.post("/api/reply", insertReply).then(resp => {
-            Swal.fire("댓글 등록 성공");
+            alert("댓글이 등록되었습니다");
             setInsertReply(prev => ({ ...prev, contents: "" }));
             setReplyList(resp.data.sort(compareBySeq));
         }).catch(err => {
-            Swal.fire("댓글 등록 실패");
+            alert("댓글 등록에 실패하였습니다.");
             console.log(err);
         })
     }
@@ -129,18 +93,18 @@ const FreeBoardContents = ({ loginId, admin }) => {
         }
 
         if (updateReply.contents === "") {
-            Swal.fire("내용을 입력해주세요");
+            alert("내용을 입력해주세요");
             return;
         }
 
         axios.put("/api/reply", updateReply).then(resp => {
-            Swal.fire("댓글 수정에 성공하였습니다");
+            alert("댓글 수정에 성공하였습니다.");
             setReplyList(resp.data.sort(compareBySeq));
             setUpdateReply(prev => ({ seq: 0, contents: "" }));
             setVisibleUpdateBox(0);
 
         }).catch(err => {
-            Swal.fire("댓글 수정에 실패하였습니다.");
+            alert("댓글 수정에 실패하였습니다.");
             console.log(err);
         })
     }
@@ -148,18 +112,16 @@ const FreeBoardContents = ({ loginId, admin }) => {
     // 게시글 삭제
     const contentsDel = (seq) => {
         let imgList = existImgSearch(boardContents.contents);
-        let str = "게시글"
-        alertDeleteConfirmation(str).then(result => {
-            if (result) {
-                axios.delete(`/api/board/${seq}`, { data: imgList }).then(resp => {
-                    alertDeleteSuccess();
-                    navi("/board/toFreeBoardList");
-                }).catch(err => {
-                    alertDeleteFailure();
-                    console.log(err);
-                })
-            }
-        })
+        if(window.confirm("게시글을 정말 삭제하시겠습니까?")){
+            axios.delete(`/api/board/${seq}`, { data: imgList }).then(resp => {
+                alert("게시글이 삭제되었습니다");
+                navi("/board/toFreeBoardList");
+                return;
+            }).catch(err => {
+                alert("게시글 삭제에 실패하였습니다.");
+                console.log(err);
+            })
+        }
     }
 
     const existImgSearch = (contents) => { // 게시글 내용에 존재하는 태그 뽑아내기 ( sysName )
@@ -174,18 +136,15 @@ const FreeBoardContents = ({ loginId, admin }) => {
 
     // 댓글 삭제
     const delReplyBtn = (seq) => {
-        let str = "댓글"
-        alertDeleteConfirmation(str).then(result => {
-            if (result) {
-                axios.delete(`/api/reply/${seq}`).then(resp => {
-                    alertDeleteSuccess(str);
-                    setReplyList(replyList.filter(e => e.seq !== seq))
-                }).catch(err => {
-                    alertDeleteFailure(str);
-                    console.log(err);
-                })
-            }
-        })
+        if(window.confirm("댓글을 정말 삭제하시겠습니까?")){
+            axios.delete(`/api/reply/${seq}`).then(resp => {
+                alert("댓글이 삭제되었습니다.");
+                setReplyList(replyList.filter(e => e.seq !== seq))
+            }).catch(err => {
+                alert("댓글 삭제에 실패하였습니다.");
+                console.log(err);
+            })
+        }
     }
 
     // 댓글 페이지네이션
@@ -215,7 +174,7 @@ const FreeBoardContents = ({ loginId, admin }) => {
             link.click();
             document.body.removeChild(link);
         }).catch(err => {
-            Swal.fire("파일 다운로드 중 에러가 발생하였습니다");
+            alert("파일 다운로드 중 에러가 발생하였습니다.")
             console.log(err);
         })
     }

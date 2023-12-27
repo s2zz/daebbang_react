@@ -1,0 +1,130 @@
+.boardContentsTitle{
+    margin-top:20px;
+    font-weight: bold;
+    font-size:xx-large;
+    display: flex;
+    align-items: center;
+    border-bottom:1px solid #A0A0A0;
+}
+.boardContentsTitle>span{
+    color:rgb(1, 140, 247);
+    font-weight: normal;
+    font-size: x-large;
+    margin-right:10px;
+}
+
+.boardContentsInfo{
+    margin-bottom:10px;
+    overflow: hidden;
+}
+.boardContentsInfo>div{
+    float:left;
+    margin-top:5px;
+}
+.boardContentsInfo>div:nth-child(1){width:75%;}
+.boardContentsInfo>div:nth-child(2){
+    width:25%;
+    text-align: end;
+}
+.boardContentsInfo button{
+    height:100%;
+    width:80px;
+    height:30px;
+    border:1px solid #A0A0A0;
+    background-color: white;
+    border-radius: 5px;
+}
+.boardContentsInfo button:hover{
+    cursor: pointer;
+    background-color: #A0A0A0;
+    border:1px solid #939393;
+    color:white;
+}
+.boardContentsDiv{
+    border:1px solid #A0A0A0;
+    padding:25px 20px;;
+    margin-bottom:20px;
+    min-height:100px;
+}
+.reviewInfo{
+    border:1px solid #326CF9;
+    min-width:100px;
+    width:7%;
+    height:33px;
+    margin-bottom:10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size:18px;
+    border-radius: 10px;
+    background-color: #326CF9;
+    color:white;
+}
+
+
+.scoreImg img{
+    width:3%;
+    padding-right:10px;
+}
+.scoreImg{padding-bottom:20px;}
+
+.reviewDetails>div:nth-child(2){
+    padding-bottom:10px;
+}
+
+.fileImg{
+    overflow: hidden;
+}
+.fileImg>div{
+    float:left;
+    border: 1px solid #5f5f5f;
+    height:130px;
+    width:130px;
+    margin-right:30px;
+    display: flex;
+    align-items: center;
+}
+.fileImg img{
+    width:100%;
+}
+.emptyFileImg{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:100% !important;
+    border:none!important;
+}
+
+.btns{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.backBtn{
+    height:100%;
+    width:80px;
+    height:35px;
+    border:1px solid gainsboro;
+    border-radius: 5px;
+}
+.editBtn{
+    height:100%;
+    width:80px;
+    height:35px;
+    border:1px solid #326CF9;
+    background-color: #326CF9;
+    color:white;
+    border-radius: 5px;
+}
+.backBtn:hover{
+    cursor: pointer;
+    background-color: #A0A0A0;
+    border:1px solid #939393;
+    color:white;
+}
+.editBtn:hover{
+    cursor: pointer;
+    background-color: #0D65D9;
+    border:1px solid #0D65D9;
+    color:white;
+}
