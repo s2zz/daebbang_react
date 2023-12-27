@@ -373,7 +373,7 @@ const AdminDashboard = () => {
                         <tbody style={{ fontSize: '15px' }}>
                             {processedReportList.map(report => (
                                 <tr key={report.seq}>
-                                    <td tyle={{ textAlign: 'center' }}>{report.estate_id}</td>
+                                    <td style={{ textAlign: 'center' }}>{report.estate_id}</td>
                                     <td>{report.writer}</td>
                                     <td>{report.taker}</td>
                                     <td>{report.contents_code}</td>
