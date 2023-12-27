@@ -5,6 +5,8 @@ import eStyle from "../css/EditBoard.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import mStyle from "../../../commons/Modal.module.css";
 
@@ -247,15 +249,37 @@ const EditRoomBoardContents = ({ loginId }) => {
     }
 
     const numberOfInputs = 5 - fileList.length;
-    const fileListDiv = () => (
-        <div className={style.fileInputDiv}>
-            {[...Array(numberOfInputs)].map((_, index) => (
-                <div key={index}>
-                    <input type="file" onChange={handleFileChange} name={`files${index}`} />
-                </div>
-            ))}
-        </div>
-    )
+
+    const [inputList, setInputList] = useState([{ name: "files0", show: false }, { name: "files1", show: false }, { name: "files2", show: false }, { name: "files3", show: false }, { name: "files4", show: false }]);
+    const fileAdd = () => {
+        if (inputList.filter(e => e.show).length > numberOfInputs-1) {
+            alert("파일은 최대 5개까지 첨부 가능합니다");
+            return;
+        }
+
+        let check = false;
+        let array = inputList.map((e, i) => {
+            if (!check && e.show === false) {
+                e.show = true;
+                check = true;
+            }
+            return e;
+        })
+        setInputList([...array]);
+    }
+
+    const fileDel = (name) => {
+
+        let array = inputList.map((e, i) => {
+            if (e.name === name) {
+                e.show = false;
+            }
+            return e;
+        })
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [name]: null } }));
+        setInputList([...array]);
+
+    }
 
     const modules = useMemo(() => ({
         toolbar: {
@@ -316,14 +340,28 @@ const EditRoomBoardContents = ({ loginId }) => {
                 {
                     fileList.map((e, i) => {
                         return (
-                            <div key={i}>{e.oriName}<span onClick={() => { handleRemoveFileChange(e.sysName) }}>x</span></div>
+                            <div key={i}>
+                                {e.oriName}
+                                <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
+                            </div>
                         );
                     })
                 }
             </div>
             <div className={style.fileBox}>
-                <div>파일첨부</div>
-                {fileListDiv()}
+                <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
+                <div className={style.fileInputDiv}>
+                    {
+                        inputList.map((e, i) => (
+                            e.show ? (
+                                <div key={i}>
+                                    <input type="file" onChange={handleFileChange} name={e.name} />
+                                    <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                </div>
+                            ) : null
+                        ))
+                    }
+                </div>
             </div>
             <div>
                 <div className={style.contents}>내용<span>*</span></div>
