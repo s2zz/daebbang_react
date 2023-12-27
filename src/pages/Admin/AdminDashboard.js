@@ -247,7 +247,7 @@ const AdminDashboard = () => {
         <div className={style.container}>
             <div className={style.title}>대시보드</div>
             <div className={style.box_container}>
-                <div className={[style.box, style.option].join(' ')} onClick={() => setSelectedChart('visitor')}>
+                <div className={[style.box, style.option, style.hover].join(' ')} onClick={() => setSelectedChart('visitor')}>
                     <div className={style.topContents}>
                         <div>오늘 방문자 수</div>
                         <div className={style.contents}>
@@ -260,7 +260,7 @@ const AdminDashboard = () => {
 
                     <div className={style.blueBox}></div>
                 </div>
-                <div className={[style.box, style.option].join(' ')} onClick={() => setSelectedChart('newMember')}>
+                <div className={[style.box, style.option, style.hover].join(' ')} onClick={() => setSelectedChart('newMember')}>
                     <div className={style.topContents}>
                         <div>오늘 신규 회원 수</div>
                         <div className={style.contents}>
@@ -271,7 +271,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className={style.redBox}></div>
                 </div>
-                <div className={[style.box, style.option, style.greenBottomBorder].join(' ')} onClick={() => setSelectedChart('newEstate')}>
+                <div className={[style.box, style.option, style.hover, style.greenBottomBorder].join(' ')} onClick={() => setSelectedChart('newEstate')}>
                     <div className={style.topContents}>
                         <div>오늘 신규 중개사 수</div>
                         <div className={style.contents}>

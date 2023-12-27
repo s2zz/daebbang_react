@@ -155,6 +155,9 @@
 .morebtn:hover {
     background-color: rgb(206, 206, 206);
 }
+.hover:hover{
+    cursor: pointer;
+}
 
 /* bottom */
 .bottom_box_container {
