@@ -30,7 +30,8 @@
     height:100%;
     width:80px;
     height:30px;
-    border:1px solid gainsboro;
+    border:1px solid #A0A0A0;
+    background-color: white;
     border-radius: 5px;
 }
 .boardContentsInfo button:hover{
@@ -66,17 +67,34 @@
     align-items: center;
     justify-content: space-between;
 }
-.btns button{
+
+.backBtn{
     height:100%;
     width:80px;
     height:35px;
     border:1px solid gainsboro;
     border-radius: 5px;
 }
-.btns button:hover{
+
+.editBtn{
+    height:100%;
+    width:80px;
+    height:35px;
+    border:1px solid #326CF9;
+    background-color: #326CF9;
+    color:white;
+    border-radius: 5px;
+}
+.backBtn:hover{
     cursor: pointer;
     background-color: #A0A0A0;
     border:1px solid #939393;
+    color:white;
+}
+.editBtn:hover{
+    cursor: pointer;
+    background-color: #0D65D9;
+    border:1px solid #0D65D9;
     color:white;
 }
 .insertReplyDiv textarea{
@@ -88,13 +106,15 @@
     height:100%;
     width:80px;
     height:30px;
-    border:1px solid gainsboro;
+    border:1px solid #326CF9;
+    background-color: #326CF9;
+    color:white;
     border-radius: 5px;
 }
 .insertReplyBtn button:hover{
     cursor: pointer;
-    background-color: #A0A0A0;
-    border:1px solid #939393;
+    background-color: #0D65D9;
+    border:1px solid #0D65D9;
     color:white;
 }
 .replyListStartHr{margin-bottom:0px;}
@@ -108,6 +128,7 @@
     border-bottom:1px solid gainsboro;
     padding:5px 0px;
 }
+
 .replyBox:nth-child(1){padding-top:0px;}
 .replyBox>div:nth-child(3){margin-bottom:20px;}
 .replyInfo{
@@ -122,23 +143,52 @@
     text-decoration: underline;
 }
 .replyInfo>div:nth-child(2){text-align: end;}
+.replyTextArea{width:100%;}
+.replyTextArea textarea{
+    width:100%;
+    resize:none;
+    border-radius: 5px;
+}
+.replyTextArea textarea:focus-within{
+    border-radius: 5px;
+}
 .replyListBtn{
     display: flex;
     justify-content: space-between;
 }
-.replyListBtn button{
+.replyEditBtn,.replycompleteEditBtn{
     height:100%;
     width:80px;
     height:30px;
-    border:1px solid gainsboro;
+    border:1px solid #326CF9;
+    background-color: white;
     border-radius: 5px;
 }
-.replyListBtn button:hover{
+.replyEditBtn:hover,.replycompleteEditBtn:hover{
     cursor: pointer;
-    background-color: #A0A0A0;
-    border:1px solid #939393;
+    background-color: #326CF9;
+    border:1px solid #326CF9;
     color:white;
 }
+
+.replyDelBtn, .replyEditCancleBtn{
+    height:100%;
+    width:80px;
+    height:30px;
+    border:1px solid #A0A0A0;
+    background-color: white;
+    border-radius: 5px;
+}
+.replyDelBtn:hover, .replyEditCancleBtn:hover{
+    height:100%;
+    width:80px;
+    height:30px;
+    border:1px solid #A0A0A0;
+    background-color: #A0A0A0;
+    color:white;
+    border-radius: 5px;
+}
+
 .naviFooter{
     margin-top:10px;
     display: flex;

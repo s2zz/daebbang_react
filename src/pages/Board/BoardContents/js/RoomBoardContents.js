@@ -104,11 +104,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
     const [updateReply, setUpdateReply] = useState({ seq: 0, contents: "" });
     const showUpdateBox = (seq, contents) => {
         if (visibleUpdateBox !== 0) {
-            let check = window.confirm("댓글 수정을 취소하고 다른 댓글을 수정하시겠습니까?");
-            if (check) {
-                setVisibleUpdateBox(seq);
-                setUpdateReply({ seq: seq, contents: contents });
-            }
+            alert("수정을 완료하고 눌러주세요.");
         } else {
             setVisibleUpdateBox(seq);
             setUpdateReply({ seq: seq, contents: contents });
@@ -243,9 +239,9 @@ const RoomBoardContents = ({ loginId, admin }) => {
             <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}>
             </div>
             <div className={style.btns}>
-                <Link to="/board/toRoomBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button>뒤로가기</button></Link>
+                <Link to="/board/toRoomBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button className={style.backBtn}>뒤로가기</button></Link>
                 {loginId === boardContents.writer || admin !== null ?
-                    <Link to="/board/toEditRoomBoardContents" state={{ sysSeq: seq }}><button>수정하기</button></Link> :
+                    <Link to="/board/toEditRoomBoardContents" state={{ sysSeq: seq }}><button className={style.editBtn}>수정하기</button></Link> :
                     ""
                 }
             </div>
@@ -277,20 +273,20 @@ const RoomBoardContents = ({ loginId, admin }) => {
                                     <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                 </div>
                                 {
-                                    visibleUpdateBox === e.seq ? <div><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
+                                    visibleUpdateBox === e.seq ? <div className={style.replyTextArea}><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
                                 }
                                 {
                                     visibleUpdateBox === e.seq ?
-                                        <div>
+                                        <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
-                                                <><button onClick={() => hideUpdateBox(e.seq)}>취소</button><button onClick={updateAdd}>수정완료</button></> :
+                                                <><button onClick={() => hideUpdateBox(e.seq)} className={style.replyEditCancleBtn}>취소</button><button onClick={updateAdd} className={style.replycompleteEditBtn}>수정완료</button></> :
                                                 ""
                                             }
                                         </div>
                                         :
                                         <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
-                                                <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
+                                                <><button onClick={() => showUpdateBox(e.seq, e.contents)} className={style.replyEditBtn}>수정</button><button onClick={() => delReplyBtn(e.seq)} className={style.replyDelBtn}>삭제</button></> :
                                                 ""
                                             }
                                         </div>
@@ -305,20 +301,20 @@ const RoomBoardContents = ({ loginId, admin }) => {
                                     <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                 </div>
                                 {
-                                    visibleUpdateBox === e.seq ? <div><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
+                                    visibleUpdateBox === e.seq ? <div className={style.replyTextArea}><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
                                 }
                                 {
                                     visibleUpdateBox === e.seq ?
-                                        <div>
+                                        <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
-                                                <><button onClick={() => hideUpdateBox(e.seq)}>취소</button><button onClick={updateAdd}>수정완료</button></> :
+                                                <><button onClick={() => hideUpdateBox(e.seq)} className={style.replyEditCancleBtn}>취소</button><button onClick={updateAdd} className={style.replycompleteEditBtn}>수정완료</button></> :
                                                 ""
                                             }
                                         </div>
                                         :
                                         <div className={style.replyListBtn}>
                                             {loginId === e.writer || admin !== null ?
-                                                <><button onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)}>삭제</button></> :
+                                                <><button className={style.replyEditBtn} onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)} className={style.replyDelBtn}>삭제</button></> :
                                                 ""
                                             }
                                         </div>

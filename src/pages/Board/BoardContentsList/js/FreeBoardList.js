@@ -157,7 +157,7 @@ const FreeBoardList = ({ loginId }) => {
             <div className={freeStyle.searchDiv}>
                 <div className={style.searchBox}>
                     <div className={style.searchInput}>
-                        <div><FontAwesomeIcon icon={faMagnifyingGlass} size="xl" /></div>
+                        <div><FontAwesomeIcon icon={faMagnifyingGlass} size="xl" style={{color:"#535353"}}/></div>
                         <div>
                             <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
                         </div>
@@ -169,7 +169,7 @@ const FreeBoardList = ({ loginId }) => {
             </div>
             <div className={style.boardContentsBox}>
                 <div className={style.boardInfo}>
-                    <div><img src={favorite} alt="..." /></div>
+                    <div><img src={favorite} alt="..." className={style.fav}/></div>
                     <div>번호</div>
                     <div>작성자</div>
                     <div>제목</div>

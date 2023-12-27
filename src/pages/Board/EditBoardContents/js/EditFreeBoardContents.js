@@ -243,8 +243,10 @@ const EditFreeBoardContents = ({ loginId }) => {
                 {
                     fileList.map((e, i) => {
                         return (
-                            <div key={i}>{e.oriName}<FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }}
-                            onClick={() => { handleRemoveFileChange(e.sysName) }} /></div>
+                            <div key={i}>
+                                {e.oriName}
+                                <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
+                            </div>
                         );
                     })
                 }
