@@ -5,7 +5,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import logo from "../Enrollment/assets/logo2.png";
+import logo from "../Enrollment/assets/logo3.png";
 import axios from 'axios';
 import style1 from "../commons/Modal.module.css";
 import {Modal, ModalBody, } from 'reactstrap';
@@ -60,7 +60,7 @@ const TopForm = ({ setLoginId }) => {
         <div className={style.container}>
             <div className={style.top}>
                 <div className={style.logo_wrap}>
-                    <Link to="/"><img src={logo} alt="..." /> </Link>
+                    <Link to="/"><img src={logo} alt="..." className={style.logo}/> </Link>
                 </div>
 
                 <div className={style.gnb}>
