@@ -80,8 +80,8 @@ const EditRoomBoardContents = ({ loginId }) => {
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
-                    editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
+                    setSysNameList(prev => [...prev, encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1])]);
+                    editor.insertEmbed(range.index, 'image', encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1]));
                 }
 
             } catch (error) {
