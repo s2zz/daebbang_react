@@ -67,7 +67,7 @@ const HomeEnrollment = (args) => {
             var dataLength = Object.keys(data).length;
 
             if (!dataLength) {
-                handleAlert("주소를 수동으로 입력해주세요.");
+                alert("주소를 수동으로 입력해주세요.");
                 setShowAddressInputs(true);
                 setShowAddress(false);
                 setShowAddressInfo(false);
@@ -106,7 +106,7 @@ const HomeEnrollment = (args) => {
                 setSearchResult(response.data.EDOffices.field);
             })
             .catch(error => {
-                handleAlert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
+                alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
             });
     }
     const handleKeyDown = (event) => {
@@ -132,7 +132,7 @@ const HomeEnrollment = (args) => {
             .then(response => {
                 if (response.data) {
                     setSelectedItem('');
-                    handleAlert("이미 가입된 공인중개사무소 입니다.")
+                    alert("이미 가입된 공인중개사무소 입니다.")
                 } else {
                     setSelectedItem(item);
                     searchPlaces(item.ldCodeNm + " " + item.bsnmCmpnm);
@@ -168,19 +168,19 @@ const HomeEnrollment = (args) => {
     const handleSubmit = () => {
         if (!selectedItem) {
             // alert('중개사무소를 선택해주세요.');
-            handleAlert('중개사무소를 선택해주세요.');
+            alert('중개사무소를 선택해주세요.');
         } else if (!value) {
             // alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
-            handleAlert('대표공인중개사 휴대폰 번호를 입력해주세요.');
+            alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
         } else if (!nameValue) {
             // alert('대표이름을 입력해주세요.');
-            handleAlert('대표이름을 입력해주세요.');
+            alert('대표이름을 입력해주세요.');
         } else if (!emailValue || !selectedValue) {
             // alert('대표공인중개사 이메일을 입력해주세요.');
-            handleAlert('대표공인중개사 이메일을 입력해주세요.');
+            alert('대표공인중개사 이메일을 입력해주세요.');
         } else if (!address && (!address1.address1 || !address2.address2)) {
             // alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
-            handleAlert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
+            alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
         } else {
            
             const formData = new FormData();
@@ -191,7 +191,7 @@ const HomeEnrollment = (args) => {
             } else if (address1.address1) {
                 addressValue = address1.address1 + " " + address2.address2 + "";
             } else {
-                handleAlert('중개사무소 찾기를 눌러주세요.');
+                alert('중개사무소 찾기를 눌러주세요.');
                 return;
             }
 
@@ -302,9 +302,7 @@ const HomeEnrollment = (args) => {
             if (extraAddr !== '') {
                 extraAddr = ' (' + extraAddr + ')';
             }
-        } else {
-            document.getElementById("sample6_extraAddress").value = '';
-        }
+        } 
 
         // 우편번호와 주소 정보를 해당 필드에 넣는다.
         document.getElementById('sample6_postcode').value = data.zonecode;
