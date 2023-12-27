@@ -1,9 +1,17 @@
 import style from './ReviewBoard.module.css';
 import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
-const ReviewBoard = () => {
+
+
+const ReviewBoard = ({ reviewInfo }) => {
+
+    useEffect(() => {
+        console.log('markerInfo:', reviewInfo);
+      }, [reviewInfo]);
+
     return (
         <>
             <div className={style.boardTitle}>**중개사 리뷰</div>

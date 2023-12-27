@@ -105,8 +105,6 @@ function OneRoom() {
     const fetchData = async () => {
       setFilterMapList(mapList);
       setlistReady(true);
-      // handleDragEnd();
-      console.log(mapList);
     };
 
     fetchData();
@@ -229,7 +227,6 @@ function OneRoom() {
 
   // 마커를 클릭할때 해당 정보를 들고 info(정보)로 이동
   const handleMarkerClick = (marker) => {
-    console.log("누름")
     navigate("/home/oneroom/info", { state: marker });
   };
 
