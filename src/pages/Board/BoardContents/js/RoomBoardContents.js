@@ -259,7 +259,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
             <div>
                 <div className={style.insertReplyDiv}>
                     <div>
-                        <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange} value={insertReply.contents} />
+                        <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange} value={insertReply.contents} maxLength="300"/>
                     </div>
                 </div>
                 <div className={style.insertReplyBtn}>

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import mStyle from "../../../../commons/Modal.module.css";
 
@@ -59,9 +59,9 @@ const RoomBoardWrite = ({ loginId }) => {
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev => [...prev, imgUrl.data[i].split("/uploads/board/")[1]]);
-                    console.log(range.index);
-                    editor.insertEmbed(range.index, 'image', imgUrl.data[i]);
+                    let sysName = imgUrl.data[i].split("/uploads/board/")[1];
+                    setSysNameList(prev => [...prev, sysName]);
+                    editor.insertEmbed(range.index, 'image', "/uploads/board/" + encodeURIComponent(sysName));
                 }
 
             } catch (error) {
@@ -256,21 +256,36 @@ const RoomBoardWrite = ({ loginId }) => {
             </div>
         );
     }
-   
-    useEffect(() => {
-        const quill = quillRef.current?.getEditor();
-        if(quill){quill.setSelection(quill.getLength(),quill.getLength());} 
-    }, [formData.contents,quillRef.current?.getEditor()])
-    const textChange = (value) => {
-        console.log(value.length)
-        if (value.length> 5000) {
-            alert("최대 5000자까지 작성 가능합니다");
-            setFormData(prev => ({ ...prev}));
-        } else {
-            setFormData(prev => ({ ...prev, contents: value }));
+    const [inputList, setInputList] = useState([{ name: "files0", show: false }, { name: "files1", show: false }, { name: "files2", show: false }, { name: "files3", show: false }, { name: "files4", show: false }]);
+    const fileAdd = () => {
+        if (inputList.filter(e => e.show).length > 4) {
+            alert("파일은 최대 5개까지 첨부 가능합니다");
+            return;
         }
+
+        let check = false;
+        let array = inputList.map((e, i) => {
+            if (!check && e.show === false) {
+                e.show = true;
+                check = true;
+            }
+            return e;
+        })
+        setInputList([...array]);
     }
 
+    const fileDel = (name) => {
+
+        let array = inputList.map((e, i) => {
+            if (e.name === name) {
+                e.show = false;
+            }
+            return e;
+        })
+        setFormData(prev => ({ ...prev, files: { ...prev.files, [name]: null } }));
+        setInputList([...array]);
+
+    }
     return (
         <>
             {toggle1 ? returnModal1(toggle1) : ""}
@@ -294,28 +309,18 @@ const RoomBoardWrite = ({ loginId }) => {
                 </div>
             </div>
             <div className={style.fileBox}>
-                <div>파일첨부</div>
+                <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
                 <div className={style.fileInputDiv}>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files0" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files1" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files2" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files3" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
-                    <div>
-                        <input type="file" onChange={handleFileChange} name="files4" />
-                        <span><FontAwesomeIcon icon={faXmark} size="lg" /></span>
-                    </div>
+                    {
+                        inputList.map((e, i) => (
+                            e.show ? (
+                                <div key={i}>
+                                    <input type="file" onChange={handleFileChange} name={e.name} />
+                                    <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                </div>
+                            ) : null
+                        ))
+                    }
                 </div>
             </div>
             <div>
@@ -323,9 +328,13 @@ const RoomBoardWrite = ({ loginId }) => {
                 <div>
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents}
-                        onChange={(value, delta, source) => {
-                            if (source === "user") {
-                                textChange(value)
+                        onChange={(value) => {
+                            console.log(value.length);
+                            if (value.length > 5000) {
+                                alert("작성 가능한 글자 수 범위를 초과하였습니다.");
+                                setFormData(prev => ({ ...prev }));
+                            } else {
+                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
                             }
                         }}
                     />
