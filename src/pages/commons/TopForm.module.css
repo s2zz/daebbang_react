@@ -21,6 +21,12 @@
     justify-content: center;
     padding-top: 8px;
 }
+
+.logo {
+  width:250px;
+  height:70px;
+}
+
 .gnb{
     float: left;
     position: relative;

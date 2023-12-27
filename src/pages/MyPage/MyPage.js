@@ -39,9 +39,9 @@ function Info() {
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
-                        <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
-                        <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
+                        <button className={style.changeBtn}><Link to="/mypage/changePw" className={style.link}>비밀번호 변경하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo" className={style.link}>회원정보 수정하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo" className={style.link}>회원 탈퇴하기</Link></button>
                     </div>
                 </div>}
         </div>
@@ -156,10 +156,10 @@ const EstateInfo = () => {
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
-                        <Link to="/mypage/profileImage"><button className={style.changeBtn}>대표 이미지</button></Link>
-                        <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
-                        <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
+                        <button className={style.changeBtn}><Link to="/mypage/changePw">비밀번호 변경하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/profileImage">대표 이미지</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo">회원정보 수정하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo">회원 탈퇴하기</Link></button>
                     </div>
                 </div>
             }

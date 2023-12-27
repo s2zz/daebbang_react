@@ -105,12 +105,16 @@
     border: 1px solid  rgb(231, 231, 231);
 }
 
-.changeBtn:hover {
+.link {
+    color: black;
+    text-decoration: none;
+}
+
+.changeBtn:hover, .changeBtn:hover .link{
     cursor: pointer;
     background-color: #326CF9;
     color: white;
 }
-
 
 /*내가 본 방*/
 .SawEstate {
