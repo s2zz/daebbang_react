@@ -6,6 +6,8 @@ import AdminMain from './AdminMain';
 import AgentManagement from './AgentManagement';
 import MemberManagement from './MemberManagement';
 import NotificationManagement from './NotificationManagement';
+import ReportManagement from './ReportManagement';
+import EstateManagement from './EstateManagement';
 import Buttons from './Buttons';
 
 const Admin = () => {
@@ -21,6 +23,8 @@ const Admin = () => {
                     <Route path="/toAgentManagement" element={<AgentManagement />}></Route>
                     <Route path="/toMemberManagement" element={<MemberManagement />}></Route>
                     <Route path="/toNotificationManagement" element={<NotificationManagement />}></Route>
+                    <Route path="/toReportManagement" element={<ReportManagement />}></Route>
+                    <Route path="/toEstateManagement" element={<EstateManagement />}></Route>
                     <Route path="/toButtons" element={<Buttons />}></Route>
                 </Routes>
             </div>

@@ -19,6 +19,7 @@
     border: 1px solid  rgb(231, 231, 231);
     width: 800px;
     margin-top: 30px;
+    margin-bottom : 50px;
 }
 
 .menuDiv {
@@ -104,12 +105,16 @@
     border: 1px solid  rgb(231, 231, 231);
 }
 
-.changeBtn:hover {
+.link {
+    color: black;
+    text-decoration: none;
+}
+
+.changeBtn:hover, .changeBtn:hover .link{
     cursor: pointer;
     background-color: #326CF9;
     color: white;
 }
-
 
 /*내가 본 방*/
 .SawEstate {
@@ -131,6 +136,7 @@
     height:100%;
     display: flex;
     align-items: center;
+    margin-left:10px;
 }
 .sawTitle {
     width:200px;
@@ -165,4 +171,22 @@
     justify-content: center;
     align-items: center;
     font-family: "NanumBarunGothic";
+}
+
+/*신고 내역*/
+.estateName {
+    margin-left:10px;
+    width: 25%;
+}
+
+.content {
+    width: 30%;
+}
+
+.content2 {
+    width: 35%;
+}
+
+.status {
+    width: 10%;
 }

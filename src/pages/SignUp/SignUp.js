@@ -7,6 +7,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEnvelope, faPhone, faHouse, faFileSignature } from "@fortawesome/free-solid-svg-icons";
 import Swal from 'sweetalert2'
+import Footer from "../commons/Footer";
 
 function SignUp() {
   const [id, setId] = useState({ id: "" });
@@ -344,6 +345,7 @@ function SignUp() {
 
 
   return (
+    <div>
     <div className={style.container}>
       <div className={style.loginBox}>
         <div className={style.logo}>
@@ -406,6 +408,8 @@ function SignUp() {
           <button className={style.signUpBtn} onClick={handleSignUp}>회원가입</button>
         </div>
       </div>
+    </div>
+    <Footer></Footer>
     </div>
   );
 }

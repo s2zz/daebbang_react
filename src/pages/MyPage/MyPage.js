@@ -6,8 +6,10 @@ import DeleteMyInfo from './DeleteMyInfo';
 import UpdateMyInfo from './UpdateMyInfo';
 import ChangePw from './ChangePw';
 import Loading from '../commons/Loading';
+import Footer from "../commons/Footer";
+import ProfileImage from './ProfileImage';
 
-const Info = () => {
+function Info() {
     const storedLoginId = sessionStorage.getItem('loginId');
     const [loading, setLoading] = useState(true);
     const [info, setInfo] = useState([{}]);
@@ -37,12 +39,11 @@ const Info = () => {
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
-                        <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
-                        <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
+                        <button className={style.changeBtn}><Link to="/mypage/changePw" className={style.link}>비밀번호 변경하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo" className={style.link}>회원정보 수정하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo" className={style.link}>회원 탈퇴하기</Link></button>
                     </div>
-                </div>
-            }
+                </div>}
         </div>
     );
 }
@@ -70,7 +71,7 @@ const Review = () => {
                                 const title = e.title || '';
                                 return (
                                     <div key={i} className={style.SawEstate}>
-                                        <img src={`uploads\\estateImages\\${e.img}`} alt="Estate Image"></img>
+                                        <img src={`/uploads/estateImages/${e.img}`} alt="Estate Image"></img>
                                         <div className={style.sawAddress}>{address.length > 30 ? address.substring(0, 30) + "..." : address}</div>
                                         <div className={style.sawTitle}>{title.length > 15 ? title.substring(0, 15) + "..." : title}</div>
                                         {e.approvalCode === 'a1' || e.approvalCode === 'a2' ? <button className={style.waitBtn}>승인 대기</button> : null}
@@ -109,10 +110,10 @@ const Report = () => {
                             {myReport.map((e, i) => {
                                 return (
                                     <div key={i} className={style.SawEstate}>
-                                        <div>{e.estateName}</div>
-                                        <div>{e.content}</div>
-                                        <div>{e.content2}</div>
-                                        <div>{e.status}</div>
+                                        <div className={style.estateName}>{e.estateName}</div>
+                                        <div className={style.content}>{e.content}</div>
+                                        <div className={style.content2}>{e.content2}</div>
+                                        <div className={style.status}>{e.status}</div>
                                     </div>
                                 )
                             })}
@@ -155,9 +156,10 @@ const EstateInfo = () => {
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <Link to="/mypage/changePw"><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
-                        <Link to="/mypage/updateMyInfo"><button className={style.changeBtn}>회원정보 수정하기</button></Link>
-                        <Link to="/mypage/deleteMyInfo"><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
+                        <button className={style.changeBtn}><Link to="/mypage/changePw">비밀번호 변경하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/profileImage">대표 이미지</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo">회원정보 수정하기</Link></button>
+                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo">회원 탈퇴하기</Link></button>
                     </div>
                 </div>
             }
@@ -196,42 +198,45 @@ function MyPage() {
     };
 
     return (
-        <div className={style.container}>
-            <div className={style.myLogo}>MY DAEBBANG</div>
-            {isEstate ?
-                <div className={style.menuDiv}>
-                    <div className={style.menu}>
-                        <Link to="/mypage/estateInfo">
+        <div>
+            <div className={style.container}>
+                <div className={style.myLogo}>MY DAEBBANG</div>
+                {isEstate ?
+                    <div className={style.menuDiv}>
+                        <div className={style.menu}>
+                            <Link to="/mypage/estateInfo">
+                                <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
+                            </Link>
+                        </div>
+                    </div>
+                    : <div className={style.menu}>
+                        <Link to="/mypage/info">
                             <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
                         </Link>
+                        <Link to="/mypage/review">
+                            <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내가 본 방</button>
+                        </Link>
+                        <Link to="/mypage/report">
+                            <button className={selectedMenu === "report" ? style.menuReportSelected : style.menuReport} onClick={() => handleMenuClick("report")}>신고 내역</button>
+                        </Link>
                     </div>
-                </div>
-                : <div className={style.menu}>
-                    <Link to="/mypage/info">
-                        <button className={selectedMenu === "info" ? style.menuInfoSelected : style.menuInfo} onClick={() => handleMenuClick("info")}>내 정보</button>
-                    </Link>
-                    <Link to="/mypage/review">
-                        <button className={selectedMenu === "review" ? style.menuReviewSelected : style.menuReview} onClick={() => handleMenuClick("review")}>내가 본 방</button>
-                    </Link>
-                    <Link to="/mypage/report">
-                        <button className={selectedMenu === "report" ? style.menuReportSelected : style.menuReport} onClick={() => handleMenuClick("report")}>신고 내역</button>
-                    </Link>
-                </div>
-            }
-            <Routes>
-                {!isEstate && <Route path="/" element={<Info />} />}
-                <Route path="info" element={<Info />} />
-                <Route path="review" element={<Review />} />
-                <Route path="report" element={<Report />} />
-                <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
-                <Route path="updateMyInfo" element={<UpdateMyInfo />} />
-                <Route path="changePw" element={<ChangePw />} />
+                }
+                <Routes>
+                    {!isEstate && <Route path="/" element={<Info />} />}
+                    <Route path="info" element={<Info />} />
+                    <Route path="review" element={<Review />} />
+                    <Route path="report" element={<Report />} />
+                    <Route path="deleteMyInfo" element={<DeleteMyInfo />} />
+                    <Route path="updateMyInfo" element={<UpdateMyInfo />} />
+                    <Route path="changePw" element={<ChangePw />} />
+                    <Route path="profileImage" element={<ProfileImage />} />
 
-                {isEstate && <Route path="/" element={<EstateInfo />} />}
-                <Route path="estateInfo" element={<EstateInfo />} />
-            </Routes>
+                    {isEstate && <Route path="/" element={<EstateInfo />} />}
+                    <Route path="estateInfo" element={<EstateInfo />} />
+                </Routes>
+            </div>
+            <Footer></Footer>
         </div>
-
     );
 }
 
