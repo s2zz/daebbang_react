@@ -56,6 +56,7 @@ const ReviewBoard = () => {
     //페이지네이션
     const [currentPage, setCurrentPage] = useState(1);
     const countPerPage = 10;
+
     const sliceContentsList = () => {
         const start = (currentPage - 1) * countPerPage;
         const end = start + countPerPage;
@@ -91,7 +92,7 @@ const ReviewBoard = () => {
                     <div>날짜</div>
                 </div>
                 {<div className={style.boardListContents}>
-                    {board.map(boardItem)}
+                    {sliceContentsList().map(boardItem)}
                 </div>}
             </div>
             <div className={style.naviFooter}>
