@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {Row, Col} from 'react-bootstrap';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 
