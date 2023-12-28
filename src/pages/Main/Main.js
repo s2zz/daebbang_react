@@ -402,7 +402,7 @@ const Main = () => {
           <div className={style.recent_estate}>
             <div className={style.titlebox}>
               <span className={style.title}> 최근 등록된 매물</span>
-              <a href="/home/oneroom"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
+              <Link to="/home/oneroom"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
             <div className={style.contents}>
@@ -426,7 +426,7 @@ const Main = () => {
           <div className={style.freeboard}>
             <div className={style.titlebox}>
               <span className={style.title}>양도 게시판</span>
-              <a href="/board/toRoomBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
+              <Link to="/board/toRoomBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
             <div className={style.contents}>
@@ -453,7 +453,7 @@ const Main = () => {
             <div className={style.titlebox}>
               <span className={style.title}>자유 게시판</span>
 
-              <a href="/board/toFreeBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></a>
+              <Link to="/board/toFreeBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
             <div className={style.contents}>

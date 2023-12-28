@@ -10,15 +10,12 @@ import Enrollment from './pages/Enrollment/Enrollment';
 import SignUp from './pages/SignUp/SignUp';
 import MyPage from './pages/MyPage/MyPage';
 import Main from './pages/Main/Main';
-import FindId from './pages/Login/FindId/FindId';
-import FindPw from './pages/Login/FindPw/FindPw';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import Review from './pages/Review/Review';
 import EstateManage from './pages/EstateManage/js/EstateManage';
-import FindEnrollmentId from './pages/Login/FindId/FindenrollmentId';
-import FindEnrollmentPw from './pages/Login/FindPw/FindenrollmentPw';
 import ScrollToTop from './pages/commons/ScrollToTop';
+import Find from './pages/find/find';
 
 function App() {
   const storedLoginId = sessionStorage.getItem('loginId');
@@ -41,10 +38,7 @@ function App() {
             <Route path="/home/*" element={<Home />} />
             <Route path="/board/*" element={<Board loginId={storedLoginId} admin={isAdmin} />} />
             <Route path="/login/*" element={<Login />} />
-            <Route path="/login/findId/*" element={<FindId />} />
-            <Route path="/login/findId/findenrollmentId" element={<FindEnrollmentId />} />
-            <Route path="/login/findPw/*" element={<FindPw />} />
-            <Route path="/login/findPw/findenrollmentPw" element={<FindEnrollmentPw />} />
+            <Route path="/find/*" element={<Find />} />
             <Route path="/signUp/*" element={<SignUp />} />
             <Route path="/myPage/*" element={storedLoginId ? <MyPage /> : <Navigate to="/" replace />} />
             <Route path="/admin/*" element={isAdmin ? <Admin /> : <Navigate to="/" replace />} />
