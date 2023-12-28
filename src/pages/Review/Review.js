@@ -2,8 +2,9 @@ import { Route, Routes } from 'react-router-dom';
 import WriteReview from './Write/WriteReview';
 import EditReview from './Edit/EditReview';
 import style from './Review.module.css';
-import ReviewBoard from './Board/ReviewBoard/ReviewBoard';
-import ReviewBoardContents from './Board/ReviewBoardContents/ReviewBoardContents';
+import ReviewBoard from './ReviewBoard/ReviewBoard';
+import ReviewBoardContents from './ReviewBoardContents/ReviewBoardContents';
+
 
 
 const Review = ({loginId, admin}) => {

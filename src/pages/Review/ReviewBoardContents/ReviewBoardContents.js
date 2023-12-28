@@ -1,6 +1,6 @@
 import style from './ReviewBoardContents.module.css';
-import favorites from '../../assets/favorites.png';
-import notFavorite from '../../assets/notFavorite.png';
+import favorites from '../assets/favorites.png';
+import notFavorite from '../assets/notFavorite.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -10,6 +10,7 @@ const ReviewBoardContents = ({loginId, admin}) => {
     const navi = useNavigate();
     const [review, setReview] = useState({});
     const seq=location && location.state && location.state.seq ? location.state.seq : 0;
+    
     // 리뷰 내용 불러오기
     useEffect(() => {
         axios.get(`/api/review/selectReviewBySeq/${location.state.seq}`).then(resp => {
