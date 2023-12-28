@@ -76,7 +76,7 @@ function FindEnrollmentPw() {
           <div className={style.findBox}>
             <Link to="/login"  className={style.findPw}>로그인</Link>
             <Link to="/enrollment" className={style.findPw}>회원가입</Link>
-            <Link className={style.findPw} to="/login/FindId/FindenrollmentId">아이디 찾기</Link>
+            <Link className={style.findPw} to="/find/FindenrollmentId">아이디 찾기</Link>
           </div>
         </div>
       </div>

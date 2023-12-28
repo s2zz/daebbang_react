@@ -74,7 +74,7 @@ function FindId() {
           <div className={style.findBox}>
             <Link to="/login" className={style.findId}>로그인</Link>
             <Link to="/signUp" className={style.findId}>회원가입</Link>
-            <Link className={style.findPw} to="/login/findPw">비밀번호 찾기</Link>
+            <Link className={style.findPw} to="/find/findPw">비밀번호 찾기</Link>
           </div>
         </div>
       </div>
