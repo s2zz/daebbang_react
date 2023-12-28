@@ -39,9 +39,9 @@ function Info() {
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <button className={style.changeBtn}><Link to="/mypage/changePw" className={style.link}>비밀번호 변경하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo" className={style.link}>회원정보 수정하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo" className={style.link}>회원 탈퇴하기</Link></button>
+                        <Link to="/mypage/changePw" className={style.link}><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
+                        <Link to="/mypage/updateMyInfo" className={style.link}> <button className={style.changeBtn}>회원정보 수정하기</button></Link>
+                        <Link to="/mypage/deleteMyInfo" className={style.link}> <button className={style.changeBtn}>회원 탈퇴하기</button></Link>
                     </div>
                 </div>}
         </div>
@@ -155,7 +155,7 @@ const EstateInfo = () => {
                 <div className={style.infoContainer}>
                     <div className={style.infoBox}>
                         <div className={style.eleftInfo}>
-                            ID<br></br>ESTATE NAME<br></br>ESTATE NUMBER<br></br>NAME<br></br>PHONE<br></br>ADDRESS<br></br>MANNER TEMPERATURE
+                            ID<br></br>ESTATE NAME<br></br>ESTATE NUMBER<br></br>NAME<br></br>PHONE<br></br>ADDRESS<br></br>MANNER TEMPERATURE<br></br>CONTENT
                         </div>
                         <div className={style.rightInfo}>
                             {storedLoginId}<br></br>
@@ -165,13 +165,14 @@ const EstateInfo = () => {
                             {info.phone}<br></br>
                             {info.address}<br></br>
                             {info.manners_temperature}<br></br>
+                            {info.content === '' || info.content === null ? "회원정보 수정을 통해 공인중개사를 소개해보세요!" : info.content}
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
-                        <button className={style.changeBtn}><Link to="/mypage/changePw" className={style.link}>비밀번호 변경하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/profileImage" className={style.link}>대표 이미지</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/updateMyInfo" className={style.link}>공인중개사 정보 수정하기</Link></button>
-                        <button className={style.changeBtn}><Link to="/mypage/deleteMyInfo" className={style.link}>회원 탈퇴하기</Link></button>
+                        <Link to="/mypage/changePw" className={style.link}><button className={style.changeBtn}>비밀번호 변경하기</button></Link>
+                        <Link to="/mypage/profileImage" className={style.link}> <button className={style.changeBtn}>대표 이미지</button></Link>
+                        <Link to="/mypage/updateMyInfo" className={style.link}> <button className={style.changeBtn}>공인중개사 정보 수정하기</button></Link>
+                        <Link to="/mypage/deleteMyInfo" className={style.link}><button className={style.changeBtn}>회원 탈퇴하기</button></Link>
                     </div>
                 </div>
             }

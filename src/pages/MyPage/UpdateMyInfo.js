@@ -19,6 +19,7 @@ const UpdateMyInfo = () => {
     const [zipcode, setZipcode] = useState({ zipcode: "" });
     const [address1, setAddress1] = useState({ address1: "" });
     const [address2, setAddress2] = useState({ address2: "" });
+    const [content, setContent] = useState({ content:"" });
 
     const [fill, setFill] = useState(false);
     const [efill, setEfill] = useState(false);
@@ -26,6 +27,7 @@ const UpdateMyInfo = () => {
     const [nameRegex, setNameRegex] = useState(false);
     const [emailRegex, setEmailRegex] = useState(false);
     const [phoneRegex, setPhoneRegex] = useState(false);
+    const [contentRegex, setContentRegex] = useState(false); 
 
     const { kakao } = window;
     const [estateGeo, setEstateGeo] = useState({ latitude: '', longitude: '' })
@@ -107,6 +109,17 @@ const UpdateMyInfo = () => {
         setEfill(e.target.value !== '');
     }
 
+    const handleChangeContent = (e) => {
+        const { name, value } = e.target;
+        setContent(prev => ({ ...prev, [name]: value }));
+
+        const contentRegex = /^.{0,1000}$/;
+
+        if (contentRegex.test(e.target.value)) {
+            setContentRegex(true);
+        }
+    }
+
     useEffect(() => {
         setFill(
             name.name !== '' &&
@@ -172,14 +185,18 @@ const UpdateMyInfo = () => {
             return;
         }
         if (!nameRegex) {
-            alert("이름은 2~5글자의 한글이어야합니다.");
+            alert("이름은 2~5글자의 한글이어야합니다");
             return;
         }
         if (!phoneRegex) {
-            alert("휴대폰 번호는 숫자 11자리만 입력해주세요.");
+            alert("휴대폰 번호는 숫자 11자리만 입력해주세요");
             return;
         }
-        if (efill && nameRegex && phoneRegex) {
+        if (!contentRegex) {
+            alert("공인중개사 소개는 1000자 이하로 작성해주세요");
+            return;
+        }
+        if (efill && nameRegex && phoneRegex && contentRegex) {
             try {
                 const userData = {
                     id: storedLoginId,
@@ -187,10 +204,11 @@ const UpdateMyInfo = () => {
                     phone: phone.phone,
                     address: address1.address1 + address2.address2,
                     latitude: estateGeo.latitude,
-                    longitude: estateGeo.longitude
+                    longitude: estateGeo.longitude,
+                    content: content.content
                 };
                 await axios.post("/api/estate/updateMyInfo", userData);
-                alert("회원정보 수정이 완료되었습니다");
+                alert("공인중개사 정보 수정이 완료되었습니다");
                 navi("/mypage");
                 window.location.reload();
             } catch (error) {
@@ -210,6 +228,7 @@ const UpdateMyInfo = () => {
         if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
             addr = data.roadAddress;
         } else { // 사용자가 지번 주소를 선택했을 경우(J)
+            console.log(data.jibunAddress);
             addr = data.jibunAddress;
         }
 
@@ -228,8 +247,6 @@ const UpdateMyInfo = () => {
             if (extraAddr !== '') {
                 extraAddr = ' (' + extraAddr + ')';
             }
-        } else {
-            document.getElementById("sample6_extraAddress").value = '';
         }
 
         // 우편번호와 주소 정보를 해당 필드에 넣는다.
@@ -337,7 +354,9 @@ const UpdateMyInfo = () => {
                             <button onClick={handleOpenModal} className={style.zipcodeBtn}>우편번호 찾기</button><br />
                             주소<br></br>
                             <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1} placeholder='주소' className={style.inputInfo}></input><br></br>
-                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력' className={style.inputInfo}></input>
+                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력' className={style.inputInfo}></input><br/><br/>
+                            공인중개사 소개<br></br>
+                            <textarea placeholder='공인중개사를 소개해보세요!' name="content" onChange={handleChangeContent} value={content.content} className={style.estateContent}></textarea>
                             <Modal
                                 isOpen={showModal}
                                 onRequestClose={() => setShowModal(false)}
