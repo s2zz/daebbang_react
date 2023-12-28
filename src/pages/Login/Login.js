@@ -139,8 +139,8 @@ const LoginBox = ({ setLoginId }) => {
           </div>
           <div className={style.findBox}>
             <Link to="/signUp" className={style.findId}>회원가입</Link>
-            <a className={style.findId} href="/login/findId">아이디 찾기</a>
-            <a className={style.findPw} href="/login/findPw">비밀번호 찾기</a>
+            <Link className={style.findId} to="/login/findId">아이디 찾기</Link>
+            <Link className={style.findPw} to="/login/findPw">비밀번호 찾기</Link>
           </div>
         </div>
         <div className={style.estateLoginBox}>
@@ -159,8 +159,8 @@ const LoginBox = ({ setLoginId }) => {
           </div>
           <div className={style.findBox}>
             <Link to="/enrollment" className={style.findId}>회원가입</Link>
-            <a className={style.findId} href="/login/findId/findenrollmentId">아이디 찾기</a>
-            <a className={style.findPw} href="/login/findPw/findenrollmentPw">비밀번호 찾기</a>
+            <Link className={style.findId} to="/login/findId/findenrollmentId">아이디 찾기</Link>
+            <Link className={style.findPw} to="/login/findPw/findenrollmentPw">비밀번호 찾기</Link>
           </div>
         </div>
         <Modal
