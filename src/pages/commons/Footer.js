@@ -2,6 +2,7 @@ import style from "./Footer.module.css"
 import { faBlog } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube,faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link} from 'react-router-dom';
 
 const Footer = () => {
       return (
@@ -10,7 +11,7 @@ const Footer = () => {
               <div className={style.footerbox}>
                   <div className={style.footer}>
                       <div className={style.linkbox}>
-                          <a href="#">회사소개</a> | <a href="#">이용약관</a> | <a className={style.font} href="#"> 개인정보처리방침  </a> | <a href="#">고객센터</a> | <a href="#">제휴문의</a> 
+                          <Link to="#">회사소개</Link> | <Link to="#">이용약관</Link> | <Link className={style.font} to="#"> 개인정보처리방침  </Link> | <Link to="#">고객센터</Link> | <Link to="#">제휴문의</Link> 
                       </div>
                       <div className={style.footermain}>
                           (주)대빵 | 대표: 이찬양: 사업자등록번호:123-45-67890<br></br>

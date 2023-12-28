@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import logo from "../Enrollment/assets/logo3.png";
 import axios from 'axios';
 import style1 from "../commons/Modal.module.css";
-import {Modal, ModalBody, } from 'reactstrap';
+import { Modal, ModalBody, } from 'reactstrap';
 
 const TopForm = ({ setLoginId }) => {
 
@@ -50,7 +50,7 @@ const TopForm = ({ setLoginId }) => {
         }
     }, [isEstate, storedLoginId, location.pathname]);
 
-    
+
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             {reviewCount}개의 확인하지 않은<br /> 문의가 있습니다!
@@ -60,19 +60,19 @@ const TopForm = ({ setLoginId }) => {
         <div className={style.container}>
             <div className={style.top}>
                 <div className={style.logo_wrap}>
-                    <Link to="/"><img src={logo} alt="..." className={style.logo}/> </Link>
+                    <Link to="/"><img src={logo} alt="..." className={style.logo} /> </Link>
                 </div>
 
                 <div className={style.gnb}>
                     <ul className={style.gnb_container}>
                         <li className={style.has_d2}>
-                            <a href="/home/oneroom/list"><Button><span>원룸</span></Button> </a>
+                            <Link to="/home/oneroom/list"><Button><span>원룸</span></Button> </Link>
                             <div className={style.depth2_bx}>
-                                <a href="/home/oneroom/list">방찾기</a>
+                                <Link to="/home/oneroom/list">방찾기</Link>
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                            <a href="#"><Button onClick={toggle3}><span>투룸</span></Button> </a>
+                            <Link to="#"><Button onClick={toggle3}><span>투룸</span></Button> </Link>
                             <div>
                                 <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
                                     <ModalBody className={style1.alertBody}>
@@ -86,7 +86,7 @@ const TopForm = ({ setLoginId }) => {
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                            <a href="#"><Button onClick={toggle3}><span>오피스텔</span></Button> </a>
+                            <Link to="#"><Button onClick={toggle3}><span>오피스텔</span></Button> </Link>
                             <div>
                                 <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
                                     <ModalBody className={style1.alertBody}>
@@ -100,11 +100,11 @@ const TopForm = ({ setLoginId }) => {
                             </div>
                         </li>
                         <li className={style.has_d2}>
-                            <a href="/board"><Button><span>게시판</span></Button> </a>
+                            <Link to="board"><Button><span>게시판</span></Button> </Link>
                             <div className={style.depth2_bx}>
-                                <a href="/board/toFavoriteBoardList">즐겨찾기</a>
-                                <a href="/board">자유게시판</a>
-                                <a href="/board/toRoomBoardList">양도게시판</a>
+                                <Link to="/board/toFavoriteBoardList">즐겨찾기</Link>
+                                <Link to="board">자유게시판</Link>
+                                <Link to="/board/toRoomBoardList">양도게시판</Link>
                             </div>
                         </li>
                     </ul>
@@ -118,27 +118,27 @@ const TopForm = ({ setLoginId }) => {
                                     <Button>{storedLoginId}▼</Button>
                                     <div className={style.depth2_bx}>
                                         {isAdmin ?
-                                            <a href="/admin">관리자 페이지</a>
-                                            : <a href="/myPage">마이페이지</a>}
+                                            <Link to="/admin">관리자 페이지</Link>
+                                            : <Link to="/myPage">마이페이지</Link>}
                                         {isEstate ?
                                             <>
-                                                <a href="/estateManage">매물관리 {isEstate && reviewCount !== 0 &&
+                                                <Link to="/estateManage">매물관리 {isEstate && reviewCount !== 0 &&
                                                     (<OverlayTrigger placement="bottom" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                                                         <Button sx={{ ml: 5 }}>{reviewCount}</Button>
-                                                    </OverlayTrigger>)}</a>
+                                                    </OverlayTrigger>)}</Link>
                                             </>
                                             : ""}
-                                        <a href="#" onClick={handleLogout}>로그아웃</a>
+                                        <Link to="#" onClick={handleLogout}>로그아웃</Link>
 
                                     </div>
                                 </li>
                             </ul>
                         </div>
-                        : <div className={style.top_btn_menu}> <Button><a href="/login">로그인 및 회원가입</a></Button></div>}
+                        : <div className={style.top_btn_menu}> <Button><Link to="/login">로그인 및 회원가입</Link></Button></div>}
 
 
                     <div className={style.top_right_menu}>
-                        {isEstate ? <> </> : <Button><a href="/enrollment">중개사무소 가입</a></Button>}
+                        {isEstate ? <> </> : <Button><Link to="/enrollment">중개사무소 가입</Link></Button>}
 
                     </div>
 
