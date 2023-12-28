@@ -147,7 +147,7 @@ const ReportManagement = () => {
             align: 'center',
             valueGetter: (params) => params.row.reportStatus?.status || '',
         },
-        { field: 'writeDate', headerName: 'Phone', width: 110, headerAlign: 'center', align: 'center' },
+        { field: 'writeDate', headerName: 'WriteDate', width: 110, headerAlign: 'center', align: 'center' },
         {
             field: 'approval',
             headerName: 'Approval',
