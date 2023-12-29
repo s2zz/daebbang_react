@@ -13,7 +13,26 @@
   src: url("./fonts/NanumBarunGothicBold.ttf") format("truetype");
 }
 
-.body_form{
+.body_form {
   position: relative;
   top: 80px;
+}
+
+* ::-webkit-scrollbar {
+  width: 11px;
+  height: 5px;
+}
+
+* ::-webkit-scrollbar-thumb {
+  /*  height: 30%;
+  background: #909090;
+  border-radius: 10px;  */
+
+  background-color: #ccc;
+  border-radius: 10px !important;
+}
+
+* ::-webkit-scrollbar-track {
+  /* background: rgba(33, 122, 244, 0.1); */
+  background-color: #fafafa;
 }

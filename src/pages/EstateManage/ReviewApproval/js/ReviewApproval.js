@@ -117,7 +117,7 @@ function ReviewApproval() {
 
   return (
     <div className={style.container}>
-      <h1 className={style.bigTitle}>리뷰 관리</h1>
+      <h1 className={style.bigTitle}>문의 관리</h1>
       <table className={style.estateTable}>
         <thead>
           <tr>
