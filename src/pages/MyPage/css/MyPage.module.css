@@ -153,12 +153,15 @@
 
 .writeReviewBtn {
     background-color: #326CF9;
+    border:none;
+    border-radius: 5px;
     color:white;
 }
 
 .writeReviewBtn:hover {
     background-color: white;
     color:#326CF9;
+    border: 1px solid #326CF9;
 }
 
 .refuseBtn {
@@ -224,20 +227,29 @@
 
 /*신고 내역*/
 .estateName {
-    margin-left:10px;
+    padding-left:10px;
+    padding-right:10px;
     width: 25%;
+    display:flex;
+    justify-content: center;
 }
 
 .content {
     width: 30%;
+    padding-left:10px;
+    padding-right:10px;
 }
 
 .content2 {
     width: 35%;
+    padding-left:10px;
+    padding-right:10px;
 }
 
 .status {
     width: 10%;
+    display:flex;
+    justify-content: center;
 }
 
 .reportEstate {
