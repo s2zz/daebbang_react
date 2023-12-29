@@ -1,6 +1,6 @@
 //
 import { Routes, Route, useNavigate } from "react-router-dom"; // Link
-import { useState, useEffect, useRef, forwardRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
 import {
   CustomOverlayMap,
   Map,
@@ -81,7 +81,6 @@ function OneRoom() {
       .then((resp) => {
         setMapList(resp.data);
         setMapRendered(true);
-        console.log(mapList);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
@@ -1843,10 +1842,10 @@ function OneRoom() {
                 {defaultDataRendered &&
                   zoomLevel <= 6 &&
                   subwayDefaultList.map(
-                    (marker) =>
+                    (marker, index) =>
                       marker.latitude &&
                       marker.longitude && (
-                        <>
+                        <React.Fragment key={index}>
                           <MapMarker
                             position={{
                               lat: marker.latitude,
@@ -1883,16 +1882,16 @@ function OneRoom() {
                               <span className="right"></span>
                             </div>
                           </CustomOverlayMap>
-                        </>
+                        </React.Fragment>
                       )
                   )}
                 {defaultDataRendered &&
                   zoomLevel <= 6 &&
                   schoolDefaultList.map(
-                    (marker) =>
+                    (marker, index) =>
                       marker.latitude &&
                       marker.longitude && (
-                        <>
+                        <React.Fragment key={index}>
                           <MapMarker
                             position={{
                               lat: marker.latitude,
@@ -1929,7 +1928,7 @@ function OneRoom() {
                               <span className="right"></span>
                             </div>
                           </CustomOverlayMap>
-                        </>
+                        </React.Fragment>
                       )
                   )}
               </Map>
