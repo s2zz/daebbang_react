@@ -321,7 +321,7 @@ function SignUp() {
             <div className={style.inputs}>
               <FontAwesomeIcon icon={faUser} />
               <input type="text" name="id" id="id" placeholder="아이디" onChange={handleChangeId} value={id.id} readOnly={readOnlyState} className={[style.inputInfo, style.inputId].join(' ')}></input>
-              <button onClick={() => duplCheck({ id: id.id })} disabled={!isConditionMet} className={style.testBtn}>아이디 중복 확인</button><br></br>
+              <button onClick={() => duplCheck({ id: id.id })} disabled={!isConditionMet} className={style.testBtn}>중복 확인</button><br></br>
               <div className={style.blank}></div>
               <FontAwesomeIcon icon={faLock} />
               <input type="password" name="pw" id="pw" placeholder="비밀번호" onChange={handleChangePw} value={pw.pw} className={style.inputInfo}></input><br></br>

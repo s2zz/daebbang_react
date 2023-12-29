@@ -62,6 +62,16 @@
     box-shadow: 0px 2px 2px #E5EAF2;
 }
 
+.inputInfo:hover {
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
+}
+
+.inputInfo:focus {
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
+    box-shadow: 0 0 0 3px #DAECFF; /* 이 색은 blue[200]에 해당합니다 */
+    outline: 0; /* Firefox 등에서 추가적인 포커스 효과를 없애는 것 */
+}
+
 .zipcodeBtn {
     border-radius: 5px;
     background-color: #8faadc;
@@ -87,6 +97,16 @@
     box-shadow: 0px 2px 2px #E5EAF2;
 }
 
+.inputZipcode:hover {
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
+}
+
+.inputZipcode:focus {
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
+    box-shadow: 0 0 0 3px #DAECFF; /* 이 색은 blue[200]에 해당합니다 */
+    outline: 0; /* Firefox 등에서 추가적인 포커스 효과를 없애는 것 */
+}
+
 .estateContent {
     resize: none;
     width: 400px;
@@ -101,6 +121,16 @@
     background: #fff;
     border: 1px solid #B0B8C4; /* 이 색은 grey[400]에 해당합니다 */
     box-shadow: 0px 2px 2px #E5EAF2;
+}
+
+.estateContent:hover {
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
+}
+
+.estateContent:focus {
+    border-color: #8faadc; /* 이 색은 blue[500]에 해당합니다 */
+    box-shadow: 0 0 0 3px #DAECFF; /* 이 색은 blue[200]에 해당합니다 */
+    outline: 0; /* Firefox 등에서 추가적인 포커스 효과를 없애는 것 */
 }
 
 .changeBtns {
