@@ -6,9 +6,10 @@ import { useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import Loading from '../../../commons/Loading';
 
 const RoomBoardContents = ({ loginId, admin }) => {
-
+    const [loading, setLoading] = useState(true);
     const location = useLocation();
     const navi = useNavigate();
     const [boardContents, setBoardContents] = useState({});
@@ -16,7 +17,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
     const [fileList, setFileList] = useState([{}]);
 
     const seq = location.state !== null && location.state.sysSeq !== null ? location.state.sysSeq : 0;
-    
+
     // 댓글 내림차순 정렬
     function compareBySeq(a, b) {
         return b.seq - a.seq;
@@ -29,6 +30,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
                 setBoardContents(resp.data);
                 setReplyList(resp.data.replies.sort(compareBySeq));
                 setFileList(resp.data.files.sort(compareBySeq));
+                setLoading(false);
             }).catch(err => {
                 console.log(err);
             })
@@ -101,7 +103,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
 
     // 댓글 삭제
     const delReplyBtn = (seq) => {
-        if(window.confirm("댓글을 정말 삭제하시겠습니까?")){
+        if (window.confirm("댓글을 정말 삭제하시겠습니까?")) {
             axios.delete(`/api/reply/${seq}`).then(resp => {
                 alert("댓글이 삭제되었습니다");
                 setReplyList(replyList.filter(e => e.seq !== seq))
@@ -116,7 +118,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
     const contentsDel = (seq) => {
         let imgList = existImgSearch(boardContents.contents);
 
-        if(window.confirm("게시글을 정말 삭제하시겠습니까?")){
+        if (window.confirm("게시글을 정말 삭제하시겠습니까?")) {
             axios.delete(`/api/board/${seq}`, { data: imgList }).then(resp => {
                 alert("게시글이 삭제되었습니다");
                 navi("/board/toRoomBoardList");
@@ -165,132 +167,135 @@ const RoomBoardContents = ({ loginId, admin }) => {
             link.click();
             document.body.removeChild(link);
         }).catch(err => {
-           alert("파일 다운로드 중 에러가 발생하였습니다");
+            alert("파일 다운로드 중 에러가 발생하였습니다");
             console.log(err);
         })
     }
 
     return (
         <>
-            <div className={style.boardContentsTitle}>
-                <span style={{ whiteSpace: "nowrap" }}>[{boardContents.header}]</span>
-                {boardContents.title}
-            </div>
-            <div className={style.boardContentsInfo}>
-                <div>
-                    작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""} | 조회수 {boardContents.viewCount}
-                </div>
-                <div>
-                    {loginId === boardContents.writer || admin !== null ? <button onClick={() => { contentsDel(seq) }}>삭제</button> : ""}
-                </div>
-            </div>
-            <div className={style.fileBox}>
-                <div>첨부파일 목록</div>
-                {
-                    fileList.length===0 ?
-                    <div>첨부파일이 존재하지 않습니다.</div> :
-                    fileList.map((e, i) => {
-                        return (
-                            <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>파일 {i + 1} | <span className={style.fileName}>{e.oriName}</span></div>
-                        );
-                    })
-                }
-            </div>
-            <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}>
-            </div>
-            <div className={style.btns}>
-                <Link to="/board/toRoomBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button className={style.backBtn}>뒤로가기</button></Link>
-                {loginId === boardContents.writer || admin !== null ?
-                    <Link to="/board/toEditRoomBoardContents" state={{ sysSeq: seq }}><button className={style.editBtn}>수정하기</button></Link> :
-                    ""
-                }
-            </div>
-            <hr />
-            <div>
-                <span><FontAwesomeIcon icon={faCircleExclamation} /> &nbsp;</span>
-                양도 게시판을 통해 이루어지는 모든 거래 및 법적 절차는 거래 당사자 간의 독립적인 책임
-                아래 진행되며, DAEBBANG은 이에 대한 법적 책임을 부담하지 않습니다.
-            </div>
-            <hr />
-            <div>
-                <div className={style.insertReplyDiv}>
-                    <div>
-                        <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange} value={insertReply.contents} maxLength="300"/>
+            {loading ? <Loading></Loading> :
+                <>
+                    <div className={style.boardContentsTitle}>
+                        <span style={{ whiteSpace: "nowrap" }}>[{boardContents.header}]</span>
+                        {boardContents.title}
                     </div>
-                </div>
-                <div className={style.insertReplyBtn}>
-                    <button onClick={insertReplyAdd}>등록</button>
-                </div>
-            </div>
-            <hr className={style.replyListStartHr} />
-            {
-                sliceReplyList().map((e, i) => {
-                    if (i === 0) {
-                        return (
-                            <div className={style.replyBoxFirst} key={i}>
-                                <div className={style.replyInfo}>
-                                    <div>{e.writer}</div>
-                                    <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
-                                </div>
-                                {
-                                    visibleUpdateBox === e.seq ? <div className={style.replyTextArea}><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
-                                }
-                                {
-                                    visibleUpdateBox === e.seq ?
-                                        <div className={style.replyListBtn}>
-                                            {loginId === e.writer || admin !== null ?
-                                                <><button onClick={() => hideUpdateBox(e.seq)} className={style.replyEditCancleBtn}>취소</button><button onClick={updateAdd} className={style.replycompleteEditBtn}>수정완료</button></> :
-                                                ""
-                                            }
-                                        </div>
-                                        :
-                                        <div className={style.replyListBtn}>
-                                            {loginId === e.writer || admin !== null ?
-                                                <><button onClick={() => showUpdateBox(e.seq, e.contents)} className={style.replyEditBtn}>수정</button><button onClick={() => delReplyBtn(e.seq)} className={style.replyDelBtn}>삭제</button></> :
-                                                ""
-                                            }
-                                        </div>
-                                }
+                    <div className={style.boardContentsInfo}>
+                        <div>
+                            작성자 {boardContents.writer} | 날짜 {boardContents.writeDate ? boardContents.writeDate.split("T")[0] : ""} | 조회수 {boardContents.viewCount}
+                        </div>
+                        <div>
+                            {loginId === boardContents.writer || admin !== null ? <button onClick={() => { contentsDel(seq) }}>삭제</button> : ""}
+                        </div>
+                    </div>
+                    <div className={style.fileBox}>
+                        <div>첨부파일 목록</div>
+                        {
+                            fileList.length === 0 ?
+                                <div>첨부파일이 존재하지 않습니다.</div> :
+                                fileList.map((e, i) => {
+                                    return (
+                                        <div key={i} onClick={() => downloadFile(e.sysName, e.oriName)}>파일 {i + 1} | <span className={style.fileName}>{e.oriName}</span></div>
+                                    );
+                                })
+                        }
+                    </div>
+                    <div className={style.boardContentsDiv} dangerouslySetInnerHTML={{ __html: boardContents.contents }}>
+                    </div>
+                    <div className={style.btns}>
+                        <Link to="/board/toRoomBoardList" state={{ searchText: location.state !== null && location.state.searchText != null ? location.state.searchText : "" }}><button className={style.backBtn}>뒤로가기</button></Link>
+                        {loginId === boardContents.writer || admin !== null ?
+                            <Link to="/board/toEditRoomBoardContents" state={{ sysSeq: seq }}><button className={style.editBtn}>수정하기</button></Link> :
+                            ""
+                        }
+                    </div>
+                    <hr />
+                    <div>
+                        <span><FontAwesomeIcon icon={faCircleExclamation} /> &nbsp;</span>
+                        양도 게시판을 통해 이루어지는 모든 거래 및 법적 절차는 거래 당사자 간의 독립적인 책임
+                        아래 진행되며, DAEBBANG은 이에 대한 법적 책임을 부담하지 않습니다.
+                    </div>
+                    <hr />
+                    <div>
+                        <div className={style.insertReplyDiv}>
+                            <div>
+                                <textarea placeholder="댓글을 입력해주세요" onChange={insertReplyHandleChange} value={insertReply.contents} maxLength="300" />
                             </div>
-                        );
-                    } else {
-                        return (
-                            <div className={style.replyBox} key={i}>
-                                <div className={style.replyInfo}>
-                                    <div>{e.writer}</div>
-                                    <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
-                                </div>
-                                {
-                                    visibleUpdateBox === e.seq ? <div className={style.replyTextArea}><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
-                                }
-                                {
-                                    visibleUpdateBox === e.seq ?
-                                        <div className={style.replyListBtn}>
-                                            {loginId === e.writer || admin !== null ?
-                                                <><button onClick={() => hideUpdateBox(e.seq)} className={style.replyEditCancleBtn}>취소</button><button onClick={updateAdd} className={style.replycompleteEditBtn}>수정완료</button></> :
-                                                ""
-                                            }
+                        </div>
+                        <div className={style.insertReplyBtn}>
+                            <button onClick={insertReplyAdd}>등록</button>
+                        </div>
+                    </div>
+                    <hr className={style.replyListStartHr} />
+                    {
+                        sliceReplyList().map((e, i) => {
+                            if (i === 0) {
+                                return (
+                                    <div className={style.replyBoxFirst} key={i}>
+                                        <div className={style.replyInfo}>
+                                            <div>{e.writer}</div>
+                                            <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                         </div>
-                                        :
-                                        <div className={style.replyListBtn}>
-                                            {loginId === e.writer || admin !== null ?
-                                                <><button className={style.replyEditBtn} onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)} className={style.replyDelBtn}>삭제</button></> :
-                                                ""
-                                            }
+                                        {
+                                            visibleUpdateBox === e.seq ? <div className={style.replyTextArea}><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
+                                        }
+                                        {
+                                            visibleUpdateBox === e.seq ?
+                                                <div className={style.replyListBtn}>
+                                                    {loginId === e.writer || admin !== null ?
+                                                        <><button onClick={() => hideUpdateBox(e.seq)} className={style.replyEditCancleBtn}>취소</button><button onClick={updateAdd} className={style.replycompleteEditBtn}>수정완료</button></> :
+                                                        ""
+                                                    }
+                                                </div>
+                                                :
+                                                <div className={style.replyListBtn}>
+                                                    {loginId === e.writer || admin !== null ?
+                                                        <><button onClick={() => showUpdateBox(e.seq, e.contents)} className={style.replyEditBtn}>수정</button><button onClick={() => delReplyBtn(e.seq)} className={style.replyDelBtn}>삭제</button></> :
+                                                        ""
+                                                    }
+                                                </div>
+                                        }
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <div className={style.replyBox} key={i}>
+                                        <div className={style.replyInfo}>
+                                            <div>{e.writer}</div>
+                                            <div>{e.writeDate ? e.writeDate.split("T")[0] : ""}</div>
                                         </div>
-                                }
+                                        {
+                                            visibleUpdateBox === e.seq ? <div className={style.replyTextArea}><textarea value={updateReply.contents} onChange={updateHandle}></textarea></div> : <div>{e.contents}</div>
+                                        }
+                                        {
+                                            visibleUpdateBox === e.seq ?
+                                                <div className={style.replyListBtn}>
+                                                    {loginId === e.writer || admin !== null ?
+                                                        <><button onClick={() => hideUpdateBox(e.seq)} className={style.replyEditCancleBtn}>취소</button><button onClick={updateAdd} className={style.replycompleteEditBtn}>수정완료</button></> :
+                                                        ""
+                                                    }
+                                                </div>
+                                                :
+                                                <div className={style.replyListBtn}>
+                                                    {loginId === e.writer || admin !== null ?
+                                                        <><button className={style.replyEditBtn} onClick={() => showUpdateBox(e.seq, e.contents)}>수정</button><button onClick={() => delReplyBtn(e.seq)} className={style.replyDelBtn}>삭제</button></> :
+                                                        ""
+                                                    }
+                                                </div>
+                                        }
 
-                            </div>
-                        );
+                                    </div>
+                                );
+                            }
+                        })
                     }
-                })
-            }
-            <div className={style.naviFooter}>
-                <Pagination
-                    count={Math.ceil(replyList.length / replyCountPerPage)}
-                    page={currentReplyPage}
-                    onChange={replyCurrentPageHandle} />
-            </div>
+                    <div className={style.naviFooter}>
+                        <Pagination
+                            count={Math.ceil(replyList.length / replyCountPerPage)}
+                            page={currentReplyPage}
+                            onChange={replyCurrentPageHandle} />
+                    </div>
+                </>}
         </>
     )
 }

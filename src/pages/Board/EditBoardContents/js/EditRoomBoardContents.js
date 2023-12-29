@@ -8,9 +8,11 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Loading from '../../../commons/Loading';
 
 const EditRoomBoardContents = ({ loginId }) => {
     const location = useLocation();
+    const [loading, setLoading] = useState(true);
     const navi = useNavigate();
     useEffect(() => {
         if (loginId === null) {
@@ -40,6 +42,7 @@ const EditRoomBoardContents = ({ loginId }) => {
             setFormData(prev => ({ ...prev, title: resp.data.title, contents: resp.data.contents, seq: resp.data.seq, header: resp.data.header }));
             setFileList(resp.data.files.sort(compareBySeq));
             setSysNameList(prev => existImgSearch(resp.data.contents));
+            setLoading(false);
         }).catch(err => {
             console.log(err);
         })
@@ -161,7 +164,7 @@ const EditRoomBoardContents = ({ loginId }) => {
 
         if (formData.header === "양도합니다") {
             toggle1();
-        } else if(formData.header==="양도 구합니다"){
+        } else if (formData.header === "양도 구합니다") {
             toggle2();
         }
     }
@@ -251,7 +254,7 @@ const EditRoomBoardContents = ({ loginId }) => {
 
     const [inputList, setInputList] = useState([{ name: "files0", show: false }, { name: "files1", show: false }, { name: "files2", show: false }, { name: "files3", show: false }, { name: "files4", show: false }]);
     const fileAdd = () => {
-        if (inputList.filter(e => e.show).length > numberOfInputs-1) {
+        if (inputList.filter(e => e.show).length > numberOfInputs - 1) {
             alert("파일은 최대 5개까지 첨부 가능합니다");
             return;
         }
@@ -313,74 +316,80 @@ const EditRoomBoardContents = ({ loginId }) => {
 
     return (
         <>
-            {toggle1 ? returnModal1(toggle1) : ""}
-            {toggle2 ? returnModal2(toggle2):""}
-            <div className={style.boardTitle}>양도게시판 글 수정</div>
-            <hr></hr>
-            <div className={style.titleBox}>
-                <div>제목<span>*</span></div>
-                <div>
-                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} maxLength="50" />
+            {loading ? <Loading></Loading> : <>
+                {toggle1 ? returnModal1(toggle1) : ""}
+                {toggle2 ? returnModal2(toggle2) : ""}
+                <div className={style.boardTitle}>양도게시판 글 수정</div>
+                <hr></hr>
+                <div className={style.titleBox}>
+                    <div>제목<span>*</span></div>
+                    <div>
+                        <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} maxLength="50" />
+                    </div>
                 </div>
-            </div>
-            <div className={style.headerBox}>
-                <div>말머리<span>*</span></div>
-                <div>
-                    <select onChange={handleHeaderChange}>
-                        {formData.header === '양도합니다'
-                            ? (<><option selected>양도합니다</option><option>양도 구합니다</option></>)
-                            : (<><option>양도합니다</option><option selected>양도 구합니다</option></>)
-                        }
-                    </select>
+                <div className={style.headerBox}>
+                    <div>말머리<span>*</span></div>
+                    <div>
+                        <select onChange={handleHeaderChange}>
+                            {formData.header === '양도합니다'
+                                ? (<><option selected>양도합니다</option><option>양도 구합니다</option></>)
+                                : (<><option>양도합니다</option><option selected>양도 구합니다</option></>)
+                            }
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div className={eStyle.fileBox}>
-                <div>파일 목록</div>
-                {
-                    fileList.map((e, i) => {
-                        return (
-                            <div key={i}>
-                                {e.oriName}
-                                <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
-                            </div>
-                        );
-                    })
-                }
-            </div>
-            <div className={style.fileBox}>
-                <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
-                <div className={style.fileInputDiv}>
+                <div className={eStyle.fileBox}>
+                    <div>파일 목록</div>
                     {
-                        inputList.map((e, i) => (
-                            e.show ? (
+                        fileList.lnegth>0 ?
+                        fileList.map((e, i) => {
+                            return (
                                 <div key={i}>
-                                    <input type="file" onChange={handleFileChange} name={e.name} />
-                                    <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                    {e.oriName}
+                                    <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
                                 </div>
-                            ) : null
-                        ))
+                            );
+                        }) :
+                        <div>첨부 파일이 없습니다.</div>
                     }
                 </div>
-            </div>
-            <div>
-                <div className={style.contents}>내용<span>*</span></div>
-                <div>
-                    <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents} onChange={(value) => {
-                            if (value.length > 5000) {
-                                alert("최대 5000자까지 작성 가능합니다");
-                                setFormData(prev => ({ ...prev }));
-                            } else {
-                                setFormData(prev => ({ ...prev, contents: value }));
-                            }
-                        }} />
+                <div className={style.fileBox}>
+                    <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
+                    <div className={style.fileInputDiv}>
+                        {
+                            inputList.filter(e=>e.show===true).length>0 ?
+                            inputList.map((e, i) => (
+                                e.show ? (
+                                    <div key={i}>
+                                        <input type="file" onChange={handleFileChange} name={e.name} />
+                                        <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                    </div>
+                                ) : null
+                            )) :
+                            <div>선택된 파일이 없습니다.</div>
+                        }
+                    </div>
                 </div>
-            </div>
+                <div>
+                    <div className={style.contents}>내용<span>*</span></div>
+                    <div>
+                        <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
+                            value={formData.contents} onChange={(value) => {
+                                if (value.length > 5000) {
+                                    alert("최대 5000자까지 작성 가능합니다");
+                                    setFormData(prev => ({ ...prev }));
+                                } else {
+                                    setFormData(prev => ({ ...prev, contents: value }));
+                                }
+                            }} />
+                    </div>
+                </div>
 
-            <div className={style.btns}>
-                <Link to="/board/toRoomBoardContents" state={{ sysSeq: location.state.sysSeq }}><button>작성 취소</button></Link>
-                <button onClick={regex}>수정 완료</button>
-            </div>
+                <div className={style.btns}>
+                    <Link to="/board/toRoomBoardContents" state={{ sysSeq: location.state.sysSeq }}><button>작성 취소</button></Link>
+                    <button onClick={regex}>수정 완료</button>
+                </div>
+            </>}
         </>
     );
 }

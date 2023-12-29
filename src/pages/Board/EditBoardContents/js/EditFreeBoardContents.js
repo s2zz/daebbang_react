@@ -7,9 +7,11 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
+import Loading from "../../../commons/Loading";
 
 const EditFreeBoardContents = ({ loginId }) => {
     const location = useLocation();
+    const [loading, setLoading] = useState(true);
     const navi = useNavigate();
     useEffect(() => {
         if (loginId === null) {
@@ -32,6 +34,7 @@ const EditFreeBoardContents = ({ loginId }) => {
             setFormData(prev => ({ ...prev, title: resp.data.title, contents: resp.data.contents, seq: resp.data.seq }));
             setFileList(resp.data.files);
             setSysNameList(prev => existImgSearch(resp.data.contents));
+            setLoading(false);
         }).catch(err => {
             console.log(err);
         })
@@ -70,7 +73,7 @@ const EditFreeBoardContents = ({ loginId }) => {
                 console.log(imgUrl.data);
                 for (let i = 0; i < imgUrl.data.length; i++) {
                     setSysNameList(prev => [...prev, encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1])]);
-                    editor.insertEmbed(range.index, 'image', "/uploads/board/"+encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1]));
+                    editor.insertEmbed(range.index, 'image', "/uploads/board/" + encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1]));
                 }
 
             } catch (error) {
@@ -230,61 +233,68 @@ const EditFreeBoardContents = ({ loginId }) => {
 
     return (
         <>
-            <div className={style.boardTitle}>자유게시판 글 수정</div>
-            <hr></hr>
-            <div className={style.titleBox}>
-                <div>제목<span>*</span></div>
-                <div>
-                    <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} maxLength="50" />
-                </div>
-            </div>
-            <div className={eStyle.fileBox}>
-                <div>파일 목록</div>
-                {
-                    fileList.map((e, i) => {
-                        return (
-                            <div key={i}>
-                                {e.oriName}
-                                <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
-                            </div>
-                        );
-                    })
-                }
-            </div>
-            <div className={style.fileBox}>
-                <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
-                <div className={style.fileInputDiv}>
-                    {
-                        inputList.map((e, i) => (
-                            e.show ? (
-                                <div key={i}>
-                                    <input type="file" onChange={handleFileChange} name={e.name} />
-                                    <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
-                                </div>
-                            ) : null
-                        ))
-                    }
-                </div>
-            </div>
-            <div>
-                <div className={style.contents}>내용<span>*</span></div>
-                <div>
-                    <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
-                        value={formData.contents} onChange={(value) => {
-                            if (value.length > 5000) {
-                                alert("최대 5000자까지 작성 가능합니다");
-                                setFormData(prev => ({ ...prev }));
-                            } else {
-                                setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+            {loading ? <Loading></Loading> :
+                <>
+                    <div className={style.boardTitle}>자유게시판 글 수정</div>
+                    <hr></hr>
+                    <div className={style.titleBox}>
+                        <div>제목<span>*</span></div>
+                        <div>
+                            <input placeholder="제목을 입력해주세요" name="title" onChange={handleChange} value={formData.title} maxLength="50" />
+                        </div>
+                    </div>
+                    <div className={eStyle.fileBox}>
+                        <div>파일 목록</div>
+                        {
+                            fileList.length > 0 ?
+                            fileList.map((e, i) => {
+                                return (
+                                    <div key={i}>
+                                        {e.oriName}
+                                        <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
+                                    </div>
+                                );
+                            }) : 
+                            <div>첨부파일이 없습니다.</div>
+                        }
+                    </div>
+                    <div className={style.fileBox}>
+                        <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
+                        <div className={style.fileInputDiv}>
+                            {
+                                inputList.filter(e=>e.show===true).length>0 ?
+                                inputList.map((e, i) => (
+                                    e.show ? (
+                                        <div key={i}>
+                                            <input type="file" onChange={handleFileChange} name={e.name} />
+                                            <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                        </div>
+                                    ) : null
+                                )) :
+                                <div>선택된 파일이 없습니다.</div>
                             }
-                        }} />
-                </div>
-            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div className={style.contents}>내용<span>*</span></div>
+                        <div>
+                            <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
+                                value={formData.contents} onChange={(value) => {
+                                    if (value.length > 5000) {
+                                        alert("최대 5000자까지 작성 가능합니다");
+                                        setFormData(prev => ({ ...prev }));
+                                    } else {
+                                        setFormData(prev => ({ ...prev, contents: value.slice(0, 5000) }));
+                                    }
+                                }} />
+                        </div>
+                    </div>
 
-            <div className={style.btns}>
-                <Link to="/board/toFreeBoardContents" state={{ sysSeq: location.state.sysSeq }}><button>작성 취소</button></Link>
-                <button onClick={handleAdd}>수정 완료</button>
-            </div>
+                    <div className={style.btns}>
+                        <Link to="/board/toFreeBoardContents" state={{ sysSeq: location.state.sysSeq }}><button>작성 취소</button></Link>
+                        <button onClick={handleAdd}>수정 완료</button>
+                    </div>
+                </>}
         </>
     );
 }

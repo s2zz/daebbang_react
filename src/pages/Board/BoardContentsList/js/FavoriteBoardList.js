@@ -7,9 +7,10 @@ import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-
+import Loading from '../../../commons/Loading';
 
 const FavoriteBoardList = () => {
+    const [loading, setLoading] = useState(true);
     const [board, setBoard] = useState([]);
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
     const [searchText, setSearchText] = useState("");
@@ -118,7 +119,7 @@ const FavoriteBoardList = () => {
     const boardItem = (e, i) => {
         return (
             <div key={i}>
-                <div><img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." className={style.fav}/></div>
+                <div><img src={favorite} onClick={() => { delFav(e.seq) }} alt="..." className={style.fav} /></div>
                 <div>{board.length - (countPerPage * (currentPage - 1)) - i}</div>
                 <div>{e.writer}</div>
                 <div>
@@ -135,53 +136,54 @@ const FavoriteBoardList = () => {
 
     return (
         <>
-            <div className={style.boardTitle}>게시판</div>
-            <hr></hr>
-            <div className={style.selectBoard}>
-                <div>즐겨찾기</div>
-                <Link to="/board/toFreeBoardList"><div>자유게시판</div></Link>
-                <Link to="/board/toRoomBoardList"><div>양도게시판</div></Link>
-            </div>
-            <div className={fstyle.triangle}></div>
-            <div className={fstyle.searchDiv}>
-                <div className={style.selectBox}>
-                    <select onChange={categoryChange}>
-                        {["전체게시물", "자유게시판", "양도게시판"].map((e, i) => {
-                            return (
-                                category === e ? <option value={e} key={i} selected>{e}</option> : <option value={e} key={i}>{e}</option>
-                            )
-                        })}
-                    </select>
+            {loading ? <Loading></Loading> : <>
+                <div className={style.boardTitle}>게시판</div>
+                <hr></hr>
+                <div className={style.selectBoard}>
+                    <div>즐겨찾기</div>
+                    <Link to="/board/toFreeBoardList"><div>자유게시판</div></Link>
+                    <Link to="/board/toRoomBoardList"><div>양도게시판</div></Link>
                 </div>
-                <div className={style.searchBox}>
-                    <div className={style.searchInput}>
-                        <div><FontAwesomeIcon icon={faMagnifyingGlass} size="xl" /></div>
+                <div className={fstyle.triangle}></div>
+                <div className={fstyle.searchDiv}>
+                    <div className={style.selectBox}>
+                        <select onChange={categoryChange}>
+                            {["전체게시물", "자유게시판", "양도게시판"].map((e, i) => {
+                                return (
+                                    category === e ? <option value={e} key={i} selected>{e}</option> : <option value={e} key={i}>{e}</option>
+                                )
+                            })}
+                        </select>
+                    </div>
+                    <div className={style.searchBox}>
+                        <div className={style.searchInput}>
+                            <div><FontAwesomeIcon icon={faMagnifyingGlass} size="xl" /></div>
+                            <div>
+                                <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
+                            </div>
+                        </div>
                         <div>
-                            <input placeholder="검색어" onChange={handleSearchChange} value={searchText} />
+                            <button onClick={() => { search() }}>Search</button>
                         </div>
                     </div>
-                    <div>
-                        <button onClick={() => { search() }}>Search</button>
+                </div>
+                <div className={style.boardContentsBox}>
+                    <div className={fstyle.boardInfo}>
+                        <div><img src={favorite} alt="..." className={style.fav} /></div>
+                        <div>번호</div>
+                        <div>작성자</div>
+                        <div>제목</div>
+                        <div>게시판</div>
+                        <div>날짜</div>
+                    </div>
+                    <div className={fstyle.boardListContents}>
+                        {contentslist()}
                     </div>
                 </div>
-            </div>
-            <div className={style.boardContentsBox}>
-                <div className={fstyle.boardInfo}>
-                    <div><img src={favorite} alt="..." className={style.fav}/></div>
-                    <div>번호</div>
-                    <div>작성자</div>
-                    <div>제목</div>
-                    <div>게시판</div>
-                    <div>날짜</div>
+                <div className={style.naviFooter}>
+                    {pagenation()}
                 </div>
-                <div className={fstyle.boardListContents}>
-                    {contentslist()}
-                </div>
-            </div>
-            <div className={style.naviFooter}>
-                {pagenation()}
-            </div>
-
+            </>}
         </>
     );
 }
