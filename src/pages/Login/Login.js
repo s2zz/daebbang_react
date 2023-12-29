@@ -49,9 +49,13 @@ const LoginBox = ({ setLoginId }) => {
   }
 
   const handleLogin = () => {
+    const userid = user.id;
     const formData = new FormData();
     formData.append("id", user.id);
     formData.append("pw", user.pw);
+    axios.get(`/api/member/getname/${userid}`).then(resp=>{
+      sessionStorage.setItem('loginName', resp.data);
+    })
     axios.post("/api/member/login", formData).then(resp => {
       setLoginId(user.id); // 로그인 성공시
       sessionStorage.setItem('loginId', user.id);
@@ -65,9 +69,13 @@ const LoginBox = ({ setLoginId }) => {
   }
 
   const handleEstateLogin = () => {
+    const estateid = estate.id;
     const formData = new FormData();
     formData.append("id", estate.id);
     formData.append("pw", estate.pw);
+    axios.get(`/api/estate/getname/${estateid}`).then(resp=>{
+      sessionStorage.setItem('loginName', resp.data);
+    })
     axios.post("/api/estate/login", formData).then(resp => {
       setLoginId(estate.id); // 로그인 성공시
       sessionStorage.setItem('loginId', estate.id);
