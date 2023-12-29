@@ -217,9 +217,9 @@ const Main = () => {
             }
 
             // 클릭 이벤트 리스너 추가
-            /* regionDiv.addEventListener("click", () => {
-              moveToLocation(region);
-            });*/
+             regionDiv.addEventListener("click", () => {
+              navigate("/home/oneroom", { state: region });
+            });
           });
 
           // 지하철역에 대한 검색
@@ -235,7 +235,10 @@ const Main = () => {
             subwayDiv.appendChild(subwaySpan);
             subwayDiv.appendChild(subwayText);
             searchListBox.appendChild(subwayDiv);
-
+            
+            subwayDiv.addEventListener("click", () => {
+              navigate("/home/oneroom", { state: subway });
+            });
 
           });
 
@@ -258,7 +261,9 @@ const Main = () => {
             subwayDiv.appendChild(subwayText);
             searchListBox.appendChild(subwayDiv);
 
-
+            subwayDiv.addEventListener("click", () => {
+              navigate("/home/oneroom", { state: school });
+            });
           });
         })
         .catch((err) => {
