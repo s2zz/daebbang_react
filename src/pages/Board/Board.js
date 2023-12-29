@@ -18,7 +18,7 @@ const Board = ({ loginId, admin }) => {
             <Routes>
                 <Route path="/" element={<FreeBoardList loginId={loginId}/>}></Route>
                 <Route path="/toFreeBoardList" element={<FreeBoardList loginId={loginId}/>} ></Route>
-                <Route path="/toFavoriteBoardList" element={<FavoriteBoardList />}  ></Route>
+                <Route path="/toFavoriteBoardList" element={<FavoriteBoardList loginId={loginId}/>}  ></Route>
                 <Route path="/toRoomBoardList" element={<RoomBoardList loginId={loginId}/>}  ></Route>
                 <Route path="/toRoomBoardWrite" element={<RoomBoardWrite loginId={loginId}/>}></Route>
                 <Route path="/toFreeBoardWrite" element={<FreeBoardWrite loginId={loginId}/>}></Route>

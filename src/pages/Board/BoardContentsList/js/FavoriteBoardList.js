@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Loading from '../../../commons/Loading';
 
-const FavoriteBoardList = () => {
+const FavoriteBoardList = ({ loginId }) => {
     const [loading, setLoading] = useState(true);
     const [board, setBoard] = useState([]);
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
@@ -25,9 +25,14 @@ const FavoriteBoardList = () => {
 
     // 게시글 목록 불러오기
     useEffect(() => {
-        axios.get(`/api/board/favBoardList`).then(resp => {
-            setBoard(resp.data.sort(compareBySeq));
-        })
+        if (loginId !== null) {
+            axios.get(`/api/board/favBoardList`).then(resp => {
+                setBoard(resp.data.sort(compareBySeq));
+                setLoading(false);
+            })
+        } else{
+            setLoading(false);
+        }
     }, []);
 
     // 페이지네이션

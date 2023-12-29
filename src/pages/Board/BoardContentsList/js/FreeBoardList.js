@@ -26,7 +26,7 @@ const FreeBoardList = ({ loginId }) => {
 
     // 게시글 목록 불러오기
     useEffect(() => {
-        axios.get(`/api/board/freeBoardList`).then(resp => {
+        axios.get(`/api/board/freeBoardList/${loginId}`).then(resp => {
             setBoard(resp.data.sort(compareBySeq));
             if (searchText !== "") {
                 setSearchBoard(resp.data.sort(compareBySeq).filter(e => e.contents.includes(searchText) || e.title.includes(searchText)));
