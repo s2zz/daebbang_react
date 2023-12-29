@@ -66,6 +66,7 @@
   color: #1a1a1a;
 }
 
+
 .info_title_top {
   position: relative;
 }
@@ -81,6 +82,20 @@
   font-weight: 600;
   text-align: center;
 }
+
+.seller_idx {
+  border-radius: 25px;
+  background-color: #326CF9;
+  color: #fff;
+  height: 25px;
+  line-height: 25px;
+  font-size: 12px;
+  width: 125px;
+  font-weight: 600;
+  text-align: center;
+}
+
+
 
 .info_day {
   position: absolute;
@@ -149,6 +164,7 @@
   background-color: #fff;
   z-index: 11;
   display: none;
+  max-height: calc(100% - 50px);
 }
 
 .more_info_box_top {
@@ -286,8 +302,9 @@
 
 .info_map {
   margin-top: 10px;
-  border: 1px solid #000;
   height: 180px;
+  border: solid 1px #d9d9d9;
+  border-radius: 5px;
 }
 
 .bottom_box {
@@ -323,7 +340,7 @@
 
 .seller_box {
   padding: 20px;
-  border-bottom: 1px solid #d9d9d9;
+  /* border-bottom: 1px solid #d9d9d9; */
   position: relative;
 }
 
@@ -437,6 +454,7 @@
 
 .seller_slide_box {
   padding: 20px;
+  padding-top: 0px;
   /* border-bottom: 1px solid #d9d9d9; */
   position: relative;
   border-bottom: 1px solid #d9d9d9;
@@ -543,4 +561,36 @@
 
 .report-option label {
   margin-left:20px;
+}
+
+.more_seller_box {
+  position: absolute;
+  width: 399px;
+  height: calc(100% - 50px);
+  top: 50px;
+  background-color: #fff;
+  z-index: 11;
+  display: none;
+  max-height: calc(100% - 50px);
+}
+
+.more_div_seller {
+  height: 45px;
+  line-height: 45px;
+  display: flex;
+}
+
+.more_div_seller span {
+  margin-right: 10px;
+}
+
+.more_div_seller span {
+  margin-right: 10px;
+}
+
+.seller_map {
+  height: 180px;
+  margin-top: 10px;
+  border: solid 1px #d9d9d9;
+  border-radius: 5px;
 }
