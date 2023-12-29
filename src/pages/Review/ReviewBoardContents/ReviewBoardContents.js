@@ -26,7 +26,7 @@ const ReviewBoardContents = ({loginId, admin}) => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             axios.delete(`/api/review/${seq}`).then((resp) => {
                 alert("리뷰가 삭제되었습니다");
-                navi("/review/boardReview");
+                navi("/review/boardReview", {state:{realEstateNumber:review.realEstateNumber}});
                 return;
             }).catch((err) => {
                 alert("리뷰 삭제에 실패하였습니다");
@@ -80,7 +80,7 @@ const ReviewBoardContents = ({loginId, admin}) => {
 
             </div>
             <div className={style.btns}>
-                <Link to="/review/boardReview"><button className={style.backBtn}>뒤로가기</button></Link>
+                <Link to="/review/boardReview" state={{realEstateNumber:review.realEstateNumber}}><button className={style.backBtn}>뒤로가기</button></Link>
                 {loginId===review.id || admin ? <Link to="/review/editReview" state={{seq:seq}}><button className={style.editBtn}>수정</button></Link> : ""}
             </div>
 
