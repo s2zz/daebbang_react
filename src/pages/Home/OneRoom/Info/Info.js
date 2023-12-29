@@ -50,6 +50,7 @@ function Info(args, estate) {
   // 마커에서 새로운 정보를 가져오면 Info 변경
   useEffect(() => {
     setMarkerInfo(location.state);
+    console.log(markerInfo);
   }, [location.state]);
 
   const handleCarouselItemClick = (estate) => {
@@ -66,6 +67,9 @@ function Info(args, estate) {
   const [estateListLimit, setEstateListLimit] = useState([{}]);
 
   const [imageUrls, setImageUrls] = useState([]);
+
+  // 프로필 이미지
+  const [profileImages, setProfileImages] = useState([]);
 
   useEffect(() => {
     const newImageUrls = markerInfo.images.map(
@@ -191,6 +195,18 @@ function Info(args, estate) {
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
+      });
+
+    axios
+      .get(`/api/estate/profileImage/${email}`)
+      .then((resp) => {
+        // 이미지 태그를 상태에 설정
+        setProfileImages(resp.data);
+
+        console.log(resp.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   }, [markerInfo, location.state]);
 
@@ -421,7 +437,9 @@ function Info(args, estate) {
 
   // 리뷰 게시판으로 데이터 넘기기
   const handleReviewMoreInfoClick = () => {
-    navigate("/review/boardReview", {state:{ realEstateNumber: review[0].realEstateNumber }});
+    navigate("/review/boardReview", {
+      state: { realEstateNumber: review[0].realEstateNumber },
+    });
   };
 
   // 이찬양 작업 공간
@@ -458,21 +476,7 @@ function Info(args, estate) {
             {/* 드래그 이벤트에 의한 최상단 박스 (구현 못함 현재 display:none 상태임)*/}
             {isVisible_drag ? null : (
               <div className={style.address_box} style={{ display: "block" }}>
-                <div onClick={() => back()}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    class="h-5 w-5 text-gray-400"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
+                <div onClick={() => back()}> {"<"}</div>
                 {/*주소*/}
                 {markerInfo.address2}
               </div>
@@ -1088,10 +1092,22 @@ function Info(args, estate) {
             <div className={style.seller_box}>
               <div className={style.seller_info}>
                 <div className={style.seller_img}>
-                  <img
-                    src={proExam}
-                    style={{ width: "100%", borderRadius: "50%" }}
-                  ></img>
+                  {profileImages && profileImages.length > 0 ? (
+                    profileImages.map((preview, index) => (
+                      <img
+                        key={index}
+                        src={`/uploads/agentProfile/${preview.sysName}`}
+                        alt={`Preview`}
+                        className={style.imagePreview}
+                        style={{ width: "100%", borderRadius: "50%" }}
+                      />
+                    ))
+                  ) : (
+                    <img
+                      src={proExam}
+                      style={{ width: "100%", borderRadius: "50%" }}
+                    ></img>
+                  )}
                 </div>
                 <div className={style.seller_title}>
                   <div>
@@ -1135,11 +1151,9 @@ function Info(args, estate) {
                   <img src={textFile} style={{ height: "100%" }}></img>
                 </div>
                 <div style={{ paddingLeft: "15px" }}>
-                  안녕하세요 반갑습니다. 믿고 연락 한번 주세요. 콘텐츠 내용 추가
-                  해주셔야 합니다. 관리자 쪽에서 그렇지 않으면 이 칸에 넣을 내용
-                  없어요. 일단 여기 엔터는 안 먹히구요. 어떻게 해야 할지는
-                  넘겨주는 쪽에서 고민을 해봐야 할 것 같습니다. 관리자 가입쪽
-                  고생하시구요.
+                  {markerInfo.realEstateAgent.content
+                    ? markerInfo.realEstateAgent.content
+                    : "부동산 소개가 없습니다."}
                 </div>
               </div>
               <div className={style.more_info}>
@@ -1335,14 +1349,16 @@ function Info(args, estate) {
                 ))
               )}
               {/* 여기서 매물 게시판으로 날라가면 됨 */}
-              <div className={style.more_info}>
-                <div
-                  className={style.more_info_text}
-                  onClick={handleReviewMoreInfoClick}
-                >
-                  더보기
+              {review.length > 0 && (
+                <div className={style.more_info}>
+                  <div
+                    className={style.more_info_text}
+                    onClick={handleReviewMoreInfoClick}
+                  >
+                    더보기
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* 신고하기 구역*/}
@@ -1361,7 +1377,9 @@ function Info(args, estate) {
                 </div>
               </div>
               <Modal isOpen={firstModal} toggle={toggleFirstModal}>
-                <ModalHeader toggle={toggleFirstModal}>신고하기</ModalHeader>
+                <ModalHeader toggle={toggleFirstModal}>
+                  <b>신고하기</b>
+                </ModalHeader>
                 <ModalBody>
                   {loginId === null ? (
                     <p>로그인 후 이용해 주세요.</p>
