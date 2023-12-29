@@ -7,8 +7,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import logo from "../Enrollment/assets/logo3.png";
 import axios from 'axios';
-import style1 from "../commons/Modal.module.css";
-import { Modal, ModalBody, } from 'reactstrap';
 
 const TopForm = ({ setLoginId }) => {
 
@@ -16,6 +14,7 @@ const TopForm = ({ setLoginId }) => {
     const location = useLocation();
 
     const storedLoginId = sessionStorage.getItem('loginId');
+    const storedLoginName = sessionStorage.getItem('loginName');
     const isAdmin = sessionStorage.getItem('isAdmin');
     const isEstate = sessionStorage.getItem('isEstate');
 
@@ -27,6 +26,7 @@ const TopForm = ({ setLoginId }) => {
             sessionStorage.removeItem('loginId');
             sessionStorage.removeItem('isAdmin');
             sessionStorage.removeItem('isEstate');
+            sessionStorage.removeItem('loginName');
             navi("/");
             window.location.reload();
             setLoginId = null;
@@ -91,7 +91,9 @@ const TopForm = ({ setLoginId }) => {
                         <div className={style.gnb}>
                             <ul className={style.gnb_container}>
                                 <li className={style.has_d2}>
-                                    <Button>{storedLoginId}▼</Button>
+                                {isEstate ?
+                                            <Button>{storedLoginName}▼</Button>
+                                            : <Button>{storedLoginName}님▼</Button>}
                                     <div className={style.depth2_bx}>
                                         {isAdmin ?
                                             <Link to="/admin">관리자 페이지</Link>
@@ -114,7 +116,7 @@ const TopForm = ({ setLoginId }) => {
 
 
                     <div className={style.top_right_menu}>
-                        {isEstate ? <> </> : <Button><Link to="/enrollment">중개사무소 가입</Link></Button>}
+                        {isEstate ? <> </> : isAdmin ? <></> : <Button><Link to="/enrollment">중개사무소 가입</Link></Button>}
 
                     </div>
 
