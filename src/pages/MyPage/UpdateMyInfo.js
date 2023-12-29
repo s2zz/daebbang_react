@@ -293,7 +293,7 @@ const UpdateMyInfo = () => {
         <div className={style.updContainer}>
             <Link to="/mypage"><button className={style.backBtn}><FontAwesomeIcon icon={faArrowLeft} className={style.arrowLeft} /></button></Link>
             <div className={style.titleBox}>
-                <div className={style.title}>회원 정보 수정</div>
+                <div className={style.title}>정보 수정</div>
             </div>
             {!isEstate ?
                 <div>
@@ -337,7 +337,7 @@ const UpdateMyInfo = () => {
                     </div>
                     <div className={style.changeBtns}>
                         <div>
-                            <button onClick={handleUpdate} className={style.changeBtn}>회원정보 수정하기</button>
+                            <button onClick={handleUpdate} className={style.changeBtn}>수정 완료</button>
                         </div>
                     </div>
                 </div>
@@ -383,7 +383,7 @@ const UpdateMyInfo = () => {
                     </div>
                     <div className={style.changeBtns}>
                         <div>
-                            <button onClick={handleEstateUpdate} className={style.changeEstateBtn}>공인중개사 정보 수정하기</button>
+                            <button onClick={handleEstateUpdate} className={style.changeEstateBtn}>수정 완료</button>
                         </div>
                     </div>
                 </div>

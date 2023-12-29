@@ -14,7 +14,7 @@ const SideBar = () => {
             </div>
             <div className={style.menu}>
                 <Link className={`${style.link} ${location.pathname === '/estateManage/reviewApproval' && style.selected}`} to="/estateManage/reviewApproval">
-                    <FontAwesomeIcon className={style.fontawe} icon={faPen} /> 리뷰 관리
+                    <FontAwesomeIcon className={style.fontawe} icon={faPen} /> 문의 관리
                 </Link>
             </div>
             <div className={style.menu}>
