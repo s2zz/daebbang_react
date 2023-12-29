@@ -170,7 +170,6 @@
 
 .left_bottom_content {
     flex: 0 0 calc(35% - 20px);
-    /* 20px 간격 고려한 왼쪽 div의 너비 */
     background-color: #ffffff;
     padding: 1%;
     padding-top: 19px 
@@ -178,14 +177,11 @@
 
 .right_bottom_content {
     flex: 0 0 calc(65% - 20px);
-    /* 20px 간격 고려한 오른쪽 div의 너비 */
     background-color: #ffffff;
     padding: 1%;
     padding-top: 19px 
 }
-.bottom_box_container th{
-    padding-left: 10px;
-}
+
 .naviFooter{
     display: flex;
     justify-content: center;

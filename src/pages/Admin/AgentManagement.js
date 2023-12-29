@@ -15,6 +15,7 @@ const AgentManagement = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get('/api/admin/agent/getAll');
+      console.log(response.data);
       setContacts(response.data);
       setLoading(false);
     } catch (error) {
@@ -92,17 +93,18 @@ const AgentManagement = () => {
     setContacts(updatedContacts);
   };
   const columns = [
-    { field: 'email', headerName: 'Email', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'estateName', headerName: 'EstateName', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'estateNumber', headerName: 'EstateNumber', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'name', headerName: 'Name', width: 90, headerAlign: 'center', align: 'center' },
-    { field: 'phone', headerName: 'Phone', width: 110, headerAlign: 'center', align: 'center' },
-    { field: 'manners_temperature', headerName: 'Manners_temperature', width: 200, headerAlign: 'center', align: 'center' },
-    { field: 'role', headerName: 'Role', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'enabled', headerName: 'Enabled', width: 80, headerAlign: 'center', align: 'center' },
+    { field: 'email', headerName: '이메일', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'estateName', headerName: '이름', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'estateNumber', headerName: '법인등록번호', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'name', headerName: '이름', width: 90, headerAlign: 'center', align: 'center' },
+    { field: 'phone', headerName: '전화번호', width: 110, headerAlign: 'center', align: 'center' },
+    { field: 'manners_temperature', headerName: '매너온도', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'report_Count', headerName: '경고횟수', width: 80, headerAlign: 'center', align: 'center' },
+    { field: 'signupDate', headerName: '가입날짜', width: 200, headerAlign: 'center', align: 'center' },
+    { field: 'enabled', headerName: '허용 여부', width: 80, headerAlign: 'center', align: 'center' },
     {
         field: 'approval',
-        headerName: 'Authority',
+        headerName: '권한',
         headerAlign: 'center',
         align: 'center',
         width: 120,
@@ -110,7 +112,7 @@ const AgentManagement = () => {
       },
     {
       field: 'delete',
-      headerName: 'Delete',
+      headerName: '삭제',
       headerAlign: 'center',
       align: 'center',
       width: 120,

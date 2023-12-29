@@ -74,6 +74,7 @@ const ReportManagement = () => {
                 variant="outlined"
                 color={isPending ? 'primary' : 'secondary'}
                 onClick={() => handleApproval(seq, reportStatus)}
+                disabled={reportStatus === 'rs3'}
             >
                 {buttonText}
             </Button>
@@ -109,7 +110,7 @@ const ReportManagement = () => {
             variant="outlined"
             color={reportStatus === 'rs1' || reportStatus === 'rs2' ? 'primary' : 'secondary'}
             onClick={() => handleReturn(seq, reportStatus)}
-            disabled={reportStatus === 'rs3'}
+            
         >
             {reportStatus === 'rs1' || reportStatus === 'rs2' ? '거부' : '거부 취소'}
         </Button>
@@ -120,11 +121,11 @@ const ReportManagement = () => {
 
 
     const columns = [
-        { field: 'seq', headerName: 'Seq', width: 150, headerAlign: 'center', align: 'center' },
-        { field: 'writer', headerName: 'Name', width: 90, headerAlign: 'center', align: 'center' },
+        { field: 'seq', headerName: '번호', width: 80, headerAlign: 'center', align: 'center' },
+        { field: 'writer', headerName: '글쓴이', width: 100, headerAlign: 'center', align: 'center' },
         {
             field: 'estateName',
-            headerName: 'EstateName',
+            headerName: '중개사무소',
             width: 200,
             headerAlign: 'center',
             align: 'center',
@@ -132,25 +133,25 @@ const ReportManagement = () => {
         },
         {
             field: 'detailContent',
-            headerName: 'Content',
+            headerName: '내용',
             width: 200,
             headerAlign: 'center',
             align: 'center',
             valueGetter: (params) => params.row.reportContents?.content || '',
         },
-        { field: 'content', headerName: 'DetailContent', width: 150, headerAlign: 'center', align: 'center' },
+        { field: 'content', headerName: '상세내용', width: 150, headerAlign: 'center', align: 'center' },
         {
             field: 'reportStatus',
-            headerName: 'ReportStatus',
-            width: 200,
+            headerName: '신고상태',
+            width: 100,
             headerAlign: 'center',
             align: 'center',
             valueGetter: (params) => params.row.reportStatus?.status || '',
         },
-        { field: 'writeDate', headerName: 'WriteDate', width: 110, headerAlign: 'center', align: 'center' },
+        { field: 'writeDate', headerName: '신고날짜', width: 180, headerAlign: 'center', align: 'center' },
         {
             field: 'approval',
-            headerName: 'Approval',
+            headerName: '승인',
             headerAlign: 'center',
             align: 'center',
             width: 120,
@@ -158,7 +159,7 @@ const ReportManagement = () => {
         },
         {
             field: 'rejection',
-            headerName: 'Rejection',
+            headerName: '거부',
             headerAlign: 'center',
             align: 'center',
             width: 100,
@@ -166,7 +167,7 @@ const ReportManagement = () => {
         },
         {
             field: 'delete',
-            headerName: 'Delete',
+            headerName: '삭제',
             headerAlign: 'center',
             align: 'center',
             width: 100,
