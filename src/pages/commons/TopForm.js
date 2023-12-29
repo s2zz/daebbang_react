@@ -19,12 +19,11 @@ const TopForm = ({ setLoginId }) => {
     const isAdmin = sessionStorage.getItem('isAdmin');
     const isEstate = sessionStorage.getItem('isEstate');
 
-    const [modal3, setModal3] = useState(false);
-
-    const toggle3 = () => setModal3(!modal3);
+    const toggle3 = () => {
+        alert("준비중인 기능입니다");
+    }
     const handleLogout = () => {
         axios.get("/api/member/logout").then(resp => {
-            console.log("로그아웃 완료");
             sessionStorage.removeItem('loginId');
             sessionStorage.removeItem('isAdmin');
             sessionStorage.removeItem('isEstate');
@@ -32,7 +31,7 @@ const TopForm = ({ setLoginId }) => {
             window.location.reload();
             setLoginId = null;
         }).catch(resp => {
-            console.log(resp);
+            alert("로그아웃에 실패했습니다.")
         })
     }
 
@@ -45,7 +44,6 @@ const TopForm = ({ setLoginId }) => {
                     setReviewCount(resp.data);
                 })
                 .catch(error => {
-                    console.error('Error fetching review count:', error);
                 });
         }
     }, [isEstate, storedLoginId, location.pathname]);
@@ -73,31 +71,9 @@ const TopForm = ({ setLoginId }) => {
                         </li>
                         <li className={style.has_d2}>
                             <Link to="#"><Button onClick={toggle3}><span>투룸</span></Button> </Link>
-                            <div>
-                                <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
-                                    <ModalBody className={style1.alertBody}>
-                                        <p className={style1.alertContents}>준비중인 기능입니다.</p>
-                                        <br></br>
-                                        <Button color="primary" className={style1.alertBtn} onClick={toggle3}>
-                                            확인
-                                        </Button>{' '}
-                                    </ModalBody>
-                                </Modal>
-                            </div>
                         </li>
                         <li className={style.has_d2}>
                             <Link to="#"><Button onClick={toggle3}><span>오피스텔</span></Button> </Link>
-                            <div>
-                                <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
-                                    <ModalBody className={style1.alertBody}>
-                                        <p className={style1.alertContents}>준비중인 기능입니다.</p>
-                                        <br></br>
-                                        <Button color="primary" className={style1.alertBtn} onClick={toggle3}>
-                                            확인
-                                        </Button>{' '}
-                                    </ModalBody>
-                                </Modal>
-                            </div>
                         </li>
                         <li className={style.has_d2}>
                             <Link to="board"><Button><span>게시판</span></Button> </Link>
