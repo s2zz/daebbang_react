@@ -1,5 +1,5 @@
 //
-import { Routes, Route, useNavigate } from "react-router-dom"; // Link
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom"; // Link
 import React, { useState, useEffect, useRef, forwardRef } from "react";
 import {
   CustomOverlayMap,
@@ -72,7 +72,26 @@ function OneRoom() {
   // NPM INSTALL 하면서 받은 카카오 정보들이
   // 로컬에 저장되어 있기 때문에 불러옴
   const { kakao } = window;
-
+  const location = useLocation();
+  const stateFromPreviousPage = location.state;
+  useEffect(() => {
+    if(stateFromPreviousPage!=null){
+      setMapCenterState((prevMapCenterState) => {
+        
+          // 이전 상태를 기반으로 새로운 상태를 생성합니다.
+        const newCenter ={lat:stateFromPreviousPage.latitude,lng:stateFromPreviousPage.longitude};
+        setZoomLevel(3);
+        return {
+          ...prevMapCenterState, // 이전 상태의 나머지 속성을 그대로 유지합니다.
+          center: newCenter, // 변경된 center 값을 적용합니다.
+        };
+      });
+      
+        }
+        else{
+          return;
+        }
+  }, []);
   // 1. 로딩 될때 매물 데이터 받음
   // 2. 전부 받고 맵 리스트에 저장하면 랜더링 완료 처리
   useEffect(() => {
@@ -116,7 +135,7 @@ function OneRoom() {
     if (mapRef.current) {
       mapRef.current.setLevel(zoomLevel);
     }
-  }, [zoomLevel]);
+  }, [zoomLevel,stateFromPreviousPage]);
 
   useEffect(() => {
     // setFilterMapList를 비동기로 처리
@@ -228,6 +247,20 @@ function OneRoom() {
   // 마커를 클릭할때 해당 정보를 들고 info(정보)로 이동
   const handleMarkerClick = (marker) => {
     navigate("/home/oneroom/info", { state: marker });
+    // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+    const storedData = localStorage.getItem("watch");
+    const watchedProperties = storedData ? JSON.parse(storedData) : [];
+
+    // 새로운 마커의 estateId를 감시 중인 속성에 추가
+    const updatedWatchedProperties = [
+      ...new Set([marker.estateId, ...watchedProperties]),
+    ];
+    // 감시 중인 속성을 최대 10개로 제한
+    if (updatedWatchedProperties.length > 10) {
+      updatedWatchedProperties.splice(10);
+    }
+    // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+    localStorage.setItem("watch", JSON.stringify(updatedWatchedProperties));
   };
 
   // 부드러운 지도 이동
