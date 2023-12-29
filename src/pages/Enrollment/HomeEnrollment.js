@@ -9,13 +9,15 @@ import Footer from "../commons/Footer";
 import DaumPostcode from "react-daum-postcode";
 import { MapMarker, Map } from "react-kakao-maps-sdk";
 import style1 from "../commons/Modal.module.css";
+import Loading from '../commons/Loading';
 
 const HomeEnrollment = (args) => {
-    
+
     const [value, setValue] = useState('');
     const [emailValue, setEmailValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
     const [nameValue, setNameValue] = useState('');
+    const [loading, setLoading] = useState(true);
     //모달
     const [modal, setModal] = useState(false);
     const toggle = () => {
@@ -104,6 +106,7 @@ const HomeEnrollment = (args) => {
         axios.get(`/api/enrollment/openApi/${searchValue}`)
             .then(response => {
                 setSearchResult(response.data.EDOffices.field);
+                setLoading(false);
             })
             .catch(error => {
                 alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
@@ -182,7 +185,7 @@ const HomeEnrollment = (args) => {
             // alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
             alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
         } else {
-           
+
             const formData = new FormData();
             let addressValue = '';
 
@@ -302,7 +305,7 @@ const HomeEnrollment = (args) => {
             if (extraAddr !== '') {
                 extraAddr = ' (' + extraAddr + ')';
             }
-        } 
+        }
 
         // 우편번호와 주소 정보를 해당 필드에 넣는다.
         document.getElementById('sample6_postcode').value = data.zonecode;
@@ -318,12 +321,12 @@ const HomeEnrollment = (args) => {
 
     return (
         <div className={style.container}>
-             {modal3 &&<div>
+            {modal3 && <div>
                 <Modal isOpen={modal3} toggle={toggle3} backdrop={false} className={style1.alert}>
                     <ModalBody className={style1.alertBody}>
                         <p className={style1.alertContents}>{alertMessage}</p>
                         <br></br>
-                        <Button color="primary" style={{fontSize:'small'}} className={style1.alertBtn} onClick={toggle3} >
+                        <Button color="primary" style={{ fontSize: 'small' }} className={style1.alertBtn} onClick={toggle3} >
                             확인
                         </Button>{' '}
                     </ModalBody>
@@ -343,7 +346,7 @@ const HomeEnrollment = (args) => {
                         <li>
                             <h5 className={style.list}>중개사무소 정보</h5>
                             <div>
-                                <Button style={{fontFamily:'NanumBarunGothic'}} onClick={handleButtonClick}>
+                                <Button style={{ fontFamily: 'NanumBarunGothic' }} onClick={handleButtonClick}>
                                     중개사무소 찾기
                                 </Button>
                                 <div>
@@ -430,32 +433,39 @@ const HomeEnrollment = (args) => {
                                             />
                                             <Button style={{ marginLeft: '2%' }} outline onClick={searchButtonClick} >검색</Button>
                                         </div>
-                                        {searchResult !== null ? (
-                                            // map 함수를 호출하는 부분
-                                            <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
-                                                {searchResult.map((item, index) => (
-                                                    <div key={index}>
-                                                        <p
-                                                            onClick={() => handleItemClick(item)}
-                                                            onMouseEnter={() => handleMouseEnter(item)}
-                                                            onMouseLeave={handleMouseLeave}
-                                                            className={style.inline}
-                                                            style={{
-                                                                cursor: 'pointer', // 마우스 커서 스타일
-                                                                backgroundColor: hoveredItem === item ? '#dae3f3' : 'white', // 배경색 변경
-                                                            }}
-                                                        >
-                                                            {item.bsnmCmpnm}
+                                        
+                                                {searchResult !== null ? (
+                                                    // map 함수를 호출하는 부분
+                                                    <div>
+                                                    {loading ? (
+                                                        <Loading />
+                                                    ) : (
+                                                    <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
+                                                        {searchResult.map((item, index) => (
+                                                            <div key={index}>
+                                                                <p
+                                                                    onClick={() => handleItemClick(item)}
+                                                                    onMouseEnter={() => handleMouseEnter(item)}
+                                                                    onMouseLeave={handleMouseLeave}
+                                                                    className={style.inline}
+                                                                    style={{
+                                                                        cursor: 'pointer', // 마우스 커서 스타일
+                                                                        backgroundColor: hoveredItem === item ? '#dae3f3' : 'white', // 배경색 변경
+                                                                    }}
+                                                                >
+                                                                    {item.bsnmCmpnm}
 
-                                                        </p>
+                                                                </p>
+                                                            </div>
+                                                        ))}
                                                     </div>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <p className={style.fontLight} style={{ padding: '1%' }}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
-                                                중개사무소가 검색되지 않을 경우 010-3470-1399로 문의주세요.</p>
-                                        )}
-
+                                                    )}
+                                                    </div>
+                                                ) : (
+                                                    <p className={style.fontLight} style={{ padding: '1%' }}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
+                                                        중개사무소가 검색되지 않을 경우 010-3470-1399로 문의주세요.</p>
+                                                )}
+                                        
                                     </ModalBody>
                                 </Modal>
                             </div>
@@ -505,7 +515,7 @@ const HomeEnrollment = (args) => {
                 </div>
             </div>
             <div style={{ textAlign: 'center', marginBottom: '2%', marginTop: '2%' }}>
-                <Button color='primary' style={{fontFamily:'NanumBarunGothic'}} onClick={handleSubmit}>
+                <Button color='primary' style={{ fontFamily: 'NanumBarunGothic' }} onClick={handleSubmit}>
                     가입 신청하기
                 </Button>
             </div>

@@ -18,7 +18,7 @@ const Notification = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('/api/reviewApproval/admin/selectByAdmin');
+            const response = await axios.get('/api/admin/reviewApproval/selectByAdmin');
             console.log(response.data);
             setContacts(response.data);
             setTotalRows(response.data.length);
@@ -54,8 +54,8 @@ const Notification = () => {
             setContacts(updatedContacts); // 상태 변경
 
             const endpoint = approvalCode === 'a4'
-                ? `/api/reviewApproval/admin/revoke-approval/${seq}` // 반려 취소
-                : `/api/reviewApproval/admin/finalBack/${seq}`; // 반려
+                ? `/api/admin/reviewApproval/revoke-approval/${seq}` // 반려 취소
+                : `/api/admin/reviewApproval/finalBack/${seq}`; // 반려
             const newApprovalCode = approvalCode === 'a2' ? 'a4' : 'a2';
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
@@ -86,8 +86,8 @@ const Notification = () => {
             setContacts(updatedContacts); // 상태 변경
 
             const endpoint = approvalCode === 'b1'
-                ? `/api/reviewApproval/admin/revoke-approval/${seq}` // 반려 취소
-                : `/api/reviewApproval/admin/return/${seq}`; // 반려
+                ? `/api/admin/reviewApproval/revoke-approval/${seq}` // 반려 취소
+                : `/api/admin/reviewApproval/return/${seq}`; // 반려
             const newApprovalCode = approvalCode === 'a2' ? 'b1' : 'a2';
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
@@ -109,8 +109,8 @@ const Notification = () => {
 
         if (confirmed) {
             const endpoint = approvalCode === 'a2'
-                ? `/api/reviewApproval/admin/approval/${seq}`
-                : `/api/reviewApproval/admin/revoke-approval/${seq}`;
+                ? `/api/admin/reviewApproval/approval/${seq}`
+                : `/api/admin/reviewApproval/revoke-approval/${seq}`;
 
             const newApprovalCode = approvalCode === 'a2' ? 'a3' : 'a2';
 
@@ -171,35 +171,35 @@ const Notification = () => {
     };
 
     const columns = [
-        { field: 'seq', headerName: 'Seq', width: 90, headerAlign: "center", align: "center" },
+        { field: 'seq', headerName: '번호', width: 90, headerAlign: "center", align: "center" },
         {
             field: 'estateName',
-            headerName: 'EstateName',
+            headerName: '중개사무소',
             width: 250,
             headerAlign: 'center',
             align: 'center',
             valueGetter: (params) => params.row.estate.realEstateAgent?.estateName || '',
         },
-        { field: 'userId', headerName: 'UserId', width: 120, headerAlign: "center", align: "center" },
+        { field: 'userId', headerName: '사용자', width: 120, headerAlign: "center", align: "center" },
         {
             field: 'estateCode',
-            headerName: 'EstateCode',
+            headerName: '매물번호',
             width: 120,
             headerAlign: 'center',
             align: 'center',
             valueGetter: (params) => params.row.estate?.estateId|| '',
         },
-        { field: 'approvalCode', headerName: 'ApprovalCode', width: 120, headerAlign: "center", align: "center" },
+        { field: 'approvalCode', headerName: '승인상태', width: 120, headerAlign: "center", align: "center" },
         {
             field: 'approval',
-            headerName: 'Approval',
+            headerName: '승인여부',
             headerAlign: 'center',
             align: 'center',
             width: 120,
             renderCell: (params) => approvalButton(params.row.seq, params.row.approvalCode),
         },
-        { field: 'return', headerName: 'Return', headerAlign: "center", align: "center", width: 100, renderCell: (params) => { return returnButton(params.row.seq, params.row.approvalCode); }, },
-        { field: 'finalback', headerName: 'FinalReturn', headerAlign: "center", align: "center", width: 150, renderCell: (params) => { return finalreturnButton(params.row.seq, params.row.approvalCode); }, }
+        { field: 'return', headerName: '반려여부', headerAlign: "center", align: "center", width: 100, renderCell: (params) => { return returnButton(params.row.seq, params.row.approvalCode); }, },
+        { field: 'finalback', headerName: '최종반려여부', headerAlign: "center", align: "center", width: 150, renderCell: (params) => { return finalreturnButton(params.row.seq, params.row.approvalCode); }, }
 
     ];
 
