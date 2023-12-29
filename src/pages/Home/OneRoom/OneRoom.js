@@ -9,6 +9,7 @@ import {
   ZoomControl,
   MarkerWithCustomOverlayStyle,
 } from "react-kakao-maps-sdk"; // ZoomControl
+import Loading from "../../commons/Loading";
 
 //
 // import { markerdata } from "./data/markerData"; // 마커 데이터 가져오기
@@ -33,6 +34,8 @@ import "./SliderToggle.css";
 import "./RangeSlider.css";
 
 function OneRoom() {
+  const [loading, setLoading] = React.useState(true);
+  const [loadingTwo, setLoadingTwo] = React.useState(true);
   const [mapRendered, setMapRendered] = useState(false);
   const [defaultDataRendered, setDefaultDataRendered] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(6);
@@ -74,24 +77,32 @@ function OneRoom() {
   const { kakao } = window;
   const location = useLocation();
   const stateFromPreviousPage = location.state;
+
   useEffect(() => {
-    if(stateFromPreviousPage!=null){
+    if (stateFromPreviousPage != null) {
       setMapCenterState((prevMapCenterState) => {
-        
+        if (stateFromPreviousPage.latitude && stateFromPreviousPage.longitude) {
           // 이전 상태를 기반으로 새로운 상태를 생성합니다.
-        const newCenter ={lat:stateFromPreviousPage.latitude,lng:stateFromPreviousPage.longitude};
-        setZoomLevel(3);
-        return {
-          ...prevMapCenterState, // 이전 상태의 나머지 속성을 그대로 유지합니다.
-          center: newCenter, // 변경된 center 값을 적용합니다.
-        };
+          const newCenter = {
+            lat: stateFromPreviousPage.latitude,
+            lng: stateFromPreviousPage.longitude,
+          };
+          setZoomLevel(3);
+          return {
+            ...prevMapCenterState, // 이전 상태의 나머지 속성을 그대로 유지합니다.
+            center: newCenter, // 변경된 center 값을 적용합니다.
+          };
+        } else {
+          return {
+            ...prevMapCenterState, // 이전 상태의 나머지 속성을 그대로 유지합니다.
+          };
+        }
       });
-      
-        }
-        else{
-          return;
-        }
+    } else {
+      return;
+    }
   }, []);
+
   // 1. 로딩 될때 매물 데이터 받음
   // 2. 전부 받고 맵 리스트에 저장하면 랜더링 완료 처리
   useEffect(() => {
@@ -100,6 +111,7 @@ function OneRoom() {
       .then((resp) => {
         setMapList(resp.data);
         setMapRendered(true);
+        console.log(mapList);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
@@ -114,6 +126,7 @@ function OneRoom() {
         setSubwayDefaultList(resp.data.subwayList);
         setSchoolDefaultList(resp.data.schoolList);
         setDefaultDataRendered(true);
+        setLoading(false);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
@@ -135,7 +148,7 @@ function OneRoom() {
     if (mapRef.current) {
       mapRef.current.setLevel(zoomLevel);
     }
-  }, [zoomLevel,stateFromPreviousPage]);
+  }, [zoomLevel, stateFromPreviousPage]);
 
   useEffect(() => {
     // setFilterMapList를 비동기로 처리
@@ -214,6 +227,11 @@ function OneRoom() {
     // 이벤트가 발생하면 페이지 이동하면서 바뀐 경계 (현재 화면) 값을 넘김
     navigate(`/home/oneroom/list`, { state: { markersInBounds, zoomLevel } });
   };
+
+  // 두번째 로딩 테스트
+  // const handleTest = (map) => {
+  //   setLoadingTwo(false);
+  // };
 
   // 지도에서 휠을 활용한 줌 이벤트 발생시 마커 새로 불러오기
   const handleZoomChanged = (map) => {
@@ -1779,427 +1797,454 @@ function OneRoom() {
   };
 
   return (
-    <div className={style.all}>
-      {/* {" "} */}
-      {/* className="container"*/}
-      <div className={style.home_top}>
-        <div>방 찾기</div>
-        {/*<div>찜한 매물</div>
+    <div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className={style.all}>
+          {/* {" "} */}
+          {/* className="container"*/}
+          <div className={style.home_top}>
+            <div>방 찾기</div>
+            {/*<div>찜한 매물</div>
         <div>방 내놓기(전월세만)</div> */}
-      </div>
-      <div className={style.main_box}>
-        <div className={style.home_body_map}>
-          <div className={style.home_body_map_main}>
-            {mapRendered && (
-              <Map
-                onCreate={handleMapLoad}
-                center={mapCenterState.center}
-                isPanto={mapCenterState.isPanto}
-                style={{ width: "100%", height: "100%" }}
-                level={zoomLevel}
-                onDragEnd={handleDragEnd}
-                onZoomChanged={handleZoomChanged}
-                onBoundsChanged={handleMapBounds}
-                onCenterChanged={handleMapCenter}
-                ref={mapRef}
-                maxLevel={13}
-              >
-                {zoomLevelRanded && (
-                  <MarkerClusterer
-                    averageCenter={true}
-                    minLevel={1}
-                    calculator={[5, 10, 15]}
-                    styles={[
-                      {
-                        // calculator 각 사이 값 마다 적용될 스타일을 지정한다
-                        width: "42px",
-                        height: "42px",
-                        background: "rgba(50, 108, 249, .8)",
-                        borderRadius: "21px",
-                        color: "white",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "16px",
-                      },
-                      {
-                        width: "48px",
-                        height: "48px",
-                        background: "rgba(50, 108, 249, .8)",
-                        borderRadius: "24px",
-                        color: "white",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        lineHeight: "41px",
-                        fontSize: "17px",
-                      },
-                      {
-                        width: "68px",
-                        height: "68px",
-                        background: "rgba(50, 108, 249, .8)",
-                        borderRadius: "34px",
-                        color: "white",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        lineHeight: "51px",
-                        fontSize: "19px",
-                      },
-                      {
-                        width: "84px",
-                        height: "84px",
-                        background: "rgba(50, 108, 249, .8)",
-                        borderRadius: "42px",
-                        color: "white",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        lineHeight: "51px",
-                        fontSize: "19px",
-                      },
-                    ]}
-                  >
-                    {filterMapList.map((marker, index) => (
-                      <MapMarker
-                        key={index}
-                        position={{
-                          lat: marker.latitude,
-                          lng: marker.longitude,
-                        }}
-                        options={{ title: marker.title }}
-                        onClick={() => handleMarkerClick(marker)}
-                      />
-                    ))}
-                  </MarkerClusterer>
-                )}
-                {defaultDataRendered &&
-                  zoomLevel <= 6 &&
-                  subwayDefaultList.map(
-                    (marker, index) =>
-                      marker.latitude &&
-                      marker.longitude && (
-                        <React.Fragment key={index}>
-                          <MapMarker
-                            position={{
-                              lat: marker.latitude,
-                              lng: marker.longitude,
-                            }}
-                            image={{
-                              src: subway,
-                              size: {
-                                width: 40,
-                                height: 40,
-                              },
-                            }}
-                            onClick={() => moveToMarker(marker)}
-                          />
-                          <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                            // 커스텀 오버레이가 표시될 위치입니다
-                            position={{
-                              lat: marker.latitude,
-                              lng: marker.longitude,
-                            }}
-                          >
-                            {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                            <div
-                              className="label"
-                              style={{
-                                color: "white",
-                                backgroundColor: "rgba(0, 0, 0, 0.6)",
-                                padding: "2px 6px 1px 6px",
-                                fontSize: "11px",
-                              }}
-                            >
-                              <span className="left"></span>
-                              <span className="center">{marker.name}</span>
-                              <span className="right"></span>
-                            </div>
-                          </CustomOverlayMap>
-                        </React.Fragment>
-                      )
-                  )}
-                {defaultDataRendered &&
-                  zoomLevel <= 6 &&
-                  schoolDefaultList.map(
-                    (marker, index) =>
-                      marker.latitude &&
-                      marker.longitude && (
-                        <React.Fragment key={index}>
-                          <MapMarker
-                            position={{
-                              lat: marker.latitude,
-                              lng: marker.longitude,
-                            }}
-                            image={{
-                              src: school,
-                              size: {
-                                width: 40,
-                                height: 40,
-                              },
-                            }}
-                            onClick={() => moveToMarker(marker)}
-                          />
-                          <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
-                            // 커스텀 오버레이가 표시될 위치입니다
-                            position={{
-                              lat: marker.latitude,
-                              lng: marker.longitude,
-                            }}
-                          >
-                            {/* 커스텀 오버레이에 표시할 내용입니다 */}
-                            <div
-                              className="label"
-                              style={{
-                                color: "white",
-                                backgroundColor: "rgba(0, 0, 0, 0.6)",
-                                padding: "2px 6px 1px 6px",
-                                fontSize: "11px",
-                              }}
-                            >
-                              <span className="left"></span>
-                              <span className="center">{marker.name}</span>
-                              <span className="right"></span>
-                            </div>
-                          </CustomOverlayMap>
-                        </React.Fragment>
-                      )
-                  )}
-              </Map>
-            )}
           </div>
-          {/* 검색창 */}
-          <div className={style.home_body_map_search}>
-            <div className={style.search_box}>
-              {/* 검색 텍스트 입력 */}
-              <input
-                type="text"
-                placeholder="지역, 지하철역, 학교 검색"
-                value={searchValue}
-                onChange={handleInputChange}
-              ></input>
-
-              {/* 검색창 리스트 X 아이콘 위치 설정 (display:none) */}
-              <button>X</button>
-
-              {/* 아이콘 */}
-              <div className={style.search_icon}>
-                <img
-                  style={{ maxHeight: "17px" }}
-                  src={search}
-                  alt="exam icon"
-                />
-              </div>
-            </div>
-
-            {/* 검색 옵션 선택 */}
-            <div className={style.search_option}>
-              <div onClick={() => handleOptionClick("전월세")}>전 ･ 월세</div>
-              <div onClick={() => handleOptionClick("구조 ･ 면적")}>
-                구조 ･ 면적
-              </div>
-              <div onClick={() => handleOptionClick("옵션")}>옵션</div>
-              {/* <div>ㅇ</div> */}
-            </div>
-          </div>
-
-          {/* 검색창 옵션 박스 위치 설정 (display:none / 이게 block 처리 되어야 밑에 box_1,2,3 이 나타남 )*/}
-          <div
-            className={`${style.search_option_box}`}
-            style={{ display: selectedOption ? "block" : "none" }}
-          >
-            {/* 전월세 선택시 */}
-            {selectedOption === "전월세" && (
-              <div
-                className={`${style.option_box_1}`}
-                style={{ display: "block" }}
-              >
-                {/* 내용 */}
-                <div>
-                  <span>거래유형</span>
-                  <div className={style.deal_type}>
-                    <div
-                      className={
-                        selectedDealType === "전체" ? style.deal_type_on : ""
-                      }
-                      onClick={() => handleDealTypeClick("전체")}
-                    >
-                      전체
-                    </div>
-                    <div
-                      className={
-                        selectedDealType === "전세" ? style.deal_type_on : ""
-                      }
-                      onClick={() => handleDealTypeClick("전세")}
-                    >
-                      전세
-                    </div>
-                    <div
-                      className={
-                        selectedDealType === "월세" ? style.deal_type_on : ""
-                      }
-                      style={{ margin: "0px" }}
-                      onClick={() => handleDealTypeClick("월세")}
-                    >
-                      월세
-                    </div>
-                  </div>
-                </div>
-
-                {/* 월세 조건 선택했을 시 표출하는 단기임대 토글버튼 (display : none) */}
-                <div
-                  style={{
-                    marginTop: "30px",
-                    position: "relative",
-                    display: selectedDealType === "월세" ? "block" : "none",
-                  }}
-                >
-                  <span>단기 임대만 보기</span>
-                  <div
-                    className={`slider-toggle ${isChecked2 ? "checked" : ""}`}
+          <div className={style.main_box}>
+            <div className={style.home_body_map}>
+              <div className={style.home_body_map_main}>
+                {mapRendered && (
+                  <Map
+                    onCreate={handleMapLoad}
+                    center={mapCenterState.center}
+                    isPanto={mapCenterState.isPanto}
+                    style={{ width: "100%", height: "100%" }}
+                    level={zoomLevel}
+                    onDragEnd={handleDragEnd}
+                    onZoomChanged={handleZoomChanged}
+                    onBoundsChanged={handleMapBounds}
+                    onCenterChanged={handleMapCenter}
+                    ref={mapRef}
+                    maxLevel={13}
                   >
-                    <label className="switch" htmlFor="activeSwitch">
-                      <input
-                        type="checkbox"
-                        id="activeSwitch"
-                        checked={isChecked2}
-                        onChange={handleToggle2}
-                      />
-                      <span className="slider"></span>
-                    </label>
-                    {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
-                  </div>
-                </div>
-
-                {/* 보증금 범위 슬라이더 */}
-                <div style={{ marginTop: "30px", display: "block" }}>
-                  <div className={style.silderTop}>
-                    <span>
-                      {selectedDealType === "전세" ? "전세금" : "보증금"}
-                    </span>
-                    <span className="value_box">
-                      {afterRange.start === 0 && afterRange.end === 0
-                        ? "전체"
-                        : afterRange.start === 0
-                        ? `${formatDragCost(afterRange.end)}까지`
-                        : afterRange.end === 0
-                        ? `${formatDragCost(afterRange.start)}부터`
-                        : `${formatDragCost(
-                            afterRange.start
-                          )}부터 ~ ${formatDragCost(afterRange.end)}까지`}
-                    </span>
-                  </div>
-
-                  <div className={style.option_range}>
-                    <div className="range-slider" ref={sliderRef}>
-                      <div className="range-bar-base-line"></div>
-
-                      <div
-                        className="range-bar"
-                        style={{
-                          left: range.left + "%",
-                          width: range.right - range.left + "%",
-                        }}
-                      ></div>
-                      <div
-                        className="range-handle left"
-                        style={{ left: range.left + "%" }}
-                        onMouseDown={handleMouseDownLeft}
-                      ></div>
-                      <div
-                        className="range-handle right"
-                        style={{ left: range.right + "%" }}
-                        onMouseDown={handleMouseDownRight}
-                      ></div>
-                    </div>
-
-                    <div className="range_info_bar">
-                      <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
-                      <div
-                        style={{
-                          borderLeft: "1px solid #b3b3b3",
-                          borderRight: "1px solid #b3b3b3",
-                        }}
-                      ></div>
-                      <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
-                    </div>
-                    <div className="range_info">
-                      <div>최소</div>
-                      <div style={{ marginLeft: "72px" }}>5천만</div>
-                      <div style={{ marginLeft: "70px" }}>2.5억</div>
-                      <div style={{ marginLeft: "70px" }}>최대</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 월세 범위 슬라이더 */}
-                <div
-                  style={{
-                    marginTop: "0px",
-                    display: selectedDealType !== "전세" ? "block" : "none",
-                  }}
-                >
-                  <div className={style.silderTop}>
-                    <span>월세</span>
-                    <span className="value_box">
-                      {afterRangeValues.start === 0 &&
-                      afterRangeValues.end === 0
-                        ? "전체"
-                        : afterRangeValues.start === 0
-                        ? `${formatDragCost(afterRangeValues.end)}까지`
-                        : afterRangeValues.end === 0
-                        ? `${formatDragCost(afterRangeValues.start)}부터`
-                        : `${formatDragCost(
-                            afterRangeValues.start
-                          )}부터 ~ ${formatDragCost(afterRangeValues.end)}까지`}
-                    </span>
-                  </div>
-
-                  <div className={style.option_range}>
-                    <div className="custom-range-slider" ref={sliderRef_month}>
-                      <div className="range-bar-base-line"></div>
-
-                      <div
-                        className="range-bar"
-                        style={{
-                          left: rangeValues.start + "%",
-                          width: rangeValues.end - rangeValues.start + "%",
-                        }}
+                    {zoomLevelRanded && (
+                      <MarkerClusterer
+                        averageCenter={true}
+                        minLevel={1}
+                        calculator={[5, 10, 15]}
+                        styles={[
+                          {
+                            // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+                            width: "42px",
+                            height: "42px",
+                            background: "rgba(50, 108, 249, .8)",
+                            borderRadius: "21px",
+                            color: "white",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "16px",
+                          },
+                          {
+                            width: "48px",
+                            height: "48px",
+                            background: "rgba(50, 108, 249, .8)",
+                            borderRadius: "24px",
+                            color: "white",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            lineHeight: "41px",
+                            fontSize: "17px",
+                          },
+                          {
+                            width: "68px",
+                            height: "68px",
+                            background: "rgba(50, 108, 249, .8)",
+                            borderRadius: "34px",
+                            color: "white",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            lineHeight: "51px",
+                            fontSize: "19px",
+                          },
+                          {
+                            width: "84px",
+                            height: "84px",
+                            background: "rgba(50, 108, 249, .8)",
+                            borderRadius: "42px",
+                            color: "white",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            lineHeight: "51px",
+                            fontSize: "19px",
+                          },
+                        ]}
                       >
-                        {/* 바로가기 */}
-                      </div>
-                      <div
-                        className="range-handle start"
-                        style={{ left: rangeValues.start + "%" }}
-                        onMouseDown={handleMouseDownStart}
-                      ></div>
-                      <div
-                        className="range-handle end"
-                        style={{ left: rangeValues.end + "%" }}
-                        onMouseDown={handleMouseDownEnd}
-                      ></div>
-                    </div>
+                        {filterMapList.map((marker, index) => (
+                          <MapMarker
+                            key={index}
+                            position={{
+                              lat: marker.latitude,
+                              lng: marker.longitude,
+                            }}
+                            options={{ title: marker.title }}
+                            onClick={() => handleMarkerClick(marker)}
+                          />
+                        ))}
+                      </MarkerClusterer>
+                    )}
+                    {defaultDataRendered &&
+                      zoomLevel <= 6 &&
+                      subwayDefaultList.map(
+                        (marker, index) =>
+                          marker.latitude &&
+                          marker.longitude && (
+                            <React.Fragment key={index}>
+                              <MapMarker
+                                position={{
+                                  lat: marker.latitude,
+                                  lng: marker.longitude,
+                                }}
+                                image={{
+                                  src: subway,
+                                  size: {
+                                    width: 40,
+                                    height: 40,
+                                  },
+                                }}
+                                onClick={() => moveToMarker(marker)}
+                              />
+                              <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                                // 커스텀 오버레이가 표시될 위치입니다
+                                position={{
+                                  lat: marker.latitude,
+                                  lng: marker.longitude,
+                                }}
+                              >
+                                {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                                <div
+                                  className="label"
+                                  style={{
+                                    color: "white",
+                                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                    padding: "2px 6px 1px 6px",
+                                    fontSize: "11px",
+                                  }}
+                                >
+                                  <span className="left"></span>
+                                  <span className="center">{marker.name}</span>
+                                  <span className="right"></span>
+                                </div>
+                              </CustomOverlayMap>
+                            </React.Fragment>
+                          )
+                      )}
+                    {defaultDataRendered &&
+                      zoomLevel <= 6 &&
+                      schoolDefaultList.map(
+                        (marker, index) =>
+                          marker.latitude &&
+                          marker.longitude && (
+                            <React.Fragment key={index}>
+                              <MapMarker
+                                position={{
+                                  lat: marker.latitude,
+                                  lng: marker.longitude,
+                                }}
+                                image={{
+                                  src: school,
+                                  size: {
+                                    width: 40,
+                                    height: 40,
+                                  },
+                                }}
+                                onClick={() => moveToMarker(marker)}
+                              />
+                              <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                                // 커스텀 오버레이가 표시될 위치입니다
+                                position={{
+                                  lat: marker.latitude,
+                                  lng: marker.longitude,
+                                }}
+                              >
+                                {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                                <div
+                                  className="label"
+                                  style={{
+                                    color: "white",
+                                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                    padding: "2px 6px 1px 6px",
+                                    fontSize: "11px",
+                                  }}
+                                >
+                                  <span className="left"></span>
+                                  <span className="center">{marker.name}</span>
+                                  <span className="right"></span>
+                                </div>
+                              </CustomOverlayMap>
+                            </React.Fragment>
+                          )
+                      )}
+                  </Map>
+                )}
+              </div>
+              {/* 검색창 */}
+              <div className={style.home_body_map_search}>
+                <div className={style.search_box}>
+                  {/* 검색 텍스트 입력 */}
+                  <input
+                    type="text"
+                    placeholder="지역, 지하철역, 학교 검색"
+                    value={searchValue}
+                    onChange={handleInputChange}
+                  ></input>
 
-                    <div className="range_info_bar">
-                      <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
-                      <div
-                        style={{
-                          borderLeft: "1px solid #b3b3b3",
-                          borderRight: "1px solid #b3b3b3",
-                        }}
-                      ></div>
-                      <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
-                    </div>
-                    <div className="range_info">
-                      <div>최소</div>
-                      <div style={{ marginLeft: "75px" }}>35만</div>
-                      <div style={{ marginLeft: "73px" }}>150만</div>
-                      <div style={{ marginLeft: "65px" }}>최대</div>
-                    </div>
+                  {/* 검색창 리스트 X 아이콘 위치 설정 (display:none) */}
+                  <button>X</button>
+
+                  {/* 아이콘 */}
+                  <div className={style.search_icon}>
+                    <img
+                      style={{ maxHeight: "17px" }}
+                      src={search}
+                      alt="exam icon"
+                    />
                   </div>
                 </div>
 
-                {/* 전세 범위 슬라이더 ( 조건 선택시 [전세 조건 선택] 나오게 바꿔야함 / 현재 display:none )*/}
-                {/* <div
+                {/* 검색 옵션 선택 */}
+                <div className={style.search_option}>
+                  <div onClick={() => handleOptionClick("전월세")}>
+                    전 ･ 월세
+                  </div>
+                  <div onClick={() => handleOptionClick("구조 ･ 면적")}>
+                    구조 ･ 면적
+                  </div>
+                  <div onClick={() => handleOptionClick("옵션")}>옵션</div>
+                  {/* <div>ㅇ</div> */}
+                </div>
+              </div>
+
+              {/* 검색창 옵션 박스 위치 설정 (display:none / 이게 block 처리 되어야 밑에 box_1,2,3 이 나타남 )*/}
+              <div
+                className={`${style.search_option_box}`}
+                style={{ display: selectedOption ? "block" : "none" }}
+              >
+                {/* 전월세 선택시 */}
+                {selectedOption === "전월세" && (
+                  <div
+                    className={`${style.option_box_1}`}
+                    style={{ display: "block" }}
+                  >
+                    {/* 내용 */}
+                    <div>
+                      <span>거래유형</span>
+                      <div className={style.deal_type}>
+                        <div
+                          className={
+                            selectedDealType === "전체"
+                              ? style.deal_type_on
+                              : ""
+                          }
+                          onClick={() => handleDealTypeClick("전체")}
+                        >
+                          전체
+                        </div>
+                        <div
+                          className={
+                            selectedDealType === "전세"
+                              ? style.deal_type_on
+                              : ""
+                          }
+                          onClick={() => handleDealTypeClick("전세")}
+                        >
+                          전세
+                        </div>
+                        <div
+                          className={
+                            selectedDealType === "월세"
+                              ? style.deal_type_on
+                              : ""
+                          }
+                          style={{ margin: "0px" }}
+                          onClick={() => handleDealTypeClick("월세")}
+                        >
+                          월세
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 월세 조건 선택했을 시 표출하는 단기임대 토글버튼 (display : none) */}
+                    <div
+                      style={{
+                        marginTop: "30px",
+                        position: "relative",
+                        display: selectedDealType === "월세" ? "block" : "none",
+                      }}
+                    >
+                      <span>단기 임대만 보기</span>
+                      <div
+                        className={`slider-toggle ${
+                          isChecked2 ? "checked" : ""
+                        }`}
+                      >
+                        <label className="switch" htmlFor="activeSwitch">
+                          <input
+                            type="checkbox"
+                            id="activeSwitch"
+                            checked={isChecked2}
+                            onChange={handleToggle2}
+                          />
+                          <span className="slider"></span>
+                        </label>
+                        {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
+                      </div>
+                    </div>
+
+                    {/* 보증금 범위 슬라이더 */}
+                    <div style={{ marginTop: "30px", display: "block" }}>
+                      <div className={style.silderTop}>
+                        <span>
+                          {selectedDealType === "전세" ? "전세금" : "보증금"}
+                        </span>
+                        <span className="value_box">
+                          {afterRange.start === 0 && afterRange.end === 0
+                            ? "전체"
+                            : afterRange.start === 0
+                            ? `${formatDragCost(afterRange.end)}까지`
+                            : afterRange.end === 0
+                            ? `${formatDragCost(afterRange.start)}부터`
+                            : `${formatDragCost(
+                                afterRange.start
+                              )}부터 ~ ${formatDragCost(afterRange.end)}까지`}
+                        </span>
+                      </div>
+
+                      <div className={style.option_range}>
+                        <div className="range-slider" ref={sliderRef}>
+                          <div className="range-bar-base-line"></div>
+
+                          <div
+                            className="range-bar"
+                            style={{
+                              left: range.left + "%",
+                              width: range.right - range.left + "%",
+                            }}
+                          ></div>
+                          <div
+                            className="range-handle left"
+                            style={{ left: range.left + "%" }}
+                            onMouseDown={handleMouseDownLeft}
+                          ></div>
+                          <div
+                            className="range-handle right"
+                            style={{ left: range.right + "%" }}
+                            onMouseDown={handleMouseDownRight}
+                          ></div>
+                        </div>
+
+                        <div className="range_info_bar">
+                          <div
+                            style={{ borderLeft: "1px solid #b3b3b3" }}
+                          ></div>
+                          <div
+                            style={{
+                              borderLeft: "1px solid #b3b3b3",
+                              borderRight: "1px solid #b3b3b3",
+                            }}
+                          ></div>
+                          <div
+                            style={{ borderRight: "1px solid #b3b3b3" }}
+                          ></div>
+                        </div>
+                        <div className="range_info">
+                          <div>최소</div>
+                          <div style={{ marginLeft: "72px" }}>5천만</div>
+                          <div style={{ marginLeft: "70px" }}>2.5억</div>
+                          <div style={{ marginLeft: "70px" }}>최대</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 월세 범위 슬라이더 */}
+                    <div
+                      style={{
+                        marginTop: "0px",
+                        display: selectedDealType !== "전세" ? "block" : "none",
+                      }}
+                    >
+                      <div className={style.silderTop}>
+                        <span>월세</span>
+                        <span className="value_box">
+                          {afterRangeValues.start === 0 &&
+                          afterRangeValues.end === 0
+                            ? "전체"
+                            : afterRangeValues.start === 0
+                            ? `${formatDragCost(afterRangeValues.end)}까지`
+                            : afterRangeValues.end === 0
+                            ? `${formatDragCost(afterRangeValues.start)}부터`
+                            : `${formatDragCost(
+                                afterRangeValues.start
+                              )}부터 ~ ${formatDragCost(
+                                afterRangeValues.end
+                              )}까지`}
+                        </span>
+                      </div>
+
+                      <div className={style.option_range}>
+                        <div
+                          className="custom-range-slider"
+                          ref={sliderRef_month}
+                        >
+                          <div className="range-bar-base-line"></div>
+
+                          <div
+                            className="range-bar"
+                            style={{
+                              left: rangeValues.start + "%",
+                              width: rangeValues.end - rangeValues.start + "%",
+                            }}
+                          >
+                            {/* 바로가기 */}
+                          </div>
+                          <div
+                            className="range-handle start"
+                            style={{ left: rangeValues.start + "%" }}
+                            onMouseDown={handleMouseDownStart}
+                          ></div>
+                          <div
+                            className="range-handle end"
+                            style={{ left: rangeValues.end + "%" }}
+                            onMouseDown={handleMouseDownEnd}
+                          ></div>
+                        </div>
+
+                        <div className="range_info_bar">
+                          <div
+                            style={{ borderLeft: "1px solid #b3b3b3" }}
+                          ></div>
+                          <div
+                            style={{
+                              borderLeft: "1px solid #b3b3b3",
+                              borderRight: "1px solid #b3b3b3",
+                            }}
+                          ></div>
+                          <div
+                            style={{ borderRight: "1px solid #b3b3b3" }}
+                          ></div>
+                        </div>
+                        <div className="range_info">
+                          <div>최소</div>
+                          <div style={{ marginLeft: "75px" }}>35만</div>
+                          <div style={{ marginLeft: "73px" }}>150만</div>
+                          <div style={{ marginLeft: "65px" }}>최대</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 전세 범위 슬라이더 ( 조건 선택시 [전세 조건 선택] 나오게 바꿔야함 / 현재 display:none )*/}
+                    {/* <div
                   style={{
                     marginTop: "30px",
                     display: selectedDealType === "전세" ? "block" : "none",
@@ -2250,591 +2295,619 @@ function OneRoom() {
                   </div>
                 </div> */}
 
-                <div
-                  style={{
-                    marginTop: "10px",
-                    position: "relative",
-                    display:
-                      selectedDealType === "전체" || selectedDealType === "월세"
-                        ? "block"
-                        : "none",
-                  }}
-                >
-                  <span>관리비 포함하여 찾기</span>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        position: "relative",
+                        display:
+                          selectedDealType === "전체" ||
+                          selectedDealType === "월세"
+                            ? "block"
+                            : "none",
+                      }}
+                    >
+                      <span>관리비 포함하여 찾기</span>
+                      <div
+                        style={{
+                          opacity:
+                            afterRangeValues.start != 0 ||
+                            afterRangeValues.end != 0
+                              ? 1
+                              : 0.2,
+                          pointerEvents:
+                            afterRangeValues.start != 0 ||
+                            afterRangeValues.end != 0
+                              ? "auto"
+                              : "none",
+                        }}
+                        className={`slider-toggle ${
+                          isChecked ? "checked" : ""
+                        }`}
+                      >
+                        <label className="switch" htmlFor="toggleSwitch">
+                          <input
+                            type="checkbox"
+                            id="toggleSwitch"
+                            checked={isChecked}
+                            onChange={handleToggle}
+                          />
+                          <span className="slider"></span>
+                        </label>
+                        {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 구조면적 선택시 */}
+                {selectedOption === "구조 ･ 면적" && (
                   <div
-                    style={{
-                      opacity:
-                        afterRangeValues.start != 0 || afterRangeValues.end != 0
-                          ? 1
-                          : 0.2,
-                      pointerEvents:
-                        afterRangeValues.start != 0 || afterRangeValues.end != 0
-                          ? "auto"
-                          : "none",
-                    }}
-                    className={`slider-toggle ${isChecked ? "checked" : ""}`}
+                    className={`${style.option_box_2}`}
+                    style={{ display: "block" }}
                   >
-                    <label className="switch" htmlFor="toggleSwitch">
-                      <input
-                        type="checkbox"
-                        id="toggleSwitch"
-                        checked={isChecked}
-                        onChange={handleToggle}
-                      />
-                      <span className="slider"></span>
-                    </label>
-                    {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
-                  </div>
-                </div>
-              </div>
-            )}
+                    {/* 구조 */}
+                    <div>
+                      <span>구조</span>
+                      <div className={style.structure_box}>
+                        <div
+                          className={style.structure_select}
+                          style={{
+                            borderWidth:
+                              selectedStructure === "전체" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedStructure === "전체"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedStructure === "전체" ? "bold" : "normal",
+                          }}
+                          onClick={() => handleStructureSelect("전체")}
+                        >
+                          <div>
+                            <img
+                              style={{ maxHeight: "24px" }}
+                              src={exam_icon}
+                              alt="exam icon"
+                            />
+                          </div>
+                          <div>전체</div>
+                        </div>
 
-            {/* 구조면적 선택시 */}
-            {selectedOption === "구조 ･ 면적" && (
-              <div
-                className={`${style.option_box_2}`}
-                style={{ display: "block" }}
-              >
-                {/* 구조 */}
-                <div>
-                  <span>구조</span>
-                  <div className={style.structure_box}>
-                    <div
-                      className={style.structure_select}
-                      style={{
-                        borderWidth:
-                          selectedStructure === "전체" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedStructure === "전체"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedStructure === "전체" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleStructureSelect("전체")}
-                    >
-                      <div>
-                        <img
-                          style={{ maxHeight: "24px" }}
-                          src={exam_icon}
-                          alt="exam icon"
-                        />
+                        <div
+                          className={style.structure_select}
+                          style={{
+                            borderWidth:
+                              selectedStructure === "오픈형" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedStructure === "오픈형"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedStructure === "오픈형"
+                                ? "bold"
+                                : "normal",
+                          }}
+                          onClick={() => handleStructureSelect("오픈형")}
+                        >
+                          <div>
+                            <img
+                              style={{ maxHeight: "24px" }}
+                              src={exam_icon}
+                              alt="exam icon"
+                            />
+                          </div>
+                          <div>오픈형(방1)</div>
+                        </div>
+
+                        <div
+                          className={style.structure_select}
+                          style={{
+                            borderWidth:
+                              selectedStructure === "분리형" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedStructure === "분리형"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedStructure === "분리형"
+                                ? "bold"
+                                : "normal",
+                          }}
+                          onClick={() => handleStructureSelect("분리형")}
+                        >
+                          <div>
+                            <img
+                              style={{ maxHeight: "24px" }}
+                              src={exam_icon}
+                              alt="exam icon"
+                            />
+                          </div>
+                          <div>분리형(방1,거실1)</div>
+                        </div>
+
+                        <div
+                          className={style.structure_select}
+                          style={{
+                            borderWidth:
+                              selectedStructure === "복층형" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedStructure === "복층형"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedStructure === "분리형"
+                                ? "bold"
+                                : "normal",
+                          }}
+                          onClick={() => handleStructureSelect("복층형")}
+                        >
+                          <div>
+                            <img
+                              style={{ maxHeight: "24px" }}
+                              src={exam_icon}
+                              alt="exam icon"
+                            />
+                          </div>
+                          <div>복층형</div>
+                        </div>
                       </div>
-                      <div>전체</div>
                     </div>
 
-                    <div
-                      className={style.structure_select}
-                      style={{
-                        borderWidth:
-                          selectedStructure === "오픈형" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedStructure === "오픈형"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedStructure === "오픈형" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleStructureSelect("오픈형")}
-                    >
-                      <div>
-                        <img
-                          style={{ maxHeight: "24px" }}
-                          src={exam_icon}
-                          alt="exam icon"
-                        />
+                    {/* 층 수 옵션 */}
+                    <div style={{ marginTop: "30px" }}>
+                      <span>층 수 옵션</span>
+                      <div className={style.floor_box}>
+                        <div
+                          style={{
+                            borderWidth:
+                              selectedFloor === "전체" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedFloor === "전체"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedFloor === "전체" ? "bold" : "normal",
+                          }}
+                          onClick={() => handleFloorSelect("전체")}
+                        >
+                          전체
+                        </div>
+
+                        <div
+                          style={{
+                            borderWidth:
+                              selectedFloor === "지상층" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedFloor === "지상층"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedFloor === "지상층" ? "bold" : "normal",
+                          }}
+                          onClick={() => handleFloorSelect("지상층")}
+                        >
+                          지상층
+                        </div>
+
+                        <div
+                          style={{
+                            borderWidth:
+                              selectedFloor === "반지하" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedFloor === "반지하"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedFloor === "반지하" ? "bold" : "normal",
+                          }}
+                          onClick={() => handleFloorSelect("반지하")}
+                        >
+                          반지하
+                        </div>
+
+                        <div
+                          style={{
+                            borderWidth:
+                              selectedFloor === "옥탑" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedFloor === "옥탑"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedFloor === "옥탑" ? "bold" : "normal",
+                          }}
+                          onClick={() => handleFloorSelect("옥탑")}
+                        >
+                          옥탑
+                        </div>
                       </div>
-                      <div>오픈형(방1)</div>
                     </div>
 
-                    <div
-                      className={style.structure_select}
-                      style={{
-                        borderWidth:
-                          selectedStructure === "분리형" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedStructure === "분리형"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedStructure === "분리형" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleStructureSelect("분리형")}
-                    >
-                      <div>
-                        <img
-                          style={{ maxHeight: "24px" }}
-                          src={exam_icon}
-                          alt="exam icon"
-                        />
+                    {/* 전용 면적 */}
+                    <div style={{ marginTop: "30px" }}>
+                      <span>전용 면적</span>
+                      <div className={style.area_box}>
+                        <div
+                          style={{
+                            borderTopLeftRadius: "4px",
+                            borderWidth:
+                              selectedArea === "전체" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "전체"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "전체" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "전체"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "전체"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("전체")}
+                        >
+                          전체
+                        </div>
+
+                        <div
+                          style={{
+                            borderWidth:
+                              selectedArea === "10평 이하" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "10평 이하"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "10평 이하" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "10평 이하"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "10평 이하"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("10평 이하")}
+                        >
+                          10평 이하
+                        </div>
+
+                        <div
+                          style={{
+                            borderWidth:
+                              selectedArea === "10평대" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "10평대"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "10평대" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "10평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "10평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("10평대")}
+                        >
+                          10평대
+                        </div>
+
+                        <div
+                          style={{
+                            borderRight: "none",
+                            borderTopRightRadius: "4px",
+                            borderWidth:
+                              selectedArea === "20평대" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "20평대"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "20평대" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "20평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "20평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderRight:
+                              selectedArea === "20평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("20평대")}
+                        >
+                          20평대
+                        </div>
+
+                        <div
+                          style={{
+                            borderBottom: "none",
+                            borderBottomLeftRadius: "4px",
+                            borderWidth:
+                              selectedArea === "30평대" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "30평대"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "30평대" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "30평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "30평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderRight:
+                              selectedArea === "30평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderBottom:
+                              selectedArea === "30평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("30평대")}
+                        >
+                          30평대
+                        </div>
+
+                        <div
+                          style={{
+                            borderBottom: "none",
+                            borderWidth:
+                              selectedArea === "40평대" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "40평대"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "40평대" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "40평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "40평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderRight:
+                              selectedArea === "40평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderBottom:
+                              selectedArea === "40평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("40평대")}
+                        >
+                          40평대
+                        </div>
+
+                        <div
+                          style={{
+                            borderBottom: "none",
+                            borderWidth:
+                              selectedArea === "50평대" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "50평대"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "50평대" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "50평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "50평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderRight:
+                              selectedArea === "50평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderBottom:
+                              selectedArea === "50평대"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("50평대")}
+                        >
+                          50평대
+                        </div>
+
+                        <div
+                          style={{
+                            borderRight: "none",
+                            borderBottom: "none",
+                            borderBottomRightRadius: "4px",
+                            borderWidth:
+                              selectedArea === "60평 이상" ? "1.4px" : "1px",
+                            borderColor:
+                              selectedArea === "60평 이상"
+                                ? "black"
+                                : "rgb(230, 230, 230)",
+                            fontWeight:
+                              selectedArea === "60평 이상" ? "bold" : "normal",
+                            borderLeft:
+                              selectedArea === "60평 이상"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderTop:
+                              selectedArea === "60평 이상"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderRight:
+                              selectedArea === "60평 이상"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                            borderBottom:
+                              selectedArea === "60평 이상"
+                                ? "1.4px solid black"
+                                : "none", // 추가
+                          }}
+                          onClick={() => handleAreaSelect("60평 이상")}
+                        >
+                          60평 이상
+                        </div>
                       </div>
-                      <div>분리형(방1,거실1)</div>
                     </div>
 
-                    <div
-                      className={style.structure_select}
-                      style={{
-                        borderWidth:
-                          selectedStructure === "복층형" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedStructure === "복층형"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedStructure === "분리형" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleStructureSelect("복층형")}
-                    >
-                      <div>
-                        <img
-                          style={{ maxHeight: "24px" }}
-                          src={exam_icon}
-                          alt="exam icon"
-                        />
+                    {/* 주차 가능 */}
+                    <div style={{ marginTop: "30px", position: "relative" }}>
+                      <span>주차 가능만 보기</span>
+                      <div
+                        className={`slider-toggle ${
+                          isToggled ? "checked" : ""
+                        }`}
+                      >
+                        <label className="switch" htmlFor="toggleSwitch_car">
+                          <input
+                            type="checkbox"
+                            id="toggleSwitch_car"
+                            checked={isToggled}
+                            onChange={handleCheckboxChange}
+                          />
+                          <span className="slider"></span>
+                        </label>
+                        {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
                       </div>
-                      <div>복층형</div>
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* 층 수 옵션 */}
-                <div style={{ marginTop: "30px" }}>
-                  <span>층 수 옵션</span>
-                  <div className={style.floor_box}>
-                    <div
-                      style={{
-                        borderWidth: selectedFloor === "전체" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedFloor === "전체"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedFloor === "전체" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleFloorSelect("전체")}
-                    >
-                      전체
-                    </div>
-
-                    <div
-                      style={{
-                        borderWidth:
-                          selectedFloor === "지상층" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedFloor === "지상층"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedFloor === "지상층" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleFloorSelect("지상층")}
-                    >
-                      지상층
-                    </div>
-
-                    <div
-                      style={{
-                        borderWidth:
-                          selectedFloor === "반지하" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedFloor === "반지하"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedFloor === "반지하" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleFloorSelect("반지하")}
-                    >
-                      반지하
-                    </div>
-
-                    <div
-                      style={{
-                        borderWidth: selectedFloor === "옥탑" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedFloor === "옥탑"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedFloor === "옥탑" ? "bold" : "normal",
-                      }}
-                      onClick={() => handleFloorSelect("옥탑")}
-                    >
-                      옥탑
-                    </div>
-                  </div>
-                </div>
-
-                {/* 전용 면적 */}
-                <div style={{ marginTop: "30px" }}>
-                  <span>전용 면적</span>
-                  <div className={style.area_box}>
-                    <div
-                      style={{
-                        borderTopLeftRadius: "4px",
-                        borderWidth: selectedArea === "전체" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "전체"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight: selectedArea === "전체" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "전체"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "전체"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("전체")}
-                    >
-                      전체
-                    </div>
-
-                    <div
-                      style={{
-                        borderWidth:
-                          selectedArea === "10평 이하" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "10평 이하"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedArea === "10평 이하" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "10평 이하"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "10평 이하"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("10평 이하")}
-                    >
-                      10평 이하
-                    </div>
-
-                    <div
-                      style={{
-                        borderWidth:
-                          selectedArea === "10평대" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "10평대"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedArea === "10평대" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "10평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "10평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("10평대")}
-                    >
-                      10평대
-                    </div>
-
-                    <div
-                      style={{
-                        borderRight: "none",
-                        borderTopRightRadius: "4px",
-                        borderWidth:
-                          selectedArea === "20평대" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "20평대"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedArea === "20평대" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "20평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "20평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderRight:
-                          selectedArea === "20평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("20평대")}
-                    >
-                      20평대
-                    </div>
-
-                    <div
-                      style={{
-                        borderBottom: "none",
-                        borderBottomLeftRadius: "4px",
-                        borderWidth:
-                          selectedArea === "30평대" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "30평대"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedArea === "30평대" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "30평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "30평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderRight:
-                          selectedArea === "30평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderBottom:
-                          selectedArea === "30평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("30평대")}
-                    >
-                      30평대
-                    </div>
-
-                    <div
-                      style={{
-                        borderBottom: "none",
-                        borderWidth:
-                          selectedArea === "40평대" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "40평대"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedArea === "40평대" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "40평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "40평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderRight:
-                          selectedArea === "40평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderBottom:
-                          selectedArea === "40평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("40평대")}
-                    >
-                      40평대
-                    </div>
-
-                    <div
-                      style={{
-                        borderBottom: "none",
-                        borderWidth:
-                          selectedArea === "50평대" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "50평대"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedArea === "50평대" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "50평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "50평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderRight:
-                          selectedArea === "50평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderBottom:
-                          selectedArea === "50평대"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("50평대")}
-                    >
-                      50평대
-                    </div>
-
-                    <div
-                      style={{
-                        borderRight: "none",
-                        borderBottom: "none",
-                        borderBottomRightRadius: "4px",
-                        borderWidth:
-                          selectedArea === "60평 이상" ? "1.4px" : "1px",
-                        borderColor:
-                          selectedArea === "60평 이상"
-                            ? "black"
-                            : "rgb(230, 230, 230)",
-                        fontWeight:
-                          selectedArea === "60평 이상" ? "bold" : "normal",
-                        borderLeft:
-                          selectedArea === "60평 이상"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderTop:
-                          selectedArea === "60평 이상"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderRight:
-                          selectedArea === "60평 이상"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                        borderBottom:
-                          selectedArea === "60평 이상"
-                            ? "1.4px solid black"
-                            : "none", // 추가
-                      }}
-                      onClick={() => handleAreaSelect("60평 이상")}
-                    >
-                      60평 이상
-                    </div>
-                  </div>
-                </div>
-
-                {/* 주차 가능 */}
-                <div style={{ marginTop: "30px", position: "relative" }}>
-                  <span>주차 가능만 보기</span>
+                {/* 옵션 선택시 */}
+                {selectedOption === "옵션" && (
                   <div
-                    className={`slider-toggle ${isToggled ? "checked" : ""}`}
+                    className={`${style.option_box_3}`}
+                    style={{ display: "block" }}
                   >
-                    <label className="switch" htmlFor="toggleSwitch_car">
-                      <input
-                        type="checkbox"
-                        id="toggleSwitch_car"
-                        checked={isToggled}
-                        onChange={handleCheckboxChange}
-                      />
-                      <span className="slider"></span>
-                    </label>
-                    {/* <p>{isChecked ? 'The switch is ON' : 'The switch is OFF'}</p> */}
+                    <div>
+                      <span>매물 옵션</span>
+                      <div className={style.item_box}>
+                        <div
+                          className={`${style.structure_select} ${
+                            selectedOptions.includes("에어컨")
+                              ? style.selected
+                              : ""
+                          }`}
+                          onClick={() => handleOptionSelect("에어컨")}
+                          style={{
+                            borderWidth: selectedOptions.includes("에어컨")
+                              ? "1.4px"
+                              : "1px",
+                            borderColor: selectedOptions.includes("에어컨")
+                              ? "black"
+                              : "rgb(230, 230, 230)",
+                            fontWeight: selectedOptions.includes("에어컨")
+                              ? "bold"
+                              : "normal",
+                          }}
+                        >
+                          에어컨
+                        </div>
+
+                        <div
+                          className={`${style.structure_select} ${
+                            selectedOptions.includes("냉장고")
+                              ? style.selected
+                              : ""
+                          }`}
+                          onClick={() => handleOptionSelect("냉장고")}
+                          style={{
+                            borderWidth: selectedOptions.includes("냉장고")
+                              ? "1.4px"
+                              : "1px",
+                            borderColor: selectedOptions.includes("냉장고")
+                              ? "black"
+                              : "rgb(230, 230, 230)",
+                            fontWeight: selectedOptions.includes("냉장고")
+                              ? "bold"
+                              : "normal",
+                          }}
+                        >
+                          냉장고
+                        </div>
+
+                        <div
+                          className={`${style.structure_select} ${
+                            selectedOptions.includes("세탁기")
+                              ? style.selected
+                              : ""
+                          }`}
+                          onClick={() => handleOptionSelect("세탁기")}
+                          style={{
+                            borderWidth: selectedOptions.includes("세탁기")
+                              ? "1.4px"
+                              : "1px",
+                            borderColor: selectedOptions.includes("세탁기")
+                              ? "black"
+                              : "rgb(230, 230, 230)",
+                            fontWeight: selectedOptions.includes("세탁기")
+                              ? "bold"
+                              : "normal",
+                          }}
+                        >
+                          세탁기
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 초기화, 확인 버튼 부분*/}
+                <div className={style.option_btn_box}>
+                  {mapRendered && (
+                    <div
+                      className={style.option_reset}
+                      onClick={setFilterReset}
+                    >
+                      초기화
+                    </div>
+                  )}
+                  <div
+                    className={style.option_check}
+                    onClick={() => setSelectedOption(null)}
+                  >
+                    확인
                   </div>
                 </div>
               </div>
-            )}
 
-            {/* 옵션 선택시 */}
-            {selectedOption === "옵션" && (
-              <div
-                className={`${style.option_box_3}`}
-                style={{ display: "block" }}
-              >
-                <div>
-                  <span>매물 옵션</span>
-                  <div className={style.item_box}>
-                    <div
-                      className={`${style.structure_select} ${
-                        selectedOptions.includes("에어컨") ? style.selected : ""
-                      }`}
-                      onClick={() => handleOptionSelect("에어컨")}
-                      style={{
-                        borderWidth: selectedOptions.includes("에어컨")
-                          ? "1.4px"
-                          : "1px",
-                        borderColor: selectedOptions.includes("에어컨")
-                          ? "black"
-                          : "rgb(230, 230, 230)",
-                        fontWeight: selectedOptions.includes("에어컨")
-                          ? "bold"
-                          : "normal",
-                      }}
-                    >
-                      에어컨
-                    </div>
-
-                    <div
-                      className={`${style.structure_select} ${
-                        selectedOptions.includes("냉장고") ? style.selected : ""
-                      }`}
-                      onClick={() => handleOptionSelect("냉장고")}
-                      style={{
-                        borderWidth: selectedOptions.includes("냉장고")
-                          ? "1.4px"
-                          : "1px",
-                        borderColor: selectedOptions.includes("냉장고")
-                          ? "black"
-                          : "rgb(230, 230, 230)",
-                        fontWeight: selectedOptions.includes("냉장고")
-                          ? "bold"
-                          : "normal",
-                      }}
-                    >
-                      냉장고
-                    </div>
-
-                    <div
-                      className={`${style.structure_select} ${
-                        selectedOptions.includes("세탁기") ? style.selected : ""
-                      }`}
-                      onClick={() => handleOptionSelect("세탁기")}
-                      style={{
-                        borderWidth: selectedOptions.includes("세탁기")
-                          ? "1.4px"
-                          : "1px",
-                        borderColor: selectedOptions.includes("세탁기")
-                          ? "black"
-                          : "rgb(230, 230, 230)",
-                        fontWeight: selectedOptions.includes("세탁기")
-                          ? "bold"
-                          : "normal",
-                      }}
-                    >
-                      세탁기
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* 초기화, 확인 버튼 부분*/}
-            <div className={style.option_btn_box}>
-              {mapRendered && (
-                <div className={style.option_reset} onClick={setFilterReset}>
-                  초기화
-                </div>
-              )}
-              <div
-                className={style.option_check}
-                onClick={() => setSelectedOption(null)}
-              >
-                확인
+              {/* 검색창 리스트 박스 위치 설정 (display:none) */}
+              <div className={style.search_list_box} ref={searchListBoxRef}>
+                {/* 검색창 리스트 세부박스 아래와 같이 세팅할것 */}
               </div>
             </div>
-          </div>
-
-          {/* 검색창 리스트 박스 위치 설정 (display:none) */}
-          <div className={style.search_list_box} ref={searchListBoxRef}>
-            {/* 검색창 리스트 세부박스 아래와 같이 세팅할것 */}
+            {/* 여기 */}
+            <div className={style.home_body_side}>
+              <Routes>
+                <Route
+                  path="list/*"
+                  element={
+                    <List filterMapList={filterMapList} listReady={listReady} />
+                  }
+                />
+                <Route path="info/*" element={<Info />} />
+              </Routes>
+            </div>
           </div>
         </div>
-        {/* 여기 */}
-        <div className={style.home_body_side}>
-          <Routes>
-            <Route
-              path="list/*"
-              element={
-                <List filterMapList={filterMapList} listReady={listReady} />
-              }
-            />
-            <Route path="info/*" element={<Info />} />
-          </Routes>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
