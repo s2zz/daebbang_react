@@ -76,9 +76,9 @@ const LoginBox = ({ setLoginId }) => {
     formData.append("id", estate.id);
     formData.append("pw", estate.pw);
 
-    axios.post("/api/estate/login", formData).then(resp => {
-      axios.get(`/api/estate/getEnabled/${estateid}`).then(resp=>{
-        if(resp.data) {
+    axios.get(`/api/estate/getEnabled/${estateid}`).then(resp=>{
+      if(resp.data) {
+        axios.post("/api/estate/login", formData).then(resp => {
           axios.get(`/api/estate/getname/${estateid}`).then(resp => {
             sessionStorage.setItem('loginName', resp.data);
             setLoginId(estate.id); // 로그인 성공시
@@ -88,11 +88,14 @@ const LoginBox = ({ setLoginId }) => {
             navi("/");
             window.location.reload();
           })
-        } else {
-          alert("승인 대기중입니다");
+        }).catch(resp => {
+          alert("아이디 또는 비밀번호를 다시 확인해주세요");
           setEstate({ id: "", pw: "" });
-        }
-      });
+        });
+      } else {
+        alert("승인 대기 중 입니다");
+        setEstate({ id: "", pw: "" });
+      }
     }).catch(resp => {
       alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setEstate({ id: "", pw: "" });
