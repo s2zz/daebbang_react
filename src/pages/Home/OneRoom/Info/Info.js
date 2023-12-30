@@ -1514,7 +1514,7 @@ function Info(args, estate) {
               </div>
             )}
 
-            {/*리뷰*/}
+            {/* 리뷰 */}
             <div className={style.review_list_frame}>
               <div
                 style={{ margin: "10px 0 0 0" }}
@@ -1536,7 +1536,7 @@ function Info(args, estate) {
                           <img
                             alt="..."
                             style={{ width: "100%", height: "100%" }}
-                            src={`/uploads/review/${e.sysName}`}
+                            src={` https://storage.googleapis.com/daebbang/review/${e.sysName}`}
                           />
                         </div>
                       ))}
