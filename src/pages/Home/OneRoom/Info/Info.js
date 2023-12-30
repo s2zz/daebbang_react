@@ -69,10 +69,39 @@ function Info(args, estate) {
   }, [location.state]);
 
   const handleCarouselItemClick = (estate) => {
+    // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+    const storedData = localStorage.getItem("watch");
+    const watchedProperties = storedData ? JSON.parse(storedData) : [];
+
+    // 새로운 마커의 estateId를 감시 중인 속성에 추가
+    const updatedWatchedProperties = [
+      ...new Set([estate.estateId, ...watchedProperties]),
+    ];
+    // 감시 중인 속성을 최대 10개로 제한
+    if (updatedWatchedProperties.length > 10) {
+      updatedWatchedProperties.splice(10);
+    }
+    // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+    localStorage.setItem("watch", JSON.stringify(updatedWatchedProperties));
+
     setMarkerInfo(estate); // markerInfo를 업데이트하는데 useState를 사용
   };
 
   const handleMoreAgentClick = (marker) => {
+    // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+    const storedData = localStorage.getItem("watch");
+    const watchedProperties = storedData ? JSON.parse(storedData) : [];
+
+    // 새로운 마커의 estateId를 감시 중인 속성에 추가
+    const updatedWatchedProperties = [
+      ...new Set([marker.estateId, ...watchedProperties]),
+    ];
+    // 감시 중인 속성을 최대 10개로 제한
+    if (updatedWatchedProperties.length > 10) {
+      updatedWatchedProperties.splice(10);
+    }
+    // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+    localStorage.setItem("watch", JSON.stringify(updatedWatchedProperties));
     toggleSeller_more();
     setMarkerInfo(marker);
   };
