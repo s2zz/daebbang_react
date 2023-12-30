@@ -109,7 +109,7 @@ const HomeEnrollment = (args) => {
                 setLoading(false);
             })
             .catch(error => {
-                alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
+                alert("해당 중개사무소가 없습니다. 계속 반복될 경우 고객센터로 문의 바랍니다.");
             });
     }
     //이메일 중복확인
@@ -117,9 +117,13 @@ const HomeEnrollment = (args) => {
     const dupleButtonClick = () => {
         if (!emailValue) {
             alert('이메일을 입력하세요.');
+            setDuplecheck(false);
         }else if(!selectedValue){
             alert('옵션을 선택하세요.');
-        }
+            setDuplecheck(false);
+        }else{
+
+        
         axios.get(`/api/enrollment/agent/emailDuplCheck/${email}`)
             .then(response => {
                 if (response.data == false) {
@@ -132,8 +136,9 @@ const HomeEnrollment = (args) => {
                 setDuplecheck(true);
             })
             .catch(error => {
-                // alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
+                alert("계속 반복될 경우 고객센터로 문의 바랍니다.");
             });
+        }
     }
 
 
