@@ -497,6 +497,7 @@
   border: 1px solid #d9d9d9;
   width: 210px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .slide_item_box div:first-child {
@@ -534,7 +535,6 @@
 }
 
 .review_list_frame_child_img {
-  height: 155px;
   width: 100%;
 }
 

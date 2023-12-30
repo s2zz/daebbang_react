@@ -176,7 +176,7 @@ function List({ onDragEnd, listReady }) {
                         <div className={style.list_box_top}>
                           {marker.realEstateAgent.manners_temperature &&
                             marker.realEstateAgent.manners_temperature >=
-                            40 && (
+                            60 && (
                               <span
                                 style={{ fontWeight: "bold" }}
                                 className={style.recommend}
@@ -268,7 +268,7 @@ function List({ onDragEnd, listReady }) {
                         <div className={style.list_box_top}>
                           {marker.realEstateAgent.manners_temperature &&
                             marker.realEstateAgent.manners_temperature >=
-                            40 && (
+                            60 && (
                               <span
                                 style={{ fontWeight: "bold" }}
                                 className={style.recommend}

@@ -53,17 +53,17 @@ const LoginBox = ({ setLoginId }) => {
     const formData = new FormData();
     formData.append("id", user.id);
     formData.append("pw", user.pw);
-    
+
     axios.post("/api/member/login", formData).then(resp => {
-      axios.get(`/api/member/getname/${userid}`).then(resp=>{
+      axios.get(`/api/member/getname/${userid}`).then(resp => {
         sessionStorage.setItem('loginName', resp.data);
         setLoginId(user.id); // 로그인 성공시
-      sessionStorage.setItem('loginId', user.id);
-      setUser({ id: "", pw: "" });
-      navi("/");
-      window.location.reload();
+        sessionStorage.setItem('loginId', user.id);
+        setUser({ id: "", pw: "" });
+        navi("/");
+        window.location.reload();
       })
-      
+
     }).catch(resp => {
       alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setUser({ id: "", pw: "" });
@@ -75,16 +75,27 @@ const LoginBox = ({ setLoginId }) => {
     const formData = new FormData();
     formData.append("id", estate.id);
     formData.append("pw", estate.pw);
-    axios.post("/api/estate/login", formData).then(resp => {
-      axios.get(`/api/estate/getname/${estateid}`).then(resp=>{
-        sessionStorage.setItem('loginName', resp.data);
-        setLoginId(estate.id); // 로그인 성공시
-      sessionStorage.setItem('loginId', estate.id);
-      sessionStorage.setItem('isEstate', true);
-      setEstate({ id: "", pw: "" });
-      navi("/");
-      window.location.reload();
-      })
+
+    axios.get(`/api/estate/getEnabled/${estateid}`).then(resp=>{
+      if(resp.data) {
+        axios.post("/api/estate/login", formData).then(resp => {
+          axios.get(`/api/estate/getname/${estateid}`).then(resp => {
+            sessionStorage.setItem('loginName', resp.data);
+            setLoginId(estate.id); // 로그인 성공시
+            sessionStorage.setItem('loginId', estate.id);
+            sessionStorage.setItem('isEstate', true);
+            setEstate({ id: "", pw: "" });
+            navi("/");
+            window.location.reload();
+          })
+        }).catch(resp => {
+          alert("아이디 또는 비밀번호를 다시 확인해주세요");
+          setEstate({ id: "", pw: "" });
+        });
+      } else {
+        alert("승인 대기 중 입니다");
+        setEstate({ id: "", pw: "" });
+      }
     }).catch(resp => {
       alert("아이디 또는 비밀번호를 다시 확인해주세요");
       setEstate({ id: "", pw: "" });
@@ -97,14 +108,14 @@ const LoginBox = ({ setLoginId }) => {
     formData.append("id", admin.id);
     formData.append("pw", admin.pw);
     axios.post("/api/member/login", formData).then(resp => {
-      axios.get(`/api/member/getname/${adminid}`).then(resp=>{
+      axios.get(`/api/member/getname/${adminid}`).then(resp => {
         sessionStorage.setItem('loginName', resp.data);
         setLoginId(admin.id); // 로그인 성공시
-      sessionStorage.setItem('loginId', admin.id);
-      sessionStorage.setItem('isAdmin', true);
-      setAdmin({ id: "", pw: "" });
-      navi("/");
-      window.location.reload();
+        sessionStorage.setItem('loginId', admin.id);
+        sessionStorage.setItem('isAdmin', true);
+        setAdmin({ id: "", pw: "" });
+        navi("/");
+        window.location.reload();
       })
     }).catch(resp => {
       alert("아이디 또는 비밀번호를 다시 확인해주세요");
