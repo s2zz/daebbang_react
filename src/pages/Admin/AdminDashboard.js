@@ -386,7 +386,7 @@ const AdminDashboard = () => {
                         <Pagination
                             count={Math.ceil(reportList.length / reportCountPerPage)}
                             page={currentReportPage}
-                            onChange={reportPageChangeHandler} // Update currentReportPage on change
+                            onChange={reportPageChangeHandler} 
                         />
                     </div>
                 </div>

@@ -139,7 +139,7 @@ const ReportManagement = () => {
             align: 'center',
             valueGetter: (params) => params.row.reportContents?.content || '',
         },
-        { field: 'content', headerName: '상세내용', width: 150, headerAlign: 'center', align: 'center' },
+        { field: 'content', headerName: '상세내용', width: 300, headerAlign: 'center', align: 'center' },
         {
             field: 'reportStatus',
             headerName: '신고상태',
