@@ -3,16 +3,17 @@ import { ResponsiveLine } from '@nivo/line';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
 const NewEstateLine = ({ data }) => {
     const itemsPerPage = 7;
     const [currentPage, setCurrentPage] = useState(0);
-    const lastPageIndex = Math.floor(data.length / itemsPerPage);
 
-    const startIndex = (lastPageIndex - currentPage) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const lastPageIndex = Math.ceil(data.length / itemsPerPage);
+    const endIndex = data.length - currentPage * itemsPerPage;
+    const startIndex = Math.max(0, endIndex - itemsPerPage);
 
     const showPreviousPage = () => {
-        if (currentPage < lastPageIndex) {
+        if (currentPage < lastPageIndex - 1) {
             setCurrentPage(currentPage + 1);
         }
     };
@@ -24,26 +25,28 @@ const NewEstateLine = ({ data }) => {
     };
 
     const currentData = data.slice(startIndex, endIndex);
+
     return (
-        <div style={{
-            width: '100%', height: '90%'
-        }}>
-            <div style={{position:'relative',top:'5%',left:'3%'}}>
-                <Button style={{marginRight:'2%'}}
+        <div style={{ width: '100%', height: '90%' }}>
+            <div style={{ position: 'relative', top: '5%', left: '3%' }}>
+                <Button
+                    style={{ marginRight: '2%' }}
                     color="info"
-                    outline onClick={showPreviousPage} disabled={currentPage === lastPageIndex}
+                    outline
+                    onClick={showPreviousPage}
+                    disabled={currentPage === lastPageIndex - 1}
                 >
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </Button>
                 <Button
                     color="info"
-                    outline onClick={showNextPage} disabled={currentPage === 0}
+                    outline
+                    onClick={showNextPage}
+                    disabled={currentPage === 0}
                 >
                     <FontAwesomeIcon icon={faChevronRight} />
                 </Button>
             </div>
-
-            {/* 현재 페이지에 해당하는 데이터로 차트를 그립니다 */}
             <ResponsiveLine
                 data={[{ id: '공인중개사 수', data: currentData }]}
                 margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
