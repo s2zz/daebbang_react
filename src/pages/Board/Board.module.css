@@ -1,4 +1,4 @@
-*{
+.boardContainer *{
     box-sizing: border-box;
     font-family: "NanumBarunGothic";
 }
