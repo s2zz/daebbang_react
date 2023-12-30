@@ -11,9 +11,11 @@ import FreeBoardContents from './BoardContents/js/FreeBoardContents';
 import RoomBoardContents from './BoardContents/js/RoomBoardContents';
 import EditFreeBoardContents from './EditBoardContents/js/EditFreeBoardContents';
 import EditRoomBoardContents from './EditBoardContents/js/EditRoomBoardContents';
+import Footer from '../commons/Footer';
 const Board = ({ loginId, admin }) => {
 
     return (
+        <>
         <div className={style.boardContainer}>
             <Routes>
                 <Route path="/" element={<FreeBoardList loginId={loginId}/>}></Route>
@@ -27,7 +29,12 @@ const Board = ({ loginId, admin }) => {
                 <Route path="/toEditFreeBoardContents/*" element={<EditFreeBoardContents loginId={loginId}/>}></Route>
                 <Route path="/toEditRoomBoardContents/*" element={<EditRoomBoardContents loginId={loginId}/>}></Route>
             </Routes>
+            <hr/>
         </div >
+        <div>
+            <Footer></Footer>
+        </div>
+        </>
     );
 }
 

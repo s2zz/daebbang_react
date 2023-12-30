@@ -7,7 +7,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-const WriteReview = () => {
+const WriteReview = ({loginId}) => {
     const location = useLocation();
     const navi = useNavigate();
     const estateId = location.state !== null && location.state.estateCode !== null ? location.state.estateCode : 0;
@@ -28,10 +28,8 @@ const WriteReview = () => {
         const formImg = new FormData();
         formImg.append("files", files);
         formImg.append("path", "review");
-        console.log("d");
         try {
             const imgUrl = await axios.post("/api/file/upload", formImg);
-            console.log(imgUrl)
             setUrl(prev => ({ ...prev, [e.target.name]: imgUrl.data[0] }));
             setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: files } }));
         } catch (err) {
@@ -65,7 +63,6 @@ const WriteReview = () => {
     const handleAdd = () => {
 
         let totalScore = Object.values(score).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-        console.log(totalScore)
         if (totalScore === 0) {
             alert("별점을 입력해주세요");
             return;
@@ -86,7 +83,6 @@ const WriteReview = () => {
             return;
         }
 
-        console.log(formData.files);
         const submitFormData = new FormData();
         submitFormData.append("estateId", formData.estateId);
         submitFormData.append("anonymous",formData.anonymouse);
@@ -100,7 +96,6 @@ const WriteReview = () => {
 
         filesList.forEach((e) => {
             if (e !== "") {
-                console.log(e);
                 submitFormData.append("files", e);
             }
         })
@@ -131,7 +126,7 @@ const WriteReview = () => {
 
     return (
         <div>
-            {estateId === 0 || approvalCode === "" ? refuseWrite()
+            {estateId === 0 || approvalCode === "" || loginId===null ? refuseWrite()
                 :
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>

@@ -79,8 +79,11 @@ const FreeBoardContents = ({ loginId, admin }) => {
     const hideUpdateBox = (seq) => {
         if (visibleUpdateBox !== 0) {
             let check = window.confirm("댓글 수정을 취소하시겠습니까?");
-            if (check) { setVisibleUpdateBox(0) }
-            setUpdateReply(prev => ({ seq: 0, contents: "" }))
+            if (check) { 
+                setVisibleUpdateBox(0); 
+                setUpdateReply(prev => ({ seq: 0, contents: "" }));
+            }
+            
         }
     }
     const updateHandle = (e) => {
@@ -233,6 +236,7 @@ const FreeBoardContents = ({ loginId, admin }) => {
                     </div>
                     <hr className={style.replyListStartHr} />
                     {
+                        sliceReplyList().length>0?
                         sliceReplyList().map((e, i) => {
                             if (i === 0) {
                                 return (
@@ -292,7 +296,8 @@ const FreeBoardContents = ({ loginId, admin }) => {
                                     </div>
                                 );
                             }
-                        })
+                        }) :
+                        <div style={{textAlign:"center",marginTop:"20px"}}>등록된 댓글이 없습니다.</div>
                     }
                     <div className={style.naviFooter}>
                         <Pagination

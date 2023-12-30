@@ -15,7 +15,7 @@ const EditFreeBoardContents = ({ loginId }) => {
     const navi = useNavigate();
     useEffect(() => {
         if (loginId === null) {
-            alert("로그인해주세요")
+            alert("잘못된 접근입니다.");
             navi("/login");
         }
     }, []);
@@ -70,7 +70,6 @@ const EditFreeBoardContents = ({ loginId }) => {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
                 const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
-                console.log(imgUrl.data);
                 for (let i = 0; i < imgUrl.data.length; i++) {
                     let sysName = imgUrl.data[i].split("https://storage.googleapis.com/daebbang/board/")[1];
                     setSysNameList(prev => [...prev, encodeURIComponent(sysName)]);
@@ -118,7 +117,6 @@ const EditFreeBoardContents = ({ loginId }) => {
     }
 
     const handleAdd = () => {
-        console.log(delFileList);
 
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
@@ -142,7 +140,7 @@ const EditFreeBoardContents = ({ loginId }) => {
             alert("내용은 최대 5000글자 입니다");
             return;
         }
-        console.log(delFileList);
+
         const submitFormData = new FormData();
         submitFormData.append("boardTitle", "자유게시판");
         submitFormData.append("seq", formData.seq);
@@ -150,7 +148,8 @@ const EditFreeBoardContents = ({ loginId }) => {
         submitFormData.append("contents", formData.contents);
         submitFormData.append("delImgList", delImgList);
         submitFormData.append("delFileList", delFileList);
-        console.log(delImgList);
+        submitFormData.append("writer",loginId);
+
         let fileList = Object.values(formData.files);
 
         fileList.forEach((e) => {

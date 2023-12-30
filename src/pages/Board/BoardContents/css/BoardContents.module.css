@@ -1,10 +1,10 @@
 .boardContentsTitle{
     margin-top:20px;
-    font-weight: bold;
     font-size:xx-large;
     display: flex;
     align-items: center;
     border-bottom:1px solid #A0A0A0;
+    font-family: "NanumBarunGothicBold";
 }
 .boardContentsTitle>span{
     color:rgb(1, 140, 247);

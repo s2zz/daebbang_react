@@ -10,8 +10,15 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const RoomBoardWrite = ({ loginId }) => {
     const navi = useNavigate();
-
+    const maxFileSize = 10 * 1024 * 1024;
     const quillRef = useRef();
+
+
+    const login = () => {
+        alert("로그인 후 이용가능한 서비스입니다");
+        navi("/login");
+        return;
+    }
 
     const [formData, setFormData] = useState({
         title: "",
@@ -21,21 +28,32 @@ const RoomBoardWrite = ({ loginId }) => {
     });
 
     const handleFileChange = (e) => {
-        setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: e.target.files[0] } }));
+        if(!loginId){login();}
+        if (e.target.files[0].size > maxFileSize) {
+            alert("파일 최대 사이즈는 10MB 입니다.");
+            e.target.value = null;
+            setFormData(prev => ({ ...prev }));
+            return;
+        } else {
+            setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: e.target.files[0] } }));
+        }
     }
 
     const handleChange = (e) => {
+        if(!loginId){login();}
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     }
 
     const handleHeaderChange = (e) => {
+        if(!loginId){login();}
         setFormData(prev => ({ ...prev, header: e.target.value }));
     }
 
     const [sysNameList, setSysNameList] = useState([]);
 
     const imageHandler = (file) => {
+        if(!loginId){login();}
         // 이미지 선택 창 나타나게 하기
         const input = document.createElement("input");
         input.setAttribute("type", "file");
@@ -53,7 +71,6 @@ const RoomBoardWrite = ({ loginId }) => {
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
-                console.log(imgUrl.data[0].split("/uploads/board/")[1]);
                 const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
 
@@ -104,11 +121,7 @@ const RoomBoardWrite = ({ loginId }) => {
     }
 
     const regex = () => {
-        if (loginId === null) {
-            alert("로그인해주세요");
-            navi("/login");
-            return;
-        }
+        if(!loginId){login();}
 
         if (formData.title === "") {
             alert("제목을 입력해주세요");
@@ -144,7 +157,7 @@ const RoomBoardWrite = ({ loginId }) => {
     }
 
     const handleAdd = () => {
-
+        if(!loginId){login();}
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
 
@@ -328,7 +341,6 @@ const RoomBoardWrite = ({ loginId }) => {
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents}
                         onChange={(value) => {
-                            console.log(value.length);
                             if (value.length > 5000) {
                                 alert("작성 가능한 글자 수 범위를 초과하였습니다.");
                                 setFormData(prev => ({ ...prev }));

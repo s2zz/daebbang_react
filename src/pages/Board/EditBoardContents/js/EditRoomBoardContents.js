@@ -16,7 +16,7 @@ const EditRoomBoardContents = ({ loginId }) => {
     const navi = useNavigate();
     useEffect(() => {
         if (loginId === null) {
-            alert("로그인해주세요")
+            alert("잘못된 접근입니다.");
             navi("/login");
         }
     }, []);
@@ -38,7 +38,6 @@ const EditRoomBoardContents = ({ loginId }) => {
 
     useEffect(() => {
         axios.get(`/api/board/boardContents/${location.state.sysSeq}`).then(resp => {
-            console.log(resp.data);
             setFormData(prev => ({ ...prev, title: resp.data.title, contents: resp.data.contents, seq: resp.data.seq, header: resp.data.header }));
             setFileList(resp.data.files.sort(compareBySeq));
             setSysNameList(prev => existImgSearch(resp.data.contents));
