@@ -63,9 +63,8 @@ function List({ onDragEnd, listReady }) {
     if (price >= 10000) {
       const billion = Math.floor(price / 10000);
       const remainder = price % 10000;
-      return `${billion}억${
-        remainder > 0 ? ` ${remainder.toLocaleString()}` : ""
-      }`;
+      return `${billion}억${remainder > 0 ? ` ${remainder.toLocaleString()}` : ""
+        }`;
     }
     return price.toLocaleString();
   }
@@ -97,7 +96,7 @@ function List({ onDragEnd, listReady }) {
             }));
             setMannersTemperatureList(tempData);
 
-            mannersTemperatureList.forEach((item) => {});
+            mannersTemperatureList.forEach((item) => { });
           })
           .catch((err) => {
             console.log("API 호출 오류:", err);
@@ -167,7 +166,7 @@ function List({ onDragEnd, listReady }) {
                           marker.images.length > 0 &&
                           marker.images[0].sysName && (
                             <img
-                              src={`/uploads/estateImages/${marker.images[0].sysName}`}
+                              src={` https://storage.googleapis.com/daebbang/estateImages/${marker.images[0].sysName}`}
                               alt="Estate"
                             />
                           )}
@@ -177,7 +176,7 @@ function List({ onDragEnd, listReady }) {
                         <div className={style.list_box_top}>
                           {marker.realEstateAgent.manners_temperature &&
                             marker.realEstateAgent.manners_temperature >=
-                              40 && (
+                            40 && (
                               <span
                                 style={{ fontWeight: "bold" }}
                                 className={style.recommend}
@@ -193,16 +192,16 @@ function List({ onDragEnd, listReady }) {
                           {marker.deposit === 0
                             ? `${formatPrice(marker.price)}`
                             : `${formatPrice(marker.deposit)} / ${formatPrice(
-                                marker.price
-                              )}`}
+                              marker.price
+                            )}`}
                         </div>
                         <div className={style.list_subtitle}>
                           {marker.area}평{" · "}
                           {marker.roomFloors === -1
                             ? "반지하"
                             : marker.roomFloors === 0
-                            ? "옥탑"
-                            : `${marker.roomFloors}층`}
+                              ? "옥탑"
+                              : `${marker.roomFloors}층`}
                         </div>
                         <div className={style.list_subtitle}>
                           {marker.address2}
@@ -259,7 +258,7 @@ function List({ onDragEnd, listReady }) {
                           marker.images.length > 0 &&
                           marker.images[0].sysName && (
                             <img
-                              src={`/uploads/estateImages/${marker.images[0].sysName}`}
+                              src={` https://storage.googleapis.com/daebbang/estateImages/${marker.images[0].sysName}`}
                               alt="Estate"
                             />
                           )}
@@ -269,7 +268,7 @@ function List({ onDragEnd, listReady }) {
                         <div className={style.list_box_top}>
                           {marker.realEstateAgent.manners_temperature &&
                             marker.realEstateAgent.manners_temperature >=
-                              40 && (
+                            40 && (
                               <span
                                 style={{ fontWeight: "bold" }}
                                 className={style.recommend}
@@ -285,16 +284,16 @@ function List({ onDragEnd, listReady }) {
                           {marker.deposit === 0
                             ? `${formatPrice(marker.price)}`
                             : `${formatPrice(marker.deposit)} / ${formatPrice(
-                                marker.price
-                              )}`}
+                              marker.price
+                            )}`}
                         </div>
                         <div className={style.list_subtitle}>
                           {marker.area}평{" · "}
                           {marker.roomFloors === -1
                             ? "반지하"
                             : marker.roomFloors === 0
-                            ? "옥탑"
-                            : `${marker.roomFloors}층`}
+                              ? "옥탑"
+                              : `${marker.roomFloors}층`}
                         </div>
                         <div className={style.list_subtitle}>
                           {marker.address2}
