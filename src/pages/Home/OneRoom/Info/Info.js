@@ -49,6 +49,9 @@ import user from "../assets/user.png";
 import certificate from "../assets/certificate.png";
 import tellPhone from "../assets/telephone.png";
 import estateMaker from "../assets/estateMaker.png";
+import temperature from "../assets/temperature.png";
+
+
 
 import proExam from "../assets/proExam.PNG";
 import siren from "../assets/siren.png";
@@ -220,7 +223,7 @@ function Info(args, estate) {
             return `/uploads/estateImages/${item.images[0].sysName}`;
           }
           // images 배열이 비어있는 경우 기본 이미지 URL을 사용
-          return { proExam };
+          return { noProfile };
         });
 
         setImageUrlsEstateLimit(imageUrls);
@@ -247,7 +250,7 @@ function Info(args, estate) {
             return `/uploads/estateImages/${item.images[0].sysName}`;
           }
           // images 배열이 비어있는 경우 기본 이미지 URL을 사용
-          return { proExam };
+          return { noProfile };
         });
 
         setImageUrlsEstateAll(imageUrls);
@@ -469,8 +472,6 @@ function Info(args, estate) {
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
-
-    
   };
 
   // 이찬양 작업 공간
@@ -1127,7 +1128,7 @@ function Info(args, estate) {
             {/* <div className={style.seller_best}>추천중개사란?</div> */}
             {/* box_7 */}
             <div className={style.seller_box}>
-              <div className={style.seller_info}>
+              <div className={style.seller_info} onClick={toggleSeller_more}>
                 <div className={style.seller_img}>
                   {profileImages && profileImages.length > 0 ? (
                     profileImages.map((preview, index) => (
@@ -1312,11 +1313,10 @@ function Info(args, estate) {
                   ))
                 ) : (
                   <img
-                    src={proExam}
+                    src={noProfile}
                     style={{
                       width: "100%",
-                      height: "300px",
-                      marginTop: "50px",
+                      marginTop: "60px",
                     }}
                   ></img>
                 )}
@@ -1352,6 +1352,14 @@ function Info(args, estate) {
                       <img src={tellPhone} style={{ width: "24px" }}></img>
                     </span>
                     <div>{markerInfo.realEstateAgent.phone}</div>
+                  </div>
+
+                  {/* 온도 */}
+                  <div className={style.more_div_seller}>
+                    <span>
+                      <img src={temperature} style={{ width: "24px" }}></img>
+                    </span>
+                    <div>{markerInfo.realEstateAgent.manners_temperature}도</div>
                   </div>
 
                   {/* 등록번호 */}
@@ -1488,19 +1496,25 @@ function Info(args, estate) {
                         </div>
                       ))}
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
-                    <Pagination
-                      count={Math.ceil(estateListAll.length / itemsPerPage)}
-                      page={currentPage}
-                      onChange={handlePageChange}
-                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <Pagination
+                        count={Math.ceil(estateListAll.length / itemsPerPage)}
+                        page={currentPage}
+                        onChange={handlePageChange}
+                      />
                     </div>
                   </Stack>
                 </div>
               </div>
             )}
 
-            {/*리뷰*/}
+            {/* 리뷰 */}
             <div className={style.review_list_frame}>
               <div
                 style={{ margin: "10px 0 0 0" }}
@@ -1522,7 +1536,7 @@ function Info(args, estate) {
                           <img
                             alt="..."
                             style={{ width: "100%", height: "100%" }}
-                            src={`/uploads/review/${e.sysName}`}
+                            src={` https://storage.googleapis.com/daebbang/review/${e.sysName}`}
                           />
                         </div>
                       ))}
