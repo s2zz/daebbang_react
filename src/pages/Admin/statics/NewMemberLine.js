@@ -7,13 +7,13 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 const NewMemberLine = ({ data }) => {
     const itemsPerPage = 7;
     const [currentPage, setCurrentPage] = useState(0);
-    const lastPageIndex = Math.floor(data.length / itemsPerPage);
 
-    const startIndex = (lastPageIndex - currentPage) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const lastPageIndex = Math.ceil(data.length / itemsPerPage);
+    const endIndex = data.length - currentPage * itemsPerPage;
+    const startIndex = Math.max(0, endIndex - itemsPerPage);
 
     const showPreviousPage = () => {
-        if (currentPage < lastPageIndex) {
+        if (currentPage < lastPageIndex - 1) {
             setCurrentPage(currentPage + 1);
         }
     };
