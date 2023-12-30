@@ -165,7 +165,7 @@ const EstateInfo = () => {
                             {info.phone}<br></br>
                             {info.address}<br></br>
                             {info.manners_temperature}<br></br>
-                            {info.content === '' || info.content === null ? "회원정보 수정을 통해 공인중개사를 소개해보세요!" : info.content}
+                            {info.content === '' || info.content === null ? "공인중개사를 소개해보세요!" : info.content}
                         </div>
                     </div>
                     <div className={style.cBtnBox}>
