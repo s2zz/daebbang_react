@@ -115,7 +115,6 @@ function OneRoom() {
       .then((resp) => {
         setMapList(resp.data);
         setMapRendered(true);
-        console.log(mapList);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
