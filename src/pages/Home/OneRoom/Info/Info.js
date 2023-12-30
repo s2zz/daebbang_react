@@ -87,6 +87,7 @@ function Info(args, estate) {
   const [estateListLimit, setEstateListLimit] = useState([{}]);
   const [estateListAll, setEstateListAll] = useState([{}]);
 
+  // 이미지 url
   const [imageUrls, setImageUrls] = useState([]);
 
   // 프로필 이미지
@@ -172,8 +173,7 @@ function Info(args, estate) {
     var estateId = markerInfo.estateId;
     axios
       .post(`/api/visit/increaseViewCount/${estateId}`)
-      .then((response) => {
-      })
+      .then((response) => {})
       .catch((error) => {});
     // 스크롤 엘리먼트가 존재하고 markerInfo가 변경될 때 스크롤을 최상단으로 이동
     if (info_scroll.current) {
@@ -1439,10 +1439,7 @@ function Info(args, estate) {
                           onClick={() => handleMoreAgentClick(marker)}
                         >
                           <div className={style.list_box_img}>
-                            <img
-                              src={imageUrlsEstateAll[index]}
-                              alt="Estate"
-                            />
+                            <img src={imageUrlsEstateAll[index]} alt="Estate" />
                           </div>
                           <div className={style.list_box_text}>
                             <div className={style.list_box_top}>
