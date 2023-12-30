@@ -228,6 +228,7 @@ const RoomBoardContents = ({ loginId, admin }) => {
                     </div>
                     <hr className={style.replyListStartHr} />
                     {
+                        sliceReplyList().length>0?
                         sliceReplyList().map((e, i) => {
                             if (i === 0) {
                                 return (
@@ -287,7 +288,8 @@ const RoomBoardContents = ({ loginId, admin }) => {
                                     </div>
                                 );
                             }
-                        })
+                        }) :
+                        <div style={{textAlign:"center",marginTop:"20px"}}>등록된 댓글이 없습니다.</div>
                     }
                     <div className={style.naviFooter}>
                         <Pagination

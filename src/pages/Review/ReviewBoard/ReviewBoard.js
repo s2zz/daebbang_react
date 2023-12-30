@@ -1,18 +1,20 @@
-import style from './ReviewBoard.module.css';
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Pagination from "@mui/material/Pagination";
 import axios from "axios";
-
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Loading from '../../commons/Loading';
+import style from './ReviewBoard.module.css';
 
 const ReviewBoard = () => {
     const location = useLocation();
+    const navi = useNavigate();
     const [board, setBoard] = useState([]); // 검색어 없을 때
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
     const [searchText, setSearchText] = useState(location.state !== null && location.state.searchText !== null ? location.state.searchText : "");
     const realEstateNumber = location.state !== null && location.state.realEstateNumber ? location.state.realEstateNumber : "";
+    const [loading, setLoading] = React.useState(true);
     // 내림차순 정렬
     function compareBySeq(a, b) {
         return b.seq - a.seq;
@@ -23,10 +25,14 @@ const ReviewBoard = () => {
         if (realEstateNumber !== "") {
             axios.get(`/api/review/reviewByAgent/${realEstateNumber}`).then(resp => {
                 setBoard(resp.data.sort(compareBySeq));
-                console.log(resp.data);
+                setLoading(false);
             }).catch(err => {
                 console.log(err);
             })
+        } else{
+            alert("잘못된 접근 입니다.");
+            navi("/");
+            return;
         }
     }, [realEstateNumber]);
 
@@ -105,6 +111,7 @@ const ReviewBoard = () => {
 
     return (
         <>
+        {loading ? <Loading></Loading> : <>
             <div className={style.boardTitle}>{board[0] ? board[0].estate.realEstateAgent.estateName : ""}의 매물 리뷰</div>
             <hr></hr>
             <div className={style.searchDiv}>
@@ -139,6 +146,7 @@ const ReviewBoard = () => {
                         <Pagination count={Math.ceil(searchBoard.length / countPerPage)} page={currentPage} onChange={currentPageHandle} />
                 }
             </div>
+            </>}
         </>
     );
 }

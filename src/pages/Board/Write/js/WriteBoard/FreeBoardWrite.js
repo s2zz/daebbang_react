@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const FreeBoardWrite = ({ loginId }) => {
-
+    const maxFileSize = 10*1024*1024;
     const navi = useNavigate();
 
     const quillRef = useRef();
@@ -17,17 +17,32 @@ const FreeBoardWrite = ({ loginId }) => {
         contents: "",
         files: {}
     });
+    const login = () => {
+        alert("로그인 후 이용가능한 서비스입니다");
+        navi("/login");
+        return;
+    }
     const handleFileChange = (e) => {
-        setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: e.target.files[0] } }));
+        if(!loginId){login();}
+        if(e.target.files[0].size>maxFileSize){
+            alert("파일 최대 사이즈는 10MB 입니다.");
+            e.target.value=null;
+            setFormData(prev => ({...prev}));
+            return;
+        } else{
+            setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: e.target.files[0] } }));
+        }
     }
 
     const handleChange = (e) => {
+        if(!loginId){login();}
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     }
     const [sysNameList, setSysNameList] = useState([]);
 
     const imageHandler = (file) => {
+        if(!loginId){login();}
         // 이미지 선택 창 나타나게 하기
         const editor = quillRef.current.getEditor();
         const input = document.createElement("input");
@@ -88,11 +103,7 @@ const FreeBoardWrite = ({ loginId }) => {
 
 
     const handleAdd = () => {
-        if (loginId === null) {
-            alert("로그인해주세요");
-            navi("/login");
-            return;
-        }
+        if(!loginId){login();}
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
         console.log(existImgList);
@@ -201,7 +212,6 @@ const FreeBoardWrite = ({ loginId }) => {
         setInputList([...array]);
 
     }
-
     return (
         <>
             <div className={style.boardTitle}>자유게시판 글 작성</div>

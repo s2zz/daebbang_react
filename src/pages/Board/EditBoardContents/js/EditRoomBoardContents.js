@@ -16,7 +16,7 @@ const EditRoomBoardContents = ({ loginId }) => {
     const navi = useNavigate();
     useEffect(() => {
         if (loginId === null) {
-            alert("로그인해주세요")
+            alert("잘못된 접근입니다.");
             navi("/login");
         }
     }, []);

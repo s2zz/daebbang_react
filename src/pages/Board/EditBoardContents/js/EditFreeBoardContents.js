@@ -15,7 +15,7 @@ const EditFreeBoardContents = ({ loginId }) => {
     const navi = useNavigate();
     useEffect(() => {
         if (loginId === null) {
-            alert("로그인해주세요")
+            alert("잘못된 접근입니다.");
             navi("/login");
         }
     }, []);
@@ -150,6 +150,7 @@ const EditFreeBoardContents = ({ loginId }) => {
         submitFormData.append("contents", formData.contents);
         submitFormData.append("delImgList", delImgList);
         submitFormData.append("delFileList", delFileList);
+        submitFormData.append("writer",loginId);
         console.log(delImgList);
         let fileList = Object.values(formData.files);
 

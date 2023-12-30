@@ -11,8 +11,8 @@ const Review = ({loginId, admin}) => {
     return (
         <div className={style.container}>
             <Routes>
-                <Route path="/writeReview" element={<WriteReview/>}></Route>
-                <Route path="/editReview" element={<EditReview/>}></Route>
+                <Route path="/writeReview" element={<WriteReview loginId={loginId}/>}></Route>
+                <Route path="/editReview" element={<EditReview loginId={loginId}/>}></Route>
                 <Route path="/boardReview" element={<ReviewBoard/>}></Route>
                 <Route path="/boardContentsReview" element={<ReviewBoardContents  loginId={loginId} Admin={admin}/>}></Route>
             </Routes>

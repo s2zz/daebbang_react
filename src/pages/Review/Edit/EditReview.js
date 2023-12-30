@@ -6,8 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Loading from '../../commons/Loading';
 
-const EditReview = () => {
+const EditReview = ({loginId}) => {
 
     const location = useLocation();
     const [loading, setLoading] = useState(true);
@@ -19,6 +20,11 @@ const EditReview = () => {
     const [formData, setFormData] = useState({});
 
     useEffect(() => {
+        if(loginId===null){
+            alert("잘못된 접근입니다");
+            navi("/");
+            return;
+        }
         axios.get(`/api/review/selectReviewBySeq/${seq}`).then(resp => {
             setFormData(resp.data);
 
@@ -37,7 +43,7 @@ const EditReview = () => {
             });
             setAllPrevImg([...prevImgs]);
             setUrl({ ...urlArr });
-            setLoading(true);
+            setLoading(false);
         })
     }, [])
 
@@ -115,6 +121,7 @@ const EditReview = () => {
         submitFormData.append("surroundings", formData.surroundings);
         submitFormData.append("facility", formData.facility);
         submitFormData.append("score", totalScore);
+        submitFormData.append("id",loginId);
 
         let filesList = Object.values(formData.files);
         console.log("d")
@@ -166,8 +173,8 @@ const EditReview = () => {
 
     return (
         <div>
-            {seq === 0 ? refuseWrite()
-                :
+            {seq === 0 ? refuseWrite():
+                loading ? <Loading></Loading> :
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
                     <hr></hr>

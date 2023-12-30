@@ -7,7 +7,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-const WriteReview = () => {
+const WriteReview = ({loginId}) => {
     const location = useLocation();
     const navi = useNavigate();
     const estateId = location.state !== null && location.state.estateCode !== null ? location.state.estateCode : 0;
@@ -131,7 +131,7 @@ const WriteReview = () => {
 
     return (
         <div>
-            {estateId === 0 || approvalCode === "" ? refuseWrite()
+            {estateId === 0 || approvalCode === "" || loginId===null ? refuseWrite()
                 :
                 <div className={style.borderBox}>
                     <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {estateId}</span></div>
