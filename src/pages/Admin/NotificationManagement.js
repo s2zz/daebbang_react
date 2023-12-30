@@ -169,7 +169,25 @@ const Notification = () => {
 
         setContacts(updatedContacts); // 변경된 부분입니다.
     };
-
+    const getApprovalStatus = (approvalCode) => {
+        switch (approvalCode) {
+            case 'a1':
+                return '미결';
+            case 'a2':
+                return '공인중개사_승인';
+            case 'a3':
+                return '관리자_승인';
+            case 'a4':
+                return '최종_반려';
+            case 'a5':
+                return '리뷰_작성_완료';
+            case 'b1':
+                return '관리자_반려';
+            default:
+                return '';
+        }
+    };
+    
     const columns = [
         { field: 'seq', headerName: '번호', width: 90, headerAlign: "center", align: "center" },
         {
@@ -189,7 +207,17 @@ const Notification = () => {
             align: 'center',
             valueGetter: (params) => params.row.estate?.estateId|| '',
         },
-        { field: 'approvalCode', headerName: '승인상태', width: 120, headerAlign: "center", align: "center" },
+        {
+            field: 'approvalCode',
+            headerName: '승인상태',
+            width: 120,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => {
+                const approvalStatus = getApprovalStatus(params.row.approvalCode);
+                return <span>{approvalStatus}</span>;
+            },
+        },
         {
             field: 'approval',
             headerName: '승인여부',
