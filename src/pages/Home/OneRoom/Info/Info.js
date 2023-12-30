@@ -169,6 +169,13 @@ function Info(args, estate) {
     setIsVisible_more(!isVisible_more);
   };
 
+  // box_7 공인 중개사 더보기 이벤트
+  const [isSeller_more, setIsSeller_more] = useState(true);
+
+  const toggleSeller_more = () => {
+    setIsSeller_more(!isSeller_more);
+  };
+
   // 공인 중개사의 최신 10개 게시물 가져오기
   useEffect(() => {
     const email = markerInfo.realEstateAgent.email;
@@ -476,7 +483,7 @@ function Info(args, estate) {
             {/* 드래그 이벤트에 의한 최상단 박스 (구현 못함 현재 display:none 상태임)*/}
             {isVisible_drag ? null : (
               <div className={style.address_box} style={{ display: "block" }}>
-                <div onClick={() => back()}> {"<"}</div>
+                <div onClick={() => back()}>{"<"}</div>
                 {/*주소*/}
                 {markerInfo.address2}
               </div>
@@ -532,7 +539,7 @@ function Info(args, estate) {
                   outsideChevron={false}
                   chevronWidth={chevronWidth}
                 >
-                  {imageUrls.map((url, index) => (
+                  {/* {imageUrls.map((url, index) => (
                     <div
                       key={index}
                       style={{ height: "300px", background: "#EEE" }}
@@ -540,6 +547,36 @@ function Info(args, estate) {
                       <img
                         src={url}
                         alt={`Item ${index}`}
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </div>
+                  ))} 
+                  
+                                    {imageUrls.map((url) => (
+                    <div
+                      key={url}
+                      style={{ height: "300px", background: "#EEE" }}
+                    >
+                      <img
+                        src={url}
+                        alt="Estate"
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </div>
+                  ))}
+
+                  
+                  
+                  여기 프롭스 키 오류 때문에 바꿈*/}
+
+                  {imageUrls.map((url, index) => (
+                    <div
+                      key={index} // 인덱스를 key로 사용
+                      style={{ height: "300px", background: "#EEE" }}
+                    >
+                      <img
+                        src={url}
+                        alt="Estate"
                         style={{ width: "100%", height: "100%" }}
                       />
                     </div>
@@ -653,12 +690,13 @@ function Info(args, estate) {
                   ? "단기 임대 가능"
                   : "단기 임대 불가능"}
               </div>
-              <div
-                className={style.more_info}
-                style={{ marginTop: "0px" }}
-                onClick={toggleVisibility}
-              >
-                <div className={style.more_info_text}>더보기</div>
+              <div className={style.more_info} style={{ marginTop: "0px" }}>
+                <div
+                  className={style.more_info_text}
+                  onClick={toggleVisibility}
+                >
+                  더보기
+                </div>
               </div>
             </div>
 
@@ -806,7 +844,6 @@ function Info(args, estate) {
                   </span>
                   등록번호 {markerInfo.estateId}
                 </div>
-
                 <div onClick={toggleVisibility} className={style.close_btn}>
                   확인
                 </div>
@@ -1150,19 +1187,20 @@ function Info(args, estate) {
                 <div>
                   <img src={textFile} style={{ height: "100%" }}></img>
                 </div>
-                <div style={{ paddingLeft: "15px" }}>
+                <div style={{ paddingLeft: "15px", fontSize: "15px" }}>
                   {markerInfo.realEstateAgent.content
                     ? markerInfo.realEstateAgent.content
                     : "부동산 소개가 없습니다."}
                 </div>
               </div>
+              {/*
               <div className={style.more_info}>
                 <div className={style.more_info_text}>더보기</div>
               </div>
-              {/* 여기서 더보기 옆에서 > 뺌*/}
+               여기서 더보기  뺌*/}
             </div>
 
-            {/* box_8 */}
+            {/* box_8 공인 중개사 게시물*/}
             <div className={style.seller_slide_box}>
               <div
                 style={{ margin: "10px 0 0 0" }}
@@ -1265,10 +1303,102 @@ function Info(args, estate) {
                 )}
               </div>
               <div className={style.more_info}>
-                <div className={style.more_info_text}>더보기</div>
+                <div
+                  className={style.more_info_text}
+                  onClick={toggleSeller_more}
+                >
+                  더보기
+                </div>
               </div>
               {/* 여기서 더보기 옆에서 > 뺌*/}
             </div>
+
+            {/* 공인 중개사 정보 더 보기*/}
+            {isSeller_more ? null : (
+              <div
+                className={style.more_seller_box}
+                style={{ display: "block" }}
+              >
+                <div className={style.more_info_box_top}>
+                  <div onClick={toggleSeller_more}>
+                    {" "}
+                    <img src={xImg} style={{ width: "20px" }}></img>
+                  </div>
+                  {markerInfo.realEstateAgent.estateName}
+                </div>
+                {profileImages && profileImages.length > 0 ? (
+                  profileImages.map((preview, index) => (
+                    <img
+                      key={index}
+                      src={`/uploads/agentProfile/${preview.sysName}`}
+                      alt={`Preview`}
+                      className={style.imagePreview}
+                      style={{ width: "100%", height: "300px" }}
+                    />
+                  ))
+                ) : (
+                  <img
+                    src={proExam}
+                    style={{ width: "100%", height: "300px" }}
+                  ></img>
+                )}
+
+                <div className={style.info_title} style={{ height: "auto" }}>
+                  <div className={style.info_title_top}>
+                    {markerInfo.realEstateAgent.manners_temperature >= 40 ? (
+                      <div className={style.seller_idx}>
+                        추천 중개사 {/*등록번호 넣기*/}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  <div
+                    className={style.info_cost}
+                    style={{ marginTop: "10px" }}
+                  >
+                    {markerInfo.realEstateAgent.estateName}
+                  </div>
+                  <div className={style.more_div_seller}>
+                    <span>
+                      <img src={washingMachine} style={{ width: "24px" }}></img>
+                    </span>
+                    <div>김은총</div>
+                  </div>
+
+                  <div className={style.more_div_seller}>
+                    <span>
+                      <img src={washingMachine} style={{ width: "24px" }}></img>
+                    </span>
+                    <div>김은총</div>
+                  </div>
+
+                  <div className={style.seller_map}>
+                    <Map // 지도를 표시할 Container
+                      center={{
+                        // 지도의 중심좌표
+                        lat: markerInfo.realEstateAgent.latitude,
+                        lng: markerInfo.realEstateAgent.longitude,
+                      }}
+                      style={{
+                        // 지도의 크기
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      level={4} // 지도의 확대 레벨
+                    >
+                      <MapMarker // 마커를 생성합니다
+                        position={{
+                          // 마커가 표시될 위치입니다
+                          lat: markerInfo.realEstateAgent.latitude,
+                          lng: markerInfo.realEstateAgent.longitude,
+                        }}
+                      />
+                    </Map>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/*리뷰*/}
             <div className={style.review_list_frame}>

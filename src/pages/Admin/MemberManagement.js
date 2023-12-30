@@ -16,6 +16,7 @@ const MemberManagement = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get('/api/admin/getMember');
+      console.log(response.data);
       setContacts(response.data);
       setLoading(false);
     } catch (error) {
@@ -77,27 +78,27 @@ const MemberManagement = () => {
   );
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90, headerAlign: 'center', align: 'center' },
-    { field: 'name', headerName: 'Name', width: 120, headerAlign: 'center', align: 'center' },
-    { field: 'phone', headerName: 'Phone', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'email', headerName: 'Email', width: 170, headerAlign: 'center', align: 'center' },
-    { field: 'address1', headerName: 'Address', width: 220, headerAlign: 'center', align: 'center' },
-    { field: 'role', headerName: 'Role', width: 150, headerAlign: 'center', align: 'center' },
-    { field: 'enabled', headerName: 'Enabled', width: 100, headerAlign: 'center', align: 'center' },
+    { field: 'id', headerName: '아이디', width: 90, headerAlign: 'center', align: 'center' },
+    { field: 'name', headerName: '이름', width: 120, headerAlign: 'center', align: 'center' },
+    { field: 'phone', headerName: '전화번호', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'email', headerName: '이메일', width: 170, headerAlign: 'center', align: 'center' },
+    { field: 'address1', headerName: '주소', width: 300, headerAlign: 'center', align: 'center' },
+    { field: 'signupDate', headerName: '가입 날짜', width: 160, headerAlign: 'center', align: 'center' },
+    { field: 'enabled', headerName: '허용 여부', width: 100, headerAlign: 'center', align: 'center' },
     {
       field: 'approval',
-      headerName: 'Authority',
+      headerName: '권한',
       headerAlign: 'center',
       align: 'center',
-      width: 150,
+      width: 130,
       renderCell: (params) => approvalButton(params.row.id, params.row.enabled),
     },
     {
       field: 'delete',
-      headerName: 'Delete',
+      headerName: '삭제',
       headerAlign: 'center',
       align: 'center',
-      width: 110,
+      width: 100,
       renderCell: (params) => deleteButton(params.row.id),
     },
   ];

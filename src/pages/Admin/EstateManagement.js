@@ -40,12 +40,12 @@ const EstateManagement = () => {
         </Button>
       );
     const columns = [
-        { field: 'estateId', headerName: 'estateId', width: 90, headerAlign: 'center', align: 'center' },
-        { field: 'address2', headerName: 'EstateName', width: 200, headerAlign: 'center', align: 'center' },
-        { field: 'title', headerName: 'EstateNumber', width: 150, headerAlign: 'center', align: 'center' },
+        { field: 'estateId', headerName: '매물번호', width: 90, headerAlign: 'center', align: 'center' },
+        { field: 'address2', headerName: '주소', width: 200, headerAlign: 'center', align: 'center' },
+        { field: 'title', headerName: '제목', width: 150, headerAlign: 'center', align: 'center' },
         {
             field: 'estateName',
-            headerName: 'estateName',
+            headerName: '중개사무소',
             width: 200,
             headerAlign: 'center',
             align: 'center',
@@ -53,7 +53,7 @@ const EstateManagement = () => {
         },
         {
             field: 'phone',
-            headerName: 'phone',
+            headerName: '전화번호',
             width: 150,
             headerAlign: 'center',
             align: 'center',
@@ -61,7 +61,7 @@ const EstateManagement = () => {
         },
         {
             field: 'roomType',
-            headerName: 'roomType',
+            headerName: '방 정보',
             width: 90,
             headerAlign: 'center',
             align: 'center',
@@ -69,16 +69,16 @@ const EstateManagement = () => {
         },
         {
             field: 'transactionType',
-            headerName: 'transactionType',
+            headerName: '방 정보2',
             width: 90,
             headerAlign: 'center',
             align: 'center',
             valueGetter: (params) => params.row.transaction?.transactionType || '',
         },
-        { field: 'writeDate', headerName: 'writeDate', width: 200, headerAlign: 'center', align: 'center' },
+        { field: 'writeDate', headerName: '등록날짜', width: 200, headerAlign: 'center', align: 'center' },
         {
             field: 'delete',
-            headerName: 'Delete',
+            headerName: '삭제',
             headerAlign: 'center',
             align: 'center',
             width: 100,

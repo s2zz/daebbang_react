@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Footer from "../commons/Footer";
 import ItemsCarousel from 'react-items-carousel';
+import Loading from '../commons/Loading';
 
 const Main = () => {
   const [freeboard, setfreeBoard] = useState([]);
@@ -17,6 +18,7 @@ const Main = () => {
   const [imageList, setImageList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const searchListBoxRef = useRef(null);
+  const [loading, setLoading] = React.useState(true);
 
   const navigate = useNavigate();
 
@@ -29,6 +31,7 @@ const Main = () => {
 
   useEffect(() => {
     axios.get(`/api/map/getLimitAll`).then((resp) => {
+      setLoading(false);
       setMapList(resp.data);
     })
       .catch((err) => {
@@ -68,11 +71,13 @@ const Main = () => {
   // 게시글 목록 불러오기
   useEffect(() => {
     axios.get(`/api/board/limitFreeBoardList`).then(resp => {
+      setLoading(false);
       setfreeBoard(resp.data.sort(compareBySeq));
     })
   }, []);
   useEffect(() => {
     axios.get(`/api/board/limitRoomBoardList`).then(resp => {
+      setLoading(false);
       setroomBoard(resp.data.sort(compareBySeq));
     })
   }, [])
@@ -402,6 +407,9 @@ const Main = () => {
         <div className={style.search_list_box} ref={searchListBoxRef}>
         </div>
       </div>
+      {loading ? (
+        <Loading />
+      ) : (
       <div className={style.middlebox}>
         <div className={style.middle_down}>
           <div className={style.recent_estate}>
@@ -484,6 +492,7 @@ const Main = () => {
           <Footer></Footer>
         </div>
       </div>
+      )}
     </div>
 
   );

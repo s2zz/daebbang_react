@@ -126,10 +126,7 @@ const AdminDashboard = () => {
         (currentReportPage - 1) * reportCountPerPage,
         currentReportPage * reportCountPerPage
     );
-    const processedReportList = slicedReportList.map(report => ({
-        ...report,
-        formattedDate: new Date(report.writeDate).toLocaleDateString(), // 원하는 날짜 형식으로 변환
-    }));
+    
     const reportPageChangeHandler = (event, page) => {
         setCurrentReportPage(page);
     }
@@ -152,6 +149,7 @@ const AdminDashboard = () => {
     const fetchReportList = () => {
         axios.get(`/api/admin/selectAllByReportStatus`)
             .then(response => {
+                console.log(response.data);
                 setReportList(response.data);
             })
             .catch(error => {
@@ -322,7 +320,7 @@ const AdminDashboard = () => {
                         <Link to="/admin/toEstateManagement"><button className={style.morebtn}>더보기</button></Link>
                     </div>
                     <hr style={{ marginTop: '2.5%' }}></hr>
-                    <table style={{ width: '100%' }}>
+                    <table style={{ width: '100%',textAlign: 'center' }}>
                         <thead>
                             <tr>
                                 <th>번호</th>
@@ -331,10 +329,10 @@ const AdminDashboard = () => {
                                 <th>정보</th>
                             </tr>
                         </thead>
-                        <tbody style={{ fontSize: '15px' }}>
+                        <tbody style={{ fontSize: '87%' }}>
                             {estateList.map(item => (
                                 <tr key={item.viewId}>
-                                    <td style={{ textAlign: 'center' }}>{item.estate.estateId}</td>
+                                    <td>{item.estate.estateId}</td>
                                     <td>{item.estate.address2}</td>
                                     <td>{item.estate.title}</td>
                                     <td>{item.estate.room.roomType}</td>
@@ -360,7 +358,7 @@ const AdminDashboard = () => {
                     </div>
                     <hr style={{ marginTop: '1.3%' }}></hr>
 
-                    <table style={{ width: '100%' }}>
+                    <table style={{ width: '100%',textAlign: 'center' }}>
                         <thead>
                             <tr>
                                 <th>매물번호</th>
@@ -370,14 +368,14 @@ const AdminDashboard = () => {
                                 <th>날짜</th>
                             </tr>
                         </thead>
-                        <tbody style={{ fontSize: '15px' }}>
-                            {processedReportList.map(report => (
+                        <tbody style={{ fontSize: '85.59%' }}>
+                            {slicedReportList.map(report => (
                                 <tr key={report.seq}>
-                                    <td style={{ textAlign: 'center' }}>{report.estate_id}</td>
+                                    <td>{report.estate.estateId}</td>
                                     <td>{report.writer}</td>
-                                    <td>{report.taker}</td>
-                                    <td>{report.contents_code}</td>
-                                    <td>{report.formattedDate}</td>
+                                    <td>{report.realEstateAgent.estateName}</td>
+                                    <td>{report.reportContents.content}</td>
+                                    <td>{report.writeDate}</td>
                                 </tr>
                             ))}
 
