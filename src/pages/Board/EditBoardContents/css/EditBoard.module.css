@@ -5,7 +5,7 @@
     padding:10px;
 }
 .fileBox>div:nth-child(1){
-    width:8%;
+    width:100%;
     margin-bottom:5px;
     font-weight: bold;
 }

@@ -46,7 +46,6 @@
 
 .selectBox {
     height: 35px;
-    width: 10%;
 }
 
 .selectBox select {
@@ -191,13 +190,14 @@
     }
 
     .boardInfo>div:nth-child(4) {
-        width:100%;
+        width: 100%;
     }
 }
+
 @media(min-width:576px) {
     .boardInfo>div:nth-child(1) {
-        display: flex!important;
-        float:left;
+        display: flex !important;
+        float: left;
     }
 
     .boardInfo>div:nth-child(1) {
@@ -213,20 +213,49 @@
 }
 
 @media(min-width:768px) {
-    .boardInfo>div:nth-child(2),.boardInfo>div:nth-child(5) {
-        display: flex!important;
-        float:left;
+
+    .boardInfo>div:nth-child(2),
+    .boardInfo>div:nth-child(5) {
+        display: flex !important;
+        float: left;
     }
+
     .boardInfo>div:nth-child(2) {
         width: 15%;
     }
+
     .boardInfo>div:nth-child(5) {
         width: 30%;
     }
 }
 
 @media(min-width:992px) {
-    .boardInfo>div:not(.boardInfo>div:nth-child(4)):not(.boardInfo>div:nth-child(1)) {
+    .boardInfo>div:nth-child(1) {
+        padding-top: 3px !important;
+    }
+
+    .boardInfo>div:nth-child(3) {
+        display: flex !important;
+        float: left;
+        width: 20%;
+    }
+
+    .boardInfo>div:nth-child(4) {
+        width: 45% !important;
+    }
+    .boardInfo>div:nth-child(5) {
+        width: 20% !important;
+    }
+}
+@media(min-width:1200px) {
+    .boardInfo>div{
+        display: flex !important;
+        float: left;
+    }
+}
+
+@media(min-width:1200px) {
+    .boardInfo>div {
         display: flex;
         float: left;
     }
@@ -244,14 +273,22 @@
     width: 20%;
 }
 
-@media(min-width:992px){
-.boardInfo>div:nth-child(2) {
-    width: 5%;
-}
+@media(min-width:992px) {
+    .boardInfo>div:nth-child(2) {
+        width: 10%;
+    }
 }
 
-.boardInfo>div:nth-child(3) {
-    width: 15%;
+@media(min-width:1200px) {
+    .boardInfo>div:nth-child(2) {
+        width: 5%;
+    }
+}
+
+@media(min-width:1200px) {
+    .boardInfo>div:nth-child(3) {
+        width: 15%;
+    }
 }
 
 @media(min-width:768px) {
@@ -261,6 +298,7 @@
         width: 50%;
     }
 }
+
 @media(min-width:992px) {
     .boardInfo>div:nth-child(4) {
         display: flex;
@@ -333,26 +371,49 @@
 
 @media(min-width:576px) {
     .boardListContents>div>div:nth-child(1) {
-        float:left;
-        display: block!important;
+        float: left;
+        display: block !important;
     }
 
 }
 
 @media(min-width:768px) {
+    .boardListContents>div>div:nth-child(2) {
+        display: block !important;
+        float: left;
+        width: 15%;
+
+    }
+
+    .boardListContents>div>div:nth-child(5) {
+        display: block !important;
+        float: left;
+        width: 30%;
+    }
+
+}
+
+@media(min-width:992px) {
     .boardListContents>div>div:nth-child(2){
-        display: block!important;
-        float:left;
-        min-width:15%;
-
+        width:10%!important;
     }
-
+    .boardListContents>div>div:nth-child(3){
+        display: block !important;
+        float: left;
+        width:20%;
+    }
+    .boardListContents>div>div:nth-child(4){
+        width:45%!important;
+    }
     .boardListContents>div>div:nth-child(5){
-        display: block!important;
-        float:left;
-        min-width:30%;
+        width:20%;
     }
-
+}
+@media(min-width:1200px) {
+    .boardListContents>div>div{
+        display: block !important;
+        float: left;
+    }
 }
 
 
@@ -362,22 +423,27 @@
     align-items: center;
     justify-content: center;
 }
-@media(min-width:768px){
-    .boardListContents>div>div:nth-child(1){padding-top:8px;}
+
+@media(min-width:768px) {
+    .boardListContents>div>div:nth-child(1) {
+        padding-top: 8px;
+    }
 }
 
 .boardListContents>div>div:nth-child(1)>img {
     width: 20%
 }
 
-@media(min-width:992px){
-.boardListContents>div>div:nth-child(2) {
-    width: 5%;
-}
+@media(min-width:1200px) {
+    .boardListContents>div>div:nth-child(2) {
+        width: 5%!important;
+    }
 }
 
-.boardListContents>div>div:nth-child(3) {
-    width: 15%;
+@media(min-width:1200px) {
+    .boardListContents>div>div:nth-child(3) {
+        width: 15%;
+    }
 }
 
 @media(min-width:576px) {
@@ -392,10 +458,10 @@
     }
 }
 
-@media(min-width:992px){
-.boardListContents>div>div:nth-child(5) {
-    width: 15%;
-}
+@media(min-width:1200px) {
+    .boardListContents>div>div:nth-child(5) {
+        width: 20%;
+    }
 }
 
 .boardListContents>div>div:nth-child(6) {
