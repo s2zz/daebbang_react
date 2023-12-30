@@ -173,7 +173,14 @@ function Info(args, estate) {
   useEffect(() => {
     // markerInfo가 변경될 때 실행될 콜백 함수
     // 이곳에서 markerInfo에 따른 원하는 동작을 수행할 수 있음
-
+    var estateId = markerInfo.estateId;
+      console.log("markerInfo estateId:", estateId);
+      axios.post(`/api/visit/increaseViewCount/${estateId}`)
+      .then(response => {
+        console.log("성공");
+      })
+      .catch(error => {
+      });
     // 스크롤 엘리먼트가 존재하고 markerInfo가 변경될 때 스크롤을 최상단으로 이동
     if (info_scroll.current) {
       info_scroll.current.scrollTop = 0;
