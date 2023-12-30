@@ -19,7 +19,7 @@ const UpdateMyInfo = () => {
     const [zipcode, setZipcode] = useState({ zipcode: "" });
     const [address1, setAddress1] = useState({ address1: "" });
     const [address2, setAddress2] = useState({ address2: "" });
-    const [content, setContent] = useState({ content:"" });
+    const [content, setContent] = useState({ content: "" });
 
     const [fill, setFill] = useState(false);
     const [efill, setEfill] = useState(false);
@@ -27,7 +27,7 @@ const UpdateMyInfo = () => {
     const [nameRegex, setNameRegex] = useState(false);
     const [emailRegex, setEmailRegex] = useState(false);
     const [phoneRegex, setPhoneRegex] = useState(false);
-    const [contentRegex, setContentRegex] = useState(false); 
+    const [contentRegex, setContentRegex] = useState(false);
 
     const { kakao } = window;
     const [estateGeo, setEstateGeo] = useState({ latitude: '', longitude: '' })
@@ -62,7 +62,6 @@ const UpdateMyInfo = () => {
         setPhone(prev => ({ ...prev, [name]: value }));
 
         setFill(e.target.value !== '');
-        setEfill(e.target.value !== '');
 
         const phoneregex = /^\d{11}$/;
 
@@ -70,6 +69,47 @@ const UpdateMyInfo = () => {
             setPhoneRegex(true);
         }
     }
+
+    //new 전화번호 로직
+    const [selectedPhoneValue, setSelectedPhoneValue] = useState('010');
+    const [phoneValue, setPhoneValue] = useState('');
+    const [phoneValue1, setPhoneValue1] = useState('');
+    useEffect(() => {
+        setSelectedPhoneValue('010');
+    }, []);
+
+    const handleSelectPhoneChange = (e) => {
+        setSelectedPhoneValue(e.target.value);
+    };
+    useEffect(() => {
+        setPhoneValue('');
+        setPhoneValue1('');
+    }, [selectedPhoneValue]);
+
+    const handlePhoneChange = (e) => {
+        const { name, value } = e.target;
+
+        if (/\D/.test(value)) {
+            // 숫자가 아닌 경우
+            alert('숫자만 입력 가능합니다.');
+            return;
+        }
+
+        if (name == 'phoneValue') {
+            const maxLength = selectedPhoneValue == '010' ? 4 : 3;
+            if (value.length <= maxLength) {
+                setPhoneValue(value);
+            }
+        } else if (name == 'phoneValue1') {
+            if (value.length <= 4) {
+                setPhoneValue1(value);
+            }
+        }
+    };
+
+    // 전화번호 입력필드 합치기
+    const pw = `${selectedPhoneValue}${phoneValue}${phoneValue1}`;
+    const newphone = `${selectedPhoneValue}-${phoneValue}-${phoneValue1}`;
 
     const handleChangeZipcode = (e) => {
         const { name, value } = e.target;
@@ -113,11 +153,11 @@ const UpdateMyInfo = () => {
         const { name, value } = e.target;
         setContent(prev => ({ ...prev, [name]: value }));
 
-        const contentRegex = /^.{0,1000}$/;
+        // const contentRegex = /^.{0,1000}$/;
 
-        if (contentRegex.test(e.target.value)) {
-            setContentRegex(true);
-        }
+        // if (contentRegex.test(e.target.value)) {
+        //     setContentRegex(true);
+        // }
     }
 
     useEffect(() => {
@@ -133,11 +173,12 @@ const UpdateMyInfo = () => {
     useEffect(() => {
         setEfill(
             name.name !== '' &&
-            phone.phone !== '' &&
             address1.address1 !== '' &&
-            address2.address2 !== ''
+            address2.address2 !== '' &&
+            phoneValue !== '' &&
+            phoneValue1 !== ''
         );
-    }, [name.name, phone.phone, address1.address1, address2.address2]);
+    }, [name.name, address1.address1, address2.address2, phoneValue, phoneValue1]);
 
     const navi = useNavigate();
 
@@ -180,6 +221,9 @@ const UpdateMyInfo = () => {
     }
 
     const handleEstateUpdate = async () => {
+        console.log(name.name);
+        console.log(newphone);
+        console.log(address1.address1 + address2.address2);
         if (!efill) {
             alert("모든 항목을 입력해주세요");
             return;
@@ -188,20 +232,16 @@ const UpdateMyInfo = () => {
             alert("이름은 2~5글자의 한글이어야합니다");
             return;
         }
-        if (!phoneRegex) {
-            alert("휴대폰 번호는 숫자 11자리만 입력해주세요");
-            return;
-        }
-        if (!contentRegex) {
-            alert("공인중개사 소개는 1000자 이하로 작성해주세요");
-            return;
-        }
-        if (efill && nameRegex && phoneRegex && contentRegex) {
+        // if (!contentRegex) {
+        //     alert("공인중개사 소개는 1000자 이하로 작성해주세요");
+        //     return;
+        // }
+        if (efill && nameRegex) {
             try {
                 const userData = {
                     id: storedLoginId,
                     name: name.name,
-                    phone: phone.phone,
+                    phone: newphone,
                     address: address1.address1 + address2.address2,
                     latitude: estateGeo.latitude,
                     longitude: estateGeo.longitude,
@@ -228,7 +268,6 @@ const UpdateMyInfo = () => {
         if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
             addr = data.roadAddress;
         } else { // 사용자가 지번 주소를 선택했을 경우(J)
-            console.log(data.jibunAddress);
             addr = data.jibunAddress;
         }
 
@@ -348,13 +387,56 @@ const UpdateMyInfo = () => {
                             이름<br></br>
                             <input type="text" name="name" onChange={handleChangeName} value={name.name} placeholder='이름 입력' className={style.inputInfo}></input><br /><br />
                             휴대전화<br></br>
-                            <input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='전화번호 입력' className={style.inputInfo}></input><br /><br />
+                            {/*<input type="text" name="phone" onChange={handleChangePhone} value={phone.phone} placeholder='전화번호 입력' className={style.inputInfo}></input><br /><br />*/}
+                            <div className={style.nextId}>
+                                <select className={style.select_style} value={selectedPhoneValue} onChange={handleSelectPhoneChange} style={{ maxWidth: '80px' }}>
+                                    <option value="010" selected>010</option>
+                                    <option value="02">02</option>
+                                    <option value="031">031</option>
+                                    <option value="032">032</option>
+                                    <option value="033">033</option>
+                                    <option value="041">041</option>
+                                    <option value="042">042</option>
+                                    <option value="043">043</option>
+                                    <option value="044">044</option>
+                                    <option value="051">051</option>
+                                    <option value="052">052</option>
+                                    <option value="053">053</option>
+                                    <option value="054">054</option>
+                                    <option value="055">055</option>
+                                    <option value="061">061</option>
+                                    <option value="062">062</option>
+                                    <option value="063">063</option>
+                                    <option value="064">064</option>
+                                </select>
+                                <span style={{ marginLeft: '5px', marginRight: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</span>
+                                <input
+                                    className={style.inputInfo}
+                                    type="text"
+                                    placeholder={selectedPhoneValue == '010' ? '0000' : '000'}
+                                    value={phoneValue}
+                                    onChange={handlePhoneChange}
+                                    name="phoneValue"
+                                    style={{ maxWidth: '90px', textAlign: 'center' }}
+                                />
+                                <span style={{ marginLeft: '5px', marginRight: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</span>
+                                <input
+                                    className={style.inputInfo}
+                                    type="text"
+                                    placeholder='0000'
+                                    value={phoneValue1}
+                                    onChange={handlePhoneChange}
+                                    name="phoneValue1"
+                                    style={{ maxWidth: '90px', textAlign: 'center' }}
+                                /><br></br>
+                            </div>
+                            <br/>
                             우편번호<br></br>
                             <input type="text" name="zipcode" id="sample6_postcode" readOnly onChange={handleChangeZipcode} value={zipcode.zipcode} className={style.inputZipcode} placeholder='우편번호'></input>
                             <button onClick={handleOpenModal} className={style.zipcodeBtn}>우편번호 찾기</button><br />
                             주소<br></br>
                             <input type="text" name="address1" id="sample6_address" readOnly onChange={handleChangeAddress1} value={address1.address1} placeholder='주소' className={style.inputInfo}></input><br></br>
-                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력' className={style.inputInfo}></input><br/><br/>
+                            <input type="text" name="address2" id="sample6_detailAddress" onChange={handleChangeAddress2} value={address2.address2} placeholder='상세주소 입력' className={style.inputInfo}></input><br /><br />
                             공인중개사 소개<br></br>
                             <textarea placeholder='공인중개사를 소개해보세요!' name="content" onChange={handleChangeContent} value={content.content} className={style.estateContent}></textarea>
                             <Modal
