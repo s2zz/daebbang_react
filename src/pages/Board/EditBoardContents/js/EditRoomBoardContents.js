@@ -342,32 +342,32 @@ const EditRoomBoardContents = ({ loginId }) => {
                 <div className={eStyle.fileBox}>
                     <div>파일 목록</div>
                     {
-                        fileList.lnegth>0 ?
-                        fileList.map((e, i) => {
-                            return (
-                                <div key={i}>
-                                    {e.oriName}
-                                    <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
-                                </div>
-                            );
-                        }) :
-                        <div>첨부 파일이 없습니다.</div>
+                        fileList.length > 0 ?
+                            fileList.map((e, i) => {
+                                return (
+                                    <div key={i}>
+                                        {e.oriName}
+                                        <FontAwesomeIcon icon={faXmark} style={{ paddingLeft: "10px" }} onClick={() => { handleRemoveFileChange(e.sysName) }} />
+                                    </div>
+                                );
+                            }) :
+                            <div>첨부파일이 없습니다.</div>
                     }
                 </div>
                 <div className={style.fileBox}>
                     <div>파일첨부 <FontAwesomeIcon icon={faPlus} size="lg" onClick={fileAdd} /></div>
                     <div className={style.fileInputDiv}>
                         {
-                            inputList.filter(e=>e.show===true).length>0 ?
-                            inputList.map((e, i) => (
-                                e.show ? (
-                                    <div key={i}>
-                                        <input type="file" onChange={handleFileChange} name={e.name} />
-                                        <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
-                                    </div>
-                                ) : null
-                            )) :
-                            <div>선택된 파일이 없습니다.</div>
+                            inputList.filter(e => e.show === true).length > 0 ?
+                                inputList.map((e, i) => (
+                                    e.show ? (
+                                        <div key={i}>
+                                            <input type="file" onChange={handleFileChange} name={e.name} />
+                                            <span><FontAwesomeIcon icon={faXmark} size="lg" onClick={() => fileDel(e.name)} /></span>
+                                        </div>
+                                    ) : null
+                                )) :
+                                <div>선택된 파일이 없습니다.</div>
                         }
                     </div>
                 </div>
