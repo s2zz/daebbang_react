@@ -51,8 +51,6 @@ import tellPhone from "../assets/telephone.png";
 import estateMaker from "../assets/estateMaker.png";
 import temperature from "../assets/temperature.png";
 
-
-
 import proExam from "../assets/proExam.PNG";
 import siren from "../assets/siren.png";
 
@@ -97,7 +95,8 @@ function Info(args, estate) {
 
   useEffect(() => {
     const newImageUrls = markerInfo.images.map(
-      (image) => `https://storage.googleapis.com/daebbang/estateImages/${image.sysName}`
+      (image) =>
+        `https://storage.googleapis.com/daebbang/estateImages/${image.sysName}`
     );
     setImageUrls(newImageUrls);
   }, [markerInfo, location.state]);
@@ -174,13 +173,13 @@ function Info(args, estate) {
     // markerInfo가 변경될 때 실행될 콜백 함수
     // 이곳에서 markerInfo에 따른 원하는 동작을 수행할 수 있음
     var estateId = markerInfo.estateId;
-      console.log("markerInfo estateId:", estateId);
-      axios.post(`/api/visit/increaseViewCount/${estateId}`)
-      .then(response => {
+    console.log("markerInfo estateId:", estateId);
+    axios
+      .post(`/api/visit/increaseViewCount/${estateId}`)
+      .then((response) => {
         console.log("성공");
       })
-      .catch(error => {
-      });
+      .catch((error) => {});
     // 스크롤 엘리먼트가 존재하고 markerInfo가 변경될 때 스크롤을 최상단으로 이동
     if (info_scroll.current) {
       info_scroll.current.scrollTop = 0;
@@ -1156,7 +1155,7 @@ function Info(args, estate) {
                 </div>
                 <div className={style.seller_title}>
                   <div>
-                    {markerInfo.realEstateAgent.manners_temperature >= 40 ? (
+                    {markerInfo.realEstateAgent.manners_temperature >= 60 ? (
                       <span className={style.recommend}>
                         <b>추천</b>
                       </span>
@@ -1171,12 +1170,12 @@ function Info(args, estate) {
                   <b>{markerInfo.realEstateAgent.estateName}</b>
                 </div>
               </div>
-              {markerInfo.realEstateAgent.manners_temperature >= 40 ? (
+              {markerInfo.realEstateAgent.manners_temperature >= 60 ? (
                 <div className={style.safe_seller}>추천중개사</div>
               ) : (
                 ""
               )}
-              {markerInfo.realEstateAgent.manners_temperature >= 40 ? (
+              {markerInfo.realEstateAgent.manners_temperature >= 60 ? (
                 <div className={style.seller_box_1}>
                   <div>
                     <img src={medal} style={{ height: "100%" }}></img>
@@ -1190,7 +1189,7 @@ function Info(args, estate) {
                 ""
               )}
 
-              {markerInfo.realEstateAgent.manners_temperature >= 40 ? "" : ""}
+              {markerInfo.realEstateAgent.manners_temperature >= 60 ? "" : ""}
               <div className={style.seller_box_2}>
                 <div>
                   <img src={textFile} style={{ height: "100%" }}></img>
@@ -1330,7 +1329,7 @@ function Info(args, estate) {
 
                 <div className={style.info_title} style={{ height: "auto" }}>
                   <div className={style.info_title_top}>
-                    {markerInfo.realEstateAgent.manners_temperature >= 40 ? (
+                    {markerInfo.realEstateAgent.manners_temperature >= 60 ? (
                       <div className={style.seller_idx}>
                         추천 중개사 {/*등록번호 넣기*/}
                       </div>
@@ -1366,7 +1365,9 @@ function Info(args, estate) {
                     <span>
                       <img src={temperature} style={{ width: "24px" }}></img>
                     </span>
-                    <div>{markerInfo.realEstateAgent.manners_temperature}도</div>
+                    <div>
+                      {markerInfo.realEstateAgent.manners_temperature}도
+                    </div>
                   </div>
 
                   {/* 등록번호 */}
@@ -1468,7 +1469,7 @@ function Info(args, estate) {
                         >
                           <div className={style.list_box_img}>
                             <img
-                              src={imageUrlsEstateLimit[index]}
+                              src={imageUrlsEstateAll[index]}
                               alt="Estate"
                             />
                           </div>
@@ -1538,15 +1539,15 @@ function Info(args, estate) {
                   <div className={style.review_list_frame_parent} key={i}>
                     <div className={style.review_list_frame_child}>
                       {/* 이미지 */}
-                      {e.files.map((e, i) => (
+                      {e.files.length > 0 && (
                         <div className={style.review_list_frame_child_img}>
                           <img
                             alt="..."
-                            style={{ width: "100%", height: "100%" }}
-                            src={` https://storage.googleapis.com/daebbang/review/${e.sysName}`}
+                            style={{ width: "100%" }}
+                            src={`https://storage.googleapis.com/daebbang/review/${e.files[0].sysName}`}
                           />
                         </div>
-                      ))}
+                      )}
 
                       {/* 하단 내용 */}
                       <div className={style.review_list_frame_child_content}>
