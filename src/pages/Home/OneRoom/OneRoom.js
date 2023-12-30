@@ -27,6 +27,10 @@ import exam_icon from "./assets/exam_icon.png";
 import search from "./assets/search.png";
 import subway from "./assets/subway.png";
 import school from "./assets/school.png";
+import all_str from "./assets/all_str.png";
+import open_str from "./assets/open_str.png";
+import separation_str from "./assets/separation_str.png";
+import duplex_str from "./assets/duplex_str.png";
 
 //
 import style from "./OneRoom.module.css";
@@ -229,9 +233,9 @@ function OneRoom() {
   };
 
   // 두번째 로딩 테스트
-  // const handleTest = (map) => {
-  //   setLoadingTwo(false);
-  // };
+  const handleMarkerLoad = (map) => {
+    setLoadingTwo(false);
+  };
 
   // 지도에서 휠을 활용한 줌 이벤트 발생시 마커 새로 불러오기
   const handleZoomChanged = (map) => {
@@ -1811,6 +1815,13 @@ function OneRoom() {
           </div>
           <div className={style.main_box}>
             <div className={style.home_body_map}>
+              {loadingTwo ? (
+                ""
+              ) : (
+                <div className={style.loading_marker}>
+                  <Loading></Loading>
+                </div>
+              )}
               <div className={style.home_body_map_main}>
                 {mapRendered && (
                   <Map
@@ -1825,6 +1836,7 @@ function OneRoom() {
                     onCenterChanged={handleMapCenter}
                     ref={mapRef}
                     maxLevel={13}
+                    onTileLoaded={handleMapLoad}
                   >
                     {zoomLevelRanded && (
                       <MarkerClusterer
@@ -2242,59 +2254,6 @@ function OneRoom() {
                         </div>
                       </div>
                     </div>
-
-                    {/* 전세 범위 슬라이더 ( 조건 선택시 [전세 조건 선택] 나오게 바꿔야함 / 현재 display:none )*/}
-                    {/* <div
-                  style={{
-                    marginTop: "30px",
-                    display: selectedDealType === "전세" ? "block" : "none",
-                  }}
-                >
-                  <span>전세</span>
-
-                  <div className={style.option_range}>
-                    <div className="custom-range-slider" ref={sliderCustomRef}>
-                      <div className="range-bar-base-line"></div>
-                      <div
-                        className="range-bar"
-                        style={{
-                          left: sliderValues.left + "%",
-                          width: sliderValues.right - sliderValues.left + "%",
-                        }}
-                      >
-                        <div className="value_box">값</div>
-                      </div>
-                      <div
-                        className="range-handle left"
-                        style={{ left: sliderValues.left + "%" }}
-                        onMouseDown={handleMouseDownLeftHandle}
-                      ></div>
-                      <div
-                        className="range-handle right"
-                        style={{ left: sliderValues.right + "%" }}
-                        onMouseDown={handleMouseDownRightHandle}
-                      ></div>
-                    </div>
-
-                    <div className="range_info_bar">
-                      <div style={{ borderLeft: "1px solid #b3b3b3" }}></div>
-                      <div
-                        style={{
-                          borderLeft: "1px solid #b3b3b3",
-                          borderRight: "1px solid #b3b3b3",
-                        }}
-                      ></div>
-                      <div style={{ borderRight: "1px solid #b3b3b3" }}></div>
-                    </div>
-                    <div className="range_info">
-                      <div>최소</div>
-                      <div style={{ marginLeft: "75px" }}>35만</div>
-                      <div style={{ marginLeft: "73px" }}>150만</div>
-                      <div style={{ marginLeft: "65px" }}>최대</div>
-                    </div>
-                  </div>
-                </div> */}
-
                     <div
                       style={{
                         marginTop: "10px",
@@ -2365,9 +2324,8 @@ function OneRoom() {
                         >
                           <div>
                             <img
-                              style={{ maxHeight: "24px" }}
-                              src={exam_icon}
-                              alt="exam icon"
+                              style={{ maxHeight: "24px", marginBottom: "12px" }}
+                              src={all_str}
                             />
                           </div>
                           <div>전체</div>
@@ -2390,11 +2348,7 @@ function OneRoom() {
                           onClick={() => handleStructureSelect("오픈형")}
                         >
                           <div>
-                            <img
-                              style={{ maxHeight: "24px" }}
-                              src={exam_icon}
-                              alt="exam icon"
-                            />
+                            <img style={{ maxHeight: "24px", marginBottom: "12px" }} src={open_str} />
                           </div>
                           <div>오픈형(방1)</div>
                         </div>
@@ -2417,9 +2371,8 @@ function OneRoom() {
                         >
                           <div>
                             <img
-                              style={{ maxHeight: "24px" }}
-                              src={exam_icon}
-                              alt="exam icon"
+                              style={{ maxHeight: "24px", marginBottom: "12px" }}
+                              src={separation_str}
                             />
                           </div>
                           <div>분리형(방1,거실1)</div>
@@ -2443,9 +2396,8 @@ function OneRoom() {
                         >
                           <div>
                             <img
-                              style={{ maxHeight: "24px" }}
-                              src={exam_icon}
-                              alt="exam icon"
+                              style={{ maxHeight: "24px", marginBottom: "12px" }}
+                              src={duplex_str}
                             />
                           </div>
                           <div>복층형</div>

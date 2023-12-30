@@ -381,3 +381,11 @@
   border-radius: 4px;
   padding: 0px 10px;
 }
+
+.loading_marker {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 11;
+  background-color: red;
+}
