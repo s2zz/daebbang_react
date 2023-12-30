@@ -12,8 +12,7 @@ import style1 from "../commons/Modal.module.css";
 import Loading from '../commons/Loading';
 
 const HomeEnrollment = (args) => {
-
-
+    const [duplecheck, setDuplecheck] = useState(false);
     const [value, setValue] = useState('');
     const [emailValue, setEmailValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
@@ -113,6 +112,31 @@ const HomeEnrollment = (args) => {
                 alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
             });
     }
+    //이메일 중복확인
+    const email = `${emailValue}@${selectedValue}`;
+    const dupleButtonClick = () => {
+        if (!emailValue) {
+            alert('이메일을 입력하세요.');
+        }else if(!selectedValue){
+            alert('옵션을 선택하세요.');
+        }
+        axios.get(`/api/enrollment/agent/emailDuplCheck/${email}`)
+            .then(response => {
+                if (response.data == false) {
+                    alert("이메일이 중복됩니다. 다른 이메일을 입력해주세요.");
+                    setEmailValue('');
+                    selectedValue('');
+                    setDuplecheck(false);
+                }
+                alert("이메일 사용 가능합니다.");
+                setDuplecheck(true);
+            })
+            .catch(error => {
+                // alert("해당 중개사무소가 없습니다. 계속 반복되 경우 고객센터로 문의 바랍니다.");
+            });
+    }
+
+
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             searchButtonClick();
@@ -141,8 +165,10 @@ const HomeEnrollment = (args) => {
     }, []);
 
     const handleSelectPhoneChange = (e) => {
-        setSelectedPhoneValue(e.target.value);
+        const selectedValue = e.target.value;
+        setSelectedPhoneValue(selectedValue);
     };
+
     useEffect(() => {
         setPhoneValue('');
         setPhoneValue1('');
@@ -220,6 +246,8 @@ const HomeEnrollment = (args) => {
             alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
         } else if (!nameValue) {
             alert('대표이름을 입력해주세요.');
+        } else if (!duplecheck) {
+            alert('중복확인을 해주세요.');
         } else if (!emailValue || !selectedValue) {
             alert('대표공인중개사 이메일을 입력해주세요.');
         } else if (!address && (!address1.address1 || !address2.address2)) {
@@ -278,17 +306,18 @@ const HomeEnrollment = (args) => {
     };
 
     const handleEmailChange = (e) => {
+        setDuplecheck(false);
         const inputValue = e.target.value;
         const regex = /^[^\u3131-\u3163\uac00-\ud7a3]*$/;
 
         if (regex.test(inputValue)) {
             setEmailValue(inputValue);
-        }else{
+        } else {
             alert("영어 또는 특수문자만 입력가능합니다.");
         }
     };
 
-    
+
 
     const handleNameChange = (e) => {
         const { name, value } = e.target;
@@ -298,7 +327,7 @@ const HomeEnrollment = (args) => {
 
             if (regex.test(value)) {
                 setNameValue(value);
-            }else{
+            } else {
                 alert("한글만 입력 가능합니다.");
             }
         }
@@ -611,6 +640,7 @@ const HomeEnrollment = (args) => {
                                     <option value="nate.com">nate.com</option>
                                     <option value="gmail.com">gmail.com</option>
                                 </select>
+                                <Button style={{ marginLeft: '10px' }} onClick={dupleButtonClick}>중복검사</Button>
                             </div>
                             <p className={style.flex}>가입 후 아이디로 이용됩니다.</p>
                         </li>
