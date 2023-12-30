@@ -1,6 +1,6 @@
 import style from '../css/BoardContents.module.css';
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
@@ -9,7 +9,7 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import Loading from '../../../commons/Loading';
 
 const RoomBoardContents = ({ loginId, admin }) => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = React.useState(true);
     const location = useLocation();
     const navi = useNavigate();
     const [boardContents, setBoardContents] = useState({});

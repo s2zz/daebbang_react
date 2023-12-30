@@ -28,9 +28,10 @@ const WriteReview = () => {
         const formImg = new FormData();
         formImg.append("files", files);
         formImg.append("path", "review");
-
+        console.log("d");
         try {
             const imgUrl = await axios.post("/api/file/upload", formImg);
+            console.log(imgUrl)
             setUrl(prev => ({ ...prev, [e.target.name]: imgUrl.data[0] }));
             setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: files } }));
         } catch (err) {
@@ -62,6 +63,7 @@ const WriteReview = () => {
     }
 
     const handleAdd = () => {
+
         let totalScore = Object.values(score).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
         console.log(totalScore)
         if (totalScore === 0) {

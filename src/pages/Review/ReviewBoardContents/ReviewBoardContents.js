@@ -72,7 +72,7 @@ const ReviewBoardContents = ({loginId, admin}) => {
                 <div className={style.fileImg}>
                     {review.files && review.files.length > 0 ?
                         review.files.map((e, i) => (
-                            <div key={i}><img src={`/uploads/review/${e.sysName}`} /></div>
+                            <div key={i}><img src={`https://storage.googleapis.com/daebbang/review/${e.sysName}`} /></div>
                         )) :
                         <div className={style.emptyFileImg}>첨부파일이 존재하지 않습니다.</div>
                     }

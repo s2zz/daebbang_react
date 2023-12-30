@@ -3,7 +3,7 @@ import "react-quill/dist/quill.snow.css";
 import style from "../../Write/css/WriteBoard/WriteBoard.module.css";
 import eStyle from "../css/EditBoard.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,7 @@ import Loading from "../../../commons/Loading";
 
 const EditFreeBoardContents = ({ loginId }) => {
     const location = useLocation();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = React.useState(true);
     const navi = useNavigate();
     useEffect(() => {
         if (loginId === null) {
@@ -72,8 +72,9 @@ const EditFreeBoardContents = ({ loginId }) => {
                 const range = editor.getSelection();
                 console.log(imgUrl.data);
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    setSysNameList(prev => [...prev, encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1])]);
-                    editor.insertEmbed(range.index, 'image', "/uploads/board/" + encodeURIComponent(imgUrl.data[i].split("/uploads/board/")[1]));
+                    let sysName = imgUrl.data[i].split("https://storage.googleapis.com/daebbang/board/")[1];
+                    setSysNameList(prev => [...prev, encodeURIComponent(sysName)]);
+                    editor.insertEmbed(range.index, 'image', "https://storage.googleapis.com/daebbang/board/" + encodeURIComponent(sysName));
                 }
 
             } catch (error) {

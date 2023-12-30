@@ -2,7 +2,7 @@ import style from "../css/BoardList.module.css";
 import favorite from "../../assets/favorites.png";
 import fstyle from "../css/FavoriteBoardList.module.css";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +10,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Loading from '../../../commons/Loading';
 
 const FavoriteBoardList = ({ loginId }) => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = React.useState(true);
     const [board, setBoard] = useState([]);
     const [searchBoard, setSearchBoard] = useState([]); // 검색어 있을 때
     const [searchText, setSearchText] = useState("");
