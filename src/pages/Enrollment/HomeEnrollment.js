@@ -171,7 +171,6 @@ const HomeEnrollment = (args) => {
     // 전화번호 입력필드 합치기
     const pw = `${selectedPhoneValue}${phoneValue}${phoneValue1}`;
     const phone = `${selectedPhoneValue}-${phoneValue}-${phoneValue1}`;
-    console.log(pw + ":" + phone);
 
     /////////////////////////////////////////////////////////////////////////
     const handleItemClick = (item) => {
