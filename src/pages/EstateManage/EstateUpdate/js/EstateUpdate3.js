@@ -57,7 +57,10 @@ function EstateUpdate3({ realEstate, setRealEstate, tempImages, setEstateImages 
           ))
         ) : (
           tempImages.map((preview, index) => (
-            <img key={index} src={`..\\..\\uploads\\estateImages\\${preview.sysName}`} alt={`Preview ${index}`} className={style.imagePreview} />
+            <img key={index} 
+            src={` https://storage.googleapis.com/daebbang/estateImages/${preview.sysName}`}
+            alt={`Preview ${index}`} 
+            className={style.imagePreview} />
           ))
         )}
       </div>

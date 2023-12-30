@@ -14,7 +14,10 @@ function EstateInsert3({ realEstate }) {
       <div className={style.imagePreviews}>
         {realEstate.images.length > 0 ? (
           realEstate.images.map((preview, index) => (
-            <img key={index} src={`..\\..\\uploads\\estateImages\\${preview.sysName}`} alt={`Preview ${index}`} className={style.imagePreview} />
+            <img key={index}
+              src={` https://storage.googleapis.com/daebbang/estateImages/${preview.sysName}`}
+              alt={`Preview ${index}`}
+              className={style.imagePreview} />
           ))
         ) : (
           <p></p>

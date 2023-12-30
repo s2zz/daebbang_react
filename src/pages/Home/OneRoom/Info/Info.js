@@ -97,7 +97,7 @@ function Info(args, estate) {
 
   useEffect(() => {
     const newImageUrls = markerInfo.images.map(
-      (image) => `/uploads/estateImages/${image.sysName}`
+      (image) => `https://storage.googleapis.com/daebbang/estateImages/${image.sysName}`
     );
     setImageUrls(newImageUrls);
   }, [markerInfo, location.state]);
@@ -1134,7 +1134,7 @@ function Info(args, estate) {
                     profileImages.map((preview, index) => (
                       <img
                         key={index}
-                        src={`/uploads/agentProfile/${preview.sysName}`}
+                        src={` https://storage.googleapis.com/daebbang/agentProfiles/${preview.sysName}`}
                         alt={`Preview`}
                         className={style.imagePreview}
                         style={{ width: "100%", borderRadius: "50%" }}
@@ -1305,7 +1305,7 @@ function Info(args, estate) {
                   profileImages.map((preview, index) => (
                     <img
                       key={index}
-                      src={`/uploads/agentProfile/${preview.sysName}`}
+                      src={` https://storage.googleapis.com/daebbang/agentProfiles/${preview.sysName}`}
                       alt={`Preview`}
                       className={style.imagePreview}
                       style={{ width: "100%", height: "300px" }}
