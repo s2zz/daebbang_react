@@ -13,6 +13,7 @@ import Loading from '../commons/Loading';
 
 const HomeEnrollment = (args) => {
 
+
     const [value, setValue] = useState('');
     const [emailValue, setEmailValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
@@ -118,18 +119,61 @@ const HomeEnrollment = (args) => {
         }
     };
 
-    const handleInputChange = (e) => {
-        const inputValue = e.target.value.replace(/\D/g, '');;
+    // const handleInputChange = (e) => {
+    //     const inputValue = e.target.value.replace(/\D/g, '');;
 
-        if (inputValue.length <= 11) {
-            setValue(inputValue);
-        }
-    };
+    //     if (inputValue.length <= 11) {
+    //         setValue(inputValue);
+    //     }
+    // };
 
     const handleSelectChange = (e) => {
         setSelectedValue(e.target.value);
     };
 
+
+    //전화번호
+    const [selectedPhoneValue, setSelectedPhoneValue] = useState('010');
+    const [phoneValue, setPhoneValue] = useState('');
+    const [phoneValue1, setPhoneValue1] = useState('');
+    useEffect(() => {
+        setSelectedPhoneValue('010');
+    }, []);
+
+    const handleSelectPhoneChange = (e) => {
+        setSelectedPhoneValue(e.target.value);
+    };
+    useEffect(() => {
+        setPhoneValue('');
+        setPhoneValue1('');
+    }, [selectedPhoneValue]);
+
+    const handlePhoneChange = (e) => {
+        const { name, value } = e.target;
+
+        if (/\D/.test(value)) {
+            // 숫자가 아닌 경우
+            alert('숫자만 입력 가능합니다.');
+            return;
+        }
+
+        if (name == 'phoneValue') {
+            const maxLength = selectedPhoneValue == '010' ? 4 : 3;
+            if (value.length <= maxLength) {
+                setPhoneValue(value);
+            }
+        } else if (name == 'phoneValue1') {
+            if (value.length <= 4) {
+                setPhoneValue1(value);
+            }
+        }
+    };
+    // 전화번호 입력필드 합치기
+    const pw = `${selectedPhoneValue}${phoneValue}${phoneValue1}`;
+    const phone = `${selectedPhoneValue}-${phoneValue}-${phoneValue1}`;
+    console.log(pw + ":" + phone);
+
+    /////////////////////////////////////////////////////////////////////////
     const handleItemClick = (item) => {
         axios.get(`/api/enrollment/agent/isEstateNumber/${item.jurirno}`)
             .then(response => {
@@ -169,22 +213,31 @@ const HomeEnrollment = (args) => {
         }
     };
     const handleSubmit = () => {
+
+
         if (!selectedItem) {
-            // alert('중개사무소를 선택해주세요.');
             alert('중개사무소를 선택해주세요.');
-        } else if (!value) {
-            // alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
+        } else if (!phoneValue || !phoneValue1) {
             alert('대표공인중개사 휴대폰 번호를 입력해주세요.');
         } else if (!nameValue) {
-            // alert('대표이름을 입력해주세요.');
             alert('대표이름을 입력해주세요.');
         } else if (!emailValue || !selectedValue) {
-            // alert('대표공인중개사 이메일을 입력해주세요.');
             alert('대표공인중개사 이메일을 입력해주세요.');
         } else if (!address && (!address1.address1 || !address2.address2)) {
-            // alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
             alert('주소를 입력해주세요. 중개사무소 찾기를 눌러서 주소를 입력하거나 우편번호 찾기를 이용해주세요.');
         } else {
+            //전화번호
+            const maxLength = selectedPhoneValue === '010' ? 4 : 3;
+
+            if (phoneValue.length !== maxLength || phoneValue1.length !== 4) {
+                if (phoneValue.length !== maxLength) {
+                    alert(`phoneValue는 ${maxLength}글자만 입력 가능합니다.`);
+                }
+                if (phoneValue1.length !== 4) {
+                    alert('phoneValue1은 4글자만 입력 가능합니다.');
+                }
+                return;
+            }
 
             const formData = new FormData();
             let addressValue = '';
@@ -207,8 +260,8 @@ const HomeEnrollment = (args) => {
             formData.append('estateName', selectedItem.bsnmCmpnm);
             formData.append('estateNumber', selectedItem.jurirno);
             formData.append('name', nameValue);
-            formData.append('phone', value);
-            formData.append('pw', value);
+            formData.append('phone', phone);
+            formData.append('pw', pw);
             formData.append('role', 'ROLE_AGENT');
             formData.append('email', emailValue + "@" + selectedValue);
 
@@ -231,8 +284,12 @@ const HomeEnrollment = (args) => {
 
         if (regex.test(inputValue)) {
             setEmailValue(inputValue);
+        }else{
+            alert("영어 또는 특수문자만 입력가능합니다.");
         }
     };
+
+    
 
     const handleNameChange = (e) => {
         const { name, value } = e.target;
@@ -242,9 +299,13 @@ const HomeEnrollment = (args) => {
 
             if (regex.test(value)) {
                 setNameValue(value);
+            }else{
+                alert("한글만 입력 가능합니다.");
             }
         }
     };
+
+
     //카카오 우편 api
     const handleChangeZipcode = (e) => {
         const { name, value } = e.target;
@@ -433,13 +494,13 @@ const HomeEnrollment = (args) => {
                                             />
                                             <Button style={{ marginLeft: '2%' }} outline onClick={searchButtonClick} >검색</Button>
                                         </div>
-                                        
-                                                {searchResult !== null ? (
-                                                    // map 함수를 호출하는 부분
-                                                    <div>
-                                                    {loading ? (
-                                                        <Loading />
-                                                    ) : (
+
+                                        {searchResult !== null ? (
+                                            // map 함수를 호출하는 부분
+                                            <div>
+                                                {loading ? (
+                                                    <Loading />
+                                                ) : (
                                                     <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
                                                         {searchResult.map((item, index) => (
                                                             <div key={index}>
@@ -459,13 +520,13 @@ const HomeEnrollment = (args) => {
                                                             </div>
                                                         ))}
                                                     </div>
-                                                    )}
-                                                    </div>
-                                                ) : (
-                                                    <p className={style.fontLight} style={{ padding: '1%' }}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
-                                                        중개사무소가 검색되지 않을 경우 010-3470-1399로 문의주세요.</p>
                                                 )}
-                                        
+                                            </div>
+                                        ) : (
+                                            <p className={style.fontLight} style={{ padding: '1%' }}>중개사무소 이름은 브이월드의 부동산중개업 정보에 등록된<br></br> 정보를 검색할 수 있습니다.<br></br>
+                                                중개사무소가 검색되지 않을 경우 010-3470-1399로 문의주세요.</p>
+                                        )}
+
                                     </ModalBody>
                                 </Modal>
                             </div>
@@ -473,7 +534,50 @@ const HomeEnrollment = (args) => {
                         <hr></hr>
                         <li>
                             <h5 className={style.list}>대표 공인중개사 휴대폰 번호</h5>
-                            <input className={style.input_style} type="text" placeholder='- 빼고 입력해주세요.' value={value} onChange={handleInputChange} />
+                            {/* 전화번호 */}
+                            {/* <input className={style.input_style} type="text" placeholder='- 빼고 입력해주세요.' value={value} onChange={handleInputChange} /> */}
+                            <div className={style.nextId}>
+                                <select className={style.select_style} value={selectedPhoneValue} onChange={handleSelectPhoneChange} style={{ maxWidth: '80px' }}>
+                                    <option value="010" selected>010</option>
+                                    <option value="02">02</option>
+                                    <option value="031">031</option>
+                                    <option value="032">032</option>
+                                    <option value="033">033</option>
+                                    <option value="041">041</option>
+                                    <option value="042">042</option>
+                                    <option value="043">043</option>
+                                    <option value="044">044</option>
+                                    <option value="051">051</option>
+                                    <option value="052">052</option>
+                                    <option value="053">053</option>
+                                    <option value="054">054</option>
+                                    <option value="055">055</option>
+                                    <option value="061">061</option>
+                                    <option value="062">062</option>
+                                    <option value="063">063</option>
+                                    <option value="064">064</option>
+                                </select>
+                                <span style={{ marginLeft: '5px', marginRight: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</span>
+                                <input
+                                    className={style.input_style}
+                                    type="text"
+                                    placeholder={selectedPhoneValue == '010' ? '0000' : '000'}
+                                    value={phoneValue}
+                                    onChange={handlePhoneChange}
+                                    name="phoneValue"
+                                    style={{ maxWidth: '90px', textAlign: 'center' }}
+                                />
+                                <span style={{ marginLeft: '5px', marginRight: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</span>
+                                <input
+                                    className={style.input_style}
+                                    type="text"
+                                    placeholder='0000'
+                                    value={phoneValue1}
+                                    onChange={handlePhoneChange}
+                                    name="phoneValue1"
+                                    style={{ maxWidth: '90px', textAlign: 'center' }}
+                                />
+                            </div>
                         </li>
                         <hr></hr>
                         <li>

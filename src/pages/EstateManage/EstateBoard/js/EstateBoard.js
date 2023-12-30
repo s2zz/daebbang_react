@@ -83,7 +83,7 @@ function EstateBoard() {
       <tr key={i}>
         <td>
           {estate.images && estate.images.length > 0 ?
-            (<img src={`../../uploads/estateImages/${estate.images[0].sysName}`} alt="Estate Image" />) :
+            (<img src={` https://storage.googleapis.com/daebbang/estateImages/${estate.images[0].sysName}`} alt="Estate Image" />) :
             (<>No Image</>)}
         </td>
         <td>{estate.roomType} {estate.transactionType} {estate.deposit}/{estate.price}</td>

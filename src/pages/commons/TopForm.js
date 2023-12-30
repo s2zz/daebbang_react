@@ -54,6 +54,12 @@ const TopForm = ({ setLoginId }) => {
             {reviewCount}개의 확인하지 않은<br /> 문의가 있습니다!
         </Tooltip>
     );
+    const handleTest = () => {
+        if (location.pathname !== '/home/oneroom/list') {
+            navi(`/home/oneroom/list`);
+          }
+    }
+
     return (
         <div className={style.container}>
             <div className={style.top}>
@@ -64,10 +70,7 @@ const TopForm = ({ setLoginId }) => {
                 <div className={style.gnb}>
                     <ul className={style.gnb_container}>
                         <li className={style.has_d2}>
-                            <Link to="/home/oneroom/list"><Button><span>원룸</span></Button> </Link>
-                            <div className={style.depth2_bx}>
-                                <Link to="/home/oneroom/list">방찾기</Link>
-                            </div>
+                        <span><Button onClick={handleTest}><span>원룸</span></Button></span>
                         </li>
                         <li className={style.has_d2}>
                             <Link to="#"><Button onClick={toggle3}><span>투룸</span></Button> </Link>
@@ -91,10 +94,10 @@ const TopForm = ({ setLoginId }) => {
                         <div className={style.gnb}>
                             <ul className={style.gnb_container}>
                                 <li className={style.has_d2}>
-                                {isEstate ?
-                                            <Button>{storedLoginName}▼</Button>
-                                            : <Button>{storedLoginName}님▼</Button>}
-                                    <div className={style.depth2_bx}>
+                                    {!isEstate ?
+                                        <Button>{storedLoginName}님▼</Button>
+                                        : <Button>{storedLoginName}▼</Button>}
+                                    <div className={style.depth3_bx}>
                                         {isAdmin ?
                                             <Link to="/admin">관리자 페이지</Link>
                                             : <Link to="/myPage">마이페이지</Link>}
@@ -116,7 +119,7 @@ const TopForm = ({ setLoginId }) => {
 
 
                     <div className={style.top_right_menu}>
-                        {isEstate ? <> </> : isAdmin ? <></> : <Button><Link to="/enrollment">중개사무소 가입</Link></Button>}
+                        {isEstate ? <> </> : isAdmin ? <div className={style.blank}></div> : <Button><Link to="/enrollment">중개사무소 가입</Link></Button>}
 
                     </div>
 
