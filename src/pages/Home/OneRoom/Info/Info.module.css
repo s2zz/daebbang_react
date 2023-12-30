@@ -395,6 +395,7 @@
 .seller_info {
   display: flex;
   height: 60px;
+  cursor: pointer;
 }
 
 .seller_title {
