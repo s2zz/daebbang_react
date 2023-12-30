@@ -338,8 +338,8 @@ const Main = () => {
               activeItemIndex={activeItemIndex}
               numberOfCards={1}
               gutter={10}
-              leftChevron={<img src={prevIMG} style={{ width: "20px" }}></img>}
-              rightChevron={<img src={nextIMG} style={{ width: "20px" }}></img>}
+              leftChevron={<img src={prevIMG} style={{ width: "20px",height:'20px' }}></img>}
+              rightChevron={<img src={nextIMG} style={{ width: "20px",height:'20px' }}></img>}
               outsideChevron={false}
               chevronWidth={chevronWidth}
             >
