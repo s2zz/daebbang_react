@@ -15,6 +15,7 @@ import axios from 'axios';
 import Review from './pages/Review/Review';
 import EstateManage from './pages/EstateManage/js/EstateManage';
 import ScrollToTop from './pages/commons/ScrollToTop';
+import NotFoundPage from './pages/commons/NotFoundPage';
 import Find from './pages/find/find';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
             <Route path="/enrollment/*" element={<Enrollment />} />
             <Route path="/review/*" element={<Review loginId={storedLoginId} admin={isAdmin}/>} />
             <Route path="/estateManage/*" element={isEstate ? <EstateManage /> : <Navigate to="/" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </div>
