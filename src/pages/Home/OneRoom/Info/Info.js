@@ -1,16 +1,26 @@
 //
 import { useState, useEffect, useRef } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { Map, MapMarker, ZoomControl } from "react-kakao-maps-sdk";
+import {
+  Map,
+  MapMarker,
+  ZoomControl,
+  CustomOverlayMap,
+} from "react-kakao-maps-sdk";
 import ItemsCarousel from "react-items-carousel";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 //
 import style from "./Info.module.css";
 import axios from "axios";
 import Swal from "sweetalert2";
-import backImg from "../assets/back.png";
+import backImg from "../assets/back_1.png";
 import backImg_2 from "../assets/back_2.png";
+import backImg_3 from "../assets/back_3.png";
+import nextIMG from "../assets/next.png";
+import prevIMG from "../assets/prev.png";
 import medal from "../assets/medal.png";
 import textFile from "../assets/textFile.png";
 
@@ -34,6 +44,11 @@ import house from "../assets/house.png";
 import heating from "../assets/heating.png";
 import mapsAndFlags from "../assets/mapsAndFlags.png";
 import realEstateHouse from "../assets/realEstate.png";
+import noProfile from "../assets/noProfile.png";
+import user from "../assets/user.png";
+import certificate from "../assets/certificate.png";
+import tellPhone from "../assets/telephone.png";
+import estateMaker from "../assets/estateMaker.png";
 
 import proExam from "../assets/proExam.PNG";
 import siren from "../assets/siren.png";
@@ -57,6 +72,11 @@ function Info(args, estate) {
     setMarkerInfo(estate); // markerInfo를 업데이트하는데 useState를 사용
   };
 
+  const handleMoreAgentClick = (marker) => {
+    toggleSeller_more();
+    setMarkerInfo(marker);
+  };
+
   const { kakao } = window;
 
   // 캐러셀 넓이
@@ -65,6 +85,7 @@ function Info(args, estate) {
 
   // 공인중개사의 게시물 10개 가져오기
   const [estateListLimit, setEstateListLimit] = useState([{}]);
+  const [estateListAll, setEstateListAll] = useState([{}]);
 
   const [imageUrls, setImageUrls] = useState([]);
 
@@ -80,6 +101,7 @@ function Info(args, estate) {
 
   // 공인중개사의 다른 게시물 10개 이미지 usl
   const [imageUrlsEstateLimit, setImageUrlsEstateLimit] = useState([]);
+  const [imageUrlsEstateAll, setImageUrlsEstateAll] = useState([]);
 
   // 보고 있는 정보가 바뀌면 캐러샐의 이미지 0번으로 이동
   useEffect(() => {
@@ -176,9 +198,11 @@ function Info(args, estate) {
     setIsSeller_more(!isSeller_more);
   };
 
-  // 공인 중개사의 최신 10개 게시물 가져오기
+  // 공인 중개사의 최신 게시물 가져오기
   useEffect(() => {
     const email = markerInfo.realEstateAgent.email;
+
+    // 10개만 가져옴
     axios
       .get(`/api/map/getAgentContentLimit`, {
         params: {
@@ -186,6 +210,7 @@ function Info(args, estate) {
         },
       })
       .then((resp) => {
+        console.log(resp.data);
         const fetchedData = resp.data;
         setEstateListLimit(fetchedData);
 
@@ -195,10 +220,37 @@ function Info(args, estate) {
             return `/uploads/estateImages/${item.images[0].sysName}`;
           }
           // images 배열이 비어있는 경우 기본 이미지 URL을 사용
-          return "기본이미지URL";
+          return { proExam };
         });
 
         setImageUrlsEstateLimit(imageUrls);
+      })
+      .catch((err) => {
+        console.log("API 호출 오류:", err);
+      });
+
+    // 전부 가져옴
+    axios
+      .get(`/api/map/getAgentContentAll`, {
+        params: {
+          email: email, // 쿼리 매개변수로 이메일을 전달
+        },
+      })
+      .then((resp) => {
+        console.log(resp.data);
+        const fetchedData = resp.data;
+        setEstateListAll(fetchedData);
+
+        const imageUrls = resp.data.map((item) => {
+          // images 배열이 존재하고 첫 번째 요소가 있는 경우 해당 이미지의 URL을 생성
+          if (item.images && item.images.length > 0) {
+            return `/uploads/estateImages/${item.images[0].sysName}`;
+          }
+          // images 배열이 비어있는 경우 기본 이미지 URL을 사용
+          return { proExam };
+        });
+
+        setImageUrlsEstateAll(imageUrls);
       })
       .catch((err) => {
         console.log("API 호출 오류:", err);
@@ -224,51 +276,6 @@ function Info(args, estate) {
   const [modal, setModal] = useState(false);
 
   const toggle = () => setModal(!modal);
-
-  // // 문의하기 버튼 클릭 이벤트
-  // const buttonEvent = () => {
-  //   const estateId = markerInfo.estateId;
-
-  //   // 로그인 확인
-  //   if (loginId == null) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "로그인한 사용자만 이용할 수 있는 기능입니다.",
-  //       text: "로그인 해주세요.",
-  //     });
-  //     return; // 로그인하지 않은 경우 여기서 함수 종료
-  //   }
-
-  //   // 사용자에게 확인 요청
-  //   Swal.fire({
-  //     title: "문의를 진행하시겠습니까?",
-  //     text: "공인중개사에게 문의를 보냅니다.",
-  //     icon: "question",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     cancelButtonText: "다시 한번 생각해볼께요",
-  //     confirmButtonText: "네, 진행합니다!",
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       // 사용자가 '네'를 선택했을 때
-  //       axios
-  //         .post("/api/reviewApproval/", {
-  //           estateCode: estateId,
-  //           userId: loginId,
-  //         })
-  //         .then((resp) => {
-  //           console.log(resp);
-  //           Swal.fire("성공!", "문의가 정상적으로 등록되었습니다.", "success");
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error:", error);
-  //           Swal.fire("오류!", "문의 등록 중 문제가 발생했습니다.", "error");
-  //         });
-  //     }
-  //   });
-  // };
 
   // 문의하기 이중모달
   const [nestedModal, setNestedModal] = useState(false);
@@ -422,13 +429,14 @@ function Info(args, estate) {
     setReportConfirmationModal(false); // "신고 완료" 모달 닫기
   };
 
+  //신고하기
   const handleReportSubmit = () => {
     axios
       .post("/api/map/report", {
         writer: loginId,
-        contents_code: selectedOption,
+        contentsCode: selectedOption,
         taker: markerInfo.realEstateAgent.email,
-        estate_id: markerInfo.estateId,
+        estateId: markerInfo.estateId,
         content: content,
       })
       .then((response) => {
@@ -447,6 +455,22 @@ function Info(args, estate) {
     navigate("/review/boardReview", {
       state: { realEstateNumber: review[0].realEstateNumber },
     });
+  };
+
+  // 최신 매물 페이징처리
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // 페이지당 아이템 수
+
+  const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return estateListAll.slice(startIndex, endIndex);
+  };
+
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+
+    
   };
 
   // 이찬양 작업 공간
@@ -483,7 +507,9 @@ function Info(args, estate) {
             {/* 드래그 이벤트에 의한 최상단 박스 (구현 못함 현재 display:none 상태임)*/}
             {isVisible_drag ? null : (
               <div className={style.address_box} style={{ display: "block" }}>
-                <div onClick={() => back()}>{"<"}</div>
+                <div onClick={() => back()}>
+                  <img src={backImg_3} style={{ width: "28px" }}></img>
+                </div>
                 {/*주소*/}
                 {markerInfo.address2}
               </div>
@@ -494,7 +520,7 @@ function Info(args, estate) {
             {/* 슬라이드 쇼*/}
             <div className={style.info_img}>
               <div className={style.info_img_top} onClick={() => back()}>
-                <img src={backImg}></img>
+                <img src={backImg} style={{ width: "28px" }}></img>
               </div>
 
               <div>
@@ -505,36 +531,10 @@ function Info(args, estate) {
                   numberOfCards={1}
                   gutter={0}
                   leftChevron={
-                    <button
-                      style={{
-                        backgroundColor: "transparent",
-                        color: "white",
-                        fontSize: "25px",
-                        border: "none",
-                        fontWeight: "bold",
-                        textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
-                        transform: "scaleX(1.1)",
-                        marginRight: "7px",
-                      }}
-                    >
-                      {"<"}
-                    </button>
+                    <img src={prevIMG} style={{ width: "40px" }}></img>
                   }
                   rightChevron={
-                    <button
-                      style={{
-                        backgroundColor: "transparent",
-                        color: "white",
-                        border: "none",
-                        fontSize: "25px",
-                        fontWeight: "bold",
-                        textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
-                        transform: "scaleX(1.1)",
-                        marginLeft: "7px",
-                      }}
-                    >
-                      {">"}
-                    </button>
+                    <img src={nextIMG} style={{ width: "40px" }}></img>
                   }
                   outsideChevron={false}
                   chevronWidth={chevronWidth}
@@ -1141,7 +1141,7 @@ function Info(args, estate) {
                     ))
                   ) : (
                     <img
-                      src={proExam}
+                      src={noProfile}
                       style={{ width: "100%", borderRadius: "50%" }}
                     ></img>
                   )}
@@ -1190,7 +1190,7 @@ function Info(args, estate) {
                 <div style={{ paddingLeft: "15px", fontSize: "15px" }}>
                   {markerInfo.realEstateAgent.content
                     ? markerInfo.realEstateAgent.content
-                    : "부동산 소개가 없습니다."}
+                    : "인삿말이 없습니다."}
                 </div>
               </div>
               {/*
@@ -1230,36 +1230,10 @@ function Info(args, estate) {
                     gutter={130}
                     infiniteLoop={true}
                     leftChevron={
-                      <button
-                        style={{
-                          backgroundColor: "transparent",
-                          color: "white",
-                          fontSize: "25px",
-                          border: "none",
-                          fontWeight: "bold",
-                          textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
-                          transform: "scaleX(1.1)",
-                          marginRight: "7px",
-                        }}
-                      >
-                        {"<"}
-                      </button>
+                      <img src={prevIMG} style={{ width: "40px" }}></img>
                     }
                     rightChevron={
-                      <button
-                        style={{
-                          backgroundColor: "transparent",
-                          color: "white",
-                          border: "none",
-                          fontSize: "25px",
-                          fontWeight: "bold",
-                          textShadow: "3px 3px 3px rgba(0, 0, 0, 0.5)",
-                          transform: "scaleX(1.1)",
-                          marginLeft: "7px",
-                        }}
-                      >
-                        {">"}
-                      </button>
+                      <img src={nextIMG} style={{ width: "40px" }}></img>
                     }
                     outsideChevron={false}
                     chevronWidth={chevronWidth}
@@ -1319,7 +1293,7 @@ function Info(args, estate) {
                 className={style.more_seller_box}
                 style={{ display: "block" }}
               >
-                <div className={style.more_info_box_top}>
+                <div className={style.address_box_fix}>
                   <div onClick={toggleSeller_more}>
                     {" "}
                     <img src={xImg} style={{ width: "20px" }}></img>
@@ -1339,7 +1313,11 @@ function Info(args, estate) {
                 ) : (
                   <img
                     src={proExam}
-                    style={{ width: "100%", height: "300px" }}
+                    style={{
+                      width: "100%",
+                      height: "300px",
+                      marginTop: "50px",
+                    }}
                   ></img>
                 )}
 
@@ -1359,18 +1337,39 @@ function Info(args, estate) {
                   >
                     {markerInfo.realEstateAgent.estateName}
                   </div>
+
+                  {/* 이름 */}
                   <div className={style.more_div_seller}>
                     <span>
-                      <img src={washingMachine} style={{ width: "24px" }}></img>
+                      <img src={user} style={{ width: "24px" }}></img>
                     </span>
-                    <div>김은총</div>
+                    <div>{markerInfo.realEstateAgent.name}</div>
                   </div>
 
+                  {/* 번호 */}
                   <div className={style.more_div_seller}>
                     <span>
-                      <img src={washingMachine} style={{ width: "24px" }}></img>
+                      <img src={tellPhone} style={{ width: "24px" }}></img>
                     </span>
-                    <div>김은총</div>
+                    <div>{markerInfo.realEstateAgent.phone}</div>
+                  </div>
+
+                  {/* 등록번호 */}
+                  <div className={style.more_div_seller}>
+                    <span>
+                      <img src={certificate} style={{ width: "24px" }}></img>
+                    </span>
+                    <div>
+                      등록번호 {markerInfo.realEstateAgent.estateNumber}
+                    </div>
+                  </div>
+
+                  {/* 주소 */}
+                  <div className={style.more_div_seller}>
+                    <span>
+                      <img src={estateMaker} style={{ width: "24px" }}></img>
+                    </span>
+                    <div>{markerInfo.realEstateAgent.address}</div>
                   </div>
 
                   <div className={style.seller_map}>
@@ -1394,8 +1393,109 @@ function Info(args, estate) {
                           lng: markerInfo.realEstateAgent.longitude,
                         }}
                       />
+                      <CustomOverlayMap // 커스텀 오버레이를 표시할 Container
+                        // 커스텀 오버레이가 표시될 위치입니다
+                        position={{
+                          lat: markerInfo.realEstateAgent.latitude,
+                          lng: markerInfo.realEstateAgent.longitude,
+                        }}
+                      >
+                        {/* 커스텀 오버레이에 표시할 내용입니다 */}
+                        <div
+                          className="label"
+                          style={{
+                            color: "white",
+                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                            padding: "2px 6px 1px 6px",
+                            fontSize: "11px",
+                            marginTop: "20px",
+                          }}
+                        >
+                          <span className="left"></span>
+                          <span className="center">부동산 위치</span>
+                          <span className="right"></span>
+                        </div>
+                      </CustomOverlayMap>
                     </Map>
                   </div>
+                </div>
+
+                {/* 인삿말 */}
+                <div className={style.info_title} style={{ height: "auto" }}>
+                  <div
+                    className={style.info_title_top}
+                    style={{ fontSize: "18px" }}
+                  >
+                    <b>인삿말</b>
+                  </div>
+                  <div style={{ marginTop: "10px" }}>
+                    {markerInfo.realEstateAgent.content || "인삿말이 없습니다"}
+                  </div>
+                </div>
+
+                {/* 최근 매물 */}
+                <div className={style.info_title} style={{ height: "auto" }}>
+                  <div
+                    className={style.info_title_top}
+                    style={{ fontSize: "18px" }}
+                  >
+                    <b>매물 목록</b>
+                  </div>
+
+                  {/*매물 목록 페이징 처리*/}
+                  <Stack spacing={2}>
+                    <div style={{ marginTop: "10px" }}>
+                      {getPaginatedData().map((marker, index) => (
+                        <div
+                          key={index}
+                          className={style.list_box}
+                          onClick={() => handleMoreAgentClick(marker)}
+                        >
+                          <div className={style.list_box_img}>
+                            <img
+                              src={imageUrlsEstateLimit[index]}
+                              alt="Estate"
+                            />
+                          </div>
+                          <div className={style.list_box_text}>
+                            <div className={style.list_box_top}>
+                              {marker.structure.structureType}
+                            </div>
+                            <div className={style.list_title}>
+                              {marker.transaction.transactionType}{" "}
+                              {marker.deposit === 0
+                                ? `${formatPrice(marker.price)}`
+                                : `${formatPrice(
+                                    marker.deposit
+                                  )} / ${formatPrice(marker.price)}`}
+                            </div>
+                            <div className={style.list_subtitle}>
+                              {marker.area}
+                              {"평 · "}
+                              {marker.roomFloors === -1
+                                ? "반지하"
+                                : marker.roomFloors === 0
+                                ? "옥탑방"
+                                : `${marker.roomFloors}층`}
+                            </div>
+                            <div className={style.list_subtitle}>
+                              {marker.address2}
+                            </div>
+                            <div className={style.list_simple}>
+                              {marker.title}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
+                    <Pagination
+                      count={Math.ceil(estateListAll.length / itemsPerPage)}
+                      page={currentPage}
+                      onChange={handlePageChange}
+                    />
+                    </div>
+                  </Stack>
                 </div>
               </div>
             )}
