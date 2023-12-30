@@ -98,7 +98,11 @@ const ProfileImage = () => {
                         ) : (
                             tempImages ? (
                                 tempImages.map((preview, index) => (
-                                    <img key={index} src={`..\\uploads\\agentProfile\\${preview.sysName}`} alt={`Preview ${index}`} className={style.imagePreview} />
+
+                                    <img key={index}
+                                        src={`https://storage.googleapis.com/daebbang/agentProfiles/${preview.sysName}`}
+                                        alt={`Preview ${index}`}
+                                        className={style.imagePreview} />
                                 ))
                             ) : (
                                 <p>No images available</p>

@@ -7,6 +7,8 @@ import axios from 'axios';
 import Footer from "../commons/Footer";
 import ItemsCarousel from 'react-items-carousel';
 import Loading from '../commons/Loading';
+import nextIMG from '../Home/OneRoom/assets/next.png'
+import prevIMG from '../Home/OneRoom/assets/prev.png'
 
 const Main = () => {
   const [freeboard, setfreeBoard] = useState([]);
@@ -59,6 +61,7 @@ const Main = () => {
     else {
       axios.get(`/api/map/getImageAll/${recent}`).then(resp => {
         setImageList(resp.data);
+
       }).catch(err => {
       })
     }
@@ -335,26 +338,8 @@ const Main = () => {
               activeItemIndex={activeItemIndex}
               numberOfCards={1}
               gutter={10}
-              leftChevron={<button
-                style={{
-                  backgroundColor: "transparent",
-                  color: "black",
-                  fontSize: "15px",
-                  border: "none",
-                  transform: "scaleX(1.1)",
-                  marginRight: "5px",
-                }}
-              >{'<'}</button>}
-              rightChevron={<button
-                style={{
-                  backgroundColor: "transparent",
-                  color: "black",
-                  fontSize: "15px",
-                  border: "none",
-                  transform: "scaleX(1.1)",
-                  marginLeft:"5px"
-                }}
-              >{'>'}</button>}
+              leftChevron={<img src={prevIMG} style={{ width: "20px" }}></img>}
+              rightChevron={<img src={nextIMG} style={{ width: "20px" }}></img>}
               outsideChevron={false}
               chevronWidth={chevronWidth}
             >
