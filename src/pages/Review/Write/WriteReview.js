@@ -28,10 +28,8 @@ const WriteReview = ({loginId}) => {
         const formImg = new FormData();
         formImg.append("files", files);
         formImg.append("path", "review");
-        console.log("d");
         try {
             const imgUrl = await axios.post("/api/file/upload", formImg);
-            console.log(imgUrl)
             setUrl(prev => ({ ...prev, [e.target.name]: imgUrl.data[0] }));
             setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: files } }));
         } catch (err) {
@@ -65,7 +63,6 @@ const WriteReview = ({loginId}) => {
     const handleAdd = () => {
 
         let totalScore = Object.values(score).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-        console.log(totalScore)
         if (totalScore === 0) {
             alert("별점을 입력해주세요");
             return;
@@ -86,7 +83,6 @@ const WriteReview = ({loginId}) => {
             return;
         }
 
-        console.log(formData.files);
         const submitFormData = new FormData();
         submitFormData.append("estateId", formData.estateId);
         submitFormData.append("anonymous",formData.anonymouse);
@@ -100,7 +96,6 @@ const WriteReview = ({loginId}) => {
 
         filesList.forEach((e) => {
             if (e !== "") {
-                console.log(e);
                 submitFormData.append("files", e);
             }
         })

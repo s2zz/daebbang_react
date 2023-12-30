@@ -61,7 +61,6 @@ const FreeBoardWrite = ({ loginId }) => {
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
-                console.log(imgUrl);
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
@@ -106,9 +105,6 @@ const FreeBoardWrite = ({ loginId }) => {
         if(!loginId){login();}
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
-        console.log(existImgList);
-        console.log(sysNameList);
-        console.log(delImgList);
 
         if (formData.title === "") {
             alert("제목을 입력해주세요");

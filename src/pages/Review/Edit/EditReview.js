@@ -93,7 +93,6 @@ const EditReview = ({loginId}) => {
 
     const handleAdd = () => {
         let totalScore = Object.values(score).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-        console.log(totalScore)
         if (totalScore === 0) {
             alert("별점을 입력해주세요");
             return;
@@ -114,7 +113,6 @@ const EditReview = ({loginId}) => {
             return;
         }
 
-        console.log(formData.files);
         const submitFormData = new FormData();
         submitFormData.append("traffic", formData.traffic);
         submitFormData.append("anonymous", formData.anonymous);
@@ -124,8 +122,7 @@ const EditReview = ({loginId}) => {
         submitFormData.append("id",loginId);
 
         let filesList = Object.values(formData.files);
-        console.log("d")
-        console.log(filesList);
+
         filesList.forEach((e) => {
             if (e !== "" && e instanceof File) {
                 submitFormData.append("files", e);
@@ -135,10 +132,6 @@ const EditReview = ({loginId}) => {
         let existFile = Object.values(url).filter(e => e.includes("https://storage.googleapis.com/daebbang/review/"));
         let existFileSysName = [];
         existFile.forEach((e) => { existFileSysName.push(e.split("https://storage.googleapis.com/daebbang/review/")[1]); });
-
-        console.log("check");
-        console.log(allPrevImg);
-        console.log(existFileSysName);
 
         let delFileList = [];
         let exist = false;

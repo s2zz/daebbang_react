@@ -84,7 +84,6 @@ const RoomBoardContents = ({ loginId, admin }) => {
         }
     }
     const updateHandle = (e) => {
-        console.log(e.target.value)
         setUpdateReply(prev => ({ ...prev, contents: e.target.value }))
     }
 

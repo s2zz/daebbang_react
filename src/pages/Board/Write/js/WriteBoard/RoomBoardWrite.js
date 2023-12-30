@@ -71,7 +71,6 @@ const RoomBoardWrite = ({ loginId }) => {
             }
             try {
                 const imgUrl = await axios.post("/api/file/upload", formImg);
-                console.log(imgUrl.data[0].split("/uploads/board/")[1]);
                 const editor = quillRef.current.getEditor();
                 const range = editor.getSelection();
 
@@ -342,7 +341,6 @@ const RoomBoardWrite = ({ loginId }) => {
                     <ReactQuill modules={modules} formats={formats} className={style.reactQuill} ref={quillRef}
                         value={formData.contents}
                         onChange={(value) => {
-                            console.log(value.length);
                             if (value.length > 5000) {
                                 alert("작성 가능한 글자 수 범위를 초과하였습니다.");
                                 setFormData(prev => ({ ...prev }));
