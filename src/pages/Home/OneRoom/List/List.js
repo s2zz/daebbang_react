@@ -120,7 +120,7 @@ function List({ onDragEnd, listReady }) {
           <div>지도를 확대해주세요.</div>
         )}
         <span className={style.unit_change}>
-          <div>{/* <img src={turn} /> */}</div>
+          <div>정렬 할 곳</div>
         </span>
       </div>
 
@@ -169,7 +169,7 @@ function List({ onDragEnd, listReady }) {
                           )}`}
                     </div>
                     <div className={style.list_subtitle}>
-                      {marker.area}평{" "}
+                      {marker.area}평{" · "}
                       {marker.roomFloors === -1
                         ? "반지하"
                         : marker.roomFloors === 0
