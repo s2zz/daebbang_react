@@ -79,7 +79,7 @@ const MemberManagement = () => {
 
   const columns = [
     { field: 'id', headerName: '아이디', width: 90, headerAlign: 'center', align: 'center' },
-    { field: 'name', headerName: '이름', width: 120, headerAlign: 'center', align: 'center' },
+    { field: 'name', headerName: '이름', width: 100, headerAlign: 'center', align: 'center' },
     { field: 'phone', headerName: '전화번호', width: 150, headerAlign: 'center', align: 'center' },
     { field: 'email', headerName: '이메일', width: 170, headerAlign: 'center', align: 'center' },
     { field: 'address1', headerName: '주소', width: 300, headerAlign: 'center', align: 'center' },

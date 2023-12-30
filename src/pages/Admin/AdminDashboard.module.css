@@ -157,6 +157,7 @@
 }
 .hover:hover{
     cursor: pointer;
+    background: rgb(231, 231, 231);
 }
 
 /* bottom */

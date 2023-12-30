@@ -48,7 +48,7 @@ const NewEstateLine = ({ data }) => {
                 </Button>
             </div>
             <ResponsiveLine
-                data={[{ id: '공인중개사 수', data: currentData }]}
+                data={[{ id: '중개사무소 수', data: currentData }]}
                 margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                 xScale={{ type: 'point' }}
                 yScale={{
@@ -65,7 +65,7 @@ const NewEstateLine = ({ data }) => {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: '공인중개사 등록일자',
+                    legend: '중개사무소 등록일자',
                     legendOffset: 36,
                     legendPosition: 'middle'
                 }}
@@ -73,7 +73,7 @@ const NewEstateLine = ({ data }) => {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: '공인중개사 수',
+                    legend: '중개사무소 수',
                     legendOffset: -40,
                     legendPosition: 'middle'
                 }}
