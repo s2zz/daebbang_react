@@ -16,7 +16,7 @@ const ReviewBoardContents = ({ loginId, admin }) => {
     const [review, setReview] = useState({});
     const seq = location && location.state && location.state.seq ? location.state.seq : 0;
     const [loading, setLoading] = React.useState(true);
-    
+
     function compareBySeq(a, b) {
         return b.seq - a.seq;
     }
@@ -47,25 +47,34 @@ const ReviewBoardContents = ({ loginId, admin }) => {
 
     const score = review.score ? review.score : 0;
     const [showImg, setShowImg] = useState(false);
-    const [showImgUrl,setShowImgUrl] = useState("");
+    const [showImgUrl, setShowImgUrl] = useState("");
     const imgClick = (sysName) => {
         setShowImg(!showImg);
-        setShowImgUrl(url+sysName);
+        setShowImgUrl(url + encodeURIComponent(sysName));
+        console.log(url + sysName);
     }
+
+    const downModal = () =>{
+        setShowImg(!showImg);
+        setShowImgUrl("");
+    }
+
     return (
         <>
             {loading ? <Loading></Loading> : <>
                 {
                     !showImg ? "" :
-                    <>
-                        <div className={style.backgroundDiv}>
-                            <div>
-                                <div className={style.imgXMark}><FontAwesomeIcon icon={faX} size='2xl'/></div>
-                                <div className={style.imgDiv} style={{backgroundImage:{showImgUrl}}}> 
+                        <>
+                            <div className={style.backgroundDiv}>
+                                <div>
+                                    <div className={style.imgXMark}><FontAwesomeIcon icon={faX} size='2xl' onClick={()=>{downModal()}} className={style.xMark}/></div>
+                                    <div className={style.imgDiv}>
+                                        <img src={showImgUrl}></img>
+                                    </div>
+
                                 </div>
                             </div>
-                        </div>
-                    </> 
+                        </>
                 }
                 <div className={style.boardContentsTitle}><span>{review.estateId}번 매물</span>{review.estate ? review.estate.title : ""}</div>
                 <div className={style.boardContentsInfo}>

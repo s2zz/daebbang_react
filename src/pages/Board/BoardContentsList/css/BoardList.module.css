@@ -97,10 +97,11 @@
 .searchBox button{
     height:100%;
     width:80%;
-    min-width:63px;
+    min-width:65px;
     border:1px solid #535353;
     background-color: white;
     border-radius: 5px;
+    margin-left:10px;
 }
 .searchBox button:hover{
     cursor: pointer;
