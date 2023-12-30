@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 const EditReview = () => {
 
     const location = useLocation();
+    const [loading, setLoading] = useState(true);
     const navi = useNavigate();
     const seq = location.state !== null && location.state.seq !== null ? location.state.seq : 0;
     const [allPrevImg, setAllPrevImg] = useState([]);
@@ -32,10 +33,11 @@ const EditReview = () => {
             resp.data.files.map((e, i) => {
                 let key = "files" + i
                 prevImgs.push(e.sysName);
-                urlArr = { ...urlArr, [key]: "/uploads/review/" + e.sysName }
+                urlArr = { ...urlArr, [key]: "https://storage.googleapis.com/daebbang/review/" + e.sysName }
             });
             setAllPrevImg([...prevImgs]);
             setUrl({ ...urlArr });
+            setLoading(true);
         })
     }, [])
 
@@ -123,9 +125,13 @@ const EditReview = () => {
             }
         })
 
-        let existFile = Object.values(url).filter(e => e.includes("/uploads/review/"));
+        let existFile = Object.values(url).filter(e => e.includes("https://storage.googleapis.com/daebbang/review/"));
         let existFileSysName = [];
-        existFile.forEach((e) => { existFileSysName.push(e.split("/uploads/review/")[1]); });
+        existFile.forEach((e) => { existFileSysName.push(e.split("https://storage.googleapis.com/daebbang/review/")[1]); });
+
+        console.log("check");
+        console.log(allPrevImg);
+        console.log(existFileSysName);
 
         let delFileList = [];
         let exist = false;
@@ -142,7 +148,7 @@ const EditReview = () => {
         submitFormData.append("delFileList", delFileList);
         axios.put(`/api/review/${seq}`, submitFormData).then(resp => {
             alert("리뷰 수정에 성공하였습니다");
-            navi("/home/oneroom/list");
+            navi("/review/boardReview", {state:{realEstateNumber:formData.realEstateNumber}});
         }).catch(err => {
             alert("리뷰 등록에 실패하였습니다");
             console.log(err);

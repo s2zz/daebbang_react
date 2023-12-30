@@ -58,9 +58,9 @@ const RoomBoardWrite = ({ loginId }) => {
                 const range = editor.getSelection();
 
                 for (let i = 0; i < imgUrl.data.length; i++) {
-                    let sysName = imgUrl.data[i].split("/uploads/board/")[1];
+                    let sysName = imgUrl.data[i].split("https://storage.googleapis.com/daebbang/board/")[1];
                     setSysNameList(prev => [...prev, encodeURIComponent(sysName)]);
-                    editor.insertEmbed(range.index, 'image', "/uploads/board/" + encodeURIComponent(sysName));
+                    editor.insertEmbed(range.index, 'image', "https://storage.googleapis.com/daebbang/board/" + encodeURIComponent(sysName));
                 }
 
             } catch (error) {
