@@ -31,8 +31,6 @@ const RoomBoardContents = ({ loginId, admin }) => {
                 setReplyList(resp.data.replies.sort(compareBySeq));
                 setFileList(resp.data.files.sort(compareBySeq));
                 setLoading(false);
-            }).catch(err => {
-                console.log(err);
             })
         }
     }, [])
@@ -61,7 +59,6 @@ const RoomBoardContents = ({ loginId, admin }) => {
             setReplyList(resp.data.sort(compareBySeq));
         }).catch(err => {
             alert("댓글 등록에 실패하였습니다.");
-            console.log(err);
         })
     }
 
@@ -96,7 +93,6 @@ const RoomBoardContents = ({ loginId, admin }) => {
 
         }).catch(err => {
             alert("댓글 수정에 실패하였습니다.");
-            console.log(err);
         })
     }
 
@@ -108,7 +104,6 @@ const RoomBoardContents = ({ loginId, admin }) => {
                 setReplyList(replyList.filter(e => e.seq !== seq))
             }).catch(err => {
                 alert("댓글 삭제에 실패하였습니다");
-                console.log(err);
             })
         }
     }
@@ -124,7 +119,6 @@ const RoomBoardContents = ({ loginId, admin }) => {
                 return;
             }).catch(err => {
                 alert("게시글 삭제에 실패하였습니다.");
-                console.log(err);
             })
         }
     }
@@ -167,7 +161,6 @@ const RoomBoardContents = ({ loginId, admin }) => {
             document.body.removeChild(link);
         }).catch(err => {
             alert("파일 다운로드 중 에러가 발생하였습니다");
-            console.log(err);
         })
     }
 
