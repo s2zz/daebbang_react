@@ -4,7 +4,7 @@ import { Box, Button } from '@mui/material';
 import axios from 'axios';
 import Loading from '../commons/Loading';
 
-const AgentManagement = () => {
+const BanAgent = () => {
   const [contacts, setContacts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -14,7 +14,7 @@ const AgentManagement = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('/api/admin/agent/getAll');
+      const response = await axios.get('/api/admin/agent/ban');
       setContacts(response.data);
       setLoading(false);
     } catch (error) {
@@ -47,24 +47,39 @@ const AgentManagement = () => {
   );
 
   const handleApproval = (email, enabled) => {
-    const confirmationMessage = enabled ? '권한 취소 하시겠습니까?' : '권한 부여 하시겠습니까?';
+    const confirmationMessage = enabled ? '정지 취소 하시겠습니까?' : '정지 하시겠습니까?';
     const confirmed = window.confirm(confirmationMessage);
     
     if (confirmed) {
-      const endpoint = enabled
-        ? `/api/admin/agent/revoke-approval/${email}`
-        : `/api/admin/agent/approve/${email}`;
+        if(enabled){
+            axios.put(`/api/admin/agent/revoke-approval/${email}`)
+            .then((response) => {
+              fetchData();
+            })
+            .catch((error) => {
+              console.error(`Error while ${enabled ? 'revoking approval' : 'approving'}:`, error);
+            });
 
-      const approvalStatus = enabled ? false : true;
-
-      axios.put(endpoint, { enabled: approvalStatus })
-        .then((response) => {
-          fetchData();
-        })
-        .catch((error) => {
-          console.error(`Error while ${enabled ? 'revoking approval' : 'approving'}:`, error);
-        });
-    } 
+            axios.delete(`/api/admin/agent/ban/delete/${email}`)
+            .then((response) => {
+              fetchData();
+              alert("정지 및 관련 매물 삭제되었습니다.");
+            })
+            .catch((error) => {
+              console.error(`Error while ${enabled ? 'revoking approval' : 'approving'}:`, error);
+            });
+        }else{
+            axios.put(`/api/admin/agent/approve/${email}`)
+            .then((response) => {
+              fetchData();
+            })
+            .catch((error) => {
+              console.error(`Error while ${enabled ? 'revoking approval' : 'approving'}:`, error);
+            });
+        }
+    } else {
+      console.log('Approval action cancelled');
+    }
   };
   
   const approvalButton = (email, enabled) => (
@@ -73,7 +88,7 @@ const AgentManagement = () => {
       color={enabled ? 'secondary' : 'primary'}
       onClick={() => handleApproval(email, enabled)}
     >
-      {enabled ? '권한 취소' : '권한 부여'}
+      {enabled ? '정지' : '정지 취소'}
     </Button>
   );
 
@@ -99,7 +114,7 @@ const AgentManagement = () => {
     { field: 'enabled', headerName: '허용 여부', width: 80, headerAlign: 'center', align: 'center' },
     {
         field: 'approval',
-        headerName: '권한',
+        headerName: '정지',
         headerAlign: 'center',
         align: 'center',
         width: 120,
@@ -138,4 +153,4 @@ const AgentManagement = () => {
   );
 };
 
-export default AgentManagement;
+export default BanAgent;
