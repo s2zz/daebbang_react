@@ -64,14 +64,18 @@
 }
 .scoreBox>div {
     float: left;
-    width: 30px;
+    width: 35px;
     height:100%;
     margin-right: 10px;
     display: flex;
     align-items: center;
 }
 
-.scoreBox img {width: 90%;}
+.scoreBox img {
+    width: 100%;
+    min-width:35px;
+    min-height:34px;
+}
 
 .reviewInsert{margin-bottom:10px;}
 .reviewInsert>div:nth-child(1){

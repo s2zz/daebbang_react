@@ -102,11 +102,37 @@
     color:white;
 }
 
-
 .scoreImg img{
-    width:3%;
     padding-right:10px;
+    min-width:43px;
+    min-height:33px;
 }
+@media(min-width:460px){
+    .scoreImg img{
+        width:10%;
+    }
+}
+@media(min-width:576px){
+    .scoreImg img{
+        width:8%;
+    }
+}
+@media(min-width:768px){
+    .scoreImg img{
+        width:6%;
+    }
+}
+@media(min-width:992px){
+    .scoreImg img{
+        width:5%;
+    }
+}
+@media(min-width:1200px){
+    .scoreImg img{
+        width:3%;
+    }
+}
+
 .scoreImg{padding-bottom:20px;}
 
 .reviewDetails>div:nth-child(2){

@@ -1,144 +1,324 @@
-.boardTitle{
-    font-size:xx-large;
-    font-weight:bold;
-    margin-top:30px;
-}
-.boardTitle+hr{
-    height:4px;
-    background-color: black;
-    border:black;
+.boardTitle {
+    font-size: xx-large;
+    font-weight: bold;
+    margin-top: 30px;
 }
 
-.searchDiv{
+.boardTitle+hr {
+    height: 4px;
+    background-color: black;
+    border: black;
+}
+
+.searchDiv {
     display: flex;
     justify-content: end;
 }
-.searchBox{
-    width:30%;
-    margin-bottom:30px;
-    overflow: hidden;
-    height:35px;
+
+@media(min-width:460px) {
+    .searchBox {
+        width: 100%;
+        margin-bottom: 30px;
+        overflow: hidden;
+        height: 35px;
+    }
 }
 
-.searchBox>div{
-    float:left;
-    height:100%;
+@media(min-width:992px) {
+    .searchBox {
+        width: 30%;
+        margin-bottom: 30px;
+        overflow: hidden;
+        height: 35px;
+    }
 }
-.searchBox>div:nth-child(1){
-    width:80%;
-    border:1px solid #535353;
+
+.searchBox>div {
+    float: left;
+    height: 100%;
+}
+
+.searchBox>div:nth-child(1) {
+    width: 80%;
+    border: 1px solid #535353;
     border-radius: 5px;
 }
-.searchBox>div:nth-child(1):focus-within{
-    border:1px solid #326CF9;
+
+.searchBox>div:nth-child(1):focus-within {
+    border: 1px solid #326CF9;
 }
 
-.searchInput{overflow: hidden;}
+.searchInput {
+    overflow: hidden;
+}
 
-.searchInput>div{
-    float:left;
-    height:100%;
+.searchInput>div {
+    float: left;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.searchInput>div:nth-child(1){
-    width:10%;
-}
-.searchInput>div:nth-child(2){
-    width:90%;
-}
-.searchInput input{
-    border:none;
-}
-.searchInput input:focus{outline:none;}
 
-.searchBox>div:nth-child(2){
-    width:20%;
+.searchInput>div:nth-child(1) {
+    width: 10%;
+}
+
+.searchInput>div:nth-child(2) {
+    width: 90%;
+}
+
+.searchInput input {
+    border: none;
+}
+
+.searchInput input:focus {
+    outline: none;
+}
+
+.searchBox>div:nth-child(2) {
+    width: 20%;
     display: flex;
     align-items: center;
     justify-content: end;
-    height:100%;
+    height: 100%;
 }
-.searchBox button{
-    height:100%;
-    width:80%;
-    min-width:63px;
-    border:1px solid #535353;
+
+.searchBox button {
+    height: 100%;
+    width: 80%;
+    min-width: 65px;
+    border: 1px solid #535353;
     background-color: white;
     border-radius: 5px;
 }
-.searchBox button:hover{
+
+.searchBox button:hover {
     cursor: pointer;
     background-color: #326CF9;
-    border:1px solid #326CF9;
-    color:white;
+    border: 1px solid #326CF9;
+    color: white;
 }
 
-.searchBox input{
-    width:100%;
-    height:100%;
+.searchBox input {
+    width: 100%;
+    height: 100%;
     border-radius: 5px;
 }
 
-.boardContentsBox{
-    padding:10px;
-    padding-bottom:4px;
-    border:1px solid #A0A0A0;
+.boardContentsBox {
+    padding: 10px;
+    padding-bottom: 4px;
+    border: 1px solid #A0A0A0;
     border-radius: 3px;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
-.boardInfo{ 
-    overflow:hidden;
-    padding-bottom:8px;
-    border-bottom:1px solid gainsboro;
-    height:40px;
+.boardInfo {
+    overflow: hidden;
+    padding-bottom: 8px;
+    border-bottom: 1px solid gainsboro;
+    height: 40px;
 }
-.boardInfo>div{
-    float:left;
+
+
+.boardInfo>div {
+    float: left;
     font-weight: bold;
-    font-size:large;
+    font-size: large;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.boardInfo>div:nth-child(1){width:8%;}
-.boardInfo>div:nth-child(2){width:10%;}
-.boardInfo>div:nth-child(3){width:50%;}
-.boardInfo>div:nth-child(4){width:22%;}
-.boardInfo>div:nth-child(5){width:10%;}
 
-.boardListContents span{
-    color:#326CF9;
-    margin-right:10px;
-    text-decoration: none!important;
+@media(min-width:460px) {
+    .boardInfo>div:not(.boardInfo>div:nth-child(1)):not(.boardInfo>div:nth-child(3)) {
+        display: none;
+    }
+
+    .boardInfo>div:nth-child(1) {
+        width: 25%;
+    }
+
+    .boardInfo>div:nth-child(3) {
+        width: 75%;
+    }
 }
-.noBoardContents{
+
+@media(min-width:768px) {
+    .boardInfo>div:nth-child(4) {
+        display: flex !important;
+        float: left;
+        width: 25%;
+    }
+
+    .boardInfo>div:nth-child(3) {
+        width: 50% !important;
+    }
+
+}
+
+@media(min-width:992px) {
+    .boardInfo>div:nth-child(1) {
+        width: 10% !important;
+    }
+
+    .boardInfo>div:nth-child(2) {
+        display: flex !important;
+        float: left;
+        width: 15%;
+    }
+
+    .boardInfo>div:nth-child(3) {
+        width: 50% !important;
+    }
+
+}
+
+@media(min-width:1200px) {
+    .boardInfo>div {
+        display: flex !important;
+    }
+}
+
+@media(min-width:1200px) {
+    .boardInfo>div:nth-child(1) {
+        width: 8% !important;
+    }
+}
+
+@media(min-width:1200px) {
+    .boardInfo>div:nth-child(2) {
+        width: 10% !important;
+    }
+}
+
+@media(min-width:1200px) {
+    .boardInfo>div:nth-child(3) {
+        width: 50% !important;
+    }
+}
+
+.boardInfo>div:nth-child(4) {
+    width: 22%;
+}
+
+.boardInfo>div:nth-child(5) {
+    width: 10%;
+}
+
+.boardListContents span {
+    color: #326CF9;
+    margin-right: 10px;
+    text-decoration: none !important;
+}
+
+.noBoardContents {
     text-align: center;
 }
 
-.boardListContents a{color:black;}
-.boardListContents>div{
-    overflow:hidden;
-    padding-top:8px;
-    padding-bottom:8px;
-    border-bottom:1px solid gainsboro;
+.boardListContents a {
+    color: black;
 }
-.boardListContents>div:last-child{border:none;}
-.boardListContents>div>div{
-    float:left;
-    font-size:large;
+
+.boardListContents>div {
+    overflow: hidden;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid gainsboro;
+}
+
+.boardListContents>div:last-child {
+    border: none;
+}
+
+.boardListContents>div>div {
+    float: left;
+    font-size: large;
     text-align: center;
 }
-.boardListContents>div>div:nth-child(1){width:8%;}
-.boardListContents>div>div:nth-child(2){width:10%;}
-.boardListContents>div>div:nth-child(3){width:50%;}
-.boardListContents>div>div:nth-child(3)>a{text-decoration: none;}
-.boardListContents>div>div:nth-child(4){width:22%;}
-.boardListContents>div>div:nth-child(5){width:10%;}
 
-.naviFooter{
+@media(min-width:460px) {
+    .boardListContents>div>div:not(.boardListContents>div>div:nth-child(1)):not(.boardListContents>div>div:nth-child(3)) {
+        display: none;
+    }
+
+    .boardListContents>div>div:nth-child(1) {
+        width: 25%;
+    }
+    .boardListContents>div>div:nth-child(3) {
+        width: 75%;
+    }
+}
+@media(min-width:768px) {
+    .boardListContents>div>div:nth-child(4) {
+        display: flex !important;
+        float: left;
+        width: 25%;
+    }
+    .boardListContents>div>div:nth-child(3) {
+        width: 50% !important;
+    }
+}
+
+@media(min-width:992px) {
+
+    .boardListContents>div>div:nth-child(1) {
+        width: 10% !important;
+    }
+    .boardListContents>div>div:nth-child(2) {
+        display: flex !important;
+        float: left;
+        align-items: center;
+        justify-content: center;
+        width: 15%;
+    }
+    .boardListContents>div>div:nth-child(3) {
+        width: 50% !important;
+    }
+}
+
+@media(min-width:1200px) {
+    .boardListContents>div>div {
+        display: flex!important;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media(min-width:1200px) {
+    .boardListContents>div>div:nth-child(1) {
+        width: 8%!important;
+    }
+}
+
+@media(min-width:1200px){
+.boardListContents>div>div:nth-child(2) {
+    width: 10%!important;
+}
+}
+
+@media(min-width:1200px) {
+    .boardListContents>div>div:nth-child(3) {
+        width: 50%!important;
+    }
+}
+
+.boardListContents>div>div:nth-child(3)>a {
+    text-decoration: none;
+}
+
+
+.boardListContents>div>div:nth-child(4) {
+    width: 22%;
+}
+
+
+.boardListContents>div>div:nth-child(5) {
+    width: 10%;
+}
+
+.naviFooter {
     display: flex;
     justify-content: space-evenly;
     font-size: large;
