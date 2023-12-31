@@ -17,10 +17,7 @@ const TopForm = ({ setLoginId }) => {
     const storedLoginName = sessionStorage.getItem('loginName');
     const isAdmin = sessionStorage.getItem('isAdmin');
     const isEstate = sessionStorage.getItem('isEstate');
-
-    const toggle3 = () => {
-        alert("준비중인 기능입니다");
-    }
+    
     const handleLogout = () => {
         axios.get("/api/member/logout").then(resp => {
             sessionStorage.removeItem('loginId');
