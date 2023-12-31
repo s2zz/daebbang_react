@@ -65,8 +65,6 @@ const EditReview = ({loginId}) => {
             setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: files } }));
         } catch (err) {
             alert("이미지 첨부에 실패하였습니다");
-            
-            console.log(err);
         }
     }
 
@@ -152,7 +150,6 @@ const EditReview = ({loginId}) => {
             navi("/review/boardReview", {state:{realEstateNumber:formData.realEstateNumber}});
         }).catch(err => {
             alert("리뷰 등록에 실패하였습니다");
-            console.log(err);
         })
 
     }

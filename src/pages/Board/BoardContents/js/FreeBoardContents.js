@@ -30,8 +30,6 @@ const FreeBoardContents = ({ loginId, admin }) => {
                 setReplyList(resp.data.replies.sort(compareBySeq));
                 setFileList(resp.data.files.sort(compareBySeq));
                 setLoading(false);
-            }).catch(err => {
-                console.log(err);
             })
         }
     }, [])

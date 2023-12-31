@@ -77,7 +77,6 @@ const FreeBoardList = ({ loginId }) => {
             }))
         }).catch(err => {
             alert("즐겨찾기 추가에 실패하였습니다.");
-            console.log(err);
         })
     }
 
@@ -96,7 +95,6 @@ const FreeBoardList = ({ loginId }) => {
             }))
         }).catch(err => {
             alert("즐겨찾기 해제에 실패하였습니다.");
-            console.log(err);
         })
 
     }

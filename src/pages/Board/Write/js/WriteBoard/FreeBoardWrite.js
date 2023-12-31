@@ -70,7 +70,7 @@ const FreeBoardWrite = ({ loginId }) => {
                 }
 
             } catch (error) {
-                console.log(error);
+                
             }
         })
     }
@@ -144,7 +144,6 @@ const FreeBoardWrite = ({ loginId }) => {
             navi("/board/toFreeBoardList");
         }).catch(err => {
             alert("게시글 등록에 실패하였습니다");
-            console.log(err);
         })
     }
 

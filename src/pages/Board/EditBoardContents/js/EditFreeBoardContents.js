@@ -35,8 +35,6 @@ const EditFreeBoardContents = ({ loginId }) => {
             setFileList(resp.data.files);
             setSysNameList(prev => existImgSearch(resp.data.contents));
             setLoading(false);
-        }).catch(err => {
-            console.log(err);
         })
     }, []);
 
@@ -77,7 +75,7 @@ const EditFreeBoardContents = ({ loginId }) => {
                 }
 
             } catch (error) {
-                console.log(error);
+                
             }
         })
     }
@@ -163,7 +161,6 @@ const EditFreeBoardContents = ({ loginId }) => {
             navi("/board/toFreeBoardContents", { state: { sysSeq: location.state.sysSeq } });
         }).catch(err => {
             alert("게시글 수정에 실패하였습니다");
-            console.log(err);
         })
     }
 

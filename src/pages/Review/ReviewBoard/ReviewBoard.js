@@ -26,8 +26,6 @@ const ReviewBoard = () => {
             axios.get(`/api/review/reviewByAgent/${realEstateNumber}`).then(resp => {
                 setBoard(resp.data.sort(compareBySeq));
                 setLoading(false);
-            }).catch(err => {
-                console.log(err);
             })
         } else{
             alert("잘못된 접근 입니다.");
