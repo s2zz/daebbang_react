@@ -13,7 +13,6 @@ const ReportManagement = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('/api/admin/report/selectAll');
-            console.log(response.data);
             setContacts(response.data);
             setLoading(false);
         } catch (error) {
@@ -54,7 +53,6 @@ const ReportManagement = () => {
     
             axios.put(endpoint, { reportStatus: approvalStatus })
                 .then((response) => {
-                    console.log(`승인 ${reportStatus === 'rs1' ? '완료됨' : '취소됨'}: ${seq}`);
                     fetchData();
                 })
                 .catch((error) => {
@@ -94,7 +92,6 @@ const ReportManagement = () => {
     
             axios.put(endpoint, { reportStatus: rejectionStatus })
                 .then((response) => {
-                    console.log(`반려 ${reportStatus === 'rs1' || reportStatus === 'rs2' ? '완료됨' : '거부'}: ${seq}`);
                     fetchData();
                 })
                 .catch((error) => {
