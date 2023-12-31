@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faFile } from '@fortawesome/free-solid-svg-icons';
 import Loading from "../../../commons/Loading";
 
 
@@ -152,6 +152,7 @@ const RoomBoardList = ({ loginId }) => {
                     <Link to={`/board/toRoomBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq, searchText: completeSearchText }}>
                         <span>[{e.header}]</span>
                         {e.title.length > 20 ? e.title.substring(0, 20) + "..." : e.title}
+                        <>{e.files.length>0 ? <FontAwesomeIcon icon={faFile} size="sm" style={{paddingLeft:"5px"}}/> : ""}</>
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>
