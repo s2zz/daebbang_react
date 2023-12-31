@@ -77,7 +77,7 @@ const Review = () => {
                                 const title = e.title || '';
                                 return (
                                     <div key={i} className={style.SawEstate}>
-                                        <img src={`/uploads/estateImages/${e.img}`} alt="Estate Image"></img>
+                                        <img src={`https://storage.googleapis.com/daebbang/estateImages/${e.img}`} alt="Estate Image"></img>
                                         <div className={style.sawAddress}>{address.length > 30 ? address.substring(0, 30) + "..." : address}</div>
                                         <div className={style.sawTitle}>{title.length > 15 ? title.substring(0, 15) + "..." : title}</div>
                                         {e.approvalCode === 'a1' || e.approvalCode === 'a2' ? <button className={style.waitBtn}>승인 대기</button> : null}
