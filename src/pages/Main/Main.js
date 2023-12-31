@@ -403,6 +403,7 @@ const Main = () => {
               <Link to="/home/oneroom"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
+           { mapList?<div className={style.notcontents}>등록된 게시물이 존재하지 않습니다.</div>:
             <div className={style.contents}>
               {
                 mapList.map((e, i) => {
@@ -419,7 +420,7 @@ const Main = () => {
                   );
                 })
               }
-            </div>
+            </div>}
           </div>
           <div className={style.freeboard}>
             <div className={style.titlebox}>
@@ -427,6 +428,7 @@ const Main = () => {
               <Link to="/board/toRoomBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
+            { mapList?<div className={style.notcontents}>등록된 게시물이 존재하지 않습니다.</div>:
             <div className={style.contents}>
               {
                 sliceRoomContentsList().map((e, i) => {
@@ -445,7 +447,7 @@ const Main = () => {
                   );
                 })
               }
-            </div>
+            </div>}
           </div>
           <div className={style.board}>
             <div className={style.titlebox}>
@@ -454,6 +456,7 @@ const Main = () => {
               <Link to="/board/toFreeBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
+            { mapList?<div className={style.notcontents}>등록된 게시물이 존재하지 않습니다.</div>:
             <div className={style.contents}>
               {
                 sliceFreeContentsList().map((e, i) => {
@@ -470,7 +473,7 @@ const Main = () => {
                   );
                 })
               }
-            </div>
+            </div>}
           </div>
         </div>
         <div middle_up="true">
