@@ -63,7 +63,6 @@ const RoomBoardList = ({ loginId }) => {
             }))
         }).catch(err => {
             alert("즐겨찾기 등록에 실패하였습니다")
-            console.log(err);
         })
     }
 
@@ -77,7 +76,6 @@ const RoomBoardList = ({ loginId }) => {
             }))
         }).catch(err => {
             alert("즐겨찾기 삭제에 실패하였습니다")
-            console.log(err);
         })
 
     }

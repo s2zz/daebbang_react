@@ -7,7 +7,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Row, Col } from 'react-bootstrap';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Loading from '../../../commons/Loading';
 
@@ -78,7 +77,6 @@ const FreeBoardList = ({ loginId }) => {
             }))
         }).catch(err => {
             alert("즐겨찾기 추가에 실패하였습니다.");
-            console.log(err);
         })
     }
 
@@ -97,7 +95,6 @@ const FreeBoardList = ({ loginId }) => {
             }))
         }).catch(err => {
             alert("즐겨찾기 해제에 실패하였습니다.");
-            console.log(err);
         })
 
     }

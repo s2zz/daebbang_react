@@ -54,7 +54,6 @@ const FavoriteBoardList = ({ loginId }) => {
             setBoard(board.filter(e => e.seq !== parentSeq));
         }).catch(err => {
             alert("즐겨찾기 해제에 실패하였습니다");
-            console.log(err);
         })
     }
 

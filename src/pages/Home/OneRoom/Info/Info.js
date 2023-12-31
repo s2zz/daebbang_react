@@ -69,10 +69,39 @@ function Info(args, estate) {
   }, [location.state]);
 
   const handleCarouselItemClick = (estate) => {
+    // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+    const storedData = localStorage.getItem("watch");
+    const watchedProperties = storedData ? JSON.parse(storedData) : [];
+
+    // 새로운 마커의 estateId를 감시 중인 속성에 추가
+    const updatedWatchedProperties = [
+      ...new Set([estate.estateId, ...watchedProperties]),
+    ];
+    // 감시 중인 속성을 최대 10개로 제한
+    if (updatedWatchedProperties.length > 10) {
+      updatedWatchedProperties.splice(10);
+    }
+    // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+    localStorage.setItem("watch", JSON.stringify(updatedWatchedProperties));
+
     setMarkerInfo(estate); // markerInfo를 업데이트하는데 useState를 사용
   };
 
   const handleMoreAgentClick = (marker) => {
+    // 로컬 스토리지에서 현재 감시 중인 속성 가져오기
+    const storedData = localStorage.getItem("watch");
+    const watchedProperties = storedData ? JSON.parse(storedData) : [];
+
+    // 새로운 마커의 estateId를 감시 중인 속성에 추가
+    const updatedWatchedProperties = [
+      ...new Set([marker.estateId, ...watchedProperties]),
+    ];
+    // 감시 중인 속성을 최대 10개로 제한
+    if (updatedWatchedProperties.length > 10) {
+      updatedWatchedProperties.splice(10);
+    }
+    // 갱신된 감시 중인 속성을 로컬 스토리지에 저장
+    localStorage.setItem("watch", JSON.stringify(updatedWatchedProperties));
     toggleSeller_more();
     setMarkerInfo(marker);
   };
@@ -220,7 +249,7 @@ function Info(args, estate) {
         const imageUrls = resp.data.map((item) => {
           // images 배열이 존재하고 첫 번째 요소가 있는 경우 해당 이미지의 URL을 생성
           if (item.images && item.images.length > 0) {
-            return `/uploads/estateImages/${item.images[0].sysName}`;
+            return `https://storage.googleapis.com/daebbang/estateImages/${item.images[0].sysName}`;
           }
           // images 배열이 비어있는 경우 기본 이미지 URL을 사용
           return { noProfile };
@@ -246,7 +275,7 @@ function Info(args, estate) {
         const imageUrls = resp.data.map((item) => {
           // images 배열이 존재하고 첫 번째 요소가 있는 경우 해당 이미지의 URL을 생성
           if (item.images && item.images.length > 0) {
-            return `/uploads/estateImages/${item.images[0].sysName}`;
+            return `https://storage.googleapis.com/daebbang/estateImages/${item.images[0].sysName}`;
           }
           // images 배열이 비어있는 경우 기본 이미지 URL을 사용
           return { noProfile };
@@ -272,6 +301,12 @@ function Info(args, estate) {
   //  LoginId
   const loginId = sessionStorage.getItem("loginId");
 
+  // isAgent
+  const isEstate = sessionStorage.getItem("isEstate");
+
+  // isAdmin
+  const isAdmin = sessionStorage.getItem("isAdmin");
+
   // 문의하기 모달
   const [modal, setModal] = useState(false);
 
@@ -290,6 +325,7 @@ function Info(args, estate) {
 
   const toggleNestedModal = () => {
     setNestedModal(!nestedModal);
+    setModal(!modal);
   };
 
   // 문의하기 버튼 클릭 이벤트
@@ -410,7 +446,9 @@ function Info(args, estate) {
 
   // 신고하기 모달
   const [firstModal, setFirstModal] = useState(false);
-  const toggleFirstModal = () => setFirstModal(!firstModal);
+  const toggleFirstModal = () => {
+    setFirstModal(!firstModal);
+  };
   const [reportConfirmationModal, setReportConfirmationModal] = useState(false);
 
   // textarea 입력값을 상태로 설정
@@ -509,10 +547,16 @@ function Info(args, estate) {
                   numberOfCards={1}
                   gutter={0}
                   leftChevron={
-                    <img src={prevIMG} style={{ width: "40px" }}></img>
+                    <img
+                      src={prevIMG}
+                      style={{ width: "40px", height: "40px" }}
+                    ></img>
                   }
                   rightChevron={
-                    <img src={nextIMG} style={{ width: "40px" }}></img>
+                    <img
+                      src={nextIMG}
+                      style={{ width: "40px", height: "40px" }}
+                    ></img>
                   }
                   outsideChevron={false}
                   chevronWidth={chevronWidth}
@@ -1208,10 +1252,16 @@ function Info(args, estate) {
                     gutter={130}
                     infiniteLoop={true}
                     leftChevron={
-                      <img src={prevIMG} style={{ width: "40px" }}></img>
+                      <img
+                        src={prevIMG}
+                        style={{ width: "40px", height: "40px" }}
+                      ></img>
                     }
                     rightChevron={
-                      <img src={nextIMG} style={{ width: "40px" }}></img>
+                      <img
+                        src={nextIMG}
+                        style={{ width: "40px", height: "40px" }}
+                      ></img>
                     }
                     outsideChevron={false}
                     chevronWidth={chevronWidth}
@@ -1318,7 +1368,10 @@ function Info(args, estate) {
                   {/* 이름 */}
                   <div className={style.more_div_seller}>
                     <span>
-                      <img src={user} style={{ width: "24px" }}></img>
+                      <img
+                        src={user}
+                        style={{ width: "24px", height: "24px" }}
+                      ></img>
                     </span>
                     <div>{markerInfo.realEstateAgent.name}</div>
                   </div>
@@ -1326,7 +1379,10 @@ function Info(args, estate) {
                   {/* 번호 */}
                   <div className={style.more_div_seller}>
                     <span>
-                      <img src={tellPhone} style={{ width: "24px" }}></img>
+                      <img
+                        src={tellPhone}
+                        style={{ width: "24px", height: "24px" }}
+                      ></img>
                     </span>
                     <div>{markerInfo.realEstateAgent.phone}</div>
                   </div>
@@ -1334,7 +1390,10 @@ function Info(args, estate) {
                   {/* 온도 */}
                   <div className={style.more_div_seller}>
                     <span>
-                      <img src={temperature} style={{ width: "24px" }}></img>
+                      <img
+                        src={temperature}
+                        style={{ width: "24px", height: "24px" }}
+                      ></img>
                     </span>
                     <div>
                       {markerInfo.realEstateAgent.manners_temperature}도
@@ -1344,7 +1403,10 @@ function Info(args, estate) {
                   {/* 등록번호 */}
                   <div className={style.more_div_seller}>
                     <span>
-                      <img src={certificate} style={{ width: "24px" }}></img>
+                      <img
+                        src={certificate}
+                        style={{ width: "24px", height: "24px" }}
+                      ></img>
                     </span>
                     <div>
                       등록번호 {markerInfo.realEstateAgent.estateNumber}
@@ -1354,7 +1416,10 @@ function Info(args, estate) {
                   {/* 주소 */}
                   <div className={style.more_div_seller}>
                     <span>
-                      <img src={estateMaker} style={{ width: "24px" }}></img>
+                      <img
+                        src={estateMaker}
+                        style={{ width: "24px", height: "24px" }}
+                      ></img>
                     </span>
                     <div>{markerInfo.realEstateAgent.address}</div>
                   </div>
@@ -1603,6 +1668,10 @@ function Info(args, estate) {
                 <ModalBody>
                   {loginId === null ? (
                     <p>로그인 후 이용해 주세요.</p>
+                  ) : isAdmin ? (
+                    <p>관리자는 신고를 할 수 없습니다.</p>
+                  ) : isEstate ? (
+                    <p>공인중개사는 신고를 할 수 없습니다.</p>
                   ) : (
                     <div>
                       <p>정확한 신고를 위해 내용을 선택해 주세요.</p>
@@ -1705,6 +1774,10 @@ function Info(args, estate) {
                         닫기
                       </Button>
                     </>
+                  ) : isAdmin || isEstate ? (
+                    <Button color="secondary" onClick={toggleFirstModal}>
+                      닫기
+                    </Button>
                   ) : (
                     <>
                       <Button color="primary" onClick={handleReportSubmit}>
@@ -1768,6 +1841,10 @@ function Info(args, estate) {
                 <ModalBody>
                   {loginId === null ? (
                     "로그인 후 이용해 주세요."
+                  ) : isAdmin ? (
+                    "관리자는 문의할 수 없습니다."
+                  ) : isEstate ? (
+                    "공인중개사는 문의할 수 없습니다."
                   ) : (
                     <div>
                       등록되어 있는 연락처가 중개사님께 전달되며.<br></br>
@@ -1776,18 +1853,36 @@ function Info(args, estate) {
                   )}
                 </ModalBody>
                 <ModalFooter>
-                  {loginId === null ? (
-                    <Button color="primary" onClick={() => navigate("/login")}>
-                      로그인
-                    </Button>
+                  {loginId === null && isAdmin === null && isEstate === null ? (
+                    <>
+                      <Button
+                        color="primary"
+                        onClick={() => navigate("/login")}
+                      >
+                        로그인
+                      </Button>
+                      <Button color="secondary" onClick={toggle}>
+                        닫기
+                      </Button>
+                    </>
                   ) : (
-                    <Button color="primary" onClick={buttonEvent}>
-                      문의하기
-                    </Button>
+                    <>
+                      {isAdmin === null && isEstate === null ? (
+                        <>
+                          <Button color="primary" onClick={buttonEvent}>
+                            문의하기
+                          </Button>
+                          <Button color="secondary" onClick={toggle}>
+                            닫기
+                          </Button>
+                        </>
+                      ) : (
+                        <Button color="secondary" onClick={toggle}>
+                          닫기
+                        </Button>
+                      )}
+                    </>
                   )}
-                  <Button color="secondary" onClick={toggle}>
-                    닫기
-                  </Button>
                 </ModalFooter>
                 <Modal isOpen={nestedModal} toggle={toggleNestedModal}>
                   <ModalHeader toggle={toggleNestedModal}>
@@ -1795,14 +1890,8 @@ function Info(args, estate) {
                   </ModalHeader>
                   <ModalBody>문의가 완료되었습니다.</ModalBody>
                   <ModalFooter>
-                    <Button
-                      color="primary"
-                      onClick={() => {
-                        toggleNestedModal();
-                        toggle();
-                      }}
-                    >
-                      확인
+                    <Button color="secondary" onClick={toggleNestedModal}>
+                      닫기
                     </Button>
                   </ModalFooter>
                 </Modal>

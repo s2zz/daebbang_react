@@ -65,7 +65,6 @@ const EditReview = ({loginId}) => {
             setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: files } }));
         } catch (err) {
             alert("이미지 첨부에 실패하였습니다");
-            console.log(err);
         }
     }
 
@@ -151,7 +150,6 @@ const EditReview = ({loginId}) => {
             navi("/review/boardReview", {state:{realEstateNumber:formData.realEstateNumber}});
         }).catch(err => {
             alert("리뷰 등록에 실패하였습니다");
-            console.log(err);
         })
 
     }
@@ -169,7 +167,7 @@ const EditReview = ({loginId}) => {
             {seq === 0 ? refuseWrite():
                 loading ? <Loading></Loading> :
                 <div className={style.borderBox}>
-                    <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
+                    <div className={style.boardTitle}>리뷰 수정 | <span>매물 번호 : {formData.estateId}</span></div>
                     <hr></hr>
                     <div className={style.anonymousInfo}>
                         <div>아이디 표시<span>*</span> &nbsp;| </div>
