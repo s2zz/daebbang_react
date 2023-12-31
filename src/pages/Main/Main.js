@@ -24,13 +24,6 @@ const Main = () => {
 
   const navigate = useNavigate();
 
-
-
-
-  
-
-
-
   useEffect(() => {
     axios.get(`/api/map/getLimitAll`).then((resp) => {
       setLoading(false);
@@ -338,8 +331,8 @@ const Main = () => {
               activeItemIndex={activeItemIndex}
               numberOfCards={1}
               gutter={10}
-              leftChevron={<img src={prevIMG} style={{ width: "20px",height:'20px' }}></img>}
-              rightChevron={<img src={nextIMG} style={{ width: "20px",height:'20px' }}></img>}
+              leftChevron={<img src={prevIMG} alt="prev"style={{ width: "20px",height:'20px' }}></img>}
+              rightChevron={<img src={nextIMG} alt="next" style={{ width: "20px",height:'20px' }}></img>}
               outsideChevron={false}
               chevronWidth={chevronWidth}
             >
@@ -403,6 +396,7 @@ const Main = () => {
               <Link to="/home/oneroom"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
+           { mapList.length===0?<div className={style.notcontents}>등록된 게시물이 존재하지 않습니다.</div>:
             <div className={style.contents}>
               {
                 mapList.map((e, i) => {
@@ -419,7 +413,7 @@ const Main = () => {
                   );
                 })
               }
-            </div>
+            </div>}
           </div>
           <div className={style.freeboard}>
             <div className={style.titlebox}>
@@ -427,6 +421,7 @@ const Main = () => {
               <Link to="/board/toRoomBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
+            { roomboard.length===0?<div className={style.notcontents}>등록된 게시물이 존재하지 않습니다.</div>:
             <div className={style.contents}>
               {
                 sliceRoomContentsList().map((e, i) => {
@@ -445,7 +440,7 @@ const Main = () => {
                   );
                 })
               }
-            </div>
+            </div>}
           </div>
           <div className={style.board}>
             <div className={style.titlebox}>
@@ -454,6 +449,7 @@ const Main = () => {
               <Link to="/board/toFreeBoardList"><span className={style.morebtnspan}><button className={style.morebtn}>더보기</button></span></Link>
             </div>
             <hr></hr>
+            { freeboard.length===0?<div className={style.notcontents}>등록된 게시물이 존재하지 않습니다.</div>:
             <div className={style.contents}>
               {
                 sliceFreeContentsList().map((e, i) => {
@@ -470,7 +466,7 @@ const Main = () => {
                   );
                 })
               }
-            </div>
+            </div>}
           </div>
         </div>
         <div middle_up="true">

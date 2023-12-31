@@ -70,8 +70,6 @@ function EstateUpdate() {
   );
 
   function setValidateMessage(fieldName) {
-    console.log(fieldName);
-
 
     if (fieldName === 'roomCode') {
       setModalMessage("방 종류를 선택해주세요.");
@@ -151,7 +149,6 @@ function EstateUpdate() {
   }
 
   const handleSubmit = () => {
-    console.log(realEstate);
 
     if (!validateFields(realEstate, maintenanceOption, showFloorInput)) {
       return false;
@@ -184,12 +181,10 @@ function EstateUpdate() {
       },
     })
       .then(resp => {
-        console.log(resp);
         navi("/EstateManage");
       })
       .catch(error => {
         console.error("Error:", error);
-        console.log(formData);
       });
   }
 
