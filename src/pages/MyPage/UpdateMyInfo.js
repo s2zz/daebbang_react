@@ -221,9 +221,6 @@ const UpdateMyInfo = () => {
     }
 
     const handleEstateUpdate = async () => {
-        console.log(name.name);
-        console.log(newphone);
-        console.log(address1.address1 + address2.address2);
         if (!efill) {
             alert("모든 항목을 입력해주세요");
             return;
