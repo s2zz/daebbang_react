@@ -25,10 +25,6 @@ function Post(props) {
             }
             fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
         }
-        console.log(data);
-        console.log(data.sigungu);
-        console.log(data.bname1);
-        console.log(data.bname2);
 
         props.setcompany({
             ...props.company,
