@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import style from "./SideBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars,faUser,faHouse,faFileAlt, faQuestion, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faBars,faUser,faHouse,faFileAlt, faQuestion, faCircleExclamation ,faBan} from "@fortawesome/free-solid-svg-icons";
 const SideBar = () => {
     const location = useLocation();
 
@@ -39,7 +39,7 @@ const SideBar = () => {
             </div>
             <div className={style.menu}>
                 <Link className={`${style.link} ${location.pathname === '/admin/toBanAgent' && style.selected}`} to="/admin/toBanAgent">
-                    <FontAwesomeIcon className={style.fontawe} icon={faCircleExclamation} /> 중개사무소 정지 관리
+                    <FontAwesomeIcon className={style.fontawe} icon={faBan} /> 중개사무소 정지 관리
                 </Link>
             </div>
         </div>
