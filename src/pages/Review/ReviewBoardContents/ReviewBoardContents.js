@@ -5,17 +5,25 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loading from '../../commons/Loading';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons';
+
 const ReviewBoardContents = ({ loginId, admin }) => {
     const maxScore = 5;
+    const url = "https://storage.googleapis.com/daebbang/review/";
     const location = useLocation();
     const navi = useNavigate();
     const [review, setReview] = useState({});
     const seq = location && location.state && location.state.seq ? location.state.seq : 0;
     const [loading, setLoading] = React.useState(true);
 
+    function compareBySeq(a, b) {
+        return b.seq - a.seq;
+    }
     // 리뷰 내용 불러오기
     useEffect(() => {
         axios.get(`/api/review/selectReviewBySeq/${location.state.seq}`).then(resp => {
+            resp.data.files = resp.data.files.sort(compareBySeq);
             setReview(resp.data);
             setLoading(false);
         }).catch(err => {
@@ -38,9 +46,36 @@ const ReviewBoardContents = ({ loginId, admin }) => {
     };
 
     const score = review.score ? review.score : 0;
+    const [showImg, setShowImg] = useState(false);
+    const [showImgUrl, setShowImgUrl] = useState("");
+    const imgClick = (sysName) => {
+        setShowImg(!showImg);
+        setShowImgUrl(url + encodeURIComponent(sysName));
+        console.log(url + sysName);
+    }
+
+    const downModal = () =>{
+        setShowImg(!showImg);
+        setShowImgUrl("");
+    }
+
     return (
         <>
             {loading ? <Loading></Loading> : <>
+                {
+                    !showImg ? "" :
+                        <>
+                            <div className={style.backgroundDiv}>
+                                <div>
+                                    <div className={style.imgXMark}><FontAwesomeIcon icon={faX} size='2xl' onClick={()=>{downModal()}} className={style.xMark}/></div>
+                                    <div className={style.imgDiv}>
+                                        <img src={showImgUrl}></img>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </>
+                }
                 <div className={style.boardContentsTitle}><span>{review.estateId}번 매물</span>{review.estate ? review.estate.title : ""}</div>
                 <div className={style.boardContentsInfo}>
                     <div>
@@ -75,7 +110,7 @@ const ReviewBoardContents = ({ loginId, admin }) => {
                     <div className={style.fileImg}>
                         {review.files && review.files.length > 0 ?
                             review.files.map((e, i) => (
-                                <div key={i}><img src={`https://storage.googleapis.com/daebbang/review/${e.sysName}`} /></div>
+                                <div key={i} onClick={() => { imgClick(e.sysName) }}><img src={`https://storage.googleapis.com/daebbang/review/${e.sysName}`} /></div>
                             )) :
                             <div className={style.emptyFileImg}>첨부파일이 존재하지 않습니다.</div>
                         }

@@ -48,10 +48,11 @@
     padding:10px;
 }
 .fileBox>div:nth-child(1){
-    width:8%;
     margin-bottom:5px;
     font-weight: bold;
+
 }
+
 .fileName:hover{
     cursor: pointer;
     text-decoration: underline;

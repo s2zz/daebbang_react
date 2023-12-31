@@ -169,7 +169,7 @@ const EditReview = ({loginId}) => {
             {seq === 0 ? refuseWrite():
                 loading ? <Loading></Loading> :
                 <div className={style.borderBox}>
-                    <div className={style.boardTitle}>리뷰 작성 | <span>매물 번호 : {formData.estateId}</span></div>
+                    <div className={style.boardTitle}>리뷰 수정 | <span>매물 번호 : {formData.estateId}</span></div>
                     <hr></hr>
                     <div className={style.anonymousInfo}>
                         <div>아이디 표시<span>*</span> &nbsp;| </div>
