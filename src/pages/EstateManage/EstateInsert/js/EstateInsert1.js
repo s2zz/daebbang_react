@@ -71,7 +71,6 @@ function EstateInsert1({ realEstate, setRealEstate }) {
           <th>종류 선택<span className={style.star}>*</span></th>
           <td>
             <input type="radio" id="r1" name="roomCode" value="r1" onChange={handleChange} /><label className={style.inputLabel} htmlFor="r1">원룸</label>
-            <input type="radio" id="r2" name="roomCode" value="r2" onChange={handleChange} /><label className={style.inputLabel} htmlFor="r2">투룸</label>
           </td>
         </tr>
         <tr>
