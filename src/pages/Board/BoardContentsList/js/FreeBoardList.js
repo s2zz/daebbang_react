@@ -139,7 +139,7 @@ const FreeBoardList = ({ loginId }) => {
                 <div>
                     <Link to={`/board/toFreeBoardContents`} style={{ textDecoration: "none" }} state={{ sysSeq: e.seq, searchText: searchText }}>
                         {e.title.length > 20 ? e.title.substring(0, 20) + "..." : e.title}
-                        <>{e.files.length>0 ? <FontAwesomeIcon icon={faFile} size="sm" style={{paddingLeft:"5px"}}/> : ""}</>
+                        <>{e.files.length>0 ? <FontAwesomeIcon icon={faFile} size="xs" style={{paddingLeft:"5px"}}/> : ""}</>
                     </Link>
                 </div>
                 <div>{e.writeDate.split("T")[0]}</div>
