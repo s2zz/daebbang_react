@@ -330,7 +330,7 @@ const Main = () => {
         <div className={style.recentbox}>
           <div className={style.saw_estate}>
             <div className={style.sawdiv}>
-              최근 본 매물
+            <span className={style.title}>최근 본 매물</span>
               <hr />
             </div>
             <ItemsCarousel
@@ -348,7 +348,7 @@ const Main = () => {
                   <div key={i} onClick={() => handleImageClick(i)} className={style.imagediv}  >
                     <img
                       className={style.sawImage}
-                      src={`/uploads/estateImages/${e}`}
+                      src={`https://storage.googleapis.com/daebbang/estateImages/${e}`}
                       alt="Estate"
                     />
                   </div>
