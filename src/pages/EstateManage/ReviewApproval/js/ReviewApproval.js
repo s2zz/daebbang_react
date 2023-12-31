@@ -11,7 +11,6 @@ function ReviewApproval() {
   useEffect(() => {
     axios.get(`/api/reviewApproval/agentReview/${sessionStorage.getItem('loginId')}`)
       .then((resp) => {
-        console.log(resp.data);
         setReviewApproval(resp.data);
       })
       .catch((error) => {
@@ -63,7 +62,6 @@ function ReviewApproval() {
 
       axios.put(`/api/reviewApproval/updateStatus/${item.seq}`, { approvalCode: updatedReviewApproval[i].approvalCode })
         .then(resp => {
-          console.log(resp);
         })
         .catch(error => {
           console.error("Error:", error);
@@ -94,7 +92,6 @@ function ReviewApproval() {
 
       axios.put(`/api/reviewApproval/updateStatus/${item.seq}`, { approvalCode: updatedReviewApproval[i].approvalCode })
         .then(resp => {
-          console.log(resp);
         })
         .catch(error => {
           console.error("Error:", error);

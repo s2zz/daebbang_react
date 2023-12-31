@@ -147,7 +147,6 @@ function EstateInsert() {
   }
 
   const handleSubmit = () => {
-    console.log(realEstate);
 
     if (!validateFields(realEstate, maintenanceOption, showFloorInput)) {
       return false;
@@ -177,7 +176,6 @@ function EstateInsert() {
       },
     })
       .then(resp => {
-        console.log(resp);
         navi("/EstateManage");
       })
       .catch(error => {
