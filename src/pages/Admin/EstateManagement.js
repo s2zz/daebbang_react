@@ -13,7 +13,6 @@ const EstateManagement = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('/api/admin/estate/selectAll');
-            console.log(response.data);
             setContacts(response.data);
             setLoading(false);
         } catch (error) {

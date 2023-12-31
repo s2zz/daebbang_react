@@ -19,7 +19,6 @@ const Notification = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('/api/admin/reviewApproval/selectByAdmin');
-            console.log(response.data);
             setContacts(response.data);
             setTotalRows(response.data.length);
             setLoading(false);
@@ -40,7 +39,6 @@ const Notification = () => {
     };
     //최종 반려
     const handleFinalReturn = (seq, approvalCode) => {
-        console.log(approvalCode);
         const confirmationMessage = approvalCode === 'a4' ? '최종 반려 취소하시겠습니까?' : '최종 반려하시겠습니까?';
         const confirmReturn = window.confirm(confirmationMessage);
 
@@ -59,8 +57,6 @@ const Notification = () => {
             const newApprovalCode = approvalCode === 'a2' ? 'a4' : 'a2';
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
-                    console.log(`Return ${approvalCode === 'a4' ? 'successful' : 'revoked'} for ${seq}`);
-                    // 데이터를 다시 가져와서 화면을 업데이트
                     fetchData();
                 })
                 .catch((error) => {
@@ -72,7 +68,6 @@ const Notification = () => {
     };
     //반려
     const handleReturn = (seq, approvalCode) => {
-        console.log(approvalCode);
         const confirmationMessage = approvalCode === 'b1' ? '반려 취소하시겠습니까?' : '반려하시겠습니까?';
         const confirmReturn = window.confirm(confirmationMessage);
 
@@ -91,8 +86,6 @@ const Notification = () => {
             const newApprovalCode = approvalCode === 'a2' ? 'b1' : 'a2';
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
-                    console.log(`Return ${approvalCode === 'b1' ? 'successful' : 'revoked'} for ${seq}`);
-                    // 데이터를 다시 가져와서 화면을 업데이트
                     fetchData();
                 })
                 .catch((error) => {
@@ -116,7 +109,6 @@ const Notification = () => {
 
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
-                    console.log(`Approval ${approvalCode === 'a2' ? 'successful' : 'revoked'} for ${seq}`);
                     fetchData();
                 })
                 .catch((error) => {

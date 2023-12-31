@@ -149,7 +149,6 @@ const AdminDashboard = () => {
     const fetchReportList = () => {
         axios.get(`/api/admin/selectAllByReportStatus`)
             .then(response => {
-                console.log(response.data);
                 setReportList(response.data);
             })
             .catch(error => {
@@ -326,16 +325,16 @@ const AdminDashboard = () => {
                                 <th>번호</th>
                                 <th>주소</th>
                                 <th>제목</th>
-                                <th>정보</th>
+                                {/* <th>정보</th> */}
                             </tr>
                         </thead>
                         <tbody style={{ fontSize: '87%' }}>
                             {estateList.map(item => (
                                 <tr key={item.viewId}>
-                                    <td>{item.estate.estateId}</td>
-                                    <td>{item.estate.address2}</td>
-                                    <td>{item.estate.title}</td>
-                                    <td>{item.estate.room.roomType}</td>
+                                    <td style={{maxWidth:"40px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.estate.estateId}</td>
+                                    <td style={{maxWidth:"186px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.estate.address2}</td>
+                                    <td style={{maxWidth:"152px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.estate.title}</td>
+                                    {/* <td>{item.estate.room.roomType}</td> */}
                                 </tr>
                             ))}
 
@@ -372,8 +371,8 @@ const AdminDashboard = () => {
                             {slicedReportList.map(report => (
                                 <tr key={report.seq}>
                                     <td>{report.estate.estateId}</td>
-                                    <td>{report.writer}</td>
-                                    <td>{report.realEstateAgent.estateName}</td>
+                                    <td style={{maxWidth:"80px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{report.writer}</td>
+                                    <td style={{maxWidth:"175px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{report.realEstateAgent.estateName}</td>
                                     <td>{report.reportContents.content}</td>
                                     <td>{report.writeDate}</td>
                                 </tr>

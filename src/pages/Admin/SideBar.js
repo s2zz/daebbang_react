@@ -37,6 +37,11 @@ const SideBar = () => {
                     <FontAwesomeIcon className={style.fontawe} icon={faCircleExclamation} /> 신고 관리
                 </Link>
             </div>
+            <div className={style.menu}>
+                <Link className={`${style.link} ${location.pathname === '/admin/toBanAgent' && style.selected}`} to="/admin/toBanAgent">
+                    <FontAwesomeIcon className={style.fontawe} icon={faCircleExclamation} /> 중개사무소 정지 관리
+                </Link>
+            </div>
         </div>
     );
 }
