@@ -7,7 +7,6 @@ import style from "./MemberManagement.module.css";
 
 const Notification = () => {
     const [page, setPage] = React.useState(1);
-    const pageSize = 10;
     const [totalRows, setTotalRows] = React.useState(0);
     const [contacts, setContacts] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
@@ -19,7 +18,6 @@ const Notification = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('/api/admin/reviewApproval/selectByAdmin');
-            console.log(response.data);
             setContacts(response.data);
             setTotalRows(response.data.length);
             setLoading(false);
@@ -29,18 +27,17 @@ const Notification = () => {
         }
     };
 
-    const generateData = (page) => {
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = Math.min(startIndex + pageSize, totalRows);
-        return contacts.slice(startIndex, endIndex);
-    };
+    // const generateData = (page) => {
+    //     const startIndex = (page - 1) * pageSize;
+    //     const endIndex = Math.min(startIndex + pageSize, totalRows);
+    //     return contacts.slice(startIndex, endIndex);
+    // };
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
     };
     //최종 반려
     const handleFinalReturn = (seq, approvalCode) => {
-        console.log(approvalCode);
         const confirmationMessage = approvalCode === 'a4' ? '최종 반려 취소하시겠습니까?' : '최종 반려하시겠습니까?';
         const confirmReturn = window.confirm(confirmationMessage);
 
@@ -59,8 +56,6 @@ const Notification = () => {
             const newApprovalCode = approvalCode === 'a2' ? 'a4' : 'a2';
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
-                    console.log(`Return ${approvalCode === 'a4' ? 'successful' : 'revoked'} for ${seq}`);
-                    // 데이터를 다시 가져와서 화면을 업데이트
                     fetchData();
                 })
                 .catch((error) => {
@@ -72,7 +67,6 @@ const Notification = () => {
     };
     //반려
     const handleReturn = (seq, approvalCode) => {
-        console.log(approvalCode);
         const confirmationMessage = approvalCode === 'b1' ? '반려 취소하시겠습니까?' : '반려하시겠습니까?';
         const confirmReturn = window.confirm(confirmationMessage);
 
@@ -91,8 +85,6 @@ const Notification = () => {
             const newApprovalCode = approvalCode === 'a2' ? 'b1' : 'a2';
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
-                    console.log(`Return ${approvalCode === 'b1' ? 'successful' : 'revoked'} for ${seq}`);
-                    // 데이터를 다시 가져와서 화면을 업데이트
                     fetchData();
                 })
                 .catch((error) => {
@@ -116,7 +108,6 @@ const Notification = () => {
 
             axios.put(endpoint, { approvalCode: newApprovalCode })
                 .then((response) => {
-                    console.log(`Approval ${approvalCode === 'a2' ? 'successful' : 'revoked'} for ${seq}`);
                     fetchData();
                 })
                 .catch((error) => {
@@ -187,7 +178,7 @@ const Notification = () => {
                 return '';
         }
     };
-    
+
     const columns = [
         { field: 'seq', headerName: '번호', width: 90, headerAlign: "center", align: "center" },
         {
@@ -205,7 +196,7 @@ const Notification = () => {
             width: 120,
             headerAlign: 'center',
             align: 'center',
-            valueGetter: (params) => params.row.estate?.estateId|| '',
+            valueGetter: (params) => params.row.estate?.estateId || '',
         },
         {
             field: 'approvalCode',
@@ -235,23 +226,21 @@ const Notification = () => {
         <div className={style.container}>
             <Box sx={{ width: '100%' }}>
                 {loading ? (
-                    <Loading></Loading>
+                    <Loading />
                 ) : (
-                    <DataGrid
-                        autoHeight
-                        pagination
-                        pageSize={pageSize}
-                        rowsPerPageOptions={[pageSize]}
-                        rowCount={totalRows}
-                        onPageChange={(newPage) => handlePageChange(newPage)}
-                        columns={columns}
-                        rows={generateData(page)}
-                        pageSizeOptions={[10, 50, 100]}
-                        getRowId={(row) => row.seq}
-                        slots={{
-                            toolbar: GridToolbar,
-                        }}
-                    />
+                    <div style={{ height: '100%', width: '100%' }}>
+                        <DataGrid
+                            autoHeight
+                            columns={columns}
+                            rows={contacts}
+                            pageSize={contacts.length}
+                            rowsPerPageOptions={[contacts.length]}
+                            getRowId={(row) => row.seq}
+                            slots={{
+                                toolbar: GridToolbar,
+                            }}
+                        />
+                    </div>
                 )}
             </Box>
         </div>

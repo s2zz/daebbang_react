@@ -13,7 +13,7 @@ const WriteReview = ({loginId}) => {
     const estateId = location.state !== null && location.state.estateCode !== null ? location.state.estateCode : 0;
     const approvalCode = location.state !== null && location.state.approvalCode !== null ? location.state.approvalCode : "";
 
-    const [formData, setFormData] = useState({ estateId: estateId, approvalCode: approvalCode, traffic: "", surroundings: "", facility: "", anonymouse:"true", files: {} });
+    const [formData, setFormData] = useState({ estateId: estateId, approvalCode: approvalCode, traffic: "", surroundings: "", facility: "", anonymous:"true", files: {} });
     const storedLoginId = sessionStorage.getItem('loginId');
 
     const handleChange = (e) => {
@@ -34,7 +34,6 @@ const WriteReview = ({loginId}) => {
             setFormData(prev => ({ ...prev, files: { ...prev.files, [e.target.name]: files } }));
         } catch (err) {
             alert("이미지 첨부에 실패하였습니다");
-            console.log(err);
         }
     }
 
@@ -85,7 +84,7 @@ const WriteReview = ({loginId}) => {
 
         const submitFormData = new FormData();
         submitFormData.append("estateId", formData.estateId);
-        submitFormData.append("anonymous",formData.anonymouse);
+        submitFormData.append("anonymous",formData.anonymous);
         submitFormData.append("approvalCode", formData.approvalCode);
         submitFormData.append("traffic", formData.traffic);
         submitFormData.append("surroundings", formData.surroundings);
@@ -109,10 +108,9 @@ const WriteReview = ({loginId}) => {
 
         axios.post("/api/review", submitFormData).then(resp => {
             alert("리뷰 등록에 성공하였습니다");
-            navi("/");
+            navi("/myPage");
         }).catch(err => {
             alert("리뷰 등록에 실패하였습니다");
-            console.log(err);
         })
 
     }

@@ -63,11 +63,11 @@ function EstateInfo2({ realEstate }) {
           <th>층수</th>
           <td>
             <div>
-              <label>전체 층 수</label>
+              <label>전체 층 수</label>&nbsp;
               {realEstate.buildingFloors}층
             </div>
             <div>
-              <label>해당 층 수</label>
+              <label>해당 층 수</label>&nbsp;
               {roomFloors()}
             </div>
           </td>

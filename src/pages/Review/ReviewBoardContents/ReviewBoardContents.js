@@ -26,8 +26,6 @@ const ReviewBoardContents = ({ loginId, admin }) => {
             resp.data.files = resp.data.files.sort(compareBySeq);
             setReview(resp.data);
             setLoading(false);
-        }).catch(err => {
-            console.log(err);
         })
     }, []);
 
@@ -40,7 +38,6 @@ const ReviewBoardContents = ({ loginId, admin }) => {
                 return;
             }).catch((err) => {
                 alert("리뷰 삭제에 실패하였습니다");
-                console.log(err);
             });
         }
     };
@@ -51,7 +48,6 @@ const ReviewBoardContents = ({ loginId, admin }) => {
     const imgClick = (sysName) => {
         setShowImg(!showImg);
         setShowImgUrl(url + encodeURIComponent(sysName));
-        console.log(url + sysName);
     }
 
     const downModal = () =>{

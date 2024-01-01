@@ -42,8 +42,6 @@ const EditRoomBoardContents = ({ loginId }) => {
             setFileList(resp.data.files.sort(compareBySeq));
             setSysNameList(prev => existImgSearch(resp.data.contents));
             setLoading(false);
-        }).catch(err => {
-            console.log(err);
         })
     }, []);
 
@@ -88,7 +86,7 @@ const EditRoomBoardContents = ({ loginId }) => {
                 }
 
             } catch (error) {
-                console.log(error);
+      
             }
         })
     }
@@ -246,7 +244,6 @@ const EditRoomBoardContents = ({ loginId }) => {
             navi("/board/toRoomBoardContents", { state: { sysSeq: location.state.sysSeq } });
         }).catch(err => {
             alert("게시글 등록에 실패하였습니다");
-            console.log(err);
         })
     }
 

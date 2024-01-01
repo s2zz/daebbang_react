@@ -17,7 +17,6 @@ function EstateBoard() {
       }
     })
       .then((resp) => {
-        console.log(resp.data);
         setRealEstate(resp.data);
 
         setLoading(false);

@@ -81,7 +81,7 @@ const RoomBoardWrite = ({ loginId }) => {
                 }
 
             } catch (error) {
-                console.log(error);
+               
             }
         })
     }
@@ -156,7 +156,10 @@ const RoomBoardWrite = ({ loginId }) => {
 
     }
 
+
+
     const handleAdd = () => {
+
         if(!loginId){login();}
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
@@ -182,7 +185,7 @@ const RoomBoardWrite = ({ loginId }) => {
             navi("/board/toRoomBoardList");
         }).catch(err => {
             alert("게시글 등록에 실패하였습니다");
-            console.log(err);
+   
         })
 
     }

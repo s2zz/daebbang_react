@@ -47,7 +47,7 @@ function FindEnrollmentPw() {
       setfindPw({ name: "",phone:"", email: "" });
     })
   } else {
-    alert("빈 칸을 입력해주세요");
+    alert("모든 항목을 입력해주세요");
   }
   }
 

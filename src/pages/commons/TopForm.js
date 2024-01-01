@@ -17,10 +17,7 @@ const TopForm = ({ setLoginId }) => {
     const storedLoginName = sessionStorage.getItem('loginName');
     const isAdmin = sessionStorage.getItem('isAdmin');
     const isEstate = sessionStorage.getItem('isEstate');
-
-    const toggle3 = () => {
-        alert("준비중인 기능입니다");
-    }
+    
     const handleLogout = () => {
         axios.get("/api/member/logout").then(resp => {
             sessionStorage.removeItem('loginId');
@@ -57,7 +54,10 @@ const TopForm = ({ setLoginId }) => {
     const handleTest = () => {
         if (location.pathname !== '/home/oneroom/list') {
             navi(`/home/oneroom/list`);
-          }
+        }
+    }
+    const handleTest2 = () => {
+        alert("준비중인 기능입니다.");
     }
 
     return (
@@ -70,13 +70,13 @@ const TopForm = ({ setLoginId }) => {
                 <div className={style.gnb}>
                     <ul className={style.gnb_container}>
                         <li className={style.has_d2}>
-                        <span><Button onClick={handleTest}><span>원룸</span></Button></span>
+                            <span><Button onClick={handleTest}><span>원룸</span></Button></span>
                         </li>
                         <li className={style.has_d2}>
-                            <Link to="#"><Button onClick={toggle3}><span>투룸</span></Button> </Link>
+                            <span><Button onClick={handleTest2}><span>투룸</span></Button></span>
                         </li>
                         <li className={style.has_d2}>
-                            <Link to="#"><Button onClick={toggle3}><span>오피스텔</span></Button> </Link>
+                            <span><Button onClick={handleTest2}><span>오피스텔</span></Button></span>
                         </li>
                         <li className={style.has_d2}>
                             <Link to="board"><Button><span>게시판</span></Button> </Link>

@@ -16,7 +16,6 @@ const MemberManagement = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get('/api/admin/getMember');
-      console.log(response.data);
       setContacts(response.data);
       setLoading(false);
     } catch (error) {
@@ -49,8 +48,6 @@ const MemberManagement = () => {
 
       axios.put(endpoint, { enabled: approvalStatus })
         .then((response) => {
-          console.log(`Approval ${enabled ? 'revoked' : 'successful'} for ${id}`);
-          // 데이터를 다시 가져와서 화면을 업데이트
           fetchData();
         })
         .catch((error) => {

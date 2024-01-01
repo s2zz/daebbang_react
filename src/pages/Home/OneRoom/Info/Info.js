@@ -1585,7 +1585,7 @@ function Info(args, estate) {
                       {/* 하단 내용 */}
                       <div className={style.review_list_frame_child_content}>
                         <div>
-                          <b>{e.anonymous ? e.id : "익명"}님</b>의 리뷰{" "}
+                          <b>{e.anonymous ? "익명" : e.id}님</b>의 리뷰{" "}
                           {e.score}점
                         </div>
 
