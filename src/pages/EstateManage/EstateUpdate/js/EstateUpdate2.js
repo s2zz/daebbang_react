@@ -43,9 +43,9 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
     setShowFloorInput(value);
 
     if (value === 'f1') {
-      setRealEstate(prev => ({ ...prev, roomFloors: -1 }));
+      setRealEstate(prev => ({ ...prev, roomFloors: "-1" }));
     } else if (value === 'f2') {
-      setRealEstate(prev => ({ ...prev, roomFloors: 0 }));
+      setRealEstate(prev => ({ ...prev, roomFloors: "0" }));
     } else {
       setRealEstate(prev => ({ ...prev, roomFloors: "" }));
     }
@@ -137,15 +137,6 @@ function EstateUpdate2({ realEstate, setRealEstate, optionList, setOptionList, m
             <input type="checkbox" id="o8" name="optionCode" value="o8" onChange={handleOptionCode} checked={optionList.includes("o8")} /><label htmlFor="o8" className={style.inputLabel}>옷장</label>
             <input type="checkbox" id="o9" name="optionCode" value="o9" onChange={handleOptionCode} checked={optionList.includes("o9")} /><label htmlFor="o9" className={style.inputLabel}>TV</label>
             <input type="checkbox" id="o10" name="optionCode" value="o10" onChange={handleOptionCode} checked={optionList.includes("o10")} /><label htmlFor="o10" className={style.inputLabel}>냉장고</label>
-            {/* <input type="checkbox" /><label>반려동물</label>
-            <input type="checkbox" /><label>베란다/발코니</label>
-            <input type="checkbox" /><label>신발장</label>
-            <input type="checkbox" /><label>냉장고</label>
-            <input type="checkbox" /><label>가스레인지</label>
-            <input type="checkbox" /><label>인덕션</label>
-            <input type="checkbox" /><label>전자레인지</label>
-            <input type="checkbox" /><label>전자도어락</label>
-            <input type="checkbox" /><label>비데</label> */}
           </td>
         </tr>
       </table>
