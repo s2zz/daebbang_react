@@ -156,7 +156,10 @@ const RoomBoardWrite = ({ loginId }) => {
 
     }
 
+
+
     const handleAdd = () => {
+
         if(!loginId){login();}
         let existImgList = existImgSearch(formData.contents);
         let delImgList = submitImgSearch(existImgList, sysNameList);
