@@ -234,67 +234,61 @@ function Info(args, estate) {
   // 공인 중개사의 최신 게시물 가져오기
   useEffect(() => {
     const email = markerInfo.realEstateAgent.email;
-
-    // 10개만 가져옴
-    axios
-      .get(`/api/map/getAgentContentLimit`, {
-        params: {
-          email: email, // 쿼리 매개변수로 이메일을 전달
-        },
-      })
-      .then((resp) => {
-        const fetchedData = resp.data;
-        setEstateListLimit(fetchedData);
-
-        const imageUrls = resp.data.map((item) => {
-          // images 배열이 존재하고 첫 번째 요소가 있는 경우 해당 이미지의 URL을 생성
+  
+    // 비동기 작업을 병렬로 실행할 Promise 배열 생성
+    const promises = [];
+  
+    // 10개만 가져오는 작업
+    const getAgentContentLimitPromise = axios.get(`/api/map/getAgentContentLimit`, {
+      params: { email: email },
+    });
+  
+    promises.push(getAgentContentLimitPromise);
+  
+    // 전부 가져오는 작업
+    const getAgentContentAllPromise = axios.get(`/api/map/getAgentContentAll`, {
+      params: { email: email },
+    });
+  
+    promises.push(getAgentContentAllPromise);
+  
+    // 프로필 이미지 가져오는 작업
+    const getProfileImagePromise = axios.get(`/api/estate/profileImage/${email}`);
+  
+    promises.push(getProfileImagePromise);
+  
+    // Promise.all을 사용하여 모든 작업을 병렬로 실행
+    Promise.all(promises)
+      .then((responses) => {
+        const fetchedDataLimit = responses[0].data;
+        const fetchedDataAll = responses[1].data;
+        const profileImageData = responses[2].data;
+  
+        setEstateListLimit(fetchedDataLimit);
+        setEstateListAll(fetchedDataAll);
+  
+        const imageUrlsLimit = fetchedDataLimit.map((item) => {
           if (item.images && item.images.length > 0) {
             return `https://storage.googleapis.com/daebbang/estateImages/${item.images[0].sysName}`;
           }
-          // images 배열이 비어있는 경우 기본 이미지 URL을 사용
           return { noProfile };
         });
-
-        setImageUrlsEstateLimit(imageUrls);
-      })
-      .catch((err) => {
-        console.log("API 호출 오류:", err);
-      });
-
-    // 전부 가져옴
-    axios
-      .get(`/api/map/getAgentContentAll`, {
-        params: {
-          email: email, // 쿼리 매개변수로 이메일을 전달
-        },
-      })
-      .then((resp) => {
-        const fetchedData = resp.data;
-        setEstateListAll(fetchedData);
-
-        const imageUrls = resp.data.map((item) => {
-          // images 배열이 존재하고 첫 번째 요소가 있는 경우 해당 이미지의 URL을 생성
+  
+        const imageUrlsAll = fetchedDataAll.map((item) => {
           if (item.images && item.images.length > 0) {
             return `https://storage.googleapis.com/daebbang/estateImages/${item.images[0].sysName}`;
           }
-          // images 배열이 비어있는 경우 기본 이미지 URL을 사용
           return { noProfile };
         });
-
-        setImageUrlsEstateAll(imageUrls);
-      })
-      .catch((err) => {
-        console.log("API 호출 오류:", err);
-      });
-
-    axios
-      .get(`/api/estate/profileImage/${email}`)
-      .then((resp) => {
+  
+        setImageUrlsEstateLimit(imageUrlsLimit);
+        setImageUrlsEstateAll(imageUrlsAll);
+  
         // 이미지 태그를 상태에 설정
-        setProfileImages(resp.data);
+        setProfileImages(profileImageData);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+      .catch((err) => {
+        console.log("API 호출 오류:", err);
       });
   }, [markerInfo, location.state]);
 
