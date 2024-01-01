@@ -67,7 +67,6 @@ function EstateInsert() {
   );
 
   function setValidateMessage(fieldName) {
-    console.log(fieldName);
 
 
     if (fieldName === 'roomCode') {

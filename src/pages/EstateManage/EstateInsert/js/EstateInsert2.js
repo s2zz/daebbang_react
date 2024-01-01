@@ -46,9 +46,9 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList,
     setShowFloorInput(value);
 
     if (value === 'f1') {
-      setRealEstate(prev => ({ ...prev, roomFloors: -1 }));
+      setRealEstate(prev => ({ ...prev, roomFloors: "-1" }));
     } else if (value === 'f2') {
-      setRealEstate(prev => ({ ...prev, roomFloors: 0 }));
+      setRealEstate(prev => ({ ...prev, roomFloors: "0" }));
     } else {
       setRealEstate(prev => ({ ...prev, roomFloors: "" }));
     }
@@ -137,20 +137,11 @@ function EstateInsert2({ realEstate, setRealEstate, setOptionList,
             <input type="checkbox" id="o3" name="optionCode" value="o3" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o3">엘리베이터</label>
             <input type="checkbox" id="o4" name="optionCode" value="o4" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o4">에어컨</label>
             <input type="checkbox" id="o5" name="optionCode" value="o5" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o5">세탁기</label>
-            <input type="checkbox" id="o6" name="optionCode" value="o6" onChange={handleOptionCode} /><label className={style.inputLabel} htmlForor="o6">침대</label>
+            <input type="checkbox" id="o6" name="optionCode" value="o6" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o6">침대</label>
             <input type="checkbox" id="o7" name="optionCode" value="o7" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o7">책상</label>
             <input type="checkbox" id="o8" name="optionCode" value="o8" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o8">옷장</label>
             <input type="checkbox" id="o9" name="optionCode" value="o9" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o9">TV</label>
             <input type="checkbox" id="o10" name="optionCode" value="o10" onChange={handleOptionCode} /><label className={style.inputLabel} htmlFor="o10">냉장고</label>
-            {/* <input type="checkbox" /><label>반려동물</label>
-            <input type="checkbox" /><label>베란다/발코니</label>
-            <input type="checkbox" /><label>신발장</label>
-            <input type="checkbox" /><label>냉장고</label>
-            <input type="checkbox" /><label>가스레인지</label>
-            <input type="checkbox" /><label>인덕션</label>
-            <input type="checkbox" /><label>전자레인지</label>
-            <input type="checkbox" /><label>전자도어락</label>
-            <input type="checkbox" /><label>비데</label> */}
           </td>
         </tr>
       </table>
