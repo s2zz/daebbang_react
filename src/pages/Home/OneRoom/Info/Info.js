@@ -639,7 +639,7 @@ function Info(args, estate) {
 
             {/* box_2 */}
             <div className={style.info_subbox}>
-              <div style={{ margin: "10px 0 0 0" }}>{markerInfo.title}</div>
+              <div style={{ margin: "10px 0 0 0"}}>{markerInfo.title}</div>
               {/* 몇 평인지*/}
               <div className={style.subbox_bold}>
                 <span>
