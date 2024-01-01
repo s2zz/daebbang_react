@@ -100,7 +100,6 @@ const FreeBoardWrite = ({ loginId }) => {
         return delImgList;
     }
 
-
     const handleAdd = () => {
         if(!loginId){login();}
         let existImgList = existImgSearch(formData.contents);
