@@ -7,7 +7,6 @@ import style from "./MemberManagement.module.css";
 
 const Notification = () => {
     const [page, setPage] = React.useState(1);
-    const pageSize = 10;
     const [totalRows, setTotalRows] = React.useState(0);
     const [contacts, setContacts] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
@@ -28,11 +27,11 @@ const Notification = () => {
         }
     };
 
-    const generateData = (page) => {
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = Math.min(startIndex + pageSize, totalRows);
-        return contacts.slice(startIndex, endIndex);
-    };
+    // const generateData = (page) => {
+    //     const startIndex = (page - 1) * pageSize;
+    //     const endIndex = Math.min(startIndex + pageSize, totalRows);
+    //     return contacts.slice(startIndex, endIndex);
+    // };
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -179,7 +178,7 @@ const Notification = () => {
                 return '';
         }
     };
-    
+
     const columns = [
         { field: 'seq', headerName: '번호', width: 90, headerAlign: "center", align: "center" },
         {
@@ -197,7 +196,7 @@ const Notification = () => {
             width: 120,
             headerAlign: 'center',
             align: 'center',
-            valueGetter: (params) => params.row.estate?.estateId|| '',
+            valueGetter: (params) => params.row.estate?.estateId || '',
         },
         {
             field: 'approvalCode',
@@ -227,23 +226,21 @@ const Notification = () => {
         <div className={style.container}>
             <Box sx={{ width: '100%' }}>
                 {loading ? (
-                    <Loading></Loading>
+                    <Loading />
                 ) : (
-                    <DataGrid
-                        autoHeight
-                        pagination
-                        pageSize={pageSize}
-                        rowsPerPageOptions={[pageSize]}
-                        rowCount={totalRows}
-                        onPageChange={(newPage) => handlePageChange(newPage)}
-                        columns={columns}
-                        rows={generateData(page)}
-                        pageSizeOptions={[10, 50, 100]}
-                        getRowId={(row) => row.seq}
-                        slots={{
-                            toolbar: GridToolbar,
-                        }}
-                    />
+                    <div style={{ height: '100%', width: '100%' }}>
+                        <DataGrid
+                            autoHeight
+                            columns={columns}
+                            rows={contacts}
+                            pageSize={contacts.length}
+                            rowsPerPageOptions={[contacts.length]}
+                            getRowId={(row) => row.seq}
+                            slots={{
+                                toolbar: GridToolbar,
+                            }}
+                        />
+                    </div>
                 )}
             </Box>
         </div>
